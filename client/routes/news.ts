@@ -5,18 +5,23 @@ export async function getNews(req: Request, res: Response) {
   // This was added by the context middleware in ../keystone.ts
   const { context } = req as typeof req & { context: Context };
 
-  if (!req.params.key) {
+  if (!req.params.key || req.params.key === 'recent') {
     const news = await context.query.NewsItem.findMany({
       query: `
           title
           key
           publishDate
           externalLink
+          thumbnail {
+            publicId
+          }
+          thumbAltText
       `,
       where: { enabled: { equals: true } },
       orderBy: {
         publishDate: 'desc',
       },
+      take: req.params.key === 'recent' ? 3 : undefined,
     });
     // And return the result as JSON
     res.json(news);

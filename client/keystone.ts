@@ -9,11 +9,12 @@ import session from 'express-session';
 import { v2 as cloudinary } from 'cloudinary';
 
 import * as lists from './admin/schema';
+import { getNews } from './routes/news';
 const multer = require('multer');
 const upload = multer({
-  limits:{
+  limits: {
     fieldSize: 1024 * 1024 * 50,
-  }
+  },
 });
 
 cloudinary.config({
@@ -130,7 +131,30 @@ let ksConfig = {
   lists,
   server: {
     maxFileSize: 1024 * 1024 * 50,
-    extendExpressApp: (app: e.Express) => {
+    extendExpressApp: (app: e.Express, createContext) => {
+      app.all('/*', (req, res, next) => {
+        res.header('Access-Control-Allow-Origin', `*`);
+        res.header(
+          'Access-Control-Allow-Methods',
+          'GET, POST, OPTIONS, HEAD, PUT'
+        );
+        res.header('Access-Control-Expose-Headers', 'Content-Length');
+        res.header(
+          'Access-Control-Allow-Headers',
+          'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
+        );
+
+        if (req.method === 'OPTIONS') res.send(200);
+        else next();
+      });
+
+      app.use('/rest', async (req, res, next) => {
+        (req as any).context = await createContext(req, res);
+        next();
+      });
+
+      app.get('/rest/news/:key?', getNews);
+
       app.get('/prod-deploy', async (req, res, next) => {
         try {
           const response = await axios.get(

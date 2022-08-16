@@ -10,6 +10,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 import * as lists from './admin/schema';
 import { getNews } from './routes/news';
+
 const multer = require('multer');
 const upload = multer({
   limits: {
@@ -131,7 +132,7 @@ let ksConfig = {
   lists,
   server: {
     maxFileSize: 1024 * 1024 * 50,
-    extendExpressApp: (app: e.Express, createContext) => {
+    extendExpressApp: (app: e.Express, createContext: any) => {
       app.all('/*', (req, res, next) => {
         res.header('Access-Control-Allow-Origin', `*`);
         res.header(

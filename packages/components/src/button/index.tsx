@@ -8,7 +8,7 @@ type ButtonProps = {
   label: string,
   margin?: string,
 };
-const Button = ({
+export const Button = ({
     className,
     hoverColor,
     link,
@@ -20,11 +20,9 @@ const Button = ({
         <button 
         className={`${
             margin !== undefined ? margin : `my-10`
-        } inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-colors duration-700 hover:bg-[#ab45f8] ${className} `}
+        } inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 hover:bg-[#ab45f8] hover:scale-105 ${className} `}
       >
         {label}</button>
         </Link>
     );
   }
-
-export default Button;

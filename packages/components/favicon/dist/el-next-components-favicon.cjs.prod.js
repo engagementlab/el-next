@@ -32,9 +32,6 @@ var Favicon = function Favicon() {
       name: "apple-mobile-web-app-title",
       content: "Snippit"
     }), /*#__PURE__*/jsxRuntime.jsx("meta", {
-      name: "application-name",
-      content: "<APP NAME>"
-    }), /*#__PURE__*/jsxRuntime.jsx("meta", {
       name: "msapplication-TileColor",
       content: "#ffc40d"
     }), /*#__PURE__*/jsxRuntime.jsx("meta", {

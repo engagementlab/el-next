@@ -22,7 +22,7 @@ export const BlockRenderers = (imageOveride?: { (props: any): JSX.Element; (arg0
     return ( 
       <Link href={props.link.props.node.children[0].text} passHref>
           <button
-          className='block lg:inline-block rounded-full px-9 py-7 mt-4 uppercase whitespace-nowrap bg-lynx text-bluegreen border-2 border-bluegreen transition-all hover:bg-green-blue hover:text-lynx hover:border-green-blue'>
+          className='block lg:inline-block rounded-full px-9 py-7 mt-4 uppercase whitespace-nowrap bg-lynx text-bluegreen border-2 border-bluegreen transition-all duration-700 hover:bg-green-blue hover:text-lynx hover:border-green-blue hover:scale-105'>
           {props.label}
           </button>
       </Link>

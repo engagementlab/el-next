@@ -9,6 +9,7 @@ var video_dist_elNextComponentsVideo = require('../../video/dist/el-next-compone
 var jsxRuntime = require('react/jsx-runtime');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
+require('../../dist/unsupportedIterableToArray-7cc9ff15.cjs.dev.js');
 require('next/image');
 require('zustand');
 
@@ -44,7 +45,7 @@ var BlockRenderers = function BlockRenderers(imageOveride) {
         href: props.link.props.node.children[0].text,
         passHref: true,
         children: /*#__PURE__*/jsxRuntime.jsx("button", {
-          className: "block lg:inline-block rounded-full px-9 py-7 mt-4 uppercase whitespace-nowrap bg-lynx text-bluegreen border-2 border-bluegreen transition-all hover:bg-green-blue hover:text-lynx hover:border-green-blue",
+          className: "block lg:inline-block rounded-full px-9 py-7 mt-4 uppercase whitespace-nowrap bg-lynx text-bluegreen border-2 border-bluegreen transition-all duration-700 hover:bg-green-blue hover:text-lynx hover:border-green-blue hover:scale-105",
           children: props.label
         })
       });

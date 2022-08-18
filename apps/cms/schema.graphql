@@ -708,6 +708,7 @@ type NewsItem {
   publishDate: DateTime
   externalLink: String
   blurb: String
+  bodyHTML: String
   body: NewsItem_body_Document
 }
 

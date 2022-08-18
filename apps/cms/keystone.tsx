@@ -11,6 +11,9 @@ import { v2 as cloudinary } from 'cloudinary';
 
 import {elab, tngvi} from './admin/schema';
 
+import type { Context } from '.keystone/types';
+import { getNews } from './routes/news';
+
 type schemaIndexType = { 
   [key: string]: object,
 }
@@ -24,7 +27,11 @@ const schemaMap: schemaIndexType = {
 }
 
 const multer = require('multer');
-const upload = multer();
+const upload = multer({
+  limits:{
+    fieldSize: 1024 * 1024 * 50,
+  }
+});
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -39,7 +46,7 @@ const AuthStrategy = require('passport-google-oauth20').Strategy;
 const MongoStore = require('connect-mongo')(session);
 const DB = require('./db');
 
-const appName: string = argv.app || 'elab';
+const appName: string = argv.app || 'tngvi';
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -154,7 +161,28 @@ let ksConfig = (lists: any) => {
   server: {
     port: argv.port || 3000,
     maxFileSize: 1024 * 1024 * 50,
-    extendExpressApp: (app: e.Express) => {
+    extendExpressApp: (app: e.Express, createContext) => {
+      // app.use(e.json({
+      //   limit: '50mb'
+      // }));
+      
+    app.all('/*', (req, res, next) => {
+      res.header('Access-Control-Allow-Origin', `*`);
+      res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, HEAD, PUT');
+      res.header('Access-Control-Expose-Headers', 'Content-Length');
+      res.header('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method');
+
+      if (req.method === 'OPTIONS') res.send(200);
+      else next();
+  });
+
+      app.use('/rest', async (req, res, next) => {
+        (req as any).context = await createContext(req, res);
+        next();
+      });
+
+      app.get('/rest/news/:key?', getNews);
+      
       app.get('/prod-deploy', async (req, res, next) => {
         try {
           const response = await axios.get(

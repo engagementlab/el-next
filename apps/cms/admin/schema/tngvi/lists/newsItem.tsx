@@ -1,4 +1,8 @@
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import ReactDOMServer from 'react-dom/server';
+import React from 'react';
 import {
+  graphql,
     list
   } from '@keystone-6/core';
 import {
@@ -6,7 +10,8 @@ import {
     json,
     relationship,
     text,
-    timestamp
+    timestamp,
+    virtual
 } from '@keystone-6/core/fields';
 import {
     document
@@ -19,6 +24,10 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 
+
+export function renderContent(content: any) {
+  return ReactDOMServer.renderToString(<DocumentRenderer document={content} />);
+}
 const NewsItem: Lists.NewsItem = list({
     fields: {
       title: text({
@@ -79,6 +88,19 @@ const NewsItem: Lists.NewsItem = list({
         ui: {
           displayMode: 'textarea'
         }
+      }),
+      bodyHTML: virtual({
+        field: graphql.field({
+          type: graphql.String,
+          resolve(item, args, context) {
+            //@ts-ignore
+            return renderContent(item.body);
+          },
+        }),
+        // ui: {
+        //   createView: { fieldMode: 'hidden' },
+        //   itemView: { fieldMode: 'hidden' }
+        // }
       }),
       body: document({
           formatting: {

@@ -410,4 +410,4 @@ var Filtering = /*#__PURE__*/function () {
   return Filtering;
 }();
 
-exports.Filtering = Filtering;
+exports["default"] = Filtering;

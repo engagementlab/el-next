@@ -13,7 +13,7 @@ import {
 import _ from 'lodash';
 import {
     AnimatePresence
-} from 'framer-motion'
+} from "framer-motion"
 
 interface ItemRendererProps<T> {
     item: T;
@@ -44,7 +44,7 @@ interface StoreSubscribeWithSelector < T extends State > {
     }
 }
 
-export class Filtering<T> {
+export default class Filtering<T> {
 
     useStore: UseBoundStore < FilterState, Omit < StoreApi < FilterState > , "subscribe" > & StoreSubscribeWithSelector < FilterState >> ;
     filtersGrouped: {

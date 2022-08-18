@@ -4,6 +4,7 @@ module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
+    '../../packages/components/src/**/*.tsx',
   ],
   theme: {
     border: {
@@ -30,7 +31,7 @@ module.exports = {
       oasis: '#9FEDD7',
       purple: '#8D33D2',
       white: '#FFF',
-      sorbet: '#F4B477'
+      sorbet: '#F4B477',
     },
   },
   plugins: [],

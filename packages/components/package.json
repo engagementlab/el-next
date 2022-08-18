@@ -1,0 +1,42 @@
+{
+  "name": "@el-next/components",
+  "version": "1.0.0",
+  "main": "dist/el-next-components.cjs.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@cloudinary/react": "^1.1.0",
+    "@cloudinary/url-gen": "^1.6.0",
+    "@keystone-6/fields-document": "^3.0.0",
+    "framer-motion": "^7.2.0",
+    "next": "^12.1.6",
+    "zustand": "^3.7.1"
+  },
+  "peerDependencies": {
+    "@el-next/components": "^1",
+    "@types/react": "^18.0.15",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react/jsx-runtime": "^18.2.0"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.tsx",
+      "blockRenderers/index.tsx",
+      "button/index.tsx",
+      "dateFormat/index.tsx",
+      "docRenderers/index.tsx",
+      "externalLink/index.tsx",
+      "favicon/index.tsx",
+      "filtering/index.tsx",
+      "flexLayout/index.tsx",
+      "headingStyle/index.tsx",
+      "image/index.tsx",
+      "layout/index.tsx",
+      "video/index.tsx"
+    ]
+  }
+}

@@ -24,7 +24,6 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 
-
 export function renderContent(content: any) {
   return ReactDOMServer.renderToString(<DocumentRenderer document={content} />);
 }
@@ -72,6 +71,12 @@ const NewsItem: Lists.NewsItem = list({
           }
       }),
       externalLink: text({
+        validation: {
+          match: { 
+            regex: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
+            explanation: 'Not a valid URL'
+          }
+        },
         label: 'External link'
       }),
       blurb: text({
@@ -91,10 +96,10 @@ const NewsItem: Lists.NewsItem = list({
             return renderContent(item.body);
           },
         }),
-        // ui: {
-        //   createView: { fieldMode: 'hidden' },
-        //   itemView: { fieldMode: 'hidden' }
-        // }
+        ui: {
+          createView: { fieldMode: 'hidden' },
+          itemView: { fieldMode: 'hidden' }
+        }
       }),
       body: document({
           formatting: {

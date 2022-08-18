@@ -8,8 +8,9 @@ import { motion } from "framer-motion";
 
 import query from "../../apollo-client";
 
-import Filtering from "../../components/Filtering";
+import { Filtering } from '@el-next/components/filtering';
 import { Image } from '@el-next/components/image';
+
 import Layout from "../../components/Layout";
 import ImagePlaceholder from "../../components/ImagePlaceholder";
 

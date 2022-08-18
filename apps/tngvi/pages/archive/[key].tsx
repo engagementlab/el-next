@@ -19,7 +19,7 @@ import {
 import query from '../../apollo-client';
 
 import { BlockRenderers, Video } from '@el-next/components';
-import DocRenderers from '../../components/DocRenderers';
+import { DocRenderers } from '@el-next/components/docRenderers';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal } from 'react';

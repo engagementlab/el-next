@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import create from 'zustand';
-import ExternalLink from '../components/ExternalLink';
-import Image from '../components/Image';
+import { Image } from '@el-next/components/image';
+import { ExternalLink } from '@el-next/components/externalLink';
 import Layout from '../components/Layout';
 
 type FormState = {
@@ -47,7 +47,7 @@ export default function GetInvolved() {
       await fetch(`https://elab-initiatives-api.azurewebsites.net/api/newsletter?email=${email}`).then((response) => {
           return response;
         }).then((res) => {
-          if (res.status === 400) {
+          if (res.status === 409) {
             setStatus('already_subscribed');
             return;
           }

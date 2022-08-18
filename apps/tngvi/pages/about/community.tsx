@@ -5,8 +5,8 @@ import { DocumentRenderer, DocumentRendererProps } from '@keystone-6/document-re
 
 import { Image } from '@el-next/components/image';
 import Layout from '../../components/Layout';
-import HeadingStyle from '../../components/HeadingStyle';
-import DocRenderers from '../../components/DocRenderers';
+import { HeadingStyle } from '@el-next/components/headingStyle';
+import { DocRenderers } from '@el-next/components/docRenderers';
 import query from "../../apollo-client";
 
 type CommunityPage = {

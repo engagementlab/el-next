@@ -10,7 +10,7 @@ import { Image } from '@el-next/components/image';
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import DocRenderers from '../../components/DocRenderers';
+import { DocRenderers } from '@el-next/components/docRenderers';
 
 type NewsItem = {
   title: string;

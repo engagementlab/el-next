@@ -4,7 +4,7 @@ import { DocumentRenderer, DocumentRendererProps } from '@keystone-6/document-re
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import Layout from '../../components/Layout';
 import { Image } from '@el-next/components/image';
-import DocRenderers from '../../components/DocRenderers';
+import { DocRenderers } from '@el-next/components/docRenderers';
 import { ReactNode } from 'react';
 
 type AboutPage = {

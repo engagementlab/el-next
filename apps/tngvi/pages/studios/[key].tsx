@@ -6,7 +6,7 @@ import query from "../../apollo-client";
 
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import Layout from '../../components/Layout';
-import DocRenderers from '../../components/DocRenderers';
+import { DocRenderers } from '@el-next/components/docRenderers';
 
 type Studio = {
   id: string;

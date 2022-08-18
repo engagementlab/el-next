@@ -5,10 +5,10 @@ import { DocumentRenderer, } from '@keystone-6/document-renderer';
 import query from "../../apollo-client";
 
 import { BlockRenderers } from '@el-next/components/blockRenderers';
-import Layout from '../../components/Layout';
-import HeadingStyle from '../../components/HeadingStyle';
+import { DocRenderers } from '@el-next/components/docRenderers';
+import { HeadingStyle } from '@el-next/components/headingStyle';
 import { Image } from '@el-next/components/image';
-import DocRenderers from '../../components/DocRenderers';
+import Layout from '../../components/Layout';
 
 type BigPicturePage = {
   content: any;

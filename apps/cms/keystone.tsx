@@ -49,7 +49,7 @@ const upload = multer({
   }
 });
 const port = argv.port || 3000;
-const allowedHosts = ['localhost:8080', 'localhost:8081', `localhost:${port}`, 'qa.transformnarratives.org', 'cms.qa.transformnarratives.org'];
+const allowedHosts = ['localhost:8080', 'localhost:8081', `localhost:${port}`, 'qa.transformnarratives.org', 'cms.qa.transformnarratives.org', 'https://qa.transformnarratives.org', 'https://cms.qa.transformnarratives.org'];
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -171,9 +171,7 @@ let ksConfig = (lists: any) => {
       extendExpressApp: (app: e.Express, createContext: any) => {
         app.all('/*', (req, res, next) => {
 
-          const host = req.headers.host || '';
-
-          // console.log(host)
+          const host = req.headers.origin || req.headers.host || '';
           if (allowedHosts.includes(host)) {
 
             res.header('Access-Control-Allow-Origin', host);

@@ -1,4 +1,7 @@
-import { BaseKeystoneTypeInfo, DatabaseConfig, } from '@keystone-6/core/types';
+import {
+  BaseKeystoneTypeInfo,
+  DatabaseConfig,
+} from '@keystone-6/core/types';
 import axios from 'axios';
 
 import yargs from 'yargs/yargs';
@@ -7,19 +10,32 @@ import 'dotenv/config';
 import e from 'express';
 import session from 'express-session';
 
-import { v2 as cloudinary } from 'cloudinary';
+import {
+  v2 as cloudinary
+} from 'cloudinary';
 
-import {elab, tngvi} from './admin/schema';
+import {
+  elab,
+  tngvi
+} from './admin/schema';
 
-import type { Context } from '.keystone/types';
-import { getNews } from './routes/news';
+import type {
+  Context
+} from '.keystone/types';
+import {
+  getNews
+} from './routes/news';
 
-type schemaIndexType = { 
+type schemaIndexType = {
   [key: string]: object,
 }
 const argv: any = yargs(process.argv.slice(2)).options({
-  app: { type: 'string' },
-  port: { type: 'number', },
+  app: {
+    type: 'string'
+  },
+  port: {
+    type: 'number',
+  },
 }).argv;
 const schemaMap: schemaIndexType = {
   'elab': elab,
@@ -28,10 +44,12 @@ const schemaMap: schemaIndexType = {
 
 const multer = require('multer');
 const upload = multer({
-  limits:{
+  limits: {
     fieldSize: 1024 * 1024 * 50,
   }
 });
+const port = argv.port || 3000;
+const allowedHosts = ['localhost:8080', `localhost:${port}`, 'qa.transformnarratives.org', 'cms.qa.transformnarratives.org'];
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -60,14 +78,16 @@ declare module 'express-session' {
     save: any;
     passport: {
       redirectTo: string;
-      user: { [key: string]: any };
+      user: {
+        [key: string]: any
+      };
     };
   }
 }
 // const ciMode = process.env.NODE_ENV === 'ci';
 
 // Fallback
-let dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = {
+let dbConfig: DatabaseConfig < BaseKeystoneTypeInfo > = {
   provider: 'sqlite',
   url: 'file:./app.db',
 };
@@ -79,8 +99,7 @@ if (process.env.DB_URI) {
 }
 
 const Passport = () => {
-  const strategy = new AuthStrategy(
-    {
+  const strategy = new AuthStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.AUTH_CALLBACK_URL,
@@ -96,8 +115,7 @@ const Passport = () => {
       const email = profile.emails[0].value;
 
       try {
-        DB().userModel.findOne(
-          {
+        DB().userModel.findOne({
             email,
           },
           (err: any, user: any) => {
@@ -141,194 +159,196 @@ const Passport = () => {
 
 let ksConfig = (lists: any) => {
   return {
-  db: dbConfig,
-  experimental: {
-    generateNextGraphqlAPI: true,
-    generateNodeAPI: true,
-  },
-  lists,
-  // ui: {
-  //   getAdditionalFiles: [
-  //     async (config: KeystoneConfig) => [
-  //       {
-  //         mode: 'write',
-  //         src: `export default '${argv.app}'`,
-  //         outputPath: 'pages/appName.js',
-  //       }
-  //     ],
-  //   ],
-  // },
-  server: {
-    port: argv.port || 3000,
-    maxFileSize: 1024 * 1024 * 50,
-    extendExpressApp: (app: e.Express, createContext: any) => {
-      app.all('/*', (req, res, next) => {
-        res.header('Access-Control-Allow-Origin', `*`);
-        res.header(
-          'Access-Control-Allow-Methods',
-          'GET, POST, OPTIONS, HEAD, PUT'
-        );
-        res.header('Access-Control-Expose-Headers', 'Content-Length');
-        res.header(
-          'Access-Control-Allow-Headers',
-          'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
-        );
-
-        if (req.method === 'OPTIONS') res.send(200);
-        else next();
-      });
-
-      app.use('/rest', async (req, res, next) => {
-        (req as any).context = await createContext(req, res);
-        next();
-      });
-
-      app.get('/rest/news/:key?', getNews);
-      
-
-      app.get('/prod-deploy', async (req, res, next) => {
-        try {
-          const response = await axios.get(
-            `${process.env.DEPLOY_API_PATH}&name=transform-narratives`
-          );
-          res.status(200).send(response.data);
-        } catch (err: any) {
-          res.status(500).send(err.message);
-        }
-      });
-
-      app.get('/media/get/:type', async (req, res) => {
-        try {
-          cloudinary.api.resources(
-            {
-              prefix: 'tngvi',
-              resource_type: 'image',
-              type: req.params.type,
-              max_results: 500,
-            },
-            (e, response) => {
-              const sorted = response.resources.sort(
-                (a: { created_at: number }, b: { created_at: number }) => {
-                  return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-                  );
-                }
-              );
-
-              res.status(200).send(sorted);
-            }
-          );
-        } catch (err: any) {
-          res.status(500).send(err);
-        }
-      });
-
-      app.get('/media/delete', async (req, res) => {
-        try {
-          cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
-            res.status(200).send(response)
-          );
-        } catch (err: any) {
-          res.status(500).send(err);
-        }
-      });
-
-      app.post('/media/upload', upload.none(), async (req, res) => {
-        try {
-          const response = await cloudinary.uploader.upload(req.body.img, {
-            folder: 'tngvi',
-          });
-          res.status(200).send(response);
-        } catch (err: any) {
-          console.error(err);
-          res.status(500).send(err);
-        }
-      });
-
-      if (process.env.ENABLE_AUTH === 'true') {
-        let p = Passport();
-        // Session store (mongostore for prod)
-        if (process.env.NODE_ENV === 'development') {
-          app.use(
-            session({
-              secret: process.env.SESSION_COOKIE || 'just-dev',
-              resave: true,
-              saveUninitialized: true,
-            })
-          );
-        } else {
-          const mongooseConnection = DB().connection;
-          if (!process.env.SESSION_COOKIE) {
-            throw new Error('Need SESSION_COOKIE in .env!');
-          }
-          app.use(
-            session({
-              saveUninitialized: false,
-              resave: false,
-              secret: process.env.SESSION_COOKIE,
-              store: new MongoStore({
-                mongooseConnection,
-              }),
-            })
-          );
-        }
-        app.get(
-          '/cms/login',
-          p.authenticate('google', {
-            scope: ['openid', 'email'],
-          })
-        );
-
-        app.get('/cms/callback', (req, res, next) => {
-          try {
-            p.authenticate(
-              'google',
-              (error: any, user: { permissions: any }, info: any) => {
-                if (!user) return;
-
-                // Log user in
-                req.logIn(user, (logInErr: any) => {
-                  if (logInErr) {
-                    res.status(500).send(logInErr);
-                    return logInErr;
-                  }
-
-                  // Explicitly save the session before redirecting!
-                  req.session.save(() => {
-                    res.redirect(req.session.redirectTo || '/');
-                  });
-                  return null;
-                });
-              }
-            )(req, res);
-          } catch (e: any) {
-            if (e) throw new Error(e);
-          }
-        });
-
-        app.use(p.initialize());
-        app.use(p.session());
-        app.use((req, res, next) => {
-          // Ignore API path
-          if (
-            req.path !== '/api/__keystone_api_build' &&
-            (!req.session.passport || !req.session.passport.user)
-          ) {
-            // console.log(req.session.redirectTo);
-            // Cache URL to bring user to after auth
-            req.session.redirectTo = req.originalUrl;
-            // if (req.session.redirectTo) res.redirect(req.session.redirectTo);
-            // else {
-            res.redirect('/cms/login');
-            // }
-          } else if (req.session.passport && req.session.passport.user.isAdmin)
-            next();
-        });
-      }
+    db: dbConfig,
+    experimental: {
+      generateNextGraphqlAPI: true,
+      generateNodeAPI: true,
     },
-  },
-};}
+    lists,
+    server: {
+      port,
+      maxFileSize: 1024 * 1024 * 50,
+      extendExpressApp: (app: e.Express, createContext: any) => {
+        app.all('/*', (req, res, next) => {
+
+          const host = req.headers.host || '';
+
+          // console.log(host)
+          if (allowedHosts.includes(host)) {
+
+            res.header('Access-Control-Allow-Origin', host);
+            res.header(
+              'Access-Control-Allow-Methods',
+              'GET, POST, OPTIONS, HEAD, PUT'
+            );
+            res.header('Access-Control-Expose-Headers', 'Content-Length');
+            res.header(
+              'Access-Control-Allow-Headers',
+              'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
+            );
+
+          }
+          if (req.method === 'OPTIONS') res.send(200);
+          else next();
+        });
+
+        app.use('/rest', async (req, res, next) => {
+          (req as any).context = await createContext(req, res);
+          next();
+        });
+
+        app.get('/rest/news/:key?', getNews);
+
+
+        app.get('/prod-deploy', async (req, res, next) => {
+          try {
+            const response = await axios.get(
+              `${process.env.DEPLOY_API_PATH}&name=transform-narratives`
+            );
+            res.status(200).send(response.data);
+          } catch (err: any) {
+            res.status(500).send(err.message);
+          }
+        });
+
+        app.get('/media/get/:type', async (req, res) => {
+          try {
+            cloudinary.api.resources({
+                prefix: 'tngvi',
+                resource_type: 'image',
+                type: req.params.type,
+                max_results: 500,
+              },
+              (e, response) => {
+                const sorted = response.resources.sort(
+                  (a: {
+                    created_at: number
+                  }, b: {
+                    created_at: number
+                  }) => {
+                    return (
+                      new Date(b.created_at).getTime() -
+                      new Date(a.created_at).getTime()
+                    );
+                  }
+                );
+
+                res.status(200).send(sorted);
+              }
+            );
+          } catch (err: any) {
+            res.status(500).send(err);
+          }
+        });
+
+        app.get('/media/delete', async (req, res) => {
+          try {
+            cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
+              res.status(200).send(response)
+            );
+          } catch (err: any) {
+            res.status(500).send(err);
+          }
+        });
+
+        app.post('/media/upload', upload.none(), async (req, res) => {
+          try {
+            const response = await cloudinary.uploader.upload(req.body.img, {
+              folder: 'tngvi',
+            });
+            res.status(200).send(response);
+          } catch (err: any) {
+            console.error(err);
+            res.status(500).send(err);
+          }
+        });
+
+        if (process.env.ENABLE_AUTH === 'true') {
+          let p = Passport();
+          // Session store (mongostore for prod)
+          if (process.env.NODE_ENV === 'development') {
+            app.use(
+              session({
+                secret: process.env.SESSION_COOKIE || 'just-dev',
+                resave: true,
+                saveUninitialized: true,
+              })
+            );
+          } else {
+            const mongooseConnection = DB().connection;
+            if (!process.env.SESSION_COOKIE) {
+              throw new Error('Need SESSION_COOKIE in .env!');
+            }
+            app.use(
+              session({
+                saveUninitialized: false,
+                resave: false,
+                secret: process.env.SESSION_COOKIE,
+                store: new MongoStore({
+                  mongooseConnection,
+                }),
+              })
+            );
+          }
+          app.get(
+            '/cms/login',
+            p.authenticate('google', {
+              scope: ['openid', 'email'],
+            })
+          );
+
+          app.get('/cms/callback', (req, res, next) => {
+            try {
+              p.authenticate(
+                'google',
+                (error: any, user: {
+                  permissions: any
+                }, info: any) => {
+                  if (!user) return;
+
+                  // Log user in
+                  req.logIn(user, (logInErr: any) => {
+                    if (logInErr) {
+                      res.status(500).send(logInErr);
+                      return logInErr;
+                    }
+
+                    // Explicitly save the session before redirecting!
+                    req.session.save(() => {
+                      res.redirect(req.session.redirectTo || '/');
+                    });
+                    return null;
+                  });
+                }
+              )(req, res);
+            } catch (e: any) {
+              if (e) throw new Error(e);
+            }
+          });
+
+          app.use(p.initialize());
+          app.use(p.session());
+          app.use((req, res, next) => {
+            // Ignore API path
+            if (
+              req.path !== '/api/__keystone_api_build' &&
+              (!req.session.passport || !req.session.passport.user)
+            ) {
+              // console.log(req.session.redirectTo);
+              // Cache URL to bring user to after auth
+              req.session.redirectTo = req.originalUrl;
+              // if (req.session.redirectTo) res.redirect(req.session.redirectTo);
+              // else {
+              res.redirect('/cms/login');
+              // }
+            } else if (req.session.passport && req.session.passport.user.isAdmin)
+              next();
+          });
+        }
+      },
+    },
+  };
+}
 
 export default (() => {
   return ksConfig(schemaMap[appName]);

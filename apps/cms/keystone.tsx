@@ -1,4 +1,4 @@
-import { BaseKeystoneTypeInfo, DatabaseConfig, KeystoneConfig } from '@keystone-6/core/types';
+import { BaseKeystoneTypeInfo, DatabaseConfig, } from '@keystone-6/core/types';
 import axios from 'axios';
 
 import yargs from 'yargs/yargs';

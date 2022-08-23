@@ -49,7 +49,7 @@ const upload = multer({
   }
 });
 const port = argv.port || 3000;
-const allowedHosts = ['localhost:8080', `localhost:${port}`, 'qa.transformnarratives.org', 'cms.qa.transformnarratives.org'];
+const allowedHosts = ['localhost:8080', 'localhost:8081', `localhost:${port}`, 'qa.transformnarratives.org', 'cms.qa.transformnarratives.org'];
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,

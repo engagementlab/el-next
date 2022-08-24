@@ -175,6 +175,7 @@ let ksConfig = (lists: any) => {
           if (allowedHosts.includes(host)) {
 
             res.header('Access-Control-Allow-Origin', host);
+            // res.header('Access-Control-Allow-Credentials', true)
             res.header(
               'Access-Control-Allow-Methods',
               'GET, POST, OPTIONS, HEAD, PUT'
@@ -328,9 +329,10 @@ let ksConfig = (lists: any) => {
           app.use(p.session());
           app.use((req, res, next) => {
             // Ignore API path
-            if (
-              req.path !== '/api/__keystone_api_build' &&
-              (!req.session.passport || !req.session.passport.user)
+            if(req.path.indexOf('/api') === 0) 
+              next();
+            else if (
+              !req.session.passport || !req.session.passport.user
             ) {
               // console.log(req.session.redirectTo);
               // Cache URL to bring user to after auth

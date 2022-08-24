@@ -124,6 +124,13 @@ model Studio {
   content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model User {
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  accessToken String    @default("")
+  createdDate DateTime?
+}
+
 enum FilterTypeType {
   Voices
   Media

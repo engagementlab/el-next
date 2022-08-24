@@ -328,7 +328,7 @@ let ksConfig = (lists: any) => {
           app.use(p.initialize());
           app.use(p.session());
           app.use((req, res, next) => {
-            // Ignore API path
+            // Ignore API paths
             if(req.path.indexOf('/api') === 0) 
               next();
             else if (

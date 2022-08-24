@@ -9,3 +9,4 @@ export { default as MediaItem } from './lists/media';
 export { default as NewsItem } from './lists/newsItem';
 export { default as Person } from './lists/person';
 export { default as Studio } from './lists/studio';
+export { default as User } from './lists/user';

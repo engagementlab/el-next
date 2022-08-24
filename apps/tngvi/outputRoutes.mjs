@@ -3,7 +3,7 @@ import _ from 'lodash';
 import recursiveReaddirFiles from 'recursive-readdir-files';
 export default (async () => {
   const files = await recursiveReaddirFiles(`${process.cwd()}/out`, {
-    ignored: /(\.js|.css|.json|.ico|.DS_Store|favicon)$/,
+    ignored: /(\.js|.css|.json|.ico|.png|.DS_Store|favicon)$/,
     filter: (item) => {
       return item.path;
     },

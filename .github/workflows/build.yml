@@ -46,6 +46,11 @@ jobs:
       - name: Install global packages
         run : npm install -g pa11y-ci http-server @lhci/cli@0.6.x yarn pm2
 
+      - name: Install local packages and run preconstruct
+        run : |
+          yarn 
+          yarn build
+
       - name: Run CMS
         working-directory: ./apps/cms  
         env:

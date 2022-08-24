@@ -22,12 +22,16 @@
             "path": "./"
         },
         {
-            "name": "API",
-            "path": "./api"
+            "name": "Apps",
+            "path": "./apps"
         },
         {
-            "name": "Client",
-            "path": "./client"
+            "name": "Functions",
+            "path": "./packages/functions"
+        },
+        {
+            "name": "Packages",
+            "path": "./packages"
         },
         {
             "name": "Scripts",

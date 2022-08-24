@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.74",
-    "@octokit/request": "^5.6.3"
+    "@octokit/request": "^5.6.3",
+    "cuid": "^2.1.8",
+    "pg": "^8.8.0"
   }
 }

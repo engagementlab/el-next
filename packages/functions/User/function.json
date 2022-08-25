@@ -13,6 +13,13 @@
       "type": "http",
       "direction": "out",
       "name": "res"
+    },
+    {
+      "name": "createUser",
+      "type": "sql",
+      "direction": "out",
+      "commandText": "dbo.User",
+      "connectionStringSetting": "SQL_URI"
     }
   ],
   "scriptFile": "../dist/User/index.js"

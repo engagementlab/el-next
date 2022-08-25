@@ -170,11 +170,7 @@ let ksConfig = (lists: any) => {
       maxFileSize: 1024 * 1024 * 50,
       extendExpressApp: (app: e.Express, createContext: any) => {
         app.all('/*', (req, res, next) => {
-
-          const host = req.headers.origin || req.headers.host || '';
-          if (allowedHosts.includes(host)) {
-
-            res.header('Access-Control-Allow-Origin', host);
+            res.header('Access-Control-Allow-Origin', '*');
             // res.header('Access-Control-Allow-Credentials', true)
             res.header(
               'Access-Control-Allow-Methods',
@@ -186,7 +182,7 @@ let ksConfig = (lists: any) => {
               'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
             );
 
-          }
+
           if (req.method === 'OPTIONS') res.send(200);
           else next();
         });

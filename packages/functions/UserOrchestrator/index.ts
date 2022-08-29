@@ -17,10 +17,7 @@ const orchestrator = df.orchestrator(function* (context) {
   outputs.push(
     yield context.df.callActivity('UserCreate', context.df.getInput())
   );
-  // outputs.push(yield context.df.callActivity("Hello", "Seattle"));
-  // outputs.push(yield context.df.callActivity("Hello", "London"));
-
-  // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
+  context.log(outputs);
   return outputs;
 });
 

@@ -35,13 +35,13 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const text =
       'INSERT INTO "User"(id, "name", "accessToken") VALUES($1, $2, $3)';
     const values = [cuid(), context.bindings.body.name, token];
-    const res = await client.query(text, values);
+    await client.query(text, values);
     await client.end();
 
-    context.done(null, res);
+    // context.done(null, res);
   } catch (e) {
-    context.log(e);
-    context.done(`Query error: ${e.message}`);
+    context.log.error(`Query error: ${e.message}`);
+    throw e;
   }
 };
 

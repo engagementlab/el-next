@@ -21,9 +21,9 @@ const User: Lists.Person = list({
         isRequired: true
       }
     }),
-    accessToken: text({
-    }),
+    accessToken: text(),
     createdDate: CreatedTimestamp,
+    bioId: text(),
   },
   ui: {
     listView: { 

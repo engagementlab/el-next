@@ -946,6 +946,7 @@ type User {
   name: String
   accessToken: String
   createdDate: DateTime
+  bioId: String
 }
 
 input UserWhereUniqueInput {
@@ -960,6 +961,7 @@ input UserWhereInput {
   name: StringFilter
   accessToken: StringFilter
   createdDate: DateTimeNullableFilter
+  bioId: StringFilter
 }
 
 input UserOrderByInput {
@@ -967,12 +969,14 @@ input UserOrderByInput {
   name: OrderDirection
   accessToken: OrderDirection
   createdDate: OrderDirection
+  bioId: OrderDirection
 }
 
 input UserUpdateInput {
   name: String
   accessToken: String
   createdDate: DateTime
+  bioId: String
 }
 
 input UserUpdateArgs {
@@ -984,6 +988,7 @@ input UserCreateInput {
   name: String
   accessToken: String
   createdDate: DateTime
+  bioId: String
 }
 
 """

@@ -129,6 +129,7 @@ model User {
   name        String    @default("")
   accessToken String    @default("")
   createdDate DateTime?
+  bioId       String    @default("")
 }
 
 enum FilterTypeType {

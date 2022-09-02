@@ -1,0 +1,10 @@
+{
+  "bindings": [
+    {
+      "name": "body",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ],
+  "scriptFile": "../dist/PersonProfileEdit/index.js"
+}

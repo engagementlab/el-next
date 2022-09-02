@@ -44,10 +44,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install global packages
-        run : npm install -g pa11y-ci http-server @lhci/cli@0.6.x yarn
+        run : npm install -g pa11y-ci http-server @lhci/cli@0.6.x yarn pm2 @preconstruct/cli
 
-      - name: Make production build
-        working-directory: ./client  
+      - name: Install local monorepo packages and run preconstruct
+        run : yarn 
+
+      - name: Run CMS
+        working-directory: ./apps/cms  
         env:
           AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
           AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
@@ -55,15 +58,24 @@ jobs:
         run: |
           yarn add typescript @types/node
           yarn
-          yarn build-ks
+          yarn build
+          pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app tngvi
+
+      - name: Make production build
+        working-directory: ./apps/tngvi  
+        env:
+          APOLLO_CLIENT_GRAPHQL_URI: ${{ secrets.APOLLO_CLIENT_GRAPHQL_URI}}
+        run: |
+          yarn add typescript @types/node
+          yarn
           yarn build
 
       - name: Serve build 
-        working-directory: ./client  
+        working-directory: ./apps/tngvi  
         run: http-server out/ > http.log 2>&1 &
 
       - name: Output all build paths to .pa11yci config and run pa11y
-        working-directory: ./client  
+        working-directory: ./apps/tngvi  
         run: |
           node outputRoutes.mjs
           pa11y-ci

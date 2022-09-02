@@ -11,13 +11,11 @@
 
 import { AzureFunction, Context } from '@azure/functions';
 
-var cuid = require('cuid');
-
+const cuid = require('cuid');
 const { Client } = require('pg');
 
 const activityFunction: AzureFunction = async function (context: Context) {
   if (!context.bindings.body.name) {
-    context.log(context.bindings.body);
     context.done(`Missing "name"`);
   }
 
@@ -31,14 +29,16 @@ const activityFunction: AzureFunction = async function (context: Context) {
     context.done(`Connect error: ${e.message}`);
   }
   try {
+    const userId = cuid();
     const token = Math.floor(1000000 + Math.random() * 900000);
     const text =
       'INSERT INTO "User"(id, "name", "accessToken") VALUES($1, $2, $3)';
-    const values = [cuid(), context.bindings.body.name, token];
+    const values = [userId, context.bindings.body.name, token];
     await client.query(text, values);
     await client.end();
+    // context.done(null, { token });
 
-    // context.done(null, res);
+    return { userId, token };
   } catch (e) {
     context.log.error(`Query error: ${e.message}`);
     throw e;

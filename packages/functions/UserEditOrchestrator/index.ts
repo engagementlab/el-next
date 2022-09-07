@@ -5,8 +5,8 @@ const orchestrator = df.orchestrator(function* (context) {
     'PersonProfileEdit',
     context.df.getInput()
   );
-  context.log(result);
-  //   context.df.setCustomStatus(response.token);
+
+  context.df.setCustomStatus(result);
 });
 
 export default orchestrator;

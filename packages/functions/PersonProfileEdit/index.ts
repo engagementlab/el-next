@@ -25,11 +25,11 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const bioIdResult = await client.query(getBioIdText, [body.token]);
     if (bioIdResult.rowCount === 0) {
       context.done('User not found');
-      return;
+      return 'User not found';
     }
-    context.log(bioIdResult);
-    const updateProfileText = `UPDATE "Person" SET "name" = $1 "title" = $2 "blurb" = $3 "remembrance" = $4 WHERE "id" = ${bioIdResult}`;
-    await client.query(updateProfileText, [context.bindingData.body.userId]);
+
+    const updateProfileText = `UPDATE "Person" SET "name" = $1, "title" = $2, "blurb" = $3, "remembrance" = $4 WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
+    // await client.query(updateProfileText, [context.bindingData.body.userId]);
     const values = [
       body.name,
       body.title,
@@ -38,8 +38,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
     ];
     await client.query(updateProfileText, values);
     await client.end();
-    // const text =
-    //   'INSERT INTO "Person"(id, "name", "title", ) VALUES($1, $2, $3, $4, $5)';
+    return 'done';
   } catch (e) {
     context.log.error(`Query error: ${e.message}`);
     throw e;

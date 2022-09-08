@@ -5,13 +5,7 @@ const { Client } = require('pg');
 
 const activityFunction: AzureFunction = async function (context: Context) {
   const body = context.bindings.body.input;
-  if (!body.name) {
-    context.done(`Missing "name"`);
-  } else if (!body.title) {
-    context.done(`Missing "title"`);
-  } else if (!body.blurb) {
-    context.done(`Missing "blurb"`);
-  }
+
   const client = new Client({
     connectionString: process.env.DB_URI,
   });
@@ -27,10 +21,10 @@ const activityFunction: AzureFunction = async function (context: Context) {
       'INSERT INTO "Person"(id, "name", "title", "blurb", "remembrance") VALUES($1, $2, $3, $4, $5)';
     const values = [
       personId,
-      body.name,
-      body.title,
-      body.blurb,
-      body.remembrance ? body.remembrance : '',
+      body[0].data.toString(),
+      body[1].data.toString(),
+      body[2].data.toString(),
+      body[3].data.toString() ? body[3].data.toString() : '',
     ];
     await client.query(text, values);
 

@@ -9,7 +9,7 @@ const httpStart: AzureFunction = async function (
   const instanceId = await client.startNew(
     req.params.functionName,
     undefined,
-    req.body
+    req
   );
 
   context.log(`Started orchestration with ID = '${instanceId}'.`);

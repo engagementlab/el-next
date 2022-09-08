@@ -11,12 +11,23 @@
 
 import { AzureFunction, Context } from '@azure/functions';
 
-const cuid = require('cuid');
-const { Client } = require('pg');
+import cuid = require('cuid');
+import { Client } from 'pg';
+import * as multipart from 'parse-multipart-data';
 
 const activityFunction: AzureFunction = async function (context: Context) {
-  if (!context.bindings.body.name) {
-    context.done(`Missing "name"`);
+  const bodyBuffer = Buffer.from(context.bindings.req.rawBody);
+  const boundary = multipart.getBoundary(
+    context.bindings.req.headers['content-type']
+  );
+  const parts = multipart.parse(bodyBuffer, boundary);
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    context.log(part);
+    // will be: { filename: 'A.txt', type: 'text/plain', data: <Buffer 41 41 41 41 42 42 42 42> }
+  }
+  if (parts.length === 0) {
+    context.done(`Missing body`);
   }
 
   const client = new Client({
@@ -30,15 +41,15 @@ const activityFunction: AzureFunction = async function (context: Context) {
   }
   try {
     const userId = cuid();
-    const token = Math.floor(1000000 + Math.random() * 900000);
+    const token = Math.floor(100000 + Math.random() * 90000);
     const text =
-      'INSERT INTO "User"(id, "name", "accessToken") VALUES($1, $2, $3)';
-    const values = [userId, context.bindings.body.name, token];
+      'INSERT INTO "User"(id, "name", "accessToken", "createdDate") VALUES($1, $2, $3, $4)';
+    const values = [userId, parts[0].data.toString(), token, new Date()];
     await client.query(text, values);
     await client.end();
     // context.done(null, { token });
 
-    return { userId, token };
+    return { body: parts, userId, token };
   } catch (e) {
     context.log.error(`Query error: ${e.message}`);
     throw e;

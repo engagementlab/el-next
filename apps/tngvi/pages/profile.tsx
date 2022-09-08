@@ -44,16 +44,14 @@ export default function GetInvolved() {
     // const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
 
     // if(emailValid) {
-        console.log(new FormData(e.target as HTMLFormElement))
-        console.log(e.currentTarget)
-         return
+        //  return
       await fetch('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+        //   'Accept': 'application/json',
+        //   'Content-Type': 'application/octet-stream'
         },
-        // body: JSON.stringify({)
+        body: new FormData(e.target as HTMLFormElement)
       }).then((response) => {
           return response;
         }).then((res) => {
@@ -96,19 +94,19 @@ export default function GetInvolved() {
                                     {/* {!submitted ? */}
                                     // Form
                                     <span className='flex flex-col'>
-                                        <input type='text' placeholder="YOUR NAME" name="NAME" id="name" width="800"
+                                        <input type='text' placeholder="YOUR NAME" name="name" id="name" width="800"
                                             aria-label="Enter your full name" minLength={5} required
                                             disabled={submitted} className={`w-full bg-lynx placeholder:text-bluegreen
                                             py-4 px-4 border-2 rounded-full transition-all ${status ? 'border-[#F4B477]'
                                             : 'border-bluegreen' }`} />
-                                        <input type='text' placeholder="YOUR TITLE" name="TITLE" id="title" width="800"
+                                        <input type='text' placeholder="YOUR TITLE" name="title" id="title" width="800"
                                             aria-label="Enter your title" minLength={5} required disabled={submitted}
                                             className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <textarea placeholder="YOUR BIO" name="blurb" id="blurb"
                                             aria-label="Enter your bio" minLength={25} maxLength={800} rows={5}
                                             required disabled={submitted}
                                             className='w-full bg-lynx placeholder:text-bluegreen' />
-                                        <input type='text' placeholder="YOUR REMEMBRANCE" name="REMEMBRANCE" id="remembrance" width="800"
+                                        <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance" id="remembrance" width="800"
                                                 aria-label="Enter your remembrance (optional)" minLength={5} disabled={submitted}
                                                 className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />

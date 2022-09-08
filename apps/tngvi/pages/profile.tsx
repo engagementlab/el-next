@@ -1,76 +1,133 @@
-import Link from 'next/link';
 import create from 'zustand';
-import { Image } from '@el-next/components/image';
-import { ExternalLink } from '@el-next/components/externalLink';
 import Layout from '../components/Layout';
 
+import {
+    useDropzone
+} from 'react-dropzone';
+
 type FormState = {
-  status: string
-  newProfile: boolean
-  submitted: boolean
-  setStatus: (status: string) => void
-  setNewProfile: (isSet: boolean) => void
-  setSubmitted: (isSet: boolean) => void
+    status: string
+    newProfile: boolean
+    submitted: boolean
+    setStatus: (status: string) => void
+    setNewProfile: (isSet: boolean) => void
+    setSubmitted: (isSet: boolean) => void
 }
 // Create store with Zustand
 const useStore = create < FormState > (set => ({
-  status: '',
-  newProfile: false,
-  submitted: false,
-  setStatus: (status: string) => set({
-      status
-  }),
-  setNewProfile:(isSet: boolean) => set({
-    newProfile: isSet
-  }),
-  setSubmitted: (isSet: boolean) => set({
-    submitted: isSet
-  })
+    status: '',
+    newProfile: false,
+    submitted: false,
+    setStatus: (status: string) => set({
+        status
+    }),
+    setNewProfile: (isSet: boolean) => set({
+        newProfile: isSet
+    }),
+    setSubmitted: (isSet: boolean) => set({
+        submitted: isSet
+    })
 }));
-
 export default function GetInvolved() {
-  const status = useStore(state => state.status);
-  const submitted = useStore(state => state.submitted);
-  const setStatus = useStore(state => state.setStatus);
-  const setNewProfile = useStore(state => state.setNewProfile);
-  const setSubmitted = useStore(state => state.setSubmitted);
+    const status = useStore(state => state.status);
+    const submitted = useStore(state => state.submitted);
+    const setStatus = useStore(state => state.setStatus);
+    const setNewProfile = useStore(state => state.setNewProfile);
+    const setSubmitted = useStore(state => state.setSubmitted);
 
-  const SubmitNewProfile = async(e: React.FormEvent<HTMLFormElement>) => {
-
-    e.preventDefault();
-    setSubmitted(true);
-
-    // const email =  (e.currentTarget[0] as HTMLInputElement).value;
-    // const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-
-    // if(emailValid) {
-        //  return
-      await fetch('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', {
-        method: 'POST',
-        headers: {
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/octet-stream'
+    const {
+        acceptedFiles,
+        fileRejections,
+        getRootProps,
+        getInputProps
+    } = useDropzone({
+        accept: {
+            'image/jpeg': [],
+            'image/png': []
         },
-        body: new FormData(e.target as HTMLFormElement)
-      }).then((response) => {
-          return response;
-        }).then((res) => {
-          if (res.status === 409) {
-            setStatus('already_subscribed');
-            return;
-          }
-          if (res.status === 500) {
-            setStatus('error');
-            return;
-          }
-          setStatus('success');
-        }).catch((error) => {
-          setStatus('error');
-        });
-    // }
-    // else setSubmitted(false);
+        maxFiles: 1,
+    });
+    const acceptedFileItems = acceptedFiles.map(file => ( <li key = {file.name} > {
+            file.name
+        } 
+        </li>
+    ));
+    const SubmitNewProfile = async (e: React.FormEvent < HTMLFormElement > ) => {
+        let formData = new FormData(e.target as HTMLFormElement);
 
-  }
+        e.preventDefault();
+        setSubmitted(true);
+
+        // const email =  (e.currentTarget[0] as HTMLInputElement).value;
+        // const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+
+        // if(emailValid) {
+        //  return
+
+        try {
+            const reader = new FileReader()
+            reader.onabort = () => {
+                setStatus('error');
+            };
+            reader.onerror = () => {
+                setStatus('error');
+            };
+            reader.onload = async () => {
+                try {
+                    formData.append('img', reader.result as string);
+                    // debugger
+                    await fetch('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', {
+                        method: 'POST',
+                        headers: {
+                            //   'Accept': 'application/json',
+                            //   'Content-Type': 'application/octet-stream'
+                        },
+                        body: formData
+                    }).then((response) => {
+                        return response;
+                    }).then((res) => {
+                        if (res.status === 409) {
+                            setStatus('already_subscribed');
+                            return;
+                        }
+                        if (res.status === 500) {
+                            setStatus('error');
+                            return;
+                        }
+                        setStatus('success');
+                    }).catch((error) => {
+                        setStatus('error');
+                    });
+
+                    // var xhr = new XMLHttpRequest();
+                    // xhr.open('POST', '/media/upload', true);
+                    // xhr.onprogress = (e) => {
+                    // if(e.loaded !== e.total) return;
+                    // setUploadOpen(false);
+                    // axios.get('/media/get/upload').then((response) => {
+                    //     setData(response.data);
+                    //     toggleWaiting();
+                    // });
+                    // };
+                    // xhr.onabort = () => {
+                    //     setStatus('error');
+                    // };
+                    // xhr.onerror = () => {
+                    //     setErrorOpen(true);
+                    // };
+                    // xhr.send(formData);
+                } catch (err) {
+                    setStatus('error');
+                }
+            }
+            reader.readAsDataURL(acceptedFiles[0])
+        } catch (err) {
+            setStatus('error');
+        }
+        // }
+        // else setSubmitted(false);
+
+    }
 
   return (
     <Layout>
@@ -110,6 +167,17 @@ export default function GetInvolved() {
                                                 aria-label="Enter your remembrance (optional)" minLength={5} disabled={submitted}
                                                 className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
+                                        <div {...getRootProps({ className: 'dropzone' })}>
+                        <input {...getInputProps()} />
+                        <p>Drag and drop an image here, or click to select one.</p>
+                        <em>(Only *.jpeg and *.png images will be accepted)</em>
+                    </div>
+                                        {acceptedFileItems.length > 0 && (
+                                            <aside>
+                                                <h4>Accepted files</h4>
+                                                <ul>{acceptedFileItems}</ul>
+                                            </aside>
+                                        )}
                                         <button type='submit' aria-label="Submit your profile">Submit 
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
                                                 viewBox="0 0 24 24" stroke="#026670" strokeWidth="2">

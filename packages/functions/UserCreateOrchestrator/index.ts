@@ -8,6 +8,7 @@ const orchestrator = df.orchestrator(function* (context) {
   yield context.df.callActivity('PersonProfileCreate', {
     userId: response.userId,
     input: response.body,
+    image: response.image,
   });
   context.df.setCustomStatus(response.token);
 });

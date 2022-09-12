@@ -1,5 +1,6 @@
 import create from 'zustand';
 import Layout from '../components/Layout';
+import axios from 'axios';
 
 import {
     useDropzone
@@ -53,7 +54,7 @@ export default function GetInvolved() {
         </li>
     ));
     const SubmitNewProfile = async (e: React.FormEvent < HTMLFormElement > ) => {
-        let formData = new FormData(e.target as HTMLFormElement);
+        let form = e.target as HTMLFormElement;
 
         e.preventDefault();
         setSubmitted(true);
@@ -74,19 +75,15 @@ export default function GetInvolved() {
             };
             reader.onload = async () => {
                 try {
-                    formData.append('img', reader.result as string);
-                    // debugger
-                    await fetch('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', {
-                        method: 'POST',
-                        headers: {
-                            //   'Accept': 'application/json',
-                            //   'Content-Type': 'application/octet-stream'
-                        },
-                        body: formData
-                    }).then((response) => {
-                        return response;
-                    }).then((res) => {
-                        if (res.status === 409) {
+
+                    const params = new URLSearchParams();
+                    params.append('name', (form.querySelector('#name') as HTMLInputElement).value);
+                    params.append('title', (form.querySelector('#title') as HTMLInputElement).value);
+                    params.append('blurb', (form.querySelector('#blurb') as HTMLInputElement).value);
+                    params.append('remembrance', (form.querySelector('#remembrance') as HTMLInputElement).value);
+                    params.append('img', reader.result as string);
+                    const res = await axios.post('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', params);
+                    if (res.status === 409) {
                             setStatus('already_subscribed');
                             return;
                         }
@@ -95,27 +92,14 @@ export default function GetInvolved() {
                             return;
                         }
                         setStatus('success');
+                        /* then((response) => {
+                        return response;
+                    }).then((res) => {
+                        
                     }).catch((error) => {
                         setStatus('error');
-                    });
+                    }); */
 
-                    // var xhr = new XMLHttpRequest();
-                    // xhr.open('POST', '/media/upload', true);
-                    // xhr.onprogress = (e) => {
-                    // if(e.loaded !== e.total) return;
-                    // setUploadOpen(false);
-                    // axios.get('/media/get/upload').then((response) => {
-                    //     setData(response.data);
-                    //     toggleWaiting();
-                    // });
-                    // };
-                    // xhr.onabort = () => {
-                    //     setStatus('error');
-                    // };
-                    // xhr.onerror = () => {
-                    //     setErrorOpen(true);
-                    // };
-                    // xhr.send(formData);
                 } catch (err) {
                     setStatus('error');
                 }
@@ -145,7 +129,7 @@ export default function GetInvolved() {
                                 </button>
 
                         <form onSubmit={SubmitNewProfile}>
-                            <div >
+                            <div>
                                 {/* {!status && */}
                                 <div>
                                     {/* {!submitted ? */}

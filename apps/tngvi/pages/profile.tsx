@@ -7,10 +7,12 @@ import {
 } from 'react-dropzone';
 
 type FormState = {
+    editStatus: string
     status: string
     newProfile: boolean
     submitted: boolean
     userToken: number
+    setEditStatus: (status: string) => void
     setStatus: (status: string) => void
     setEditProfile: (isSet: boolean) => void
     setSubmitted: (isSet: boolean) => void
@@ -18,10 +20,14 @@ type FormState = {
 }
 // Create store with Zustand
 const useStore = create < FormState > (set => ({
+    editStatus: '',
     status: '',
     newProfile: false,
     submitted: false,
     userToken: 0,
+    setEditStatus: (status: string) => set({
+        editStatus: status
+    }),
     setStatus: (status: string) => set({
         status
     }),
@@ -37,9 +43,11 @@ const useStore = create < FormState > (set => ({
 }));
 export default function GetInvolved() {
     const status = useStore(state => state.status);
+    const editStatus = useStore(state => state.editStatus);
     const submitted = useStore(state => state.submitted);
     const userToken = useStore(state => state.userToken);
     const setStatus = useStore(state => state.setStatus);
+    const setEditStatus = useStore(state => state.setEditStatus);
     const setEditProfile = useStore(state => state.setEditProfile);
     const setSubmitted = useStore(state => state.setSubmitted);
     const setUserToken = useStore(state => state.setUserToken);
@@ -131,40 +139,113 @@ export default function GetInvolved() {
             setStatus('error');
         }
     }
+    const SubmitUserToken = async (e: React.FormEvent < HTMLFormElement > ) => {
+        let form = e.target as HTMLFormElement;
+
+        e.preventDefault();
+        setEditStatus('submitted');
+
+        try {            
+            const requestResult = await axios.get(`http://localhost:7071/api/PersonProfileGet?token=${(form.querySelector('#token') as HTMLInputElement).value}`);
+            console.log(requestResult)
+
+            // No user 
+            if(requestResult.status === 402) {
+                setEditStatus('no_user');
+            }
+            // Request was successful
+            else if (requestResult.status === 202) {
+            }
+        } catch (err) {
+            console.error(err);
+            setEditStatus('error');
+        }
+    }
 
   return (
     <Layout>
+<div className="container relative mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-7/12 z-10">
 
-        <div className="container relative mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-7/12 z-10">
-            <h2 className="text-2xl text-bluegreen font-semibold mb-8">Profile</h2>
+    <div className="mb-14 xl:flex xl:w-3/5">
+        <div className="w-full">
 
-            <div className="mb-14 xl:flex xl:w-3/5">
-                    <div className="w-full">
-                        <button onClick={()=> {setEditProfile(true)}} className={`inline-block rounded-full px-10 py-7
-                            uppercase border-2
-                            border-oasis text-purple text-sm lg:text-lg transition-all hover:bg-oasis`}>
-                            Edit Profile
-                        </button>
+            <h3 className="text-1xl text-bluegreen">Have a profile?</h3>
+            <h2 className="text-2xl text-bluegreen font-semibold mb-8">Enter your access token!</h2>
+            <form onSubmit={SubmitUserToken}>
+                    <div>
+                        <div className='flex flex-col'>
+                            <input type='text' placeholder="YOUR TOKEN" name="token" id="token" width="200"
+                                aria-label="Enter your full token" minLength={6} maxLength={6} required
+                                disabled={editStatus === 'submitted'} className={`bg-lynx placeholder:text-bluegreen
+                                py-4 px-4 border-2 max-w-[200px] rounded-full transition-all ${editStatus == 'no_user' ? 'border-[#F4B477]'
+                                : 'border-bluegreen' }`} />
+                        {editStatus !== 'submitted' ?
+                        //     <button type='submit' className={`inline-block rounded-full px-10 py-7 uppercase border-2
+                        // border-oasis text-purple text-sm lg:text-lg transition-all max-w-[200px] hover:bg-oasis`} aria-label="Submit your profile">Submit 
+                        //     </button>
+                        <button className={`inline-block rounded-full px-10 py-2 mt-4
+                        uppercase border-2 border-oasis text-purple text-sm lg:text-lg  max-w-[200px] transition-all hover:bg-oasis`}>
+                        Next
+                    </button>
+                        : 
+                        // Loading
+                        <svg width="60" height="24" viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg"
+                            fill="#026670">
+                            <circle cx="6" cy="12" r="3">
+                                <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
+                                    values="3;6;3" calcMode="linear" repeatCount="indefinite" />
+                                <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
+                                    values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="24" cy="12" r="3">
+                                <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
+                                    values="6;3;6" calcMode="linear" repeatCount="indefinite" />
+                                <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
+                                    values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="42" cy="12" r="3">
+                                <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
+                                    values="3;6;3" calcMode="linear" repeatCount="indefinite" />
+                                <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
+                                    values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
+                            </circle>
+                        </svg>
+                        }
+                        </div>                        
+                    </div>
+                    {/* {status === 'edit' &&
+                    } */}
+                    {editStatus === 'no_user' &&
+                        <span className='text-[#F4B477]'>
+                            No user with this token was found.
+                        </span>
+                    }
+                    {editStatus === 'error' &&
+                        <span className='text-green-blue'>
+                            Sorry, there was a problem. Try again later, please.
+                        </span>
+                    }
+            </form>
 
-                            <hr />
-                        <form onSubmit={SubmitNewProfile}>
-                            <div>
-                                {!status &&
-                                <div>
-                                    <div className='flex flex-col'>
-                                        <input type='text' placeholder="YOUR NAME" name="name" id="name" width="800"
-                                            aria-label="Enter your full name" minLength={5} required
-                                            disabled={submitted} className={`w-full bg-lynx placeholder:text-bluegreen
-                                            py-4 px-4 border-2 rounded-full transition-all ${status ? 'border-[#F4B477]'
-                                            : 'border-bluegreen' }`} />
-                                        <input type='text' placeholder="YOUR TITLE" name="title" id="title" width="800"
-                                            aria-label="Enter your title" minLength={5} required disabled={submitted}
-                                            className='w-full bg-lynx placeholder:text-bluegreen' />
-                                        <textarea placeholder="YOUR BIO" name="blurb" id="blurb"
-                                            aria-label="Enter your bio" minLength={25} maxLength={800} rows={5} required
-                                            disabled={submitted}
-                                            className='w-full bg-lynx placeholder:text-bluegreen' />
-                                        <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance" id="remembrance" width="800"
+            <hr />
+            <h3 className="text-1xl text-bluegreen">Don't have a profile?</h3>
+            <h2 className="text-2xl text-bluegreen font-semibold mb-8">Submit one!</h2>
+            <form onSubmit={SubmitNewProfile}>
+                <div>
+                    {!status &&
+                    <div>
+                        <div className='flex flex-col'>
+                            <input type='text' placeholder="YOUR NAME" name="name" id="name" width="800"
+                                aria-label="Enter your full name" minLength={5} required disabled={submitted}
+                                className={`w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                transition-all ${status ? 'border-[#F4B477]' : 'border-bluegreen' }`} />
+                            <input type='text' placeholder="YOUR TITLE" name="title" id="title" width="800"
+                                aria-label="Enter your title" minLength={5} required disabled={submitted}
+                                className='w-full bg-lynx placeholder:text-bluegreen' />
+                            <textarea placeholder="YOUR BIO" name="blurb" id="blurb" aria-label="Enter your bio"
+                                minLength={25} maxLength={800} rows={5} required disabled={submitted}
+                                className='w-full bg-lynx placeholder:text-bluegreen' />
+                            <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance" id="remembrance" width="800"
                                                 aria-label="Enter your remembrance (optional)" minLength={5} disabled={submitted}
                                                 className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />

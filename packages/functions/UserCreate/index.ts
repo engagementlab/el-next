@@ -13,7 +13,6 @@ import { AzureFunction, Context } from '@azure/functions';
 
 import cuid = require('cuid');
 import { Client } from 'pg';
-import * as multipart from 'parse-multipart-data';
 
 const activityFunction: AzureFunction = async function (context: Context) {
   let body = null;
@@ -40,7 +39,6 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const values = [userId, body.get('name'), token, new Date()];
     await client.query(text, values);
     await client.end();
-    // // context.done(null, { token });
 
     return { body: body.toString(), userId, token };
   } catch (e) {

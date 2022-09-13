@@ -34,7 +34,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
 
     const personId = cuid();
     const text =
-      'INSERT INTO "Person" (id, "name", "image", "title", "blurb", "remembrance") VALUES($1, $2, $3, $4, $5 $6)';
+      'INSERT INTO "Person" (id, "name", "image", "title", "blurb", "remembrance") VALUES($1, $2, $3, $4, $5, $6)';
     const values = [
       personId,
       body.get('name'),

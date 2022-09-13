@@ -10,31 +10,39 @@ type FormState = {
     status: string
     newProfile: boolean
     submitted: boolean
+    userToken: number
     setStatus: (status: string) => void
-    setNewProfile: (isSet: boolean) => void
+    setEditProfile: (isSet: boolean) => void
     setSubmitted: (isSet: boolean) => void
+    setUserToken: (token: number) => void
 }
 // Create store with Zustand
 const useStore = create < FormState > (set => ({
     status: '',
     newProfile: false,
     submitted: false,
+    userToken: 0,
     setStatus: (status: string) => set({
         status
     }),
-    setNewProfile: (isSet: boolean) => set({
+    setEditProfile: (isSet: boolean) => set({
         newProfile: isSet
     }),
     setSubmitted: (isSet: boolean) => set({
         submitted: isSet
+    }),
+    setUserToken: (token: number) => set({ 
+        userToken: token
     })
 }));
 export default function GetInvolved() {
     const status = useStore(state => state.status);
     const submitted = useStore(state => state.submitted);
+    const userToken = useStore(state => state.userToken);
     const setStatus = useStore(state => state.setStatus);
-    const setNewProfile = useStore(state => state.setNewProfile);
+    const setEditProfile = useStore(state => state.setEditProfile);
     const setSubmitted = useStore(state => state.setSubmitted);
+    const setUserToken = useStore(state => state.setUserToken);
 
     const {
         acceptedFiles,
@@ -78,27 +86,41 @@ export default function GetInvolved() {
 
                     const params = new URLSearchParams();
                     params.append('name', (form.querySelector('#name') as HTMLInputElement).value);
+                    // TODO: email
+                    // params.append('email', (form.querySelector('#email') as HTMLInputElement).value);
                     params.append('title', (form.querySelector('#title') as HTMLInputElement).value);
                     params.append('blurb', (form.querySelector('#blurb') as HTMLInputElement).value);
                     params.append('remembrance', (form.querySelector('#remembrance') as HTMLInputElement).value);
                     params.append('img', reader.result as string);
-                    const res = await axios.post('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', params);
-                    if (res.status === 409) {
-                            setStatus('already_subscribed');
-                            return;
-                        }
-                        if (res.status === 500) {
-                            setStatus('error');
-                            return;
-                        }
-                        setStatus('success');
-                        /* then((response) => {
-                        return response;
-                    }).then((res) => {
-                        
-                    }).catch((error) => {
-                        setStatus('error');
-                    }); */
+
+                    const requestResult = await axios.post('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', params);
+
+                    // Request was accepted
+                    if (requestResult.status === 202) {
+
+                        const getUpdate = () => {setTimeout(async () => {     
+                            const requestUpdate = await axios.get(requestResult.data.statusQueryGetUri);
+                            console.log(requestUpdate)
+
+                            if(requestUpdate.data.runtimeStatus === 'Pending') {
+                                // Try to get update in a bit
+                                getUpdate();
+                                return;
+                            }
+                            else if(requestUpdate.data.runtimeStatus === 'Completed') {
+                                setUserToken(requestUpdate.data.customStatus);
+                                setStatus('success');
+                                return;
+                            }
+                            else if(requestUpdate.data.runtimeStatus === 'Failed') {
+                                setStatus('error');
+                                return;
+                            }
+                        }, 3000)}
+
+                        // Get durable function status after a bit of time
+                        getUpdate();
+                    }
 
                 } catch (err) {
                     setStatus('error');
@@ -108,9 +130,6 @@ export default function GetInvolved() {
         } catch (err) {
             setStatus('error');
         }
-        // }
-        // else setSubmitted(false);
-
     }
 
   return (
@@ -119,22 +138,20 @@ export default function GetInvolved() {
         <div className="container relative mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-7/12 z-10">
             <h2 className="text-2xl text-bluegreen font-semibold mb-8">Profile</h2>
 
-            <div className="mb-14 w-full xl:flex">
-                <div className="mt-14 xl:mt-16 w-full">
-                    <div>
+            <div className="mb-14 xl:flex xl:w-3/5">
+                    <div className="w-full">
+                        <button onClick={()=> {setEditProfile(true)}} className={`inline-block rounded-full px-10 py-7
+                            uppercase border-2
+                            border-oasis text-purple text-sm lg:text-lg transition-all hover:bg-oasis`}>
+                            Edit Profile
+                        </button>
 
-                                <button onClick={() => {setNewProfile(true)}} className={`inline-block rounded-full px-10 py-7 uppercase border-2
-                                    border-oasis text-purple text-sm lg:text-lg transition-all`}>
-                                    Create Profile
-                                </button>
-
+                            <hr />
                         <form onSubmit={SubmitNewProfile}>
                             <div>
-                                {/* {!status && */}
+                                {!status &&
                                 <div>
-                                    {/* {!submitted ? */}
-                                    // Form
-                                    <span className='flex flex-col'>
+                                    <div className='flex flex-col'>
                                         <input type='text' placeholder="YOUR NAME" name="name" id="name" width="800"
                                             aria-label="Enter your full name" minLength={5} required
                                             disabled={submitted} className={`w-full bg-lynx placeholder:text-bluegreen
@@ -144,34 +161,31 @@ export default function GetInvolved() {
                                             aria-label="Enter your title" minLength={5} required disabled={submitted}
                                             className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <textarea placeholder="YOUR BIO" name="blurb" id="blurb"
-                                            aria-label="Enter your bio" minLength={25} maxLength={800} rows={5}
-                                            required disabled={submitted}
+                                            aria-label="Enter your bio" minLength={25} maxLength={800} rows={5} required
+                                            disabled={submitted}
                                             className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance" id="remembrance" width="800"
                                                 aria-label="Enter your remembrance (optional)" minLength={5} disabled={submitted}
                                                 className='w-full bg-lynx placeholder:text-bluegreen' />
                                         <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
                                         <div {...getRootProps({ className: 'dropzone' })}>
-                        <input {...getInputProps()} />
-                        <p>Drag and drop an image here, or click to select one.</p>
-                        <em>(Only *.jpeg and *.png images will be accepted)</em>
-                    </div>
+                                            <input {...getInputProps()} />
+                                            <p>Drag and drop a bio image here, or click to select one.</p>
+                                            <em>(Only *.jpeg and *.png images accepted)</em>
+                                        </div>
                                         {acceptedFileItems.length > 0 && (
                                             <aside>
-                                                <h4>Accepted files</h4>
+                                                <h4>Attached file:</h4>
                                                 <ul>{acceptedFileItems}</ul>
                                             </aside>
                                         )}
-                                        <button type='submit' aria-label="Submit your profile">Submit 
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                                                viewBox="0 0 24 24" stroke="#026670" strokeWidth="2">
-                                                <path strokeLinecap="round" strokeLinejoin="round"
-                                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                            </svg>
+                                    {!submitted ?
+                                        <button type='submit' className={`inline-block rounded-full px-10 py-7 uppercase border-2
+                                    border-oasis text-purple text-sm lg:text-lg transition-all max-w-[200px] hover:bg-oasis`} aria-label="Submit your profile">Submit 
                                         </button>
-                                    </span>
-                                    :
+: 
                                     // Loading
+                                    // <span>LOADING</span>
                                     <svg width="60" height="24" viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg"
                                         fill="#026670">
                                         <circle cx="6" cy="12" r="3">
@@ -193,14 +207,32 @@ export default function GetInvolved() {
                                                 values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
                                         </circle>
                                     </svg>
-                                    {/* } */}
+                                    }
+                                    </div>
+                                    
                                 </div>
-                                {/* } */}
+                                }
+                            
+                                {status === 'success' &&
+                                    <div className='text-purple'>
+                                        <p>Thanks for submitting your profile!</p>
+                                        <h3 className="text-3xl italic">Important!</h3>
+                                        <p>
+                                            <p>You will need the following token to login to edit your profile in the future. Please treat this token as you would a password.</p>
+                                            <p>Your token is:</p>
+                                            <p className="text-green-blue text-5xl font-extrabold">{userToken}</p>
+                                        </p>
+                                    </div>
+                                }
+                                {status === 'error' &&
+                                    <span className='text-green-blue'>
+                                        Sorry, there was a problem. Try again later, please.
+                                    </span>
+                                }
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
         </div>
     </Layout>
 

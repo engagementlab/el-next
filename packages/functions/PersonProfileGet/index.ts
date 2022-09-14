@@ -26,15 +26,15 @@ const httpTrigger: AzureFunction = async function (
     const getBioIdText = 'SELECT "bioId" FROM "User" WHERE "accessToken" = $1';
     const bioIdResult = await client.query(getBioIdText, [req.query.token]);
     if (bioIdResult.rowCount === 0) {
-      // context.done('User not found');
       context.res = {
         status: 204,
       };
       return;
     }
-    const getProfileText = `SELECT "name", "title", "blurb", "remembrance" FROM "Person" WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
+    const getProfileText = `SELECT "name", "title", "blurb", "remembrance", "image" FROM "Person" WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
     const profileResult = await client.query(getProfileText);
     await client.end();
+    context.log(bioIdResult.rows[0], profileResult.rows[0]);
     context.res = {
       status: 200,
       body: profileResult.rows[0],

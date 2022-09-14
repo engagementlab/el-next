@@ -30,18 +30,19 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const response = await cloudinary.uploader.upload(body.get('img'), {
       folder: 'tngvi',
     });
-    context.log(response._meta);
+    context.log(response);
 
     const personId = cuid();
     const text =
-      'INSERT INTO "Person" (id, "name", "image", "title", "blurb", "remembrance") VALUES($1, $2, $3, $4, $5, $6)';
+      'INSERT INTO "Person" (id, "name", "image", "title", "blurb", "remembrance", "createdDate") VALUES($1, $2, $3, $4, $5, $6, $7)';
     const values = [
       personId,
       body.get('name'),
-      response._meta,
+      response,
       body.get('title'),
       body.get('blurb'),
       body.get('remembrance') ? body.get('remembrance') : '',
+      new Date(),
     ];
     await client.query(text, values);
 

@@ -58,7 +58,7 @@ export default function GetInvolved() {
 
     const setStatus = useStore(state => state.setStatus);
     const setEditStatus = useStore(state => state.setEditStatus);
-    const setEditProfile = useStore(state => state.setEditProfile);
+    // const setEditProfile = useStore(state => state.setEditProfile);
     const setSubmitted = useStore(state => state.setSubmitted);
     const setUserToken = useStore(state => state.setUserToken);
     const setFormData = useStore(state => state.setFormData);
@@ -86,26 +86,26 @@ export default function GetInvolved() {
         e.preventDefault();
 
         try {
-            const reader = new FileReader()
-            reader.onabort = () => {
-                setStatus('error');
-            };
-            reader.onerror = () => {
-                setStatus('error');
-            };
-            reader.onload = async () => {
+            const reader = new FileReader();
+            const makeRequest = async (img: string | ArrayBuffer | null = null) => {
                 try {
 
+                    const url = mode === 'edit' ? 'http://localhost:7071/api/orchestrators/UserEditOrchestrator' : 'http://localhost:7071/api/orchestrators/UserCreateOrchestrator';
                     const params = new URLSearchParams();
+                    if(mode === 'edit')
+                        params.append('token', (form.querySelector('#token') as HTMLInputElement).value);
+                    
                     params.append('name', (form.querySelector('#name') as HTMLInputElement).value);
                     // TODO: email
                     // params.append('email', (form.querySelector('#email') as HTMLInputElement).value);
                     params.append('title', (form.querySelector('#title') as HTMLInputElement).value);
                     params.append('blurb', (form.querySelector('#blurb') as HTMLInputElement).value);
                     params.append('remembrance', (form.querySelector('#remembrance') as HTMLInputElement).value);
-                    params.append('img', reader.result as string);
 
-                    const requestResult = await axios.post('http://localhost:7071/api/orchestrators/UserCreateOrchestrator', params);
+                    if(img)
+                        params.append('img', img as string);
+
+                    const requestResult = await axios.post(url, params);
 
                     // Request was accepted
                     if (requestResult.status === 202) {
@@ -121,6 +121,8 @@ export default function GetInvolved() {
                             else if(requestUpdate.data.runtimeStatus === 'Completed') {
                                 setUserToken(requestUpdate.data.customStatus);
                                 setStatus('success');
+                                setEditStatus('success');
+                                
                                 return;
                             }
                             else if(requestUpdate.data.runtimeStatus === 'Failed') {
@@ -138,12 +140,27 @@ export default function GetInvolved() {
                     setStatus('error');
                 }
             }
-            if(acceptedFiles.length === 0) {
+
+            reader.onabort = () => {
+                setStatus('error');
+            };
+            reader.onerror = () => {
+                setStatus('error');
+            };
+            reader.onload = async () => {
+                makeRequest(reader.result);
+            }
+
+            if(acceptedFiles.length === 0 && mode === 'new') {
                 setStatus('image');
                 return;
             }
             setSubmitted(true);
-            reader.readAsDataURL(acceptedFiles[0])
+
+            if(acceptedFiles[0])
+                reader.readAsDataURL(acceptedFiles[0])
+            else if(mode === 'edit')
+                makeRequest();
         } catch (err) {
             console.error(err);
             setStatus('error');
@@ -152,12 +169,13 @@ export default function GetInvolved() {
     }
     const SubmitUserToken = async (e: React.FormEvent < HTMLFormElement > ) => {
         let form = e.target as HTMLFormElement;
+        const token = (form.querySelector('#token') as HTMLInputElement).value;
 
         e.preventDefault();
         setEditStatus('code');
 
         try {            
-            const requestResult = await axios.get(`http://localhost:7071/api/PersonProfileGet?token=${(form.querySelector('#token') as HTMLInputElement).value}`);
+            const requestResult = await axios.get(`http://localhost:7071/api/PersonProfileGet?token=${token}`);
 
             // No user 
             if(requestResult.status === 204) {
@@ -166,13 +184,9 @@ export default function GetInvolved() {
             // Request was successful
             else if (requestResult.status === 200) {
                 setEditStatus('form');
-                // const form = editFormRef.current;
                 setFormData(requestResult.data)
-                // Pre-fill form fields
-                // for(let key in requestResult.data) {
-                //     console.log(form?.querySelector(`#${key}`))
-                //     (form?.querySelector(`#${key}`) as HTMLInputElement).value = requestResult.data[key];
-                // }
+                setUserToken(parseInt(token));
+
             }
         } catch (err) {
             console.error(err);
@@ -244,97 +258,92 @@ export default function GetInvolved() {
                             }
                         </form>
                     }
-                        <form id="edit" ref={editFormRef} onSubmit={e => SubmitProfile(e, 'edit')}>
-                    {editStatus === 'form' &&
+                    <form id="edit" ref={editFormRef} onSubmit={e => SubmitProfile(e, 'edit')}>
+                        {editStatus === 'form' &&
 
-                    <div>
-
-                            <h3 className="text-2xl text-bluegreen font-semibold mb-8">Edit your profile</h3>
                             <div>
-                                <div>
-                                    <div className='flex flex-col'>
-                                        <p>*Required</p>
-                                        <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
-                                            aria-label="Enter your full name" minLength={5} required disabled={submitted} value={formData['name']}
-                                            className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
-                                        transition-all border-bluegreen" />
-                                        <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
-                                            aria-label="Enter your title" minLength={5} required disabled={submitted} value={formData['title']}
-                                            className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
-                                        transition-all border-bluegreen mt-4" />
-                                        <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
-                                            id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
-                                            minLength={5} disabled={submitted} value={formData['remembrance']} 
-                                            className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                <h3 className="text-2xl text-bluegreen font-semibold mb-8">Edit your profile</h3>
+                                        <div className='flex flex-col'>
+                                            <p>*Required</p>
+
+                                            <input type='hidden' aria-hidden='true' name='token' id='token' value={userToken} />
+                                            <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
+                                                aria-label="Enter your full name" minLength={5} required disabled={submitted} defaultValue={formData['name']}
+                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                            transition-all border-bluegreen" />
+                                            <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
+                                                aria-label="Enter your title" minLength={5} required disabled={submitted} defaultValue={formData['title']}
+                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                            transition-all border-bluegreen mt-4" />
+                                            <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
+                                                id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
+                                                minLength={5} disabled={submitted} defaultValue={formData['remembrance']} 
+                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                                            transition-all border-bluegreen mt-4" />
+                                            <textarea placeholder="YOUR BIO*" name="blurb" id="blurb"
+                                                aria-label="Enter your bio" minLength={25} maxLength={800} rows={8} required
+                                                disabled={submitted} defaultValue={formData['blurb']} 
+                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-large
                                                         transition-all border-bluegreen mt-4" />
-                                        <textarea placeholder="YOUR BIO*" name="blurb" id="blurb"
-                                            aria-label="Enter your bio" minLength={25} maxLength={800} rows={5} required
-                                            disabled={submitted} value={formData['blurb']} 
-                                            className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-large
-                                                       transition-all border-bluegreen mt-4" />
-                                        <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
-                                                {/* <div {...getRootProps({ className: 'dropzone bg-sorbet/30 p-4 mt-4 rounded-large cursor-pointer' })}>
-                                                    <input {...getInputProps()} />
-                                                    <p>Drag and drop a bio image here, or click to select one.*  <em>(Only *.jpeg and *.png images accepted)</em></p>
-                                                    
-                                                </div>
-                                                {acceptedFileItems.length > 0 && (
-                                                    <aside>
-                                                        <h4>Attached file:</h4>
-                                                        <ul>{acceptedFileItems}</ul>
-                                                    </aside>
-                                                )} */}
-                                            {!submitted ?
-                                                <button type='submit' className={`inline-block rounded-full px-10 py-2 mt-4 uppercase border-2
-                                            border-oasis text-purple text-sm lg:text-lg transition-all max-w-[200px] hover:bg-oasis`} aria-label="Submit your profile">Submit 
-                                                </button>
-        : 
-                                            // Loading
-                                            <svg width="60" height="24" viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg"
-                                                fill="#026670">
-                                                <circle cx="6" cy="12" r="3">
-                                                    <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
-                                                        values="3;6;3" calcMode="linear" repeatCount="indefinite" />
-                                                    <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
-                                                        values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
-                                                </circle>
-                                                <circle cx="24" cy="12" r="3">
-                                                    <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
-                                                        values="6;3;6" calcMode="linear" repeatCount="indefinite" />
-                                                    <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
-                                                        values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
-                                                </circle>
-                                                <circle cx="42" cy="12" r="3">
-                                                    <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
-                                                        values="3;6;3" calcMode="linear" repeatCount="indefinite" />
-                                                    <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
-                                                        values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
-                                                </circle>
-                                            </svg>
-                            }
-                                </div>       
+                                            <img src={`https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_250/${formData['image'].public_id}`} className="max-w-xs mt-4" />
+                                            <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
+                                                    <div {...getRootProps({ className: 'dropzone bg-sorbet/30 p-4 mt-4 rounded-large cursor-pointer' })}>
+                                                        <input {...getInputProps()} />
+                                                        <p><b>To change your bio image</b>: Drag and drop a bio image here, or click to select one.*  <em>(Only *.jpeg and *.png images accepted)</em></p>
+                                                            
+                                                        {acceptedFileItems.length > 0 && (
+                                                            <aside>
+                                                                <h4>Attached file:</h4>
+                                                                <ul>{acceptedFileItems}</ul>
+                                                            </aside>
+                                                        )}
+                                                    </div>
+                                                {!submitted ?
+                                                    <button type='submit' className={`inline-block rounded-full px-10 py-2 mt-4 uppercase border-2
+                                                border-oasis text-purple text-sm lg:text-lg transition-all max-w-[200px] hover:bg-oasis`} aria-label="Submit your profile">Update 
+                                                    </button>
+            : 
+                                                // Loading
+                                                <svg width="60" height="24" viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="#026670">
+                                                    <circle cx="6" cy="12" r="3">
+                                                        <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
+                                                            values="3;6;3" calcMode="linear" repeatCount="indefinite" />
+                                                        <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
+                                                            values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="24" cy="12" r="3">
+                                                        <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
+                                                            values="6;3;6" calcMode="linear" repeatCount="indefinite" />
+                                                        <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
+                                                            values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle cx="42" cy="12" r="3">
+                                                        <animate attributeName="r" from="3" to="3" begin="0s" dur="1s"
+                                                            values="3;6;3" calcMode="linear" repeatCount="indefinite" />
+                                                        <animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="1s"
+                                                            values="1;.5;1" calcMode="linear" repeatCount="indefinite" />
+                                                    </circle>
+                                                </svg>
+                                }
+                                    </div> 
                             </div>
-                                
-                                    {status === 'success' &&
-                                        <div className='text-purple'>
-                                            <p>Thanks for updating your profile!</p>
-                                        </div>
-                                    }
-                                    {status === 'image' &&
-                                        <span className='text-green-blue'>
-                                            You need to attach a bio image.
-                                        </span>
-                                    }
-                                    {status === 'error' &&
-                                        <span className='text-green-blue'>
-                                            Sorry, there was a problem. Try again later, please.
-                                        </span>
-                                    }
-                                </div>
-                                </div>
-                    }
+                        }
+                                    
+                        {status === 'success' &&
+                            <div className='text-purple'>
+                                <p>Thanks for updating your profile!</p>
+                            </div>
+                        }
+                        {status === 'error' &&
+                            <span className='text-green-blue'>
+                                Sorry, there was a problem. Try again later, please.
+                            </span>
+                        }
                     </form>
+                    
                     <hr />
+                    
                     <form onSubmit={e => SubmitProfile(e, 'new')}>
                         <div>
                             {((status === '' || status !== 'success') && editStatus !== 'form') &&
@@ -364,13 +373,13 @@ export default function GetInvolved() {
                                                 <input {...getInputProps()} />
                                                 <p>Drag and drop a bio image here, or click to select one.*  <em>(Only *.jpeg and *.png images accepted)</em></p>
                                                 
+                                                {acceptedFileItems.length > 0 && (
+                                                    <aside>
+                                                        <h4>Attached file:</h4>
+                                                        <ul>{acceptedFileItems}</ul>
+                                                    </aside>
+                                                )} 
                                             </div>
-                                            {acceptedFileItems.length > 0 && (
-                                                <aside>
-                                                    <h4>Attached file:</h4>
-                                                    <ul>{acceptedFileItems}</ul>
-                                                </aside>
-                                            )}
                                         {!submitted ?
                                             <button type='submit' className={`inline-block rounded-full px-10 py-2 mt-4 uppercase border-2
                                         border-oasis text-purple text-sm lg:text-lg transition-all max-w-[200px] hover:bg-oasis`} aria-label="Submit your profile">Submit 
@@ -400,30 +409,36 @@ export default function GetInvolved() {
                                         </svg>
                                         }
                             </div>       
+                        
                         </div>
                     }
                             
-                                {status === 'success' &&
-                                    <div className='text-purple'>
-                                        <p>Thanks for submitting your profile!</p>
-                                        <h3 className="text-3xl italic">Important!</h3>
-                                        <p>
-                                            <p>You will need the following token to login to edit your profile in the future. Please treat this token as you would a password.</p>
-                                            <p>Your token is:</p>
-                                            <p className="text-green-blue text-5xl font-extrabold">{userToken}</p>
-                                        </p>
-                                    </div>
-                                }
-                                {status === 'image' &&
-                                    <span className='text-green-blue'>
-                                        You need to attach a bio image.
-                                    </span>
-                                }
-                                {status === 'error' &&
-                                    <span className='text-green-blue'>
-                                        Sorry, there was a problem. Try again later, please.
-                                    </span>
-                                }
+                            {
+                            (editStatus !== 'form' && editStatus !== 'success') &&
+                                <div>
+                                    {status === 'success' &&
+                                        <div className='text-purple'>
+                                            <p>Thanks for submitting your profile!</p>
+                                            <h3 className="text-3xl italic">Important!</h3>
+                                            <p>
+                                                <p>You will need the following token to login to edit your profile in the future. Please treat this token as you would a password.</p>
+                                                <p>Your token is:</p>
+                                                <p className="text-green-blue text-5xl font-extrabold">{userToken}</p>
+                                            </p>
+                                        </div>
+                                    }
+                                    {status === 'image' &&
+                                        <span className='text-green-blue'>
+                                            You need to attach a bio image.
+                                        </span>
+                                    }
+                                    {status === 'error' &&
+                                        <span className='text-green-blue'>
+                                            Sorry, there was a problem. Try again later, please.
+                                        </span>
+                                    }
+                                </div>
+                            }
                             </div>
                     </form>
                     </div>

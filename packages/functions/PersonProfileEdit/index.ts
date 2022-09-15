@@ -1,16 +1,24 @@
 ﻿import { AzureFunction, Context } from '@azure/functions';
 
+import { v2 as cloudinary } from 'cloudinary';
+
 const { Client } = require('pg');
 
 const activityFunction: AzureFunction = async function (context: Context) {
-  const body = context.bindings.body;
-  if (!body.name) {
-    context.done(`Missing "name"`);
-  } else if (!body.title) {
-    context.done(`Missing "title"`);
-  } else if (!body.blurb) {
-    context.done(`Missing "blurb"`);
+  let body: URLSearchParams = null;
+  let imgResponse = null;
+  try {
+    body = new URLSearchParams(context.bindings.input.body);
+  } catch (err) {
+    context.done(`Invalid body`);
   }
+
+  if (body.has('img')) {
+    imgResponse = await cloudinary.uploader.upload(body.get('img'), {
+      folder: 'tngvi',
+    });
+  }
+
   const client = new Client({
     connectionString: process.env.DB_URI,
   });
@@ -22,20 +30,25 @@ const activityFunction: AzureFunction = async function (context: Context) {
   }
   try {
     const getBioIdText = 'SELECT "bioId" FROM "User" WHERE "accessToken" = $1';
-    const bioIdResult = await client.query(getBioIdText, [body.token]);
+    context.log(getBioIdText);
+    const bioIdResult = await client.query(getBioIdText, [body.get('token')]);
     if (bioIdResult.rowCount === 0) {
       context.done('User not found');
       return 'User not found';
     }
 
-    const updateProfileText = `UPDATE "Person" SET "name" = $1, "title" = $2, "blurb" = $3, "remembrance" = $4 WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
-    // await client.query(updateProfileText, [context.bindingData.body.userId]);
+    const updateProfileText = `UPDATE "Person" SET "name" = $1, "title" = $2, "blurb" = $3, "remembrance" = $4${
+      imgResponse ? ', "image" = $5' : ''
+    } WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
+    context.log(updateProfileText);
     const values = [
-      body.name,
-      body.title,
-      body.blurb,
-      body.remembrance ? body.remembrance : '',
+      body.get('name'),
+      body.get('title'),
+      body.get('blurb'),
+      body.get('remembrance') ? body.get('remembrance') : '',
     ];
+    if (imgResponse) values.push(imgResponse);
+
     await client.query(updateProfileText, values);
     await client.end();
     return 'done';

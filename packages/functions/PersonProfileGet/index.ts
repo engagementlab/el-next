@@ -34,7 +34,7 @@ const httpTrigger: AzureFunction = async function (
     const getProfileText = `SELECT "name", "title", "blurb", "remembrance", "image" FROM "Person" WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
     const profileResult = await client.query(getProfileText);
     await client.end();
-    context.log(bioIdResult.rows[0], profileResult.rows[0]);
+
     context.res = {
       status: 200,
       body: profileResult.rows[0],

@@ -1,7 +1,6 @@
 ﻿import { AzureFunction, Context } from '@azure/functions';
 
-import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
-const { Readable } = require('stream');
+import { v2 as cloudinary } from 'cloudinary';
 
 const cuid = require('cuid');
 const { Client } = require('pg');
@@ -30,7 +29,6 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const response = await cloudinary.uploader.upload(body.get('img'), {
       folder: 'tngvi',
     });
-    context.log(response);
 
     const personId = cuid();
     const text =

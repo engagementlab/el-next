@@ -81,8 +81,10 @@ export default function GetInvolved() {
         </li>
     ));
     const SubmitProfile = async (e: React.FormEvent < HTMLFormElement >, mode: string) => {
+        const url = mode === 'edit' ? `${process.env.AZURE_FUNCTION_URI}/orchestrators/UserEditOrchestrator` :
+                                      `${process.env.AZURE_FUNCTION_URI}/orchestrators/UserCreateOrchestrator`;
         let form = e.target as HTMLFormElement;
-
+        
         e.preventDefault();
 
         try {
@@ -90,7 +92,6 @@ export default function GetInvolved() {
             const makeRequest = async (img: string | ArrayBuffer | null = null) => {
                 try {
 
-                    const url = mode === 'edit' ? 'http://localhost:7071/api/orchestrators/UserEditOrchestrator' : 'http://localhost:7071/api/orchestrators/UserCreateOrchestrator';
                     const params = new URLSearchParams();
                     if(mode === 'edit')
                         params.append('token', (form.querySelector('#token') as HTMLInputElement).value);
@@ -175,7 +176,7 @@ export default function GetInvolved() {
         setEditStatus('code');
 
         try {            
-            const requestResult = await axios.get(`http://localhost:7071/api/PersonProfileGet?token=${token}`);
+            const requestResult = await axios.get(`${process.env.AZURE_FUNCTION_URI}/PersonProfileGet?token=${token}`);
 
             // No user 
             if(requestResult.status === 204) {

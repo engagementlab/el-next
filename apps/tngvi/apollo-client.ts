@@ -1,6 +1,5 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 
-console.log('apollo', process.env.APOLLO_CLIENT_GRAPHQL_URI);
 const apollo = new ApolloClient({
   uri:
     process.env.APOLLO_CLIENT_GRAPHQL_URI ||

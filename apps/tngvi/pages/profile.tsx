@@ -81,8 +81,8 @@ export default function GetInvolved() {
         </li>
     ));
     const SubmitProfile = async (e: React.FormEvent < HTMLFormElement >, mode: string) => {
-        const url = mode === 'edit' ? `${process.env.AZURE_FUNCTION_URI}/orchestrators/UserEditOrchestrator` :
-                                      `${process.env.AZURE_FUNCTION_URI}/orchestrators/UserCreateOrchestrator`;
+        const url = mode === 'edit' ? `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserEditOrchestrator` :
+                                      `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserCreateOrchestrator`;
         let form = e.target as HTMLFormElement;
         
         e.preventDefault();
@@ -176,7 +176,7 @@ export default function GetInvolved() {
         setEditStatus('code');
 
         try {            
-            const requestResult = await axios.get(`${process.env.AZURE_FUNCTION_URI}/PersonProfileGet?token=${token}`);
+            const requestResult = await axios.get(`${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/PersonProfileGet?token=${token}`);
 
             // No user 
             if(requestResult.status === 204) {

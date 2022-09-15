@@ -12,7 +12,7 @@ yarn;
 
 pm2 restart 'el-cms-new'; 
 
-cd ../apps/tngvi;
+cd ../tngvi;
 nvm use;
 yarn;
 

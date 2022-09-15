@@ -81,7 +81,8 @@ export default function GetInvolved() {
         </li>
     ));
     const SubmitProfile = async (e: React.FormEvent < HTMLFormElement >, mode: string) => {
-        const url = mode === 'edit' ? `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserEditOrchestrator` :
+        const edit = mode === 'edit';
+        const url = edit ? `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserEditOrchestrator` :
                                       `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserCreateOrchestrator`;
         let form = e.target as HTMLFormElement;
         
@@ -93,7 +94,7 @@ export default function GetInvolved() {
                 try {
 
                     const params = new URLSearchParams();
-                    if(mode === 'edit')
+                    if(edit)
                         params.append('token', (form.querySelector('#token') as HTMLInputElement).value);
                     
                     params.append('name', (form.querySelector('#name') as HTMLInputElement).value);
@@ -122,12 +123,14 @@ export default function GetInvolved() {
                             else if(requestUpdate.data.runtimeStatus === 'Completed') {
                                 setUserToken(requestUpdate.data.customStatus);
                                 setStatus('success');
-                                setEditStatus('success');
+                    
+                                if(edit) setEditStatus('success');
                                 
                                 return;
                             }
                             else if(requestUpdate.data.runtimeStatus === 'Failed') {
                                 setStatus('error');
+                                if(edit) setEditStatus('error');
                                 return;
                             }
                         }, 3000)}
@@ -139,14 +142,17 @@ export default function GetInvolved() {
                 } catch (err) {
                     setSubmitted(false);
                     setStatus('error');
+                    if(edit) setEditStatus('error');
                 }
             }
 
             reader.onabort = () => {
                 setStatus('error');
+                if(edit) setEditStatus('error');
             };
             reader.onerror = () => {
                 setStatus('error');
+                if(edit) setEditStatus('error');
             };
             reader.onload = async () => {
                 makeRequest(reader.result);
@@ -165,6 +171,7 @@ export default function GetInvolved() {
         } catch (err) {
             console.error(err);
             setStatus('error');
+            if(edit) setEditStatus('error');
             setSubmitted(false);
         }
     }
@@ -185,6 +192,7 @@ export default function GetInvolved() {
             // Request was successful
             else if (requestResult.status === 200) {
                 setEditStatus('form');
+                setStatus('hide');
                 setFormData(requestResult.data)
                 setUserToken(parseInt(token));
 
@@ -331,12 +339,12 @@ export default function GetInvolved() {
                             </div>
                         }
                                     
-                        {status === 'success' &&
+                        {editStatus === 'success' &&
                             <div className='text-purple'>
                                 <p>Thanks for updating your profile!</p>
                             </div>
                         }
-                        {status === 'error' &&
+                        {editStatus === 'error' &&
                             <span className='text-green-blue'>
                                 Sorry, there was a problem. Try again later, please.
                             </span>

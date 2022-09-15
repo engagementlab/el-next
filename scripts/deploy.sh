@@ -7,7 +7,13 @@
 nvm use;
 yarn;
 yarn build;
+cd apps/cms;
+yarn;
+
+pm2 restart 'el-cms-new'; 
+
 cd apps/tngvi;
+nvm use;
 yarn;
 yarn dev;
 

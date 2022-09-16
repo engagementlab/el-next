@@ -15,24 +15,32 @@ cloudinary.config({
 const activityFunction: AzureFunction = async function (context: Context) {
   const body = new URLSearchParams(context.bindings.body.input);
 
-  // context.log(context.bindings.body.input, body);
   const client = new Client({
     connectionString: process.env.DB_URI,
   });
-  try {
-    await client.connect();
-  } catch (e) {
-    context.log(e);
-    context.done(`Connect error: ${e.message}`);
+  await client.connect();
+
+  const userId = body.get('name').toLocaleLowerCase().replace(/ /g, '-');
+  const getImgDataText = `SELECT "data" FROM "Temp" WHERE "id" = '${userId}'`;
+
+  // Retrieve base64 img string for new user from DB
+  const imgDataResult = await client.query(getImgDataText);
+  if (imgDataResult.rowCount === 0) {
+    context.done('Image data not found');
+    return 'Image data not found';
   }
+
   try {
-    const response = await cloudinary.uploader.upload(body.get('img'), {
-      folder: 'tngvi',
-    });
+    const response = await cloudinary.uploader.upload(
+      imgDataResult.rows[0].data,
+      {
+        folder: 'tngvi',
+      }
+    );
 
     const personId = cuid();
     const text =
-      'INSERT INTO "Person" (id, "name", "image", "title", "blurb", "remembrance", "createdDate") VALUES($1, $2, $3, $4, $5, $6, $7)';
+      'INSERT INTO "Person" (id, "name", "image", "title", "blurb", "remembrance", "createdDate", "enabled") VALUES($1, $2, $3, $4, $5, $6, $7, $8)';
     const values = [
       personId,
       body.get('name'),
@@ -41,6 +49,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
       body.get('blurb'),
       body.get('remembrance') ? body.get('remembrance') : '',
       new Date(),
+      'FALSE',
     ];
     await client.query(text, values);
 
@@ -49,6 +58,15 @@ const activityFunction: AzureFunction = async function (context: Context) {
       personId,
       context.bindingData.body.userId,
     ]);
+
+    const delImgDataText = `DELETE FROM "Temp" WHERE "id" = '${userId}'`;
+    const delResult = await client.query(delImgDataText);
+
+    if (delResult.rowCount === 0) {
+      context.done('Could not delete temporary image data.');
+      return 'Could not delete temporary image data.';
+    }
+
     await client.end();
   } catch (e) {
     context.log.error(`Query error: ${e.message}`);

@@ -15,12 +15,7 @@ import cuid = require('cuid');
 import { Client } from 'pg';
 
 const activityFunction: AzureFunction = async function (context: Context) {
-  let body = null;
-  try {
-    body = new URLSearchParams(context.bindings.req.body);
-  } catch (err) {
-    context.done(`Invalid body`);
-  }
+  let body: URLSearchParams = new URLSearchParams(context.bindings.req);
 
   const client = new Client({
     connectionString: process.env.DB_URI,

@@ -221,12 +221,16 @@ export default function GetInvolved() {
                                         disabled={editStatus==='submitted' } className={`bg-lynx placeholder:text-bluegreen
                                         py-4 px-4 border-2 max-w-[200px] rounded-full transition-all ${editStatus=='no_user'
                                         ? 'border-[#F4B477]' : 'border-bluegreen' }`} />
+
                                     {editStatus !== 'submitted' ?
+                                    <div>
+                                    <input type="submit" value="Submit your token" name="submit" aria-hidden="true" className='hidden' />
                                     <button className={`inline-block rounded-full px-10 py-2 mt-4 uppercase border-2
                                         border-oasis text-purple text-sm lg:text-lg max-w-[200px] transition-all
                                         hover:bg-oasis`}>
                                         Next
                                     </button>
+                                    </div>
                                     :
                                     // Loading
                                     <svg width="60" height="24" viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg"
@@ -267,8 +271,8 @@ export default function GetInvolved() {
                             }
                         </form>
                     }
-                    <form id="edit" ref={editFormRef} onSubmit={e => SubmitProfile(e, 'edit')}>
                         {editStatus === 'form' &&
+                    <form id="edit" ref={editFormRef} onSubmit={e => SubmitProfile(e, 'edit')}>
 
                             <div>
                                 <h3 className="text-2xl text-bluegreen font-semibold mb-8">Edit your profile</h3>
@@ -345,6 +349,7 @@ export default function GetInvolved() {
                                 }
                                     </div> 
                             </div>
+                    </form>
                         }
                                     
                         {editStatus === 'success' &&
@@ -357,7 +362,6 @@ export default function GetInvolved() {
                                 Sorry, there was a problem. Try again later, please.
                             </span>
                         }
-                    </form>
                     
                     <hr />
                     

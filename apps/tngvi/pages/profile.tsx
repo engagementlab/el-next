@@ -272,29 +272,37 @@ export default function GetInvolved() {
 
                             <div>
                                 <h3 className="text-2xl text-bluegreen font-semibold mb-8">Edit your profile</h3>
-                                        <div className='flex flex-col'>
-                                            <p>*Required</p>
+                                <div className='flex flex-col'>
+                                    <p>*Required</p>
 
-                                            <input type='hidden' aria-hidden='true' name='token' id='token' value={userToken} />
-                                            <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
-                                                aria-label="Enter your full name" minLength={5} required disabled={submitted} defaultValue={formData['name']}
-                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                    <input type='hidden' aria-hidden='true' name='token' id='token' value={userToken} />
+                                    <p className='text-purple font-semibold'>Name you'd like displayed, including
+                                        preferred prefix or suffixes*</p>
+                                    <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
+                                        aria-label="Enter your full name" minLength={5} required disabled={submitted}
+                                        defaultValue={formData['name']} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                             transition-all border-bluegreen" />
-                                            <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
-                                                aria-label="Enter your title" minLength={5} required disabled={submitted} defaultValue={formData['title']}
-                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
-                                            transition-all border-bluegreen mt-4" />
-                                            <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
-                                                id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
-                                                minLength={5} disabled={submitted} defaultValue={formData['remembrance']} 
-                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
-                                                            transition-all border-bluegreen mt-4" />
-                                            <textarea placeholder="YOUR BIO*" name="blurb" id="blurb"
-                                                aria-label="Enter your bio" minLength={25} maxLength={800} rows={8} required
-                                                disabled={submitted} defaultValue={formData['blurb']} 
-                                                className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-large
+                                    <p className='text-purple font-semibold'>Title and Organization/affiliation you'd
+                                        like listed (if applicable)*</p>
+
+                                    <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
+                                        aria-label="Enter your title" minLength={5} required disabled={submitted}
+                                        defaultValue={formData['title']} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                                transition-all border-bluegreen mt-4" />
+                                    <p className='text-purple font-semibold'>In remembrance of: (Name, birth and death
+                                        date of someone close to you killed by gun violence) if applicable</p>
+                                    <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
+                                        id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
+                                        minLength={5} disabled={submitted} defaultValue={formData['remembrance']}
+                                        className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
+                                                transition-all border-bluegreen mt-4" />
+                                    <p className='text-purple font-semibold'>Why are you involved in TNGV? (800
+                                        characters max)*</p>
+                                    <textarea placeholder="WHY ARE YOU INVOLVED*" name="blurb" id="blurb"
+                                        aria-label="Enter your bio" minLength={25} maxLength={800} rows={8} required
+                                        disabled={submitted} defaultValue={formData['blurb']} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-large
                                                         transition-all border-bluegreen mt-4" />
-                                            <img src={`https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_250/${formData['image'].public_id}`} className="max-w-xs mt-4" />
+                                    <img src={`https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_250/${formData['image'].public_id}`} className="max-w-xs mt-4" />
                                             <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
                                                     <div {...getRootProps({ className: 'dropzone bg-sorbet/30 p-4 mt-4 rounded-large cursor-pointer' })}>
                                                         <input {...getInputProps()} />
@@ -361,26 +369,30 @@ export default function GetInvolved() {
                                 <h2 className="text-2xl text-bluegreen font-semibold mb-8">Submit one!</h2>
                                 <div className='flex flex-col'>
                                     <p>*Required</p>
+                                    <p className='text-purple font-semibold'>Name you'd like displayed, including preferred prefix or suffixes*</p>
                                     <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
                                         aria-label="Enter your full name" minLength={5} required disabled={submitted}
                                         className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                     transition-all border-bluegreen" />
+                                    <p className='text-purple font-semibold'>Title and Organization/affiliation you'd like listed (if applicable)*</p>
                                     <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
                                         aria-label="Enter your title" minLength={5} required disabled={submitted}
                                         className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                     transition-all border-bluegreen mt-4" />
+                                     <p className='text-purple font-semibold'>In remembrance of: (Name, birth and death date of someone close to you killed by gun violence) if applicable</p>
                                     <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
                                         id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
                                         minLength={5} disabled={submitted} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                                     transition-all border-bluegreen mt-4" />
-                                    <textarea placeholder="YOUR BIO*" name="blurb" id="blurb"
+                                    <p className='text-purple font-semibold'>Why are you involved in TNGV? (800 characters max)*</p>
+                                    <textarea placeholder="WHY ARE YOU INVOLVED*" name="blurb" id="blurb"
                                         aria-label="Enter your bio" minLength={25} maxLength={800} rows={5} required
                                         disabled={submitted} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-large
                                     transition-all border-bluegreen mt-4" />
                                     <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
                                             <div {...getRootProps({ className: 'dropzone bg-sorbet/30 p-4 mt-4 rounded-large cursor-pointer' })}>
                                                 <input {...getInputProps()} />
-                                                <p>Drag and drop a bio image here, or click to select one.*  <em>(Only *.jpeg and *.png images accepted)</em></p>
+                                                <p><strong>Drag and drop a bio image here, or click to select one.*</strong> Please try to use a high-quality image. <em>(Only *.jpeg and *.png images accepted)</em></p>
                                                 
                                                 {acceptedFileItems.length > 0 && (
                                                     <aside>

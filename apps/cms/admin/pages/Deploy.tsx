@@ -16,6 +16,7 @@ import create, {
     UseBoundStore,
     State
 } from 'zustand';
+import React from 'react';
 
 type NavState = {
     confirmed: boolean

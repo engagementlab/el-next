@@ -6,5 +6,5 @@
       "direction": "in"
     }
   ],
-  "scriptFile": "../dist/UserOrchestrator/index.js"
+  "scriptFile": "../dist/UserEditOrchestrator/index.js"
 }

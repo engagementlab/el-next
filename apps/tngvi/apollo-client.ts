@@ -1,6 +1,5 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 
-console.log('apollo', process.env.APOLLO_CLIENT_GRAPHQL_URI);
 const apollo = new ApolloClient({
   uri:
     process.env.APOLLO_CLIENT_GRAPHQL_URI ||
@@ -17,7 +16,6 @@ const query = async (name: string, queryStr: string) => {
             }
       `,
     });
-    console.log(result);
     return result.data[name];
   } catch (err: any) {
     if (err.networkError) console.error(err.networkError.result);

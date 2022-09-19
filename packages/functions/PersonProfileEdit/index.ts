@@ -1,38 +1,68 @@
 ﻿import { AzureFunction, Context } from '@azure/functions';
 
-const cuid = require('cuid');
+import { v2 as cloudinary } from 'cloudinary';
+
 const { Client } = require('pg');
 
 const activityFunction: AzureFunction = async function (context: Context) {
-  const body = context.bindings.body;
-  if (!body.name) {
-    context.done(`Missing "name"`);
-  } else if (!body.title) {
-    context.done(`Missing "title"`);
-  } else if (!body.blurb) {
-    context.done(`Missing "blurb"`);
+  let body: URLSearchParams = null;
+  let imgResponse = null;
+  try {
+    body = new URLSearchParams(context.bindings.input);
+  } catch (err) {
+    context.done(`Invalid body`);
   }
+
   const client = new Client({
     connectionString: process.env.DB_URI,
   });
-  try {
-    await client.connect();
-  } catch (e) {
-    context.log(e);
-    context.done(`Connect error: ${e.message}`);
+  await client.connect();
+
+  const userId = body.get('name').toLocaleLowerCase().replace(/ /g, '-');
+  const getImgDataText = `SELECT "data" FROM "Temp" WHERE "id" = '${userId}'`;
+
+  // Retrieve base64 img string for new user from DB
+  const imgDataResult = await client.query(getImgDataText);
+  if (imgDataResult.rowCount === 1) {
+    // Upload new img if found
+    imgResponse = await cloudinary.uploader.upload(imgDataResult.rows[0].data, {
+      folder: 'tngvi',
+    });
   }
+
   try {
-    const text =
-      'UPDATE Person SET name = $1 title = $2 blurb = $3 remembrance = $4 WHERE id = $5';
+    const getBioIdText = 'SELECT "bioId" FROM "User" WHERE "accessToken" = $1';
+    const bioIdResult = await client.query(getBioIdText, [body.get('token')]);
+    if (bioIdResult.rowCount === 0) {
+      context.done('User not found');
+      return 'User not found';
+    }
+
+    const updateProfileText = `UPDATE "Person" SET "name" = $1, "title" = $2, "blurb" = $3, "remembrance" = $4${
+      imgResponse ? ', "image" = $5' : ''
+    } WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
     const values = [
-      cuid(),
-      body.name,
-      body.title,
-      body.blurb,
-      body.remembrance ? body.remembrance : '',
+      body.get('name'),
+      body.get('title'),
+      body.get('blurb'),
+      body.get('remembrance') ? body.get('remembrance') : '',
     ];
-    await client.query(text, values);
+    if (imgResponse) values.push(imgResponse);
+
+    await client.query(updateProfileText, values);
+
+    if (imgDataResult.rowCount === 1) {
+      const delImgDataText = `DELETE FROM "Temp" WHERE "id" = '${userId}'`;
+      const delResult = await client.query(delImgDataText);
+
+      if (delResult.rowCount === 0) {
+        context.done('Could not delete temporary image data.');
+        return 'Could not delete temporary image data.';
+      }
+    }
+
     await client.end();
+    return 'done';
   } catch (e) {
     context.log.error(`Query error: ${e.message}`);
     throw e;

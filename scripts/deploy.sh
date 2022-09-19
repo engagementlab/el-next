@@ -7,8 +7,13 @@
 nvm use;
 yarn;
 yarn build;
-cd apps/tngvi;
+cd apps/cms;
 yarn;
-yarn dev;
+
+pm2 restart 'el-cms-new'; 
+
+cd ../tngvi;
+nvm use;
+yarn;
 
 pm2 restart 'transform-narratives'; 

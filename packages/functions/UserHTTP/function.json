@@ -22,5 +22,5 @@
       "direction": "in"
     }
   ],
-  "scriptFile": "../dist/UserCreateHTTP/index.js"
+  "scriptFile": "../dist/UserHTTP/index.js"
 }

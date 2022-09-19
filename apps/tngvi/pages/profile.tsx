@@ -286,13 +286,13 @@ export default function GetInvolved() {
                                         like listed (if applicable)*</p>
 
                                     <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
-                                        aria-label="Enter your title" minLength={5} required disabled={submitted}
+                                        aria-label="Enter your title" minLength={5} maxLength={100} required disabled={submitted}
                                         defaultValue={formData['title']} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                                 transition-all border-bluegreen mt-4" />
                                     <p className='text-purple font-semibold'>In remembrance of: (Name, birth and death
                                         date of someone close to you killed by gun violence) if applicable</p>
                                     <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
-                                        id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
+                                        id="remembrance" width="800" maxLength={100} aria-label="Enter your remembrance (optional)"
                                         minLength={5} disabled={submitted} defaultValue={formData['remembrance']}
                                         className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                                 transition-all border-bluegreen mt-4" />
@@ -376,12 +376,12 @@ export default function GetInvolved() {
                                     transition-all border-bluegreen" />
                                     <p className='text-purple font-semibold'>Title and Organization/affiliation you'd like listed (if applicable)*</p>
                                     <input type='text' placeholder="YOUR TITLE*" name="title" id="title" width="800"
-                                        aria-label="Enter your title" minLength={5} required disabled={submitted}
+                                        aria-label="Enter your title" minLength={5} maxLength={100} required disabled={submitted}
                                         className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                     transition-all border-bluegreen mt-4" />
                                      <p className='text-purple font-semibold'>In remembrance of: (Name, birth and death date of someone close to you killed by gun violence) if applicable</p>
                                     <input type='text' placeholder="YOUR REMEMBRANCE" name="remembrance"
-                                        id="remembrance" width="800" aria-label="Enter your remembrance (optional)"
+                                        id="remembrance" width="800" maxLength={100} aria-label="Enter your remembrance (optional)"
                                         minLength={5} disabled={submitted} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full
                                                     transition-all border-bluegreen mt-4" />
                                     <p className='text-purple font-semibold'>Why are you involved in TNGV? (800 characters max)*</p>

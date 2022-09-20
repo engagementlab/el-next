@@ -785,10 +785,18 @@ type Person {
   title: String
   createdDate: DateTime
   enabled: Boolean
+  tag: PersonTagType
   image: CloudinaryImage_File
   blurb: String
   remembrance: String
   content: Person_content_Document
+}
+
+enum PersonTagType {
+  student
+  faculty
+  partner
+  staff
 }
 
 type Person_content_Document {
@@ -808,8 +816,16 @@ input PersonWhereInput {
   title: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
+  tag: PersonTagTypeNullableFilter
   blurb: StringFilter
   remembrance: StringFilter
+}
+
+input PersonTagTypeNullableFilter {
+  equals: PersonTagType
+  in: [PersonTagType!]
+  notIn: [PersonTagType!]
+  not: PersonTagTypeNullableFilter
 }
 
 input PersonOrderByInput {
@@ -818,6 +834,7 @@ input PersonOrderByInput {
   title: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
+  tag: OrderDirection
   blurb: OrderDirection
   remembrance: OrderDirection
 }
@@ -827,6 +844,7 @@ input PersonUpdateInput {
   title: String
   createdDate: DateTime
   enabled: Boolean
+  tag: PersonTagType
   image: Upload
   blurb: String
   remembrance: String
@@ -843,6 +861,7 @@ input PersonCreateInput {
   title: String
   createdDate: DateTime
   enabled: Boolean
+  tag: PersonTagType
   image: Upload
   blurb: String
   remembrance: String

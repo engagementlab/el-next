@@ -7,7 +7,7 @@ export AZURE_STORAGE_CONNECTION_STRING=$AZURE_STORAGE_CONNECTION_STRING
 
 echo "------- Upload app build to Azure. -------"
 # Upload app build to Azure
-az storage blob upload-batch --overwrite true -d '$web' -s ./client/out
+az storage blob upload-batch --overwrite true -d '$web' -s ./apps/tngvi/out
 
 echo "------- Clear CDN cache. -------"
 # Clear CDN cache

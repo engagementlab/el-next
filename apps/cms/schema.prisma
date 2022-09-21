@@ -100,15 +100,16 @@ model NewsItem {
 }
 
 model Person {
-  id          String    @id @default(cuid())
-  name        String    @default("")
-  title       String    @default("")
+  id          String         @id @default(cuid())
+  name        String         @default("")
+  title       String         @default("")
   createdDate DateTime?
-  enabled     Boolean   @default(true)
+  enabled     Boolean        @default(true)
+  tag         PersonTagType?
   image       Json?
-  blurb       String    @default("")
-  remembrance String    @default("")
-  content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  blurb       String         @default("")
+  remembrance String         @default("")
+  content     Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Studio {
@@ -146,4 +147,11 @@ enum FilterTypeType {
 enum FilterSectionType {
   media
   studio
+}
+
+enum PersonTagType {
+  student
+  faculty
+  partner
+  staff
 }

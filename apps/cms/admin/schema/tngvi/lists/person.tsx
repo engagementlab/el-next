@@ -3,6 +3,7 @@ import {
 } from '@keystone-6/core';
 import {
   checkbox,
+  select,
   text
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
@@ -30,6 +31,16 @@ const Person: Lists.Person = list({
     createdDate: CreatedTimestamp,
     enabled: checkbox({
       defaultValue: true,
+    }),
+    tag: select({
+      type: 'enum',
+      options: [
+        { label: 'Student', value: 'student' },
+        { label: 'Faculty', value: 'faculty' },
+        { label: 'Partner', value: 'partner' },
+        { label: 'Staff', value: 'staff' },
+      ],
+      ui: { displayMode: 'segmented-control' },
     }),
     image: cloudinaryImage({
       cloudinary: {

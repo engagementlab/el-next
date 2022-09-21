@@ -49,6 +49,8 @@ const useStore = create < FormState > (set => ({
     })
 }));
 export default function GetInvolved() {
+
+    const functionUrl = process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI || 'https://elab-initiatives-api.azurewebsites.net/api';
     const editFormRef = useRef<HTMLFormElement>(null);
     const status = useStore(state => state.status);
     const editStatus = useStore(state => state.editStatus);
@@ -82,8 +84,8 @@ export default function GetInvolved() {
     ));
     const SubmitProfile = async (e: React.FormEvent < HTMLFormElement >, mode: string) => {
         const edit = mode === 'edit';
-        const url = edit ? `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserEditOrchestrator` :
-                                      `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/orchestrators/UserCreateOrchestrator`;
+        const url = edit ? `${functionUrl}/orchestrators/UserEditOrchestrator` :
+                                      `${functionUrl}/orchestrators/UserCreateOrchestrator`;
         let form = e.target as HTMLFormElement;
         
         e.preventDefault();
@@ -183,7 +185,7 @@ export default function GetInvolved() {
         setEditStatus('code');
 
         try {            
-            const requestResult = await axios.get(`${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/PersonProfileGet?token=${token}`);
+            const requestResult = await axios.get(`${functionUrl}/PersonProfileGet?token=${token}`);
 
             // No user 
             if(requestResult.status === 204) {

@@ -4,14 +4,13 @@ import {
 import {
   Image
 } from '@el-next/components/image';
+import { DocumentRenderer, } from '@keystone-6/document-renderer';
 
 import create, {
   Mutate,
   GetState,
   SetState,
   StoreApi,
-  UseBoundStore,
-  State
 } from 'zustand'
 import {
   subscribeWithSelector
@@ -26,6 +25,8 @@ import query from "../../apollo-client";
 import {
   useRouter
 } from 'next/router';
+import { DocRenderers, BlockRenderers, HeadingStyle } from '@el-next/components';
+import { ReactNode } from 'react';
 
 type CommunityPage = {
   values: any;
@@ -41,15 +42,23 @@ type Person = {
   content: any;
 };
 
-interface ItemRendererProps < T > {
-  item: T;
-  toggleFilter: (filter: string) => void;
-}
 type FilterState = {
   currentFilter: string;
   toggle: (filter: string) => void
   reset: () => void
 }
+
+
+const rendererOverrides = {
+  heading: (level: number, children: ReactNode, textAlign: any) => {
+
+    const customRenderers = {
+      4: 'text-xl font-semibold text-coated my-8',
+      5: 'text-lg font-extrabold text-purple'
+    };
+    return HeadingStyle(level, children, textAlign, customRenderers);
+},
+};
 
 let filterOverride: string | null = null;
 // Create store with Zustand
@@ -91,7 +100,6 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
   const selectedFilter = useStore(state => state.currentFilter);
 
   const haveFilters = selectedFilter.length > 0;
-  console.log('selectedFilter',selectedFilter)
   const haveSpecificFilter = (key: string) => {
     return selectedFilter === key
   };
@@ -106,11 +114,11 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
     
     const linkClass = 'no-underline border-b-2 border-b-[rgba(2,102,112,0)] hover:border-b-[rgba(2,102,112,1)] transition-all';
   
-    const menu = <div className="flex justify-between">
-                  {filters.map(filter => {
-                      return (
-                          <span key={filter} className={`text-lg xl:text-sm font-semibold my-8 xl:my-4
-                              ${!haveSpecificFilter(filter) ? 'text-bluegreen' : 'text-purple' }`}>
+    const menu = <div className="flex justify-between md:w-1/2 lg:w-1/4">
+                    <span>Filter:</span>
+                    {filters.map(filter => {
+                    return (
+                      <span key={filter} className={`font-semibold capitalize ${!haveSpecificFilter(filter) ? 'text-bluegreen' : 'text-purple' }`}>
                               <a href="#" onClick={(e)=>{ toggleFilter(filter); filterOverride = filter; e.preventDefault() }}
                                   className='w-full flex items-center justify-between'>
                                   <span className={!haveSpecificFilter(filter) ? linkClass : ''}>
@@ -119,33 +127,28 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
                               </a>
                           </span>
                       )
-                  })}
+                    })}
+                    <a href="#" className="text-bluegreen" onClick={(e)=>{ reset(); e.preventDefault() }}
+                      style={{visibility: !haveFilters ? 'hidden' : 'visible'}}><svg width="24px" height="24px"
+                        viewBox="0 0 24 24">
+                        <path  style={{fill: '#8D33D2'}} fill-rule="evenodd"
+                          d="M5.72 5.72a.75.75 0 011.06 0L12 10.94l5.22-5.22a.75.75 0 111.06 1.06L13.06 12l5.22 5.22a.75.75 0 11-1.06 1.06L12 13.06l-5.22 5.22a.75.75 0 01-1.06-1.06L10.94 12 5.72 6.78a.75.75 0 010-1.06z" />
+                        </svg></a>
                 </div>;
   
-    return(<div> 
-            {/* Tablet portrait+ */}
-            <div className="hidden lg:block">
-                <div className="mr-4 flex justify-between">
-                    <span>Filter:</span>
-                    <a href="#" className="text-bluegreen" onClick={(e) =>{ reset(); e.preventDefault() }}  style={{visibility: !haveFilters ? 'hidden' : 'visible'}}>Clear</a>
-                </div>
-                {menu}
-            </div>
-        </div>);
+    return(<div>{menu}</div>);
   
   };
+
   return (
     <Layout>
       <div className='container mt-14 mb-24 xl:mt-16 px-4 xl:px-8'>
-          {/* <div
-          className="container mt-14 mb-14 xl:mt-16 px-4 xl:px-8">
-              <h2 className="text-2xl text-bluegreen font-semibold">About Our Community</h2>
-              <DocumentRenderer document={page.values.document} renderers={DocRenderers(rendererOverrides)} componentBlocks={BlockRenderers()} />
-          </div> */}
+          <h2 className="text-2xl text-bluegreen font-semibold">About Our Community</h2>
+          <DocumentRenderer document={page.values.document} renderers={DocRenderers(rendererOverrides)} componentBlocks={BlockRenderers()} />
+          <hr className='border-sorbet' />
           <h2 className="text-xl text-coated font-semibold mt-14 mb-12">Our Community</h2>
           {RenderFilters(['student', 'faculty', 'partner', 'staff' ])}
-          <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 lg:grid-cols-2">
-              {/* <hr className='border-sorbet' /> */}
+          <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 md:grid-cols-2">
               <AnimatePresence>
                 {filteredItems.map((person, i) => (
                   <div key={i} className='flex flex-col mt-5'>
@@ -161,7 +164,7 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
                         <div>
                             <h3 className='text-xl font-semibold text-coated'>{person.name}</h3>
                             <p className="mt-2 mb-8">{person.title}</p>
-                            <p className="text-purple">{person.tag}</p>
+                            {/* <p className="text-purple">{person.tag}</p> */}
                             
                             {/* < {person.blurb && (
                                 <p>

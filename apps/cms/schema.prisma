@@ -2,8 +2,9 @@
 // Modify your Keystone config when you want to change this.
 
 datasource postgresql {
-  url      = env("DATABASE_URL")
-  provider = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider          = "postgresql"
 }
 
 generator client {
@@ -100,16 +101,18 @@ model NewsItem {
 }
 
 model Person {
-  id          String         @id @default(cuid())
-  name        String         @default("")
-  title       String         @default("")
-  createdDate DateTime?
-  enabled     Boolean        @default(true)
-  tag         PersonTagType?
-  image       Json?
-  blurb       String         @default("")
-  remembrance String         @default("")
-  content     Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id              String    @id @default(cuid())
+  name            String    @default("")
+  key             String    @default("")
+  title           String    @default("")
+  createdDate     DateTime?
+  enabled         Boolean   @default(true)
+  currentlyActive Boolean   @default(true)
+  tag             Json      @default("[]")
+  image           Json?
+  blurb           String    @default("")
+  remembrance     String    @default("")
+  content         Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Studio {
@@ -147,11 +150,4 @@ enum FilterTypeType {
 enum FilterSectionType {
   media
   studio
-}
-
-enum PersonTagType {
-  student
-  faculty
-  partner
-  staff
 }

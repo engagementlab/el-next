@@ -782,21 +782,16 @@ input NewsItemCreateInput {
 type Person {
   id: ID!
   name: String
+  key: String
   title: String
   createdDate: DateTime
   enabled: Boolean
-  tag: PersonTagType
+  currentlyActive: Boolean
+  tag: [String!]
   image: CloudinaryImage_File
   blurb: String
   remembrance: String
   content: Person_content_Document
-}
-
-enum PersonTagType {
-  student
-  faculty
-  partner
-  staff
 }
 
 type Person_content_Document {
@@ -813,38 +808,35 @@ input PersonWhereInput {
   NOT: [PersonWhereInput!]
   id: IDFilter
   name: StringFilter
+  key: StringFilter
   title: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
-  tag: PersonTagTypeNullableFilter
+  currentlyActive: BooleanFilter
   blurb: StringFilter
   remembrance: StringFilter
-}
-
-input PersonTagTypeNullableFilter {
-  equals: PersonTagType
-  in: [PersonTagType!]
-  notIn: [PersonTagType!]
-  not: PersonTagTypeNullableFilter
 }
 
 input PersonOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  key: OrderDirection
   title: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
-  tag: OrderDirection
+  currentlyActive: OrderDirection
   blurb: OrderDirection
   remembrance: OrderDirection
 }
 
 input PersonUpdateInput {
   name: String
+  key: String
   title: String
   createdDate: DateTime
   enabled: Boolean
-  tag: PersonTagType
+  currentlyActive: Boolean
+  tag: [String!]
   image: Upload
   blurb: String
   remembrance: String
@@ -858,10 +850,12 @@ input PersonUpdateArgs {
 
 input PersonCreateInput {
   name: String
+  key: String
   title: String
   createdDate: DateTime
   enabled: Boolean
-  tag: PersonTagType
+  currentlyActive: Boolean
+  tag: [String!]
   image: Upload
   blurb: String
   remembrance: String
@@ -1241,6 +1235,7 @@ type KeystoneAdminUIListMeta {
 type KeystoneAdminUIFieldMeta {
   path: String!
   label: String!
+  description: String
   isOrderable: Boolean!
   isFilterable: Boolean!
   fieldMeta: JSON

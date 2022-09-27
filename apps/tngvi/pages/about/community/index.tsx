@@ -20,13 +20,14 @@ import {
   AnimatePresence
 } from "framer-motion"
 
-import Layout from '../../components/Layout';
-import query from "../../apollo-client";
+import Layout from '../../../components/Layout';
+import query from "../../../apollo-client";
 import {
   useRouter
 } from 'next/router';
 import { DocRenderers, BlockRenderers, HeadingStyle } from '@el-next/components';
 import { ReactNode } from 'react';
+import Link from 'next/link';
 
 type CommunityPage = {
   values: any;
@@ -34,8 +35,10 @@ type CommunityPage = {
 
 type Person = {
   name: string;
+  key: string;
   tag: string;
   title: string;
+  currentlyActive: boolean;
   remembrance: string;
   blurb: string;
   image: any;
@@ -43,7 +46,8 @@ type Person = {
 };
 
 type FilterState = {
-  currentFilter: string;
+  currentFilters: never[];
+  // currentFilter: string;
   toggle: (filter: string) => void
   reset: () => void
 }
@@ -72,12 +76,19 @@ const useStore = create <
   >
   (
     subscribeWithSelector((set) => ({
-      currentFilter: '',
-      toggle: (filter: string) => set({
-        currentFilter: filter
-      }),
+      currentFilters: [],
+      toggle: (filter: any) => set((state) => {
+        return state.currentFilters.includes(filter as never) ? {
+                ...state,
+                currentFilters: state.currentFilters.filter(e => e !== filter)
+            } :
+            {
+                ...state,
+                currentFilters: [...state.currentFilters, filter as never]
+            }
+    }),
       reset: () => set({
-        currentFilter: ''
+        currentFilters: []
       }),
     })));
 
@@ -85,7 +96,7 @@ const useStore = create <
 //   console.log('current', current)
 //   history.replaceState({}, 'Filtered Data', `${location.pathname}?${current}`);
 // });
-export default function Community({ page, people }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Community({ page, currentPeople, previousPeople }: InferGetStaticPropsType<typeof getStaticProps>) {
 
   const router = useRouter();
   const toggleFilter = useStore(state => state.toggle);
@@ -97,19 +108,26 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
   
   // Store get/set
   // if(filterOverride && (preSelectedFilter !== filterOverride))
-  const selectedFilter = useStore(state => state.currentFilter);
+  const selectedFilters = useStore(state => state.currentFilters);
 
-  const haveFilters = selectedFilter.length > 0;
+  const haveFilters = selectedFilters.length > 0;
   const haveSpecificFilter = (key: string) => {
-    return selectedFilter === key
+    return _.values(selectedFilters).includes(key as never)
   };
   const reset = useStore(state => state.reset);
+  
+  const filteredCurrentPpl = currentPeople.filter(
+    // If selected filters empty, show all...
+    item => selectedFilters.length === 0 ||
+    // ...otherwise, item's filters must match ALL selected filters
+    _.every(selectedFilters, r => _.map(item.tag).indexOf(r) >= 0));
 
-    const filteredItems = people.filter(
-        // If selected filters empty, show all...
-        item => selectedFilter === '' ||
-        // ...otherwise, item's tag must match selected filter
-        item.tag === selectedFilter);
+  const filteredPreviousPpl = previousPeople.filter(
+    // If selected filters empty, show all...
+    item => selectedFilters.length === 0 ||
+    // ...otherwise, item's filters must match ALL selected filters
+    _.every(selectedFilters, r => _.map(item.tag).indexOf(r) >= 0));
+  
   const RenderFilters = (filters: string[]) => {
     
     const linkClass = 'no-underline border-b-2 border-b-[rgba(2,102,112,0)] hover:border-b-[rgba(2,102,112,1)] transition-all';
@@ -131,13 +149,62 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
                     <a href="#" className="text-bluegreen" onClick={(e)=>{ reset(); e.preventDefault() }}
                       style={{visibility: !haveFilters ? 'hidden' : 'visible'}}><svg width="24px" height="24px"
                         viewBox="0 0 24 24">
-                        <path  style={{fill: '#8D33D2'}} fill-rule="evenodd"
+                        <path  style={{fill: '#8D33D2'}} fillRule="evenodd"
                           d="M5.72 5.72a.75.75 0 011.06 0L12 10.94l5.22-5.22a.75.75 0 111.06 1.06L13.06 12l5.22 5.22a.75.75 0 11-1.06 1.06L12 13.06l-5.22 5.22a.75.75 0 01-1.06-1.06L10.94 12 5.72 6.78a.75.75 0 010-1.06z" />
                         </svg></a>
                 </div>;
   
     return(<div>{menu}</div>);
   
+  };
+
+  const RenderPeople = (people: Person[]) => {
+    return (
+      people.length === 0 ?
+      <p className='w-full text-xl my-20 text-center'>Sorry, no matches found. Please try other filters.</p> :
+      <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 md:grid-cols-2">
+        <AnimatePresence>
+          {people.map((person, i) => (
+            
+            <Link href={`/about/community/${person.key}`} passHref>
+              <a>
+                <div key={i} className='flex flex-col mt-5'>
+                    <div>
+                        {person.image ?
+                          <Image id={`thumb-${i}`} alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={300} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' /> :
+                          <svg viewBox="0 0 300 255" width="300" height="255" stroke="#000000" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#000000">
+                            <title>{`Missing image of person with name "${person.name}"`}</title>
+                            <path d="M 57.509 200 C 57.509 165.5 103.509 165.5 126.509 142.5 C 138.009 131 103.509 131 103.509 73.5 C 103.509 35.17 118.838 16 149.509 16 C 180.179 16 195.509 35.17 195.509 73.5 C 195.509 131 161.009 131 172.509 142.5 C 195.509 165.5 241.509 165.5 241.509 200" style={{stroke: 'rgb(141, 51, 210)', strokeOpacity: 0.36, strokeWidth: '7px'}}></path>
+                          </svg>
+                        }
+                    </div>
+                    <div>
+                        <h3 className='text-xl font-semibold text-coated'>{person.name}</h3>
+                        <p className="mt-2 mb-8">{person.title}</p>
+                        {/* <p className="text-purple">{person.tag}</p> */}
+                        
+                        {/* < {person.blurb && (
+                          <p>
+                          <span className="text-coated font-semibold">
+                          What brings you here?
+                          </span>
+                          <br />
+                          {person.blurb}
+                          </p>
+                          )}
+                          {person.remembrance && (
+                            <p className="text-purple font-semibold">
+                            Engaged in remembrance of {person.remembrance}.
+                            </p>
+                          )}DocumentRenderer document={person.content.document} renderers={renderers} componentBlocks={BlockRenderers} /> */}
+                    </div>
+                </div>
+              </a>
+            </Link>
+          ))}
+        </AnimatePresence>
+      </div>
+    )
   };
 
   return (
@@ -148,43 +215,10 @@ export default function Community({ page, people }: InferGetStaticPropsType<type
           <hr className='border-sorbet' />
           <h2 className="text-xl text-coated font-semibold mt-14 mb-12">Our Community</h2>
           {RenderFilters(['student', 'faculty', 'partner', 'staff' ])}
-          <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 md:grid-cols-2">
-              <AnimatePresence>
-                {filteredItems.map((person, i) => (
-                  <div key={i} className='flex flex-col mt-5'>
-                        <div>
-                            {person.image ?
-                              <Image id={`thumb-${i}`} alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={300} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' /> :
-                              <svg viewBox="0 0 300 255" width="300" height="255" stroke="#000000" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#000000">
-                                <title>{`Missing image of person with name "${person.name}"`}</title>
-                                <path d="M 57.509 200 C 57.509 165.5 103.509 165.5 126.509 142.5 C 138.009 131 103.509 131 103.509 73.5 C 103.509 35.17 118.838 16 149.509 16 C 180.179 16 195.509 35.17 195.509 73.5 C 195.509 131 161.009 131 172.509 142.5 C 195.509 165.5 241.509 165.5 241.509 200" style={{stroke: 'rgb(141, 51, 210)', strokeOpacity: 0.36, strokeWidth: '7px'}}></path>
-                              </svg>
-                            }
-                        </div>
-                        <div>
-                            <h3 className='text-xl font-semibold text-coated'>{person.name}</h3>
-                            <p className="mt-2 mb-8">{person.title}</p>
-                            {/* <p className="text-purple">{person.tag}</p> */}
-                            
-                            {/* < {person.blurb && (
-                                <p>
-                                  <span className="text-coated font-semibold">
-                                  What brings you here?
-                                  </span>
-                                  <br />
-                                  {person.blurb}
-                                </p>
-                              )}
-                              {person.remembrance && (
-                                <p className="text-purple font-semibold">
-                                  Engaged in remembrance of {person.remembrance}.
-                                </p>
-                              )}DocumentRenderer document={person.content.document} renderers={renderers} componentBlocks={BlockRenderers} /> */}
-                        </div>
-                    </div>
-                ))}
-              </AnimatePresence>
-          </div>
+          <h3 className="text-lg font-extrabold text-purple mt-5">Current Participants</h3>
+          {RenderPeople(filteredCurrentPpl)}
+          <h3 className="text-lg font-extrabold text-purple mt-5">Previous Participants</h3>
+          {RenderPeople(filteredPreviousPpl)}
       </div>
     </Layout>
     
@@ -204,6 +238,8 @@ export async function getStaticProps() {
     'people',
     `people(orderBy: {name: asc}, where: { enabled: { equals: true }}) {
       name 
+      key
+      currentlyActive
       title
       tag
       blurb
@@ -217,12 +253,14 @@ export async function getStaticProps() {
     }`);
     
   const page = pageResult[0] as CommunityPage;
-  const people = peopleResult as Person[];
+  const currentPeople = (peopleResult as Person[]).filter(p=> p.currentlyActive);
+  const previousPeople = (peopleResult as Person[]).filter(p=> !p.currentlyActive);
  
   return {
     props: {
       page,
-      people
+      currentPeople,
+      previousPeople,
     }
   };
 }

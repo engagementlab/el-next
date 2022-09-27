@@ -1,7 +1,4 @@
-import {
-  BaseKeystoneTypeInfo,
-  DatabaseConfig,
-} from '@keystone-6/core/types';
+import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
 import axios from 'axios';
 
 import yargs from 'yargs/yargs';
@@ -10,46 +7,46 @@ import 'dotenv/config';
 import e from 'express';
 import session from 'express-session';
 
-import {
-  v2 as cloudinary
-} from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 
-import {
-  elab,
-  tngvi
-} from './admin/schema';
+import { elab, tngvi } from './admin/schema';
 
-import type {
-  Context
-} from '.keystone/types';
-import {
-  getNews
-} from './routes/news';
+import type { Context } from '.keystone/types';
+import { getNews } from './routes/news';
+import { setPplKeys } from './routes/people';
 
 type schemaIndexType = {
-  [key: string]: object,
-}
+  [key: string]: object;
+};
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
-    type: 'string'
+    type: 'string',
   },
   port: {
     type: 'number',
   },
 }).argv;
 const schemaMap: schemaIndexType = {
-  'elab': elab,
-  'tngvi': tngvi,
-}
+  elab: elab,
+  tngvi: tngvi,
+};
 
 const multer = require('multer');
 const upload = multer({
   limits: {
     fieldSize: 1024 * 1024 * 50,
-  }
+  },
 });
 const port = argv.port || 3000;
-const allowedHosts = ['localhost:8080', 'localhost:8081', `localhost:${port}`, 'qa.transformnarratives.org', 'cms.qa.transformnarratives.org', 'https://qa.transformnarratives.org', 'https://cms.qa.transformnarratives.org'];
+const allowedHosts = [
+  'localhost:8080',
+  'localhost:8081',
+  `localhost:${port}`,
+  'qa.transformnarratives.org',
+  'cms.qa.transformnarratives.org',
+  'https://qa.transformnarratives.org',
+  'https://cms.qa.transformnarratives.org',
+];
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -79,7 +76,7 @@ declare module 'express-session' {
     passport: {
       redirectTo: string;
       user: {
-        [key: string]: any
+        [key: string]: any;
       };
     };
   }
@@ -87,7 +84,7 @@ declare module 'express-session' {
 // const ciMode = process.env.NODE_ENV === 'ci';
 
 // Fallback
-let dbConfig: DatabaseConfig < BaseKeystoneTypeInfo > = {
+let dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = {
   provider: 'sqlite',
   url: 'file:./app.db',
 };
@@ -99,7 +96,8 @@ if (process.env.DB_URI) {
 }
 
 const Passport = () => {
-  const strategy = new AuthStrategy({
+  const strategy = new AuthStrategy(
+    {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.AUTH_CALLBACK_URL,
@@ -115,7 +113,8 @@ const Passport = () => {
       const email = profile.emails[0].value;
 
       try {
-        DB().userModel.findOne({
+        DB().userModel.findOne(
+          {
             email,
           },
           (err: any, user: any) => {
@@ -170,18 +169,17 @@ let ksConfig = (lists: any) => {
       maxFileSize: 1024 * 1024 * 50,
       extendExpressApp: (app: e.Express, createContext: any) => {
         app.all('/*', (req, res, next) => {
-            res.header('Access-Control-Allow-Origin', '*');
-            // res.header('Access-Control-Allow-Credentials', true)
-            res.header(
-              'Access-Control-Allow-Methods',
-              'GET, POST, OPTIONS, HEAD, PUT'
-            );
-            res.header('Access-Control-Expose-Headers', 'Content-Length');
-            res.header(
-              'Access-Control-Allow-Headers',
-              'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
-            );
-
+          res.header('Access-Control-Allow-Origin', '*');
+          // res.header('Access-Control-Allow-Credentials', true)
+          res.header(
+            'Access-Control-Allow-Methods',
+            'GET, POST, OPTIONS, HEAD, PUT'
+          );
+          res.header('Access-Control-Expose-Headers', 'Content-Length');
+          res.header(
+            'Access-Control-Allow-Headers',
+            'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
+          );
 
           if (req.method === 'OPTIONS') res.send(200);
           else next();
@@ -193,7 +191,7 @@ let ksConfig = (lists: any) => {
         });
 
         app.get('/rest/news/:key?', getNews);
-
+        app.get('/rest/ppl', setPplKeys);
 
         app.get('/prod-deploy', async (req, res, next) => {
           try {
@@ -208,7 +206,8 @@ let ksConfig = (lists: any) => {
 
         app.get('/media/get/:type', async (req, res) => {
           try {
-            cloudinary.api.resources({
+            cloudinary.api.resources(
+              {
                 prefix: 'tngvi',
                 resource_type: 'image',
                 type: req.params.type,
@@ -216,11 +215,14 @@ let ksConfig = (lists: any) => {
               },
               (e, response) => {
                 const sorted = response.resources.sort(
-                  (a: {
-                    created_at: number
-                  }, b: {
-                    created_at: number
-                  }) => {
+                  (
+                    a: {
+                      created_at: number;
+                    },
+                    b: {
+                      created_at: number;
+                    }
+                  ) => {
                     return (
                       new Date(b.created_at).getTime() -
                       new Date(a.created_at).getTime()
@@ -296,9 +298,13 @@ let ksConfig = (lists: any) => {
             try {
               p.authenticate(
                 'google',
-                (error: any, user: {
-                  permissions: any
-                }, info: any) => {
+                (
+                  error: any,
+                  user: {
+                    permissions: any;
+                  },
+                  info: any
+                ) => {
                   if (!user) return;
 
                   // Log user in
@@ -325,11 +331,8 @@ let ksConfig = (lists: any) => {
           app.use(p.session());
           app.use((req, res, next) => {
             // Ignore API paths
-            if(req.path.indexOf('/api') === 0) 
-              next();
-            else if (
-              !req.session.passport || !req.session.passport.user
-            ) {
+            if (req.path.indexOf('/api') === 0) next();
+            else if (!req.session.passport || !req.session.passport.user) {
               // console.log(req.session.redirectTo);
               // Cache URL to bring user to after auth
               req.session.redirectTo = req.originalUrl;
@@ -337,14 +340,17 @@ let ksConfig = (lists: any) => {
               // else {
               res.redirect('/cms/login');
               // }
-            } else if (req.session.passport && req.session.passport.user.isAdmin)
+            } else if (
+              req.session.passport &&
+              req.session.passport.user.isAdmin
+            )
               next();
           });
         }
       },
     },
   };
-}
+};
 
 export default (() => {
   return ksConfig(schemaMap[appName]);

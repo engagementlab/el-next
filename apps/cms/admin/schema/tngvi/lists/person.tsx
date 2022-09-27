@@ -4,6 +4,7 @@ import {
 import {
   checkbox,
   select,
+  multiselect,
   text
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
@@ -13,13 +14,25 @@ import {
 import {
   cloudinaryImage
 } from '../../../components/cloudinary';
-import { CreatedTimestamp } from '../../hooks';
+import { CreatedTimestamp, CreateKey } from '../../hooks';
 
 const Person: Lists.Person = list({
   fields: {
     name: text({
       validation: {
         isRequired: true
+      }
+    }),
+    key: text({
+      // isIndexed: 'unique',
+      isFilterable: true,
+      ui: {
+        createView: {
+          fieldMode:'hidden'
+        },
+        itemView: {
+          fieldMode: 'hidden'
+        }
       }
     }),
     title: text({
@@ -32,15 +45,16 @@ const Person: Lists.Person = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    tag: select({
-      type: 'enum',
+    currentlyActive: checkbox({ label: 'Current Participant', defaultValue: true}),
+    tag: multiselect({
+      label: 'Tags',
+      type: 'string',
       options: [
         { label: 'Student', value: 'student' },
         { label: 'Faculty', value: 'faculty' },
         { label: 'Partner', value: 'partner' },
         { label: 'Staff', value: 'staff' },
       ],
-      ui: { displayMode: 'segmented-control' },
     }),
     image: cloudinaryImage({
       cloudinary: {
@@ -68,6 +82,26 @@ const Person: Lists.Person = list({
   ui: {
     listView: { 
       initialColumns: ['name', 'title', 'image']
+    }
+  },
+  hooks: {
+    resolveInput: async ({
+      listKey,
+      operation,
+      inputData,
+      item,
+      resolvedData,
+      context,
+    }) => {
+      if(resolvedData.name) {
+
+        resolvedData = {
+          ...resolvedData,
+          key: CreateKey(resolvedData.name)
+        }
+
+      }
+      return resolvedData;
     }
   }
 });

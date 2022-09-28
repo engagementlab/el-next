@@ -20,7 +20,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
   await client.connect();
 
   const userId = body.get('name').toLocaleLowerCase().replace(/ /g, '-');
-  const getImgDataText = `SELECT "data" FROM "Temp" WHERE "id" = '${userId}'`;
+  const getImgDataText = `SELECT "data" FROM "DataTemp" WHERE "id" = '${userId}'`;
 
   // Retrieve base64 img string for new user from DB
   const imgDataResult = await client.query(getImgDataText);
@@ -53,7 +53,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
     await client.query(updateProfileText, values);
 
     if (imgDataResult.rowCount === 1) {
-      const delImgDataText = `DELETE FROM "Temp" WHERE "id" = '${userId}'`;
+      const delImgDataText = `DELETE FROM "DataTemp" WHERE "id" = '${userId}'`;
       const delResult = await client.query(delImgDataText);
 
       if (delResult.rowCount === 0) {

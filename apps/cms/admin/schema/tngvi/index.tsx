@@ -10,3 +10,4 @@ export { default as NewsItem } from './lists/newsItem';
 export { default as Person } from './lists/person';
 export { default as Studio } from './lists/studio';
 export { default as User } from './lists/user';
+export { default as Temp } from './lists/temp'

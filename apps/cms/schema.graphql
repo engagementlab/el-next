@@ -954,6 +954,41 @@ input StudioCreateInput {
   content: JSON
 }
 
+type Temp {
+  id: ID!
+  data: String
+}
+
+input TempWhereUniqueInput {
+  id: ID
+}
+
+input TempWhereInput {
+  AND: [TempWhereInput!]
+  OR: [TempWhereInput!]
+  NOT: [TempWhereInput!]
+  id: IDFilter
+  data: StringFilter
+}
+
+input TempOrderByInput {
+  id: OrderDirection
+  data: OrderDirection
+}
+
+input TempUpdateInput {
+  data: String
+}
+
+input TempUpdateArgs {
+  where: TempWhereUniqueInput!
+  data: TempUpdateInput!
+}
+
+input TempCreateInput {
+  data: String
+}
+
 type User {
   id: ID!
   name: String
@@ -1094,6 +1129,12 @@ type Mutation {
   updateStudios(data: [StudioUpdateArgs!]!): [Studio]
   deleteStudio(where: StudioWhereUniqueInput!): Studio
   deleteStudios(where: [StudioWhereUniqueInput!]!): [Studio]
+  createTemp(data: TempCreateInput!): Temp
+  createTemps(data: [TempCreateInput!]!): [Temp]
+  updateTemp(where: TempWhereUniqueInput!, data: TempUpdateInput!): Temp
+  updateTemps(data: [TempUpdateArgs!]!): [Temp]
+  deleteTemp(where: TempWhereUniqueInput!): Temp
+  deleteTemps(where: [TempWhereUniqueInput!]!): [Temp]
   createUser(data: UserCreateInput!): User
   createUsers(data: [UserCreateInput!]!): [User]
   updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
@@ -1191,6 +1232,14 @@ type Query {
   ): [Studio!]
   studio(where: StudioWhereUniqueInput!): Studio
   studiosCount(where: StudioWhereInput! = {}): Int
+  temps(
+    where: TempWhereInput! = {}
+    orderBy: [TempOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Temp!]
+  temp(where: TempWhereUniqueInput!): Temp
+  tempsCount(where: TempWhereInput! = {}): Int
   users(
     where: UserWhereInput! = {}
     orderBy: [UserOrderByInput!]! = []

@@ -308,7 +308,7 @@ export default function GetInvolved() {
                                         aria-label="Enter your bio" minLength={25} maxLength={800} rows={8} required
                                         disabled={submitted} defaultValue={formData['blurb']} className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-large
                                                         transition-all border-bluegreen mt-4" />
-                                    <img src={`https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_250/${formData['image'].public_id}`} className="max-w-xs mt-4" />
+                                    <img src={`https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_250/${formData['image']._meta.public_id}`} className="max-w-xs mt-4" />
                                             <input type="submit" value="Submit your profile" name="submit" aria-hidden="true" className='hidden' />
                                                     <div {...getRootProps({ className: 'dropzone bg-sorbet/30 p-4 mt-4 rounded-large cursor-pointer' })}>
                                                         <input {...getInputProps()} />

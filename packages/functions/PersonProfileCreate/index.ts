@@ -44,7 +44,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const values = [
       personId,
       body.get('name'),
-      response,
+      { id: cuid(), _meta: response },
       body.get('title'),
       body.get('blurb'),
       body.get('remembrance') ? body.get('remembrance') : '',

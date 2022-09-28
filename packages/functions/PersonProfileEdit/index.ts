@@ -1,6 +1,7 @@
 ﻿import { AzureFunction, Context } from '@azure/functions';
 
 import { v2 as cloudinary } from 'cloudinary';
+import cuid = require('cuid');
 
 const { Client } = require('pg');
 
@@ -41,13 +42,13 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const updateProfileText = `UPDATE "Person" SET "name" = $1, "title" = $2, "blurb" = $3, "remembrance" = $4${
       imgResponse ? ', "image" = $5' : ''
     } WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
-    const values = [
+    const values: any[] = [
       body.get('name'),
       body.get('title'),
       body.get('blurb'),
       body.get('remembrance') ? body.get('remembrance') : '',
     ];
-    if (imgResponse) values.push(imgResponse);
+    if (imgResponse) values.push({ id: cuid(), _meta: imgResponse });
 
     await client.query(updateProfileText, values);
 

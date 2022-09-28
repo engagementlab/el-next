@@ -8,7 +8,7 @@ import {
   Lists
 } from '.keystone/types';
 
-const Temp: Lists.Temp = list({
+const DataTemp: Lists.DataTemp = list({
   fields: {
     data: text(),
   },
@@ -16,4 +16,4 @@ const Temp: Lists.Temp = list({
     isHidden: true,
   }
 });
-export default Temp;
+export default DataTemp;

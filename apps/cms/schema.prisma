@@ -30,6 +30,11 @@ model Community {
   values Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model DataTemp {
+  id   String @id @default(cuid())
+  data String @default("")
+}
+
 model Event {
   id               String    @id @default(cuid())
   name             String    @default("")
@@ -126,11 +131,6 @@ model Studio {
   blurb       String    @default("")
   filters     Filter[]  @relation("Studio_filters")
   content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Temp {
-  id   String @id @default(cuid())
-  data String @default("")
 }
 
 model User {

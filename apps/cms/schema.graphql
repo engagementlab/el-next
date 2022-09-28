@@ -180,6 +180,41 @@ input CommunityCreateInput {
   values: JSON
 }
 
+type DataTemp {
+  id: ID!
+  data: String
+}
+
+input DataTempWhereUniqueInput {
+  id: ID
+}
+
+input DataTempWhereInput {
+  AND: [DataTempWhereInput!]
+  OR: [DataTempWhereInput!]
+  NOT: [DataTempWhereInput!]
+  id: IDFilter
+  data: StringFilter
+}
+
+input DataTempOrderByInput {
+  id: OrderDirection
+  data: OrderDirection
+}
+
+input DataTempUpdateInput {
+  data: String
+}
+
+input DataTempUpdateArgs {
+  where: DataTempWhereUniqueInput!
+  data: DataTempUpdateInput!
+}
+
+input DataTempCreateInput {
+  data: String
+}
+
 type Event {
   id: ID!
   name: String
@@ -954,41 +989,6 @@ input StudioCreateInput {
   content: JSON
 }
 
-type Temp {
-  id: ID!
-  data: String
-}
-
-input TempWhereUniqueInput {
-  id: ID
-}
-
-input TempWhereInput {
-  AND: [TempWhereInput!]
-  OR: [TempWhereInput!]
-  NOT: [TempWhereInput!]
-  id: IDFilter
-  data: StringFilter
-}
-
-input TempOrderByInput {
-  id: OrderDirection
-  data: OrderDirection
-}
-
-input TempUpdateInput {
-  data: String
-}
-
-input TempUpdateArgs {
-  where: TempWhereUniqueInput!
-  data: TempUpdateInput!
-}
-
-input TempCreateInput {
-  data: String
-}
-
 type User {
   id: ID!
   name: String
@@ -1072,6 +1072,15 @@ type Mutation {
   updateCommunities(data: [CommunityUpdateArgs!]!): [Community]
   deleteCommunity(where: CommunityWhereUniqueInput!): Community
   deleteCommunities(where: [CommunityWhereUniqueInput!]!): [Community]
+  createDataTemp(data: DataTempCreateInput!): DataTemp
+  createDataTemps(data: [DataTempCreateInput!]!): [DataTemp]
+  updateDataTemp(
+    where: DataTempWhereUniqueInput!
+    data: DataTempUpdateInput!
+  ): DataTemp
+  updateDataTemps(data: [DataTempUpdateArgs!]!): [DataTemp]
+  deleteDataTemp(where: DataTempWhereUniqueInput!): DataTemp
+  deleteDataTemps(where: [DataTempWhereUniqueInput!]!): [DataTemp]
   createEvent(data: EventCreateInput!): Event
   createEvents(data: [EventCreateInput!]!): [Event]
   updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
@@ -1129,12 +1138,6 @@ type Mutation {
   updateStudios(data: [StudioUpdateArgs!]!): [Studio]
   deleteStudio(where: StudioWhereUniqueInput!): Studio
   deleteStudios(where: [StudioWhereUniqueInput!]!): [Studio]
-  createTemp(data: TempCreateInput!): Temp
-  createTemps(data: [TempCreateInput!]!): [Temp]
-  updateTemp(where: TempWhereUniqueInput!, data: TempUpdateInput!): Temp
-  updateTemps(data: [TempUpdateArgs!]!): [Temp]
-  deleteTemp(where: TempWhereUniqueInput!): Temp
-  deleteTemps(where: [TempWhereUniqueInput!]!): [Temp]
   createUser(data: UserCreateInput!): User
   createUsers(data: [UserCreateInput!]!): [User]
   updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
@@ -1168,6 +1171,14 @@ type Query {
   ): [Community!]
   community(where: CommunityWhereUniqueInput!): Community
   communitiesCount(where: CommunityWhereInput! = {}): Int
+  dataTemps(
+    where: DataTempWhereInput! = {}
+    orderBy: [DataTempOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [DataTemp!]
+  dataTemp(where: DataTempWhereUniqueInput!): DataTemp
+  dataTempsCount(where: DataTempWhereInput! = {}): Int
   events(
     where: EventWhereInput! = {}
     orderBy: [EventOrderByInput!]! = []
@@ -1232,14 +1243,6 @@ type Query {
   ): [Studio!]
   studio(where: StudioWhereUniqueInput!): Studio
   studiosCount(where: StudioWhereInput! = {}): Int
-  temps(
-    where: TempWhereInput! = {}
-    orderBy: [TempOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Temp!]
-  temp(where: TempWhereUniqueInput!): Temp
-  tempsCount(where: TempWhereInput! = {}): Int
   users(
     where: UserWhereInput! = {}
     orderBy: [UserOrderByInput!]! = []

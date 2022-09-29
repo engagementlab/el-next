@@ -18,7 +18,7 @@ import {
 
 import query from '../../../apollo-client';
 
-import { BlockRenderers, Video } from '@el-next/components';
+import { BlockRenderers, Image, Video } from '@el-next/components';
 import { DocRenderers } from '@el-next/components/docRenderers';
 import Layout from '../../../components/Layout';
 import Link from 'next/link';
@@ -51,51 +51,61 @@ export default function Person({
       !person ? 'Not found!' :
         <Layout>
             <div className='content-container container w-full mt-14 mb-24 xl:mt-16 px-4 xl:px-8'>
-            {person.blurb && (
-                                <p>
-                                  <span className="text-coated font-semibold">
-                                  What brings you here?
-                                  </span>
-                                  <br />
-                                  {person.blurb}
-                                </p>
-                              )}
-                              {person.remembrance && (
-                                <p className="text-purple font-semibold">
-                                  Engaged in remembrance of {person.remembrance}.
-                                </p>
-                              )}
-                {/* <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} /> */}
-                {/*
-                <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
+              <h2 className='text-xl font-semibold text-bluegreen'>{person.name}</h2>
+              <p className="mt-2 mb-8">{person.title}</p>
+              <div className="flex">
+                  <div className='w-full lg:w-1/3 flex-shrink-0'>
+                    <Image id='thumb' alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={400} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' />
+                  </div>
 
-                    {relatedItems &&
-                    <div>
-                    <div className='flex flex-col lg:flex-row justify-between items-center'>
-                    <p>Browse other stories to keep learning</p>
-                    <Link href='/media-archive' passHref>
-                    <a>
-                    See All
-                    </a>
-                    </Link>
+                  <div>
+                      {person.blurb && (
+                        <p>
+                          <span className="text-coated font-semibold">
+                          What brings you here?
+                          </span>
+                          <br />
+                          {person.blurb}
+                        </p>
+                      )}
+                      {person.remembrance && (
+                        <p className="text-purple font-semibold">
+                          Engaged in remembrance of {person.remembrance}.
+                        </p>
+                      )}
                     </div>
-                    <div className='flex flex-col lg:flex-row'>
-                    {relatedItems.map((relatedItem, i) => (
-                        <Link key={i} href={`/media/${relatedItem.key}`} passHref>
-                        <a className="w-full lg:w-1/3">
-                        <div>
-                        <Image id={`thumb-${i}`} alt={`Thumbnail for media with name "${relatedItem.title}"`} imgId={relatedItem.thumbnail.publicId} width={302}  />
-                        <h4 className='text-xl font-semibold mt-3'>{relatedItem.title}</h4>
-                        
-                        <p className='text-base'>{relatedItem.shortDescription}</p>
-                        <p>{_.map(relatedItem.filters, 'name').join(', ')}</p>
-                        </div>
-                        </a>
-                        </Link>
-                        ))}
-                        </div>
-                        </div>
-                    } */}
+                  {/* <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} /> */}
+                  {/*
+                  <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
+
+                      {relatedItems &&
+                      <div>
+                      <div className='flex flex-col lg:flex-row justify-between items-center'>
+                      <p>Browse other stories to keep learning</p>
+                      <Link href='/media-archive' passHref>
+                      <a>
+                      See All
+                      </a>
+                      </Link>
+                      </div>
+                      <div className='flex flex-col lg:flex-row'>
+                      {relatedItems.map((relatedItem, i) => (
+                          <Link key={i} href={`/media/${relatedItem.key}`} passHref>
+                          <a className="w-full lg:w-1/3">
+                          <div>
+                          <Image id={`thumb-${i}`} alt={`Thumbnail for media with name "${relatedItem.title}"`} imgId={relatedItem.thumbnail.publicId} width={302}  />
+                          <h4 className='text-xl font-semibold mt-3'>{relatedItem.title}</h4>
+                          
+                          <p className='text-base'>{relatedItem.shortDescription}</p>
+                          <p>{_.map(relatedItem.filters, 'name').join(', ')}</p>
+                          </div>
+                          </a>
+                          </Link>
+                          ))}
+                          </div>
+                          </div>
+                      } */}
+              </div>
             </div>
         </Layout>
   );

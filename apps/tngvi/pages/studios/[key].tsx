@@ -7,6 +7,7 @@ import query from "../../apollo-client";
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import Layout from '../../components/Layout';
 import { DocRenderers } from '@el-next/components/docRenderers';
+import Link from 'next/link';
 
 type Studio = {
   id: string;
@@ -15,9 +16,23 @@ type Studio = {
   filters: any[];
   content: any;
   associatedMedia:[{ videos: any[]}];
+  associatedPeople: [{
+    name: string;
+    key: string
+    title: string;
+  }]
 };
 
 export default function Studio({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
+
+const associatedPeople = () => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* <p>ppl</p>/ */}
+      <p><Link href={`/about/community/${item.associatedPeople[0].key}`} passHref>{item.associatedPeople[0].name}</Link>, {item.associatedPeople[0].title}</p>
+    </div>
+  );
+};
   return (
   !item ? 'Not found!' :
   <Layout>
@@ -26,7 +41,7 @@ export default function Studio({ item }: InferGetStaticPropsType<typeof getStati
             <h1 className="text-2xl font-bold text-bluegreen mb-2">{item.name}</h1>
             {/* <p className="text-bluegreen mb-10">{_.map(item.filters, 'name').join(', ')}</p> */}
 
-            <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} />
+            <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers(null, associatedPeople)} renderers={DocRenderers()} />
 {/* 
             {item.associatedMedia &&
               <div className='mt-14'>
@@ -103,13 +118,19 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     `studios(where: { key: { equals: "${params!.key}" } }) {
        name 
        filters { 
-         name
+        name
+       } 
+       associatedPeople {
+        name
+        key
+        title
        } 
        content {
-         document(hydrateRelationships: true)
+        document(hydrateRelationships: true)
        } 
       }`);
   const item = itemResult[0] as Studio;
+  console.log(item.content.document[0].children[1].children);
   // const item = (await query.Studio.findOne({
   //     where: { key: params!.key as string },
   //     query: '',

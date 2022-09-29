@@ -827,6 +827,13 @@ type Person {
   blurb: String
   remembrance: String
   content: Person_content_Document
+  studios(
+    where: StudioWhereInput! = {}
+    orderBy: [StudioOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Studio!]
+  studiosCount(where: StudioWhereInput! = {}): Int
 }
 
 type Person_content_Document {
@@ -850,6 +857,13 @@ input PersonWhereInput {
   currentlyActive: BooleanFilter
   blurb: StringFilter
   remembrance: StringFilter
+  studios: StudioManyRelationFilter
+}
+
+input StudioManyRelationFilter {
+  every: StudioWhereInput
+  some: StudioWhereInput
+  none: StudioWhereInput
 }
 
 input PersonOrderByInput {
@@ -876,6 +890,14 @@ input PersonUpdateInput {
   blurb: String
   remembrance: String
   content: JSON
+  studios: StudioRelateToManyForUpdateInput
+}
+
+input StudioRelateToManyForUpdateInput {
+  disconnect: [StudioWhereUniqueInput!]
+  set: [StudioWhereUniqueInput!]
+  create: [StudioCreateInput!]
+  connect: [StudioWhereUniqueInput!]
 }
 
 input PersonUpdateArgs {
@@ -895,6 +917,12 @@ input PersonCreateInput {
   blurb: String
   remembrance: String
   content: JSON
+  studios: StudioRelateToManyForCreateInput
+}
+
+input StudioRelateToManyForCreateInput {
+  create: [StudioCreateInput!]
+  connect: [StudioWhereUniqueInput!]
 }
 
 type Studio {
@@ -913,6 +941,13 @@ type Studio {
     skip: Int! = 0
   ): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
+  associatedPeople(
+    where: PersonWhereInput! = {}
+    orderBy: [PersonOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Person!]
+  associatedPeopleCount(where: PersonWhereInput! = {}): Int
   content: Studio_content_Document
 }
 
@@ -937,6 +972,7 @@ input StudioWhereInput {
   order: IntNullableFilter
   blurb: StringFilter
   filters: FilterManyRelationFilter
+  associatedPeople: PersonManyRelationFilter
 }
 
 input IntNullableFilter {
@@ -948,6 +984,12 @@ input IntNullableFilter {
   gt: Int
   gte: Int
   not: IntNullableFilter
+}
+
+input PersonManyRelationFilter {
+  every: PersonWhereInput
+  some: PersonWhereInput
+  none: PersonWhereInput
 }
 
 input StudioOrderByInput {
@@ -969,7 +1011,15 @@ input StudioUpdateInput {
   thumbnail: Upload
   blurb: String
   filters: FilterRelateToManyForUpdateInput
+  associatedPeople: PersonRelateToManyForUpdateInput
   content: JSON
+}
+
+input PersonRelateToManyForUpdateInput {
+  disconnect: [PersonWhereUniqueInput!]
+  set: [PersonWhereUniqueInput!]
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 input StudioUpdateArgs {
@@ -986,7 +1036,13 @@ input StudioCreateInput {
   thumbnail: Upload
   blurb: String
   filters: FilterRelateToManyForCreateInput
+  associatedPeople: PersonRelateToManyForCreateInput
   content: JSON
+}
+
+input PersonRelateToManyForCreateInput {
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 type User {

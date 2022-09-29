@@ -73,6 +73,16 @@ const Studio: Lists.Studio = list({
         displayMode: 'select',
       }
     }),
+    associatedPeople: relationship({
+      ref: 'Person.studios',
+      many: true,
+      ui: {
+        // displayMode: 'cards',
+        // cardFields: ['name', 'title',],
+        // inlineEdit: { fields: ['title'] },
+        // inlineConnect: true,
+      }
+    }),
     content: document({
       formatting: {
         headingLevels: [3, 4],  
@@ -91,6 +101,13 @@ const Studio: Lists.Studio = list({
         // [1, 2],
         // [1, 2, 1],
       ],
+      // relationships: {
+      //   people: {
+      //     listKey: 'Person',
+      //     label: 'People Involved',
+      //     selection: 'id name',
+      //   },
+      // },
       ui: {
         views: path.join(process.cwd(), 'admin/components/component-blocks')
       },

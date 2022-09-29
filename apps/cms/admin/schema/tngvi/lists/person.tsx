@@ -5,7 +5,8 @@ import {
   checkbox,
   select,
   multiselect,
-  text
+  text,
+  relationship
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import {
@@ -78,6 +79,7 @@ const Person: Lists.Person = list({
         formatting: true,
         label: 'Full Bio/Content'
     }),
+    studios: relationship({ref: 'Studio.associatedPeople', many: true }),
   },
   ui: {
     listView: { 

@@ -118,19 +118,21 @@ model Person {
   blurb           String    @default("")
   remembrance     String    @default("")
   content         Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studios         Studio[]  @relation("Person_studios")
 }
 
 model Studio {
-  id          String    @id @default(cuid())
-  name        String    @default("")
-  key         String    @unique @default("")
-  createdDate DateTime?
-  enabled     Boolean   @default(true)
-  order       Int?
-  thumbnail   Json?
-  blurb       String    @default("")
-  filters     Filter[]  @relation("Studio_filters")
-  content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  order            Int?
+  thumbnail        Json?
+  blurb            String    @default("")
+  filters          Filter[]  @relation("Studio_filters")
+  associatedPeople Person[]  @relation("Person_studios")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model User {

@@ -522,4 +522,37 @@ export const componentBlocks = {
       },
       chromeless: true
    }),
+   associatedPeople: component({
+     label: 'Associated People',
+     preview: props => {
+       return (
+        <NotEditable>{props.fields.title.element}</NotEditable>
+       );
+     },
+     schema: {
+      //  type: fields.text({defaultValue: 'people', label: 'people'}),
+       title: fields.child({ kind: 'inline', placeholder: 'Associated people will appear here.' }),
+       people: fields.relationship({ 
+        listKey: 'Person',
+        label: 'People Involved',
+        selection: 'id key name',
+       })
+     },
+    //  preview: props => {
+    //    return (
+    //     <div>
+    //      <div style={{ fontStyle: 'italic', color: '#4A5568' }}>
+    //       {props.fields.title.element}
+    //       </div>
+    //      <p>{!props.fields.person.value?.label ? <span>Click <em>Edit</em> to select person</span> : <NotEditable>{props.fields.person.value?.label}</NotEditable>}</p>
+    //       </div>
+    //    );
+    //  },
+    //  schema: {
+    //    person: fields.relationship({ listKey: 'Person', label: 'Select person:', selection: 'key name title' }),
+    //    title: fields.child({ kind: 'inline' "Person title, if different from their profile" }),
+    //  },
+    //  chromeless: true,
+   }),
+
  }

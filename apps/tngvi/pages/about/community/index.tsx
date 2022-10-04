@@ -132,21 +132,21 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
     
     const linkClass = 'no-underline border-b-2 border-b-[rgba(2,102,112,0)] hover:border-b-[rgba(2,102,112,1)] transition-all';
   
-    const menu = <div className="flex justify-between md:w-1/2 lg:w-1/4">
+    const menu = <div className="flex flex-col justify-between md:flex-row md:w-3/4 lg:w-1/2">
                     <span>Filter:</span>
+                    <div className='flex items-center justify-between mt-3 md:mt-0 md:w-full md:ml-2'>
                     {filters.map(filter => {
-                    return (
-                      <span key={filter} className={`font-semibold capitalize ${!haveSpecificFilter(filter) ? 'text-bluegreen' : 'text-purple' }`}>
-                              <a href="#" onClick={(e)=>{ toggleFilter(filter); filterOverride = filter; e.preventDefault() }}
-                                  className='w-full flex items-center justify-between'>
-                                  <span className={!haveSpecificFilter(filter) ? linkClass : ''}>
-                                      {filter}
-                                  </span>
-                              </a>
-                          </span>
-                      )
-                    })}
-                    <a href="#" className="text-bluegreen" onClick={(e)=>{ reset(); e.preventDefault() }}
+                      return (
+                        <span key={filter}>
+                                <a href="#" onClick={(e)=>{ toggleFilter(filter); filterOverride = filter; e.preventDefault() }}
+                                     className={`font-semibold uppercase ${!haveSpecificFilter(filter) ? 'text-bluegreen' : 'text-purple' }`}>
+                                        {filter}
+                                </a>
+                            </span>
+                        )
+                      })}
+                    </div>
+                    <a href="#" className="text-bluegreen md:ml-2" onClick={(e)=>{ reset(); e.preventDefault() }}
                       style={{visibility: !haveFilters ? 'hidden' : 'visible'}}><svg width="24px" height="24px"
                         viewBox="0 0 24 24">
                         <path  style={{fill: '#8D33D2'}} fillRule="evenodd"
@@ -164,11 +164,10 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
       <p className='w-full text-xl my-20 text-center'>Sorry, no matches found. Please try other filters.</p> :
       <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 md:grid-cols-2">
         <AnimatePresence>
-          {people.map((person, i) => (
-            
-            <Link href={`/about/community/${person.key}`} passHref>
+          {people.map((person, i) => (  
+            <Link href={`/about/community/${person.key}`} passHref key={person.key}>
               <a>
-                <div key={i} className='flex flex-col mt-5'>
+                <div className='flex flex-col mt-5'>
                     <div>
                         {person.image ?
                           <Image id={`thumb-${i}`} alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={300} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' /> :

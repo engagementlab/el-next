@@ -25,10 +25,10 @@ function CustomLogo () {
         />
         <div style={{width: '80px'}}>
             <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="none" viewBox="0 0 70 70">
-                <path fill="#000" fill-rule="evenodd" d="M70 35c0 19.33-15.67 35-35 35S0 54.33 0 35 15.67 0 35 0s35 15.67 35 35z" clip-rule="evenodd"/>
-                <path fill="#F6A536" fill-rule="evenodd" d="M28.075 17.992l.018 28.195h20.244v5.82H21.69V18.053l6.385-.06z" clip-rule="evenodd"/>
-                <path fill="#00AB9E" fill-rule="evenodd" d="M28.075 32.18v5.869h20.262v-5.821l-20.262-.048z" clip-rule="evenodd"/>
-                <path fill="#F72923" fill-rule="evenodd" d="M28.075 17.992v5.868h20.262v-5.82l-20.262-.048z" clip-rule="evenodd"/>
+                <path fill="#000" fillRule="evenodd" d="M70 35c0 19.33-15.67 35-35 35S0 54.33 0 35 15.67 0 35 0s35 15.67 35 35z" clipRule="evenodd"/>
+                <path fill="#F6A536" fillRule="evenodd" d="M28.075 17.992l.018 28.195h20.244v5.82H21.69V18.053l6.385-.06z" clipRule="evenodd"/>
+                <path fill="#00AB9E" fillRule="evenodd" d="M28.075 32.18v5.869h20.262v-5.821l-20.262-.048z" clipRule="evenodd"/>
+                <path fill="#F72923" fillRule="evenodd" d="M28.075 17.992v5.868h20.262v-5.82l-20.262-.048z" clipRule="evenodd"/>
             </svg>
         </div>
         <h1 style={{fontSize: 'large'}}>Engagement Lab <br />Content Management</h1>

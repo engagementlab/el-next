@@ -331,7 +331,11 @@ let ksConfig = (lists: any) => {
           app.use(p.session());
           app.use((req, res, next) => {
             // Ignore API paths
-            if (req.path.indexOf('/api') === 0) next();
+            if (
+              req.path.indexOf('/api') === 0 ||
+              req.path.indexOf('/_next') === 0
+            )
+              next();
             else if (!req.session.passport || !req.session.passport.user) {
               // console.log(req.session.redirectTo);
               // Cache URL to bring user to after auth

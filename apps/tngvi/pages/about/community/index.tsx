@@ -119,14 +119,14 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
   const filteredCurrentPpl = currentPeople.filter(
     // If selected filters empty, show all...
     item => selectedFilters.length === 0 ||
-    // ...otherwise, item's filters must match ALL selected filters
-    _.every(selectedFilters, r => _.map(item.tag).indexOf(r) >= 0));
+    // ...otherwise, item's filters must match one of the selected filters
+    _.some(selectedFilters, r => _.map(item.tag).indexOf(r) >= 0));
 
   const filteredPreviousPpl = previousPeople.filter(
     // If selected filters empty, show all...
     item => selectedFilters.length === 0 ||
-    // ...otherwise, item's filters must match ALL selected filters
-    _.every(selectedFilters, r => _.map(item.tag).indexOf(r) >= 0));
+    // ...otherwise, item's filters must match one of the selected filters
+    _.some(selectedFilters, r => _.map(item.tag).indexOf(r) >= 0));
   
   const RenderFilters = (filters: string[]) => {
     

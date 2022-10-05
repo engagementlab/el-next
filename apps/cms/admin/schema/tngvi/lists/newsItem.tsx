@@ -8,6 +8,7 @@ import {
 import {
   checkbox,
     json,
+    multiselect,
     relationship,
     text,
     timestamp,
@@ -49,6 +50,16 @@ const NewsItem: Lists.NewsItem = list({
       createdDate: CreatedTimestamp,
       enabled: checkbox({
         defaultValue: true,
+      }),
+      apps: multiselect({
+        label: 'Where should this be published?',
+        type: 'enum',
+        options: [
+          { label: 'ELab Home', value: 'elab' },
+          { label: 'TNGVI', value: 'tngvim' },
+        ],
+        ui:
+        { description: 'Where should this be published?', }
       }),
       thumbnail: cloudinaryImage({
         label: 'Thumbnail/Header Image',

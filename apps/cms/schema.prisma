@@ -97,6 +97,7 @@ model NewsItem {
   key          String    @unique @default("")
   createdDate  DateTime?
   enabled      Boolean   @default(true)
+  apps         Json      @default("[]")
   thumbnail    Json?
   thumbAltText String    @default("")
   publishDate  DateTime

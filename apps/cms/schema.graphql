@@ -738,6 +738,7 @@ type NewsItem {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  apps: [NewsItemAppType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   publishDate: DateTime
@@ -745,6 +746,11 @@ type NewsItem {
   blurb: String
   bodyHTML: String
   body: NewsItem_body_Document
+}
+
+enum NewsItemAppType {
+  elab
+  tngvim
 }
 
 type NewsItem_body_Document {
@@ -788,6 +794,7 @@ input NewsItemUpdateInput {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  apps: [NewsItemAppType!]
   thumbnail: Upload
   thumbAltText: String
   publishDate: DateTime
@@ -806,6 +813,7 @@ input NewsItemCreateInput {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  apps: [NewsItemAppType!]
   thumbnail: Upload
   thumbAltText: String
   publishDate: DateTime

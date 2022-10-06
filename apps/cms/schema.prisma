@@ -16,18 +16,13 @@ model About {
   id      String @id @default(cuid())
   name    String @unique @default("About Page")
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  values  Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model BigPicture {
   id      String @id @default(cuid())
   name    String @unique @default("Big Picture Page")
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Community {
-  id     String @id @default(cuid())
-  name   String @unique @default("Community Page")
-  values Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model DataTemp {

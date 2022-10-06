@@ -1,6 +1,5 @@
 export { default as About } from './lists/about';
 export { default as BigPicture } from './lists/bigPicture';
-export { default as Community } from './lists/community';
 export { default as Event } from './lists/event';
 export { default as Filter } from './lists/filter';
 export { default as Home } from './lists/home';

@@ -5,9 +5,14 @@ type About {
   id: ID!
   name: String
   content: About_content_Document
+  values: About_values_Document
 }
 
 type About_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_values_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -82,6 +87,7 @@ enum OrderDirection {
 input AboutUpdateInput {
   name: String
   content: JSON
+  values: JSON
 }
 
 input AboutUpdateArgs {
@@ -92,6 +98,7 @@ input AboutUpdateArgs {
 input AboutCreateInput {
   name: String
   content: JSON
+  values: JSON
 }
 
 type BigPicture {
@@ -135,49 +142,6 @@ input BigPictureUpdateArgs {
 input BigPictureCreateInput {
   name: String
   content: JSON
-}
-
-type Community {
-  id: ID!
-  name: String
-  values: Community_values_Document
-}
-
-type Community_values_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input CommunityWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input CommunityWhereInput {
-  AND: [CommunityWhereInput!]
-  OR: [CommunityWhereInput!]
-  NOT: [CommunityWhereInput!]
-  id: IDFilter
-  name: StringFilter
-}
-
-input CommunityOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input CommunityUpdateInput {
-  name: String
-  values: JSON
-}
-
-input CommunityUpdateArgs {
-  where: CommunityWhereUniqueInput!
-  data: CommunityUpdateInput!
-}
-
-input CommunityCreateInput {
-  name: String
-  values: JSON
 }
 
 type DataTemp {
@@ -1127,15 +1091,6 @@ type Mutation {
   updateBigPictures(data: [BigPictureUpdateArgs!]!): [BigPicture]
   deleteBigPicture(where: BigPictureWhereUniqueInput!): BigPicture
   deleteBigPictures(where: [BigPictureWhereUniqueInput!]!): [BigPicture]
-  createCommunity(data: CommunityCreateInput!): Community
-  createCommunities(data: [CommunityCreateInput!]!): [Community]
-  updateCommunity(
-    where: CommunityWhereUniqueInput!
-    data: CommunityUpdateInput!
-  ): Community
-  updateCommunities(data: [CommunityUpdateArgs!]!): [Community]
-  deleteCommunity(where: CommunityWhereUniqueInput!): Community
-  deleteCommunities(where: [CommunityWhereUniqueInput!]!): [Community]
   createDataTemp(data: DataTempCreateInput!): DataTemp
   createDataTemps(data: [DataTempCreateInput!]!): [DataTemp]
   updateDataTemp(
@@ -1227,14 +1182,6 @@ type Query {
   ): [BigPicture!]
   bigPicture(where: BigPictureWhereUniqueInput!): BigPicture
   bigPicturesCount(where: BigPictureWhereInput! = {}): Int
-  communities(
-    where: CommunityWhereInput! = {}
-    orderBy: [CommunityOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Community!]
-  community(where: CommunityWhereUniqueInput!): Community
-  communitiesCount(where: CommunityWhereInput! = {}): Int
   dataTemps(
     where: DataTempWhereInput! = {}
     orderBy: [DataTempOrderByInput!]! = []

@@ -69,6 +69,18 @@ const About: Lists.About = list({
                  },
             }
         }),
+        values: document({
+            label: 'Our Values',
+            formatting: {
+                headingLevels: [4, 5],
+                inlineMarks: true,
+                softBreaks: true,
+            },
+            ui: {
+                views: path.join(process.cwd(), 'admin/components/component-blocks')
+            },
+            componentBlocks,
+        }),
     },
     ui: {
         hideCreate: true,
@@ -78,4 +90,4 @@ const About: Lists.About = list({
         }
     },
   });
-  export default About;
+  export default About; 

@@ -532,11 +532,11 @@ export const componentBlocks = {
      schema: {
       //  type: fields.text({defaultValue: 'people', label: 'people'}),
        title: fields.child({ kind: 'inline', placeholder: 'Associated people will appear here.' }),
-       people: fields.relationship({ 
-        listKey: 'Person',
-        label: 'People Involved',
-        selection: 'id key name',
-       })
+      //  people: fields.relationship({ 
+      //   listKey: 'Person',
+      //   label: 'People Involved',
+      //   selection: 'id key name',
+      //  })
      },
     //  preview: props => {
     //    return (

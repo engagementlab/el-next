@@ -8,14 +8,19 @@ import {
   text,
   relationship
 } from '@keystone-6/core/fields';
-import { document } from '@keystone-6/fields-document';
+import {
+  document
+} from '@keystone-6/fields-document';
 import {
   Lists
 } from '.keystone/types';
 import {
   cloudinaryImage
 } from '../../../components/cloudinary';
-import { CreatedTimestamp, CreateKey } from '../../hooks';
+import {
+  CreatedTimestamp,
+  CreateKey
+} from '../../hooks';
 
 const Person: Lists.Person = list({
   fields: {
@@ -29,7 +34,7 @@ const Person: Lists.Person = list({
       isFilterable: true,
       ui: {
         createView: {
-          fieldMode:'hidden'
+          fieldMode: 'hidden'
         },
         itemView: {
           fieldMode: 'hidden'
@@ -42,19 +47,39 @@ const Person: Lists.Person = list({
         isRequired: true
       }
     }),
+    abbreviatedTitle: text({
+      // label: 'Title/Role',
+      ui: {
+        description: "Used for when this person is listed as a collaborator/co-creator on an item (e.g. partner, student, etc). If not provided, the person's first tag will be used"
+      }
+    }),
     createdDate: CreatedTimestamp,
     enabled: checkbox({
       defaultValue: true,
     }),
-    currentlyActive: checkbox({ label: 'Current Participant', defaultValue: true}),
+    currentlyActive: checkbox({
+      label: 'Current Participant',
+      defaultValue: true
+    }),
     tag: multiselect({
       label: 'Tags',
       type: 'string',
-      options: [
-        { label: 'Student', value: 'student' },
-        { label: 'Faculty', value: 'faculty' },
-        { label: 'Partner', value: 'partner' },
-        { label: 'Staff', value: 'staff' },
+      options: [{
+          label: 'Student',
+          value: 'student'
+        },
+        {
+          label: 'Faculty',
+          value: 'faculty'
+        },
+        {
+          label: 'Partner',
+          value: 'partner'
+        },
+        {
+          label: 'Staff',
+          value: 'staff'
+        },
       ],
     }),
     image: cloudinaryImage({
@@ -76,13 +101,16 @@ const Person: Lists.Person = list({
       label: 'In remembrance of...'
     }),
     content: document({
-        formatting: true,
-        label: 'Full Bio/Content'
+      formatting: true,
+      label: 'Full Bio/Content'
     }),
-    studios: relationship({ref: 'Studio.associatedPeople', many: true }),
+    studios: relationship({
+      ref: 'Studio.associatedPeople',
+      many: true
+    }),
   },
   ui: {
-    listView: { 
+    listView: {
       initialColumns: ['name', 'title', 'image']
     }
   },
@@ -95,7 +123,7 @@ const Person: Lists.Person = list({
       resolvedData,
       context,
     }) => {
-      if(resolvedData.name) {
+      if (resolvedData.name) {
 
         resolvedData = {
           ...resolvedData,

@@ -8,8 +8,9 @@
     "start": "keystone start",
     "build": "keystone build",
     "build-export": "npx babel export/src -d export/lib --extensions .ts,.tsx",
-    "watch-export": "npx babel export/src -d export/lib --extensions .ts,.tsx --watch",
     "export": "npm run build-export && node ./export/lib",
+    "migrate": "keystone prisma migrate deploy",
+    "watch-export": "npx babel export/src -d export/lib --extensions .ts,.tsx --watch",
     "postinstall": "keystone postinstall --fix"
   },
   "dependencies": {

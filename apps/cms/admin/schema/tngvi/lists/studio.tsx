@@ -20,9 +20,11 @@ import {
 } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { helper } from '../../../components/helper';
 
 const Studio: Lists.Studio = list({
   fields: {
+    helper: helper(),
     name: text({
       validation: {
         isRequired: true
@@ -125,6 +127,7 @@ const Studio: Lists.Studio = list({
     // file: azureStorageFile({ azureStorageConfig: azConfig }),
   },
   ui: {
+    description: 'https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit',
     listView: { 
       initialColumns: ['name', 'order', 'thumbnail',],
       initialSort: { field: 'order', direction: 'ASC' }

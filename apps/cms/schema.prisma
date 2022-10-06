@@ -102,23 +102,25 @@ model NewsItem {
 }
 
 model Person {
-  id              String    @id @default(cuid())
-  name            String    @default("")
-  key             String    @default("")
-  title           String    @default("")
-  createdDate     DateTime?
-  enabled         Boolean   @default(true)
-  currentlyActive Boolean   @default(true)
-  tag             Json      @default("[]")
-  image           Json?
-  blurb           String    @default("")
-  remembrance     String    @default("")
-  content         Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studios         Studio[]  @relation("Person_studios")
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @default("")
+  title            String    @default("")
+  abbreviatedTitle String    @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  currentlyActive  Boolean   @default(true)
+  tag              Json      @default("[]")
+  image            Json?
+  blurb            String    @default("")
+  remembrance      String    @default("")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studios          Studio[]  @relation("Person_studios")
 }
 
 model Studio {
   id               String    @id @default(cuid())
+  helper           String?
   name             String    @default("")
   key              String    @unique @default("")
   createdDate      DateTime?

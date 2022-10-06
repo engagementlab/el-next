@@ -791,6 +791,7 @@ type Person {
   name: String
   key: String
   title: String
+  abbreviatedTitle: String
   createdDate: DateTime
   enabled: Boolean
   currentlyActive: Boolean
@@ -824,6 +825,7 @@ input PersonWhereInput {
   name: StringFilter
   key: StringFilter
   title: StringFilter
+  abbreviatedTitle: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
   currentlyActive: BooleanFilter
@@ -843,6 +845,7 @@ input PersonOrderByInput {
   name: OrderDirection
   key: OrderDirection
   title: OrderDirection
+  abbreviatedTitle: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
   currentlyActive: OrderDirection
@@ -854,6 +857,7 @@ input PersonUpdateInput {
   name: String
   key: String
   title: String
+  abbreviatedTitle: String
   createdDate: DateTime
   enabled: Boolean
   currentlyActive: Boolean
@@ -881,6 +885,7 @@ input PersonCreateInput {
   name: String
   key: String
   title: String
+  abbreviatedTitle: String
   createdDate: DateTime
   enabled: Boolean
   currentlyActive: Boolean
@@ -899,6 +904,7 @@ input StudioRelateToManyForCreateInput {
 
 type Studio {
   id: ID!
+  helper: String
   name: String
   key: String
   createdDate: DateTime
@@ -966,6 +972,7 @@ input PersonManyRelationFilter {
 
 input StudioOrderByInput {
   id: OrderDirection
+  helper: OrderDirection
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
@@ -975,6 +982,7 @@ input StudioOrderByInput {
 }
 
 input StudioUpdateInput {
+  helper: String
   name: String
   key: String
   createdDate: DateTime
@@ -1000,6 +1008,7 @@ input StudioUpdateArgs {
 }
 
 input StudioCreateInput {
+  helper: String
   name: String
   key: String
   createdDate: DateTime

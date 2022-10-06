@@ -4,7 +4,6 @@ import {
 import {
   Image
 } from '@el-next/components/image';
-import { DocumentRenderer, } from '@keystone-6/document-renderer';
 
 import create, {
   Mutate,
@@ -22,16 +21,8 @@ import {
 
 import Layout from '../../../components/Layout';
 import query from "../../../apollo-client";
-import {
-  useRouter
-} from 'next/router';
-import { DocRenderers, BlockRenderers, HeadingStyle } from '@el-next/components';
-import { ReactNode } from 'react';
-import Link from 'next/link';
 
-type CommunityPage = {
-  values: any;
-};
+import Link from 'next/link';
 
 type Person = {
   name: string;
@@ -52,19 +43,6 @@ type FilterState = {
   reset: () => void
 }
 
-
-const rendererOverrides = {
-  heading: (level: number, children: ReactNode, textAlign: any) => {
-
-    const customRenderers = {
-      4: 'text-xl font-semibold text-coated my-8',
-      5: 'text-lg font-extrabold text-purple'
-    };
-    return HeadingStyle(level, children, textAlign, customRenderers);
-},
-};
-
-let filterOverride: string | null = null;
 // Create store with Zustand
 const useStore = create <
   FilterState,
@@ -92,19 +70,9 @@ const useStore = create <
       }),
     })));
 
-// useStore.subscribe(state => state.currentFilter, (current) => {
-//   console.log('current', current)
-//   history.replaceState({}, 'Filtered Data', `${location.pathname}?${current}`);
-// });
-export default function Community({ page, currentPeople, previousPeople }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Community({ currentPeople, previousPeople }: InferGetStaticPropsType<typeof getStaticProps>) {
 
-  const router = useRouter();
   const toggleFilter = useStore(state => state.toggle);
-  // const preSelectedFilter = Object.keys(router.query).length === 1 ? Object.keys(router.query)[0] : '';
-  // let selectedFilter = filterOverride || (preSelectedFilter.length > 0 ? preSelectedFilter : '');
-  // console.log('query',router.query, preSelectedFilter)
-
-  // toggleFilter(selectedFilter)
   
   // Store get/set
   // if(filterOverride && (preSelectedFilter !== filterOverride))
@@ -136,7 +104,7 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
                     {filters.map(filter => {
                       return (
                         <span key={filter}>
-                                <a href="#" onClick={(e)=>{ toggleFilter(filter); filterOverride = filter; e.preventDefault() }}
+                                <a href="#" onClick={(e)=>{ toggleFilter(filter); e.preventDefault() }}
                                      className={`font-semibold uppercase ${!haveSpecificFilter(filter) ? 'text-bluegreen' : 'text-purple' }`}>
                                         {filter}
                                 </a>
@@ -178,22 +146,6 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
                     <div>
                         <h3 className='text-xl font-semibold text-coated'>{person.name}</h3>
                         <p className="mt-2 mb-8">{person.title}</p>
-                        {/* <p className="text-purple">{person.tag}</p> */}
-                        
-                        {/* < {person.blurb && (
-                          <p>
-                          <span className="text-coated font-semibold">
-                          What brings you here?
-                          </span>
-                          <br />
-                          {person.blurb}
-                          </p>
-                          )}
-                          {person.remembrance && (
-                            <p className="text-purple font-semibold">
-                            Engaged in remembrance of {person.remembrance}.
-                            </p>
-                          )}DocumentRenderer document={person.content.document} renderers={renderers} componentBlocks={BlockRenderers} /> */}
                     </div>
                 </div>
               </a>
@@ -207,10 +159,7 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
   return (
     <Layout>
       <div className='container mt-14 mb-24 xl:mt-16 px-4 xl:px-8'>
-          <h2 className="text-2xl text-bluegreen font-semibold">About Our Community</h2>
-          <DocumentRenderer document={page.values.document} renderers={DocRenderers(rendererOverrides)} componentBlocks={BlockRenderers()} />
-          <hr className='border-sorbet' />
-          <h2 className="text-xl text-coated font-semibold mt-14 mb-12">Our Community</h2>
+          <h2 className="text-2xl text-bluegreen font-semibold mb-4">Our Community</h2>
           {RenderFilters(['student', 'faculty', 'partner', 'staff' ])}
           <h3 className="text-lg font-extrabold text-purple mt-5">Current Participants</h3>
           {RenderPeople(filteredCurrentPpl)}
@@ -224,13 +173,6 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
 }
 
 export async function getStaticProps() {
-  const pageResult = await query(
-    'communities',
-    `communities(where: { name: { equals: "Community Page" } }) {
-      values { 
-        document 
-      }
-    }`);
   const peopleResult = await query(
     'people',
     `people(orderBy: {name: asc}, where: { enabled: { equals: true }}) {
@@ -249,13 +191,11 @@ export async function getStaticProps() {
       }
     }`);
     
-  const page = pageResult[0] as CommunityPage;
   const currentPeople = (peopleResult as Person[]).filter(p=> p.currentlyActive);
   const previousPeople = (peopleResult as Person[]).filter(p=> !p.currentlyActive);
  
   return {
     props: {
-      page,
       currentPeople,
       previousPeople,
     }

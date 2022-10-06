@@ -130,9 +130,7 @@ export default function Community({ page, currentPeople, previousPeople }: Infer
   
   const RenderFilters = (filters: string[]) => {
     
-    const linkClass = 'no-underline border-b-2 border-b-[rgba(2,102,112,0)] hover:border-b-[rgba(2,102,112,1)] transition-all';
-  
-    const menu = <div className="flex flex-col justify-between md:flex-row md:w-3/4 lg:w-1/2">
+    const menu = <div className="flex flex-col justify-between md:flex-row md:w-3/4 lg:w-1/2 xl:w-1/3">
                     <span>Filter:</span>
                     <div className='flex items-center justify-between mt-3 md:mt-0 md:w-full md:ml-2'>
                     {filters.map(filter => {

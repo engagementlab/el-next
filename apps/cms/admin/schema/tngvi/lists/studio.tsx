@@ -24,7 +24,12 @@ import { helper } from '../../../components/helper';
 
 const Studio: Lists.Studio = list({
   fields: {
-    helper: helper(),
+    helper: helper({
+      html: 'Please follow the <a href="https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit">Studio Template</a>',
+      ui: {
+        itemView: {
+          fieldMode: 'hidden'
+        }}}),
     name: text({
       validation: {
         isRequired: true

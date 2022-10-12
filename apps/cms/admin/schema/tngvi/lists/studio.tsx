@@ -24,12 +24,6 @@ import { helper } from '../../../components/helper';
 
 const Studio: Lists.Studio = list({
   fields: {
-    helper: helper({
-      html: 'Please follow the <a href="https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit">Studio Template</a>',
-      ui: {
-        itemView: {
-          fieldMode: 'hidden'
-        }}}),
     name: text({
       validation: {
         isRequired: true
@@ -88,6 +82,15 @@ const Studio: Lists.Studio = list({
         // cardFields: ['name', 'title',],
         // inlineEdit: { fields: ['title'] },
         // inlineConnect: true,
+      }
+    }),
+    helper: helper({
+      html: 'Please follow the <a href="https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit" target="_blank">Studio Template</a>.',
+      ui: {
+        itemView: {
+          fieldMode: 'hidden'
+    
+        }
       }
     }),
     content: document({

@@ -904,7 +904,6 @@ input StudioRelateToManyForCreateInput {
 
 type Studio {
   id: ID!
-  helper: String
   name: String
   key: String
   createdDate: DateTime
@@ -926,6 +925,7 @@ type Studio {
     skip: Int! = 0
   ): [Person!]
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
+  helper: String
   content: Studio_content_Document
 }
 
@@ -972,17 +972,16 @@ input PersonManyRelationFilter {
 
 input StudioOrderByInput {
   id: OrderDirection
-  helper: OrderDirection
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
   order: OrderDirection
   blurb: OrderDirection
+  helper: OrderDirection
 }
 
 input StudioUpdateInput {
-  helper: String
   name: String
   key: String
   createdDate: DateTime
@@ -992,6 +991,7 @@ input StudioUpdateInput {
   blurb: String
   filters: FilterRelateToManyForUpdateInput
   associatedPeople: PersonRelateToManyForUpdateInput
+  helper: String
   content: JSON
 }
 
@@ -1008,7 +1008,6 @@ input StudioUpdateArgs {
 }
 
 input StudioCreateInput {
-  helper: String
   name: String
   key: String
   createdDate: DateTime
@@ -1018,6 +1017,7 @@ input StudioCreateInput {
   blurb: String
   filters: FilterRelateToManyForCreateInput
   associatedPeople: PersonRelateToManyForCreateInput
+  helper: String
   content: JSON
 }
 

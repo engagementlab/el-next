@@ -120,7 +120,6 @@ model Person {
 
 model Studio {
   id               String    @id @default(cuid())
-  helper           String?
   name             String    @default("")
   key              String    @unique @default("")
   createdDate      DateTime?
@@ -130,6 +129,7 @@ model Studio {
   blurb            String    @default("")
   filters          Filter[]  @relation("Studio_filters")
   associatedPeople Person[]  @relation("Person_studios")
+  helper           String?
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 

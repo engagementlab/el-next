@@ -25,7 +25,7 @@ var BlockRenderers = function BlockRenderers(imageOveride, peopleOveride) {
           display: 'flex',
           flexDirection: 'column'
         },
-        children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage.Image, {
+        children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
           id: 'img-' + props.image.publicId,
           alt: props.image.alt,
           imgId: props.image.publicId,
@@ -61,8 +61,7 @@ var BlockRenderers = function BlockRenderers(imageOveride, peopleOveride) {
         })
       });
     }
-  }; // if() blocks.image = 
-
+  };
   return blocks;
 };
 

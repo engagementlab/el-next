@@ -12,6 +12,5 @@ export declare const BlockRenderers: (imageOveride?: (props: any) => JSX.Element
     }>;
     associatedPeople: import("@keystone-6/fields-document/component-blocks").ComponentBlock<{
         title: import("@keystone-6/fields-document/component-blocks").ChildField;
-        people: import("@keystone-6/fields-document/component-blocks").RelationshipField<false>;
     }>;
 }>;

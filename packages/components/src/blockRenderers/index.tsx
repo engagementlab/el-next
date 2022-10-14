@@ -2,7 +2,7 @@ import React from "react";
 import { InferRenderersForComponentBlocks } from "@keystone-6/fields-document/component-blocks";
 import Link from "next/link";
 import {componentBlocks} from '../../../../apps/cms/admin/components';
-import { Image } from "../image";
+import Image from "../image";
 import { Video } from "../video";
 
 export const BlockRenderers = (imageOveride?: { (props: any): JSX.Element }, peopleOveride?: { (peopleProps: any): JSX.Element }) => {
@@ -38,6 +38,5 @@ export const BlockRenderers = (imageOveride?: { (props: any): JSX.Element }, peo
       );
     }
   }
-  // if() blocks.image = 
   return blocks;
 };

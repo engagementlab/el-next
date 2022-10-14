@@ -1,5 +1,5 @@
 export { BlockRenderers } from './blockRenderers';
-export * from './button';
+export { Button } from './button';
 export { DocRenderers } from './docRenderers';
 export { Favicon } from './favicon';
 export * from './filtering';

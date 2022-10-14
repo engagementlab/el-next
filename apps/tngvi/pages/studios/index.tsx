@@ -11,7 +11,7 @@ import {
 import query from "../../apollo-client";
 
 import Filtering from "@el-next/components/filtering";
-import { Image } from '@el-next/components/image';
+import Image from '@el-next/components/image';
 import Layout from "../../components/Layout";
 import ImagePlaceholder from "../../components/ImagePlaceholder";
 
@@ -55,6 +55,7 @@ const renderItem = (props: {
 }
 
 export default function Studios({ filtersGrouped, studios }: InferGetStaticPropsType<typeof getStaticProps>) {
+    console.log(Filtering)
     const router = useRouter();
     const preSelectedFilters = Object.keys(router.query).length === 1 ? Object.keys(router.query)[0].split('/') as never[] : [];
     const filtering = new Filtering<StudioItem>(filtersGrouped, preSelectedFilters, studios, renderItem);

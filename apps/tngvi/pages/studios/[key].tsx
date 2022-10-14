@@ -130,7 +130,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        } 
       }`);
   const item = itemResult[0] as Studio;
-  console.log(item.content.document[0].children[1].children);
+  // console.log(item.content.document[0].children[1].children);
   // const item = (await query.Studio.findOne({
   //     where: { key: params!.key as string },
   //     query: '',

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import create from 'zustand';
-import { Image } from '@el-next/components/image';
+import Image from '@el-next/components/image';
 import { ExternalLink } from '@el-next/components/externalLink';
 import Layout from '../components/Layout';
 

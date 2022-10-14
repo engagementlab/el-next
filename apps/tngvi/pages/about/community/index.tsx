@@ -1,9 +1,7 @@
 import {
   InferGetStaticPropsType
 } from 'next';
-import {
-  Image
-} from '@el-next/components/image';
+import Image from '@el-next/components/image';
 
 import create, {
   Mutate,

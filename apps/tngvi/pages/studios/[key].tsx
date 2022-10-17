@@ -19,17 +19,30 @@ type Studio = {
   associatedPeople: [{
     name: string;
     key: string
-    title: string;
+    abbreviatedTitle: string;
+    tag: string[];
   }]
 };
 
 export default function Studio({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
 
-const associatedPeople = () => {
+const associatedPeople = (props) => {
+  // Show only selected people?
+  const onlySelectedPeople = props.selectedPeople.length > 0;
+  const selectedPeopleKeys = _.map(props.selectedPeople, 'data.key');
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {/* <p>ppl</p>/ */}
-      <p><Link href={`/about/community/${item.associatedPeople[0].key}`} passHref>{item.associatedPeople[0].name}</Link>, {item.associatedPeople[0].title}</p>
+    <div className='flex flex-col'>
+      {
+        item.associatedPeople.map((person, i) => {
+          if((onlySelectedPeople &&  selectedPeopleKeys.includes(person.key)) || !onlySelectedPeople) {
+            // Fallback to the person's first tag if no abbreviatedTitle
+            const title = props.showTitles ? `, ${person.abbreviatedTitle ? person.abbreviatedTitle : person.tag[0]}` : '';
+            return (
+              <p key={person.key} className='mt-1'><Link href={`/about/community/${person.key}`} passHref>{person.name}</Link>{title}</p>
+            );
+          }
+        })
+      }
     </div>
   );
 };
@@ -123,14 +136,15 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        associatedPeople {
         name
         key
-        title
+        abbreviatedTitle
+        tag
        } 
        content {
         document(hydrateRelationships: true)
        } 
       }`);
   const item = itemResult[0] as Studio;
-  // console.log(item.content.document[0].children[1].children);
+  // console.log(item.content.document[0].children[1].children[1]);
   // const item = (await query.Studio.findOne({
   //     where: { key: params!.key as string },
   //     query: '',

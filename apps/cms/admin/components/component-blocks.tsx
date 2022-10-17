@@ -6,7 +6,7 @@ import { FormField, HydratedRelationshipData } from '@keystone-6/fields-document
 import Select, { GroupBase, OptionProps } from 'react-select'
 import { FieldContainer } from '@keystone-ui/fields';
 import { css as emCss } from '@emotion/css';
-import { Box, Grid, IconButton, MenuItem, Modal, Select as MUISelect, TextField } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, Grid, IconButton, MenuItem, Modal, Select as MUISelect, TextField } from '@mui/material';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -526,17 +526,16 @@ export const componentBlocks = {
      label: 'Associated People',
      preview: props => {
        return (
-        <NotEditable>{props.fields.title.element}</NotEditable>
+        <>
+          <NotEditable>{props.fields.title.element}</NotEditable>
+          <FormControlLabel control={<Checkbox disabled checked={props.fields.showTitles.value} />} label="Show titles"></FormControlLabel>
+        </>
        );
      },
      schema: {
-      //  type: fields.text({defaultValue: 'people', label: 'people'}),
        title: fields.child({ kind: 'inline', placeholder: 'Associated people will appear here.' }),
-      //  people: fields.relationship({ 
-      //   listKey: 'Person',
-      //   label: 'People Involved',
-      //   selection: 'id key name',
-      //  })
+       showTitles: fields.checkbox({ label: 'Show titles' }),
+       selectedPeople: fields.relationship({ listKey: 'Person', label: 'Show only these people (optional):', selection: 'key name title abbreviatedTitle', many: true }),
      },
     //  preview: props => {
     //    return (
@@ -547,10 +546,6 @@ export const componentBlocks = {
     //      <p>{!props.fields.person.value?.label ? <span>Click <em>Edit</em> to select person</span> : <NotEditable>{props.fields.person.value?.label}</NotEditable>}</p>
     //       </div>
     //    );
-    //  },
-    //  schema: {
-    //    person: fields.relationship({ listKey: 'Person', label: 'Select person:', selection: 'key name title' }),
-    //    title: fields.child({ kind: 'inline' "Person title, if different from their profile" }),
     //  },
     //  chromeless: true,
    }),

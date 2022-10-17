@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldContainer, FieldDescription, FieldLabel, TextInput } from '@keystone-ui/fields';
+import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
 import { CellLink, CellContainer } from '@keystone-6/core/admin-ui/components';
 
 import {
@@ -27,9 +27,7 @@ const styles = {
 };
 
 export function Field({ field, value, onChange, autoFocus }: FieldProps<typeof controller>) {
-  const disabled = onChange === undefined;
-
-  return (
+    return (
     <FieldContainer as="fieldset" className={styles.field}>
       <svg width="48px" height="48px" viewBox="0 0 48 48" className={styles.icon}>
         <g>

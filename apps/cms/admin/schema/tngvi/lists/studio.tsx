@@ -82,6 +82,7 @@ const Studio: Lists.Studio = list({
         // cardFields: ['name', 'title',],
         // inlineEdit: { fields: ['title'] },
         // inlineConnect: true,
+        description: 'Use + button -> "Associated People" on toolbar to display in Content document.'
       }
     }),
     helper: helper({

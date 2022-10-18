@@ -29,7 +29,10 @@ export default function Studio({ item }: InferGetStaticPropsType<typeof getStati
 const associatedPeople = (props: { selectedPeople: any[]; showTitles: boolean; }) => {
   // Show only selected people?
   const onlySelectedPeople = props.selectedPeople.length > 0;
+  const singlePerson = props.selectedPeople.length === 1;
   const selectedPeopleKeys = _.map(props.selectedPeople, 'data.key');
+  //  className='text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all'
+  if(singlePerson) return <span><Link href={`/about/community/${props.selectedPeople[0].data.key}`} passHref><a>{props.selectedPeople[0].label}</a></Link></span>;
   return (
     <div className='flex flex-col'>
       {

@@ -26,7 +26,7 @@ type Studio = {
 
 export default function Studio({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
 
-const associatedPeople = (props) => {
+const associatedPeople = (props: { selectedPeople: any[]; showTitles: boolean; }) => {
   // Show only selected people?
   const onlySelectedPeople = props.selectedPeople.length > 0;
   const selectedPeopleKeys = _.map(props.selectedPeople, 'data.key');

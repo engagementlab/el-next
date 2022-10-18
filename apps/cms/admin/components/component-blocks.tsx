@@ -529,6 +529,11 @@ export const componentBlocks = {
         <>
           <NotEditable>{props.fields.title.element}</NotEditable>
           <FormControlLabel control={<Checkbox disabled checked={props.fields.showTitles.value} />} label="Show titles"></FormControlLabel>
+          {props.fields.selectedPeople.value.length > 0 && <p><strong>Show only:</strong></p>}
+          {props.fields.selectedPeople.value.map((value, index) => {
+            return <div key={index}>{value.label}</div>
+          })}
+          
         </>
        );
      },

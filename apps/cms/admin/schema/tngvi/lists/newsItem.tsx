@@ -24,9 +24,10 @@ import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { BlockRenderers } from '@el-next/components';
 
 export function renderContent(content: any) {
-  return ReactDOMServer.renderToString(<DocumentRenderer document={content} />);
+  return ReactDOMServer.renderToString(<DocumentRenderer document={content} componentBlocks={BlockRenderers()} />);
 }
 const NewsItem: Lists.NewsItem = list({
     fields: {
@@ -98,6 +99,7 @@ const NewsItem: Lists.NewsItem = list({
           type: graphql.String,
           resolve(item, args, context) {
             //@ts-ignore
+            console.log(item.body)
             return renderContent(item.body);
           },
         }),

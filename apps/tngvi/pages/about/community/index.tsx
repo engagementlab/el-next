@@ -122,7 +122,7 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
   
   };
 
-  const RenderPeople = (people: Person[]) => {
+  const RenderPeople = (people: Person[], previous: boolean) => {
     return (
       people.length === 0 ?
       <p className='w-full text-xl my-20 text-center'>Sorry, no matches found. Please try other filters.</p> :
@@ -134,7 +134,7 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
                 <div className='flex flex-col mt-5'>
                     <div>
                         {person.image ?
-                          <Image id={`thumb-${i}`} alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={300} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' /> :
+                          <Image id={`thumb-${i}${previous && '-prev'}`} alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={300} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' /> :
                           <svg viewBox="0 0 300 255" width="300" height="255" stroke="#000000" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#000000">
                             <title>{`Missing image of person with name "${person.name}"`}</title>
                             <path d="M 57.509 200 C 57.509 165.5 103.509 165.5 126.509 142.5 C 138.009 131 103.509 131 103.509 73.5 C 103.509 35.17 118.838 16 149.509 16 C 180.179 16 195.509 35.17 195.509 73.5 C 195.509 131 161.009 131 172.509 142.5 C 195.509 165.5 241.509 165.5 241.509 200" style={{stroke: 'rgb(141, 51, 210)', strokeOpacity: 0.36, strokeWidth: '7px'}}></path>
@@ -162,7 +162,7 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
           <h3 className="text-lg font-extrabold text-purple mt-5">Current Participants</h3>
           {RenderPeople(filteredCurrentPpl)}
           <h3 className="text-lg font-extrabold text-purple mt-5">Previous Participants</h3>
-          {RenderPeople(filteredPreviousPpl)}
+          {RenderPeople(filteredPreviousPpl, true)}
       </div>
     </Layout>
     

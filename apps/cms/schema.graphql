@@ -592,6 +592,13 @@ type MediaItem {
     skip: Int! = 0
   ): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
+  associatedPeople(
+    where: PersonWhereInput! = {}
+    orderBy: [PersonOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Person!]
+  associatedPeopleCount(where: PersonWhereInput! = {}): Int
   content: MediaItem_content_Document
   videos: JSON
   file: AzureStorageFileFieldOutput
@@ -631,12 +638,19 @@ input MediaItemWhereInput {
   enabled: BooleanFilter
   shortDescription: StringFilter
   filters: FilterManyRelationFilter
+  associatedPeople: PersonManyRelationFilter
 }
 
 input FilterManyRelationFilter {
   every: FilterWhereInput
   some: FilterWhereInput
   none: FilterWhereInput
+}
+
+input PersonManyRelationFilter {
+  every: PersonWhereInput
+  some: PersonWhereInput
+  none: PersonWhereInput
 }
 
 input MediaItemOrderByInput {
@@ -656,6 +670,7 @@ input MediaItemUpdateInput {
   thumbnail: Upload
   shortDescription: String
   filters: FilterRelateToManyForUpdateInput
+  associatedPeople: PersonRelateToManyForUpdateInput
   content: JSON
   videos: JSON
   file: AzureStorageFileFieldInput
@@ -666,6 +681,13 @@ input FilterRelateToManyForUpdateInput {
   set: [FilterWhereUniqueInput!]
   create: [FilterCreateInput!]
   connect: [FilterWhereUniqueInput!]
+}
+
+input PersonRelateToManyForUpdateInput {
+  disconnect: [PersonWhereUniqueInput!]
+  set: [PersonWhereUniqueInput!]
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 input AzureStorageFileFieldInput {
@@ -686,6 +708,7 @@ input MediaItemCreateInput {
   thumbnail: Upload
   shortDescription: String
   filters: FilterRelateToManyForCreateInput
+  associatedPeople: PersonRelateToManyForCreateInput
   content: JSON
   videos: JSON
   file: AzureStorageFileFieldInput
@@ -694,6 +717,11 @@ input MediaItemCreateInput {
 input FilterRelateToManyForCreateInput {
   create: [FilterCreateInput!]
   connect: [FilterWhereUniqueInput!]
+}
+
+input PersonRelateToManyForCreateInput {
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 type NewsItem {
@@ -800,6 +828,13 @@ type Person {
   blurb: String
   remembrance: String
   content: Person_content_Document
+  mediaItems(
+    where: MediaItemWhereInput! = {}
+    orderBy: [MediaItemOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [MediaItem!]
+  mediaItemsCount(where: MediaItemWhereInput! = {}): Int
   studios(
     where: StudioWhereInput! = {}
     orderBy: [StudioOrderByInput!]! = []
@@ -831,7 +866,14 @@ input PersonWhereInput {
   currentlyActive: BooleanFilter
   blurb: StringFilter
   remembrance: StringFilter
+  mediaItems: MediaItemManyRelationFilter
   studios: StudioManyRelationFilter
+}
+
+input MediaItemManyRelationFilter {
+  every: MediaItemWhereInput
+  some: MediaItemWhereInput
+  none: MediaItemWhereInput
 }
 
 input StudioManyRelationFilter {
@@ -866,7 +908,15 @@ input PersonUpdateInput {
   blurb: String
   remembrance: String
   content: JSON
+  mediaItems: MediaItemRelateToManyForUpdateInput
   studios: StudioRelateToManyForUpdateInput
+}
+
+input MediaItemRelateToManyForUpdateInput {
+  disconnect: [MediaItemWhereUniqueInput!]
+  set: [MediaItemWhereUniqueInput!]
+  create: [MediaItemCreateInput!]
+  connect: [MediaItemWhereUniqueInput!]
 }
 
 input StudioRelateToManyForUpdateInput {
@@ -894,7 +944,13 @@ input PersonCreateInput {
   blurb: String
   remembrance: String
   content: JSON
+  mediaItems: MediaItemRelateToManyForCreateInput
   studios: StudioRelateToManyForCreateInput
+}
+
+input MediaItemRelateToManyForCreateInput {
+  create: [MediaItemCreateInput!]
+  connect: [MediaItemWhereUniqueInput!]
 }
 
 input StudioRelateToManyForCreateInput {
@@ -964,12 +1020,6 @@ input IntNullableFilter {
   not: IntNullableFilter
 }
 
-input PersonManyRelationFilter {
-  every: PersonWhereInput
-  some: PersonWhereInput
-  none: PersonWhereInput
-}
-
 input StudioOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -995,13 +1045,6 @@ input StudioUpdateInput {
   content: JSON
 }
 
-input PersonRelateToManyForUpdateInput {
-  disconnect: [PersonWhereUniqueInput!]
-  set: [PersonWhereUniqueInput!]
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
 input StudioUpdateArgs {
   where: StudioWhereUniqueInput!
   data: StudioUpdateInput!
@@ -1019,11 +1062,6 @@ input StudioCreateInput {
   associatedPeople: PersonRelateToManyForCreateInput
   helper: String
   content: JSON
-}
-
-input PersonRelateToManyForCreateInput {
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
 }
 
 type User {

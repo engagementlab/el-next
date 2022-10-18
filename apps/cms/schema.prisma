@@ -80,6 +80,7 @@ model MediaItem {
   thumbnail        Json?
   shortDescription String    @default("")
   filters          Filter[]  @relation("MediaItem_filters")
+  associatedPeople Person[]  @relation("MediaItem_associatedPeople")
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   videos           Json?
   file_filename    String?
@@ -102,20 +103,21 @@ model NewsItem {
 }
 
 model Person {
-  id               String    @id @default(cuid())
-  name             String    @default("")
-  key              String    @default("")
-  title            String    @default("")
-  abbreviatedTitle String    @default("")
+  id               String      @id @default(cuid())
+  name             String      @default("")
+  key              String      @default("")
+  title            String      @default("")
+  abbreviatedTitle String      @default("")
   createdDate      DateTime?
-  enabled          Boolean   @default(true)
-  currentlyActive  Boolean   @default(true)
-  tag              Json      @default("[]")
+  enabled          Boolean     @default(true)
+  currentlyActive  Boolean     @default(true)
+  tag              Json        @default("[]")
   image            Json?
-  blurb            String    @default("")
-  remembrance      String    @default("")
-  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studios          Studio[]  @relation("Person_studios")
+  blurb            String      @default("")
+  remembrance      String      @default("")
+  content          Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  mediaItems       MediaItem[] @relation("MediaItem_associatedPeople")
+  studios          Studio[]    @relation("Person_studios")
 }
 
 model Studio {

@@ -66,6 +66,13 @@ const MediaItem: Lists.MediaItem = list({
           displayMode: 'select',
         }
       }),
+      associatedPeople: relationship({
+        ref: 'Person.mediaItems',
+        many: true,
+        ui: {
+          description: 'Use + button -> "Associated People" on toolbar to display in Content document.'
+        }
+      }),
       content: document({
         formatting: true,
         dividers: true,

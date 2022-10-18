@@ -104,6 +104,10 @@ const Person: Lists.Person = list({
       formatting: true,
       label: 'Full Bio/Content'
     }),
+    mediaItems: relationship({
+      ref: 'MediaItem.associatedPeople',
+      many: true
+    }),
     studios: relationship({
       ref: 'Studio.associatedPeople',
       many: true

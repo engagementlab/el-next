@@ -78,10 +78,6 @@ const Studio: Lists.Studio = list({
       ref: 'Person.studios',
       many: true,
       ui: {
-        // displayMode: 'cards',
-        // cardFields: ['name', 'title',],
-        // inlineEdit: { fields: ['title'] },
-        // inlineConnect: true,
         description: 'Use + button -> "Associated People" on toolbar to display in Content document.'
       }
     }),

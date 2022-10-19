@@ -5,6 +5,16 @@ const apollo = new ApolloClient({
     process.env.APOLLO_CLIENT_GRAPHQL_URI ||
     'http://localhost:3000/api/graphql',
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'ignore',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
 });
 const query = async (name: string, queryStr: string) => {
   try {

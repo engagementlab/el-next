@@ -122,12 +122,12 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
   
   };
 
-  const RenderPeople = (people: Person[], previous: boolean) => {
+  const RenderPeople = (people: Person[], previous: boolean = false) => {
     return (
       people.length === 0 ?
       <p className='w-full text-xl my-20 text-center'>Sorry, no matches found. Please try other filters.</p> :
       <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 md:grid-cols-2">
-        <AnimatePresence>
+        <AnimatePresence key={previous ? 'previous' : 'current'}>
           {people.map((person, i) => (  
             <Link href={`/about/community/${person.key}`} passHref key={person.key}>
               <a>
@@ -142,7 +142,7 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
                         }
                     </div>
                     <div>
-                        <h3 className='text-xl font-semibold text-coated'>{person.name}</h3>
+                        <h3 className='text-xl font-semibold text-coated'>{person.name} {person.key}</h3>
                         <p className="mt-2 mb-8">{person.title}</p>
                     </div>
                 </div>

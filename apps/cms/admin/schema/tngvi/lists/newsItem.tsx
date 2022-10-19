@@ -57,7 +57,7 @@ const NewsItem: Lists.NewsItem = list({
         type: 'enum',
         options: [
           { label: 'ELab Home', value: 'elab' },
-          { label: 'TNGVI', value: 'tngvim' },
+          { label: 'TNGVI', value: 'tngvi' },
         ],
         ui:
         { description: 'Where should this be published?', }

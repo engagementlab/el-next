@@ -742,7 +742,7 @@ type NewsItem {
 
 enum NewsItemAppType {
   elab
-  tngvim
+  tngvi
 }
 
 type NewsItem_body_Document {

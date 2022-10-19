@@ -191,7 +191,6 @@ let ksConfig = (lists: any) => {
         });
 
         app.get('/rest/news/:key?', getNews);
-        app.get('/rest/ppl', setPplKeys);
 
         app.get('/prod-deploy', async (req, res, next) => {
           try {

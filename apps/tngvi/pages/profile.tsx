@@ -266,11 +266,11 @@ export default function GetInvolved() {
                                 No user with this token was found.
                             </span>
                             }
-                            {editStatus === 'error' &&
+                            {/* {editStatus === 'error' &&
                             <span className='text-green-blue'>
                                 Sorry, there was a problem. Try again later, please.
                             </span>
-                            }
+                            } */}
                         </form>
                     }
                         {editStatus === 'form' &&
@@ -282,7 +282,7 @@ export default function GetInvolved() {
                                     <p>*Required</p>
 
                                     <input type='hidden' aria-hidden='true' name='token' id='token' value={userToken} />
-                                    <p className='text-purple font-semibold'>Name you'd like displayed, including
+                                    <p className='text-purple font-semibold'>First and last name you'd like displayed, including
                                         preferred prefix or suffixes*</p>
                                     <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
                                         aria-label="Enter your full name" minLength={5} required disabled={submitted}
@@ -375,7 +375,8 @@ export default function GetInvolved() {
                                 <h2 className="text-2xl text-bluegreen font-semibold mb-8">Submit one!</h2>
                                 <div className='flex flex-col'>
                                     <p>*Required</p>
-                                    <p className='text-purple font-semibold'>Name you'd like displayed, including preferred prefix or suffixes*</p>
+                                    <p className='text-purple font-semibold'>First and last name you'd like displayed, including
+                                        preferred prefix or suffixes*</p>
                                     <input type='text' placeholder="YOUR NAME*" name="name" id="name" width="800"
                                         aria-label="Enter your full name" minLength={5} required disabled={submitted}
                                         className="w-full bg-lynx placeholder:text-bluegreen py-4 px-4 border-2 rounded-full

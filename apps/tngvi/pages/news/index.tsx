@@ -18,6 +18,7 @@ type News = {
         publicId: string;
     }
     externalLink?: string;
+    apps: string[];
 }
 
 export default function News({ items }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -109,7 +110,8 @@ export async function getStaticProps() {
             where: {
                 enabled: {
                     equals: true
-                }
+                },
+
             },
             orderBy: {
                 publishDate: desc
@@ -123,10 +125,12 @@ export async function getStaticProps() {
             thumbnail { 
                 publicId
             }
+            apps
         }`) as News[];
+    const tngviItems = items.filter(item => item.apps.includes('tngvi') || item.apps.length === 0);
     return {
         props: {
-            items
+            items: tngviItems,
         }
     };
 }

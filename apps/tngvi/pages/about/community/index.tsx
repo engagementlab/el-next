@@ -142,7 +142,7 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
                         }
                     </div>
                     <div>
-                        <h3 className='text-xl font-semibold text-coated'>{person.name} {person.key}</h3>
+                        <h3 className='text-xl font-semibold text-coated'>{person.name}</h3>
                         <p className="mt-2 mb-8">{person.title}</p>
                     </div>
                 </div>

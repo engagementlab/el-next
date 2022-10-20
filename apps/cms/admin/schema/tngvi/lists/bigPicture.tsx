@@ -8,6 +8,7 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from '@keystone-6/core/access';
 import {
     Lists
 } from '.keystone/types';
@@ -20,6 +21,7 @@ import {
 import { FixButtons } from '../../hooks';
 
 const BigPicture: Lists.BigPicture = list({
+    access: allowAll,
     fields: {
         name: text({
             isIndexed: 'unique',

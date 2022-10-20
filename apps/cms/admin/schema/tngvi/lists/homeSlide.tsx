@@ -5,6 +5,7 @@ import {
   relationship,
   text
 } from '@keystone-6/core/fields';
+import { allowAll } from '@keystone-6/core/access';
 import {
   Lists
 } from '.keystone/types';
@@ -13,6 +14,7 @@ import {
 } from '../../../components/cloudinary';
 
 const HomeSlide: Lists.HomeSlide = list({
+    access: allowAll,
     fields: {
       homeSlides: relationship({
         ref: 'Home.slides',

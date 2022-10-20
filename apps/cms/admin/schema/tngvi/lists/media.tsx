@@ -12,16 +12,19 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
 import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
-import { azConfig, azureStorageFile } from '../../azure';
+import { azureStorageFile } from '@el-next/fields-azure';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { azConfig } from '../../azure';
 
 const MediaItem: Lists.MediaItem = list({
+    access: allowAll,
     fields: {
       title: text({
         validation: {

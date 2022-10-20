@@ -38,7 +38,8 @@ const CloudinaryImageFormat = graphql.inputObject({
     'All options are strings as they ultimately end up in a URL.',
   fields: {
     prettyName: graphql.arg({
-      description: ' Rewrites the filename to be this pretty string. Do not include `/` or `.`',
+      description:
+        ' Rewrites the filename to be this pretty string. Do not include `/` or `.`',
       type: graphql.String,
     }),
     width: graphql.arg({ type: graphql.String }),
@@ -81,7 +82,9 @@ type CloudinaryImage_File = {
   publicId: string | null;
   publicUrl: string | null;
   publicUrlTransformed: (args: {
-    transformation: graphql.InferValueFromArg<graphql.Arg<typeof CloudinaryImageFormat>>;
+    transformation: graphql.InferValueFromArg<
+      graphql.Arg<typeof CloudinaryImageFormat>
+    >;
   }) => string | null;
 };
 
@@ -113,9 +116,11 @@ export const cloudinaryImage =
     cloudinary,
     ...config
   }: CloudinaryImageFieldConfig<ListTypeInfo>): FieldTypeFunc<ListTypeInfo> =>
-  meta => {
+  (meta) => {
     if ((config as any).isIndexed === 'unique') {
-      throw Error("isIndexed: 'unique' is not a supported option for field type cloudinaryImage");
+      throw Error(
+        "isIndexed: 'unique' is not a supported option for field type cloudinaryImage"
+      );
     }
     const adapter = new CloudinaryAdapter(cloudinary);
     const resolveInput = async (
@@ -128,7 +133,12 @@ export const cloudinaryImage =
         return undefined;
       }
 
-      const { createReadStream, filename: originalFilename, mimetype, encoding } = await uploadData;
+      const {
+        createReadStream,
+        filename: originalFilename,
+        mimetype,
+        encoding,
+      } = await uploadData;
       const stream = createReadStream();
 
       if (!stream) {
@@ -151,8 +161,14 @@ export const cloudinaryImage =
       {
         ...config,
         input: {
-          create: { arg: graphql.arg({ type: graphql.Upload }), resolve: resolveInput },
-          update: { arg: graphql.arg({ type: graphql.Upload }), resolve: resolveInput },
+          create: {
+            arg: graphql.arg({ type: graphql.Upload }),
+            resolve: resolveInput,
+          },
+          update: {
+            arg: graphql.arg({ type: graphql.Upload }),
+            resolve: resolveInput,
+          },
         },
         output: graphql.field({
           type: outputType,
@@ -175,7 +191,7 @@ export const cloudinaryImage =
             };
           },
         }),
-        views: path.join(__dirname, 'views'),
+        views: 'views',
       },
       {
         map: config.db?.map,

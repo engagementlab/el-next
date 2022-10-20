@@ -6,12 +6,14 @@ import {
     select,
     text
 } from '@keystone-6/core/fields';
+import { allowAll } from '@keystone-6/core/access';
 import {
     Lists
 } from '.keystone/types';
 import { CreateKey } from '../../hooks';
 
 const Filter: Lists.Filter = list({
+    access: allowAll,
     fields: {
     //   mediaRef: relationship({ ref: 'MediaItem.filters', many: true }),
       name: text({

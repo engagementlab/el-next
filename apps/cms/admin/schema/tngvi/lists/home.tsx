@@ -2,19 +2,19 @@ import {
     list
   } from '@keystone-6/core';
 import {
-    json,
     relationship,
-    select,
     text
 } from '@keystone-6/core/fields';
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
 
 const Home: Lists.Home = list({
+    access: allowAll,
     fields: {
         name: text({
             isIndexed: 'unique',

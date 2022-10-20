@@ -43,7 +43,7 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
           return value;
         },
       }),
-      views: path.join(__dirname, 'views'),
+      views: 'views',
       getAdminMeta() {
         return { html };
       },

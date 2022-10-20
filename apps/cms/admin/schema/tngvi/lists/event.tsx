@@ -11,6 +11,7 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
@@ -22,6 +23,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 
 const Event: Lists.Event = list({
+    access: allowAll,
     fields: {
       name: text({
         validation: {
@@ -104,7 +106,7 @@ const Event: Lists.Event = list({
           [1, 2, 1],
         ],
         ui: {
-          views: path.join(process.cwd(), 'admin/components/component-blocks')
+          views: 'admin/components/component-blocks',
         },
   
         componentBlocks,

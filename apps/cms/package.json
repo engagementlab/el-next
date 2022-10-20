@@ -18,10 +18,10 @@
     "@emotion/core": "10.3.1",
     "@emotion/css": "^11.7.1",
     "@emotion/styled": "^11.8.1",
-    "@k6-contrib/fields-azure": "^1.1.0",
+    "@k6-contrib/fields-azure": "^2.0.0",
     "@keystone-6/auth": "^3.0.0",
-    "@keystone-6/core": "^2.0.0",
-    "@keystone-6/fields-document": "^3.0.0",
+    "@keystone-6/core": "^3.0.1",
+    "@keystone-6/fields-document": "^5.0.0",
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.81",
     "@mui/material": "^5.6.4",
@@ -64,6 +64,7 @@
     "@types/react-dom": "^18.0.6"
   },
   "resolutions": {
+    "graphql": "^15.8.0",
     "next": "12.2.4"
   }
 }

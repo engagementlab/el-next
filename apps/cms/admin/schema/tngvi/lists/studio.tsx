@@ -11,6 +11,7 @@ import {
 import {
   document
 } from '@keystone-6/fields-document';
+import { allowAll } from '@keystone-6/core/access';
 import {
   Lists
 } from '.keystone/types';
@@ -23,6 +24,7 @@ import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { helper } from '../../../components/helper';
 
 const Studio: Lists.Studio = list({
+    access: allowAll,
   fields: {
     name: text({
       validation: {
@@ -110,7 +112,7 @@ const Studio: Lists.Studio = list({
       //   },
       // },
       ui: {
-        views: path.join(process.cwd(), 'admin/components/component-blocks')
+        views: 'admin/components/component-blocks',
       },
 
       componentBlocks,

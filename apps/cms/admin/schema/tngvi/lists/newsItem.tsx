@@ -17,6 +17,7 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
@@ -30,6 +31,7 @@ export function renderContent(content: any) {
   return ReactDOMServer.renderToString(<DocumentRenderer document={content} componentBlocks={BlockRenderers()} />);
 }
 const NewsItem: Lists.NewsItem = list({
+    access: allowAll,
     fields: {
       title: text({
         validation: {

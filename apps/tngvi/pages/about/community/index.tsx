@@ -110,7 +110,7 @@ export default function Community({ currentPeople, previousPeople }: InferGetSta
                         )
                       })}
                     </div>
-                    <a href="#" role="button" className="text-bluegreen md:ml-2" onClick={(e)=>{ reset(); e.preventDefault() }}
+                    <a href="#" role="button" aria-label="Reset Filters" className="text-bluegreen md:ml-2" onClick={(e)=>{ reset(); e.preventDefault() }}
                       style={{visibility: !haveFilters ? 'hidden' : 'visible'}}><svg width="24px" height="24px"
                         viewBox="0 0 24 24">
                         <path  style={{fill: '#8D33D2'}} fillRule="evenodd"

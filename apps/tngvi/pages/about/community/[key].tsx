@@ -3,27 +3,11 @@ import {
     GetStaticPropsContext,
     InferGetStaticPropsType
 } from 'next';
-import {
-    useRouter
-} from 'next/router';
-import {
-    DocumentRenderer,
-} from '@keystone-6/document-renderer';
-
-import _ from 'lodash';
-import create from 'zustand';
-import {
-    CopyToClipboard
-} from 'react-copy-to-clipboard';
 
 import query from '../../../apollo-client';
 
 import Image from '@el-next/components/image';
-import { DocRenderers } from '@el-next/components/docRenderers';
 import Layout from '../../../components/Layout';
-import Link from 'next/link';
-import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal } from 'react';
-
 
 type Person = {
     name: string;
@@ -58,7 +42,7 @@ export default function Person({
                     <Image id='thumb' alt={`Thumbnail for person with name "${person.name}"`} imgId={person.image.publicId} width={335} transforms='f_auto,dpr_auto,c_thumb,g_face,ar_4:3' />
                   </div>
 
-                  <div>
+                  <div className='lg:ml-9'>
                     {person.blurb && (
                       <p>
                         <span className="text-coated font-semibold">

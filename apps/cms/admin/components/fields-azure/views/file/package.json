@@ -1,0 +1,4 @@
+{
+  "main": "dist/el-next-fields-azure-views-file.cjs.js",
+  "module": "dist/el-next-fields-azure-views-file.esm.js"
+}

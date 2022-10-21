@@ -43,7 +43,7 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
           return value;
         },
       }),
-      views: 'views',
+      views: './admin/components/helper/views',
       getAdminMeta() {
         return { html };
       },

@@ -112,7 +112,7 @@ const Studio: Lists.Studio = list({
       //   },
       // },
       ui: {
-        views: 'admin/components/component-blocks',
+        views: './admin/components/component-blocks',
       },
 
       componentBlocks,

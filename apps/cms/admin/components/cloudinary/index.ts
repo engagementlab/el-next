@@ -191,7 +191,7 @@ export const cloudinaryImage =
             };
           },
         }),
-        views: 'views',
+        views: './admin/components/cloudinary/views',
       },
       {
         map: config.db?.map,

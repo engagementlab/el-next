@@ -194,8 +194,7 @@ type Event {
   content: Event_content_Document
 }
 
-scalar DateTime
-  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 type CloudinaryImage_File {
   id: ID
@@ -213,8 +212,7 @@ Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/docu
 All options are strings as they ultimately end up in a URL.
 """
 input CloudinaryImageFormat {
-  """
-  Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
   """
   prettyName: String
   width: String
@@ -326,9 +324,7 @@ input EventUpdateInput {
   content: JSON
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input EventUpdateArgs {
@@ -439,12 +435,7 @@ type Home {
   id: ID!
   name: String
   intro: Home_intro_Document
-  slides(
-    where: HomeSlideWhereInput! = {}
-    orderBy: [HomeSlideOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [HomeSlide!]
+  slides(where: HomeSlideWhereInput! = {}, orderBy: [HomeSlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [HomeSlide!]
   slidesCount(where: HomeSlideWhereInput! = {}): Int
 }
 
@@ -508,12 +499,7 @@ input HomeSlideRelateToManyForCreateInput {
 
 type HomeSlide {
   id: ID!
-  homeSlides(
-    where: HomeWhereInput! = {}
-    orderBy: [HomeOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Home!]
+  homeSlides(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
   homeSlidesCount(where: HomeWhereInput! = {}): Int
   image: CloudinaryImage_File
   altText: String
@@ -585,19 +571,9 @@ type MediaItem {
   enabled: Boolean
   thumbnail: CloudinaryImage_File
   shortDescription: String
-  filters(
-    where: FilterWhereInput! = {}
-    orderBy: [FilterOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Filter!]
+  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
-  associatedPeople(
-    where: PersonWhereInput! = {}
-    orderBy: [PersonOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Person!]
+  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
   content: MediaItem_content_Document
   videos: JSON
@@ -828,19 +804,9 @@ type Person {
   blurb: String
   remembrance: String
   content: Person_content_Document
-  mediaItems(
-    where: MediaItemWhereInput! = {}
-    orderBy: [MediaItemOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [MediaItem!]
+  mediaItems(where: MediaItemWhereInput! = {}, orderBy: [MediaItemOrderByInput!]! = [], take: Int, skip: Int! = 0): [MediaItem!]
   mediaItemsCount(where: MediaItemWhereInput! = {}): Int
-  studios(
-    where: StudioWhereInput! = {}
-    orderBy: [StudioOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Studio!]
+  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0): [Studio!]
   studiosCount(where: StudioWhereInput! = {}): Int
 }
 
@@ -967,19 +933,9 @@ type Studio {
   order: Int
   thumbnail: CloudinaryImage_File
   blurb: String
-  filters(
-    where: FilterWhereInput! = {}
-    orderBy: [FilterOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Filter!]
+  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
-  associatedPeople(
-    where: PersonWhereInput! = {}
-    orderBy: [PersonOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Person!]
+  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
   helper: String
   content: Studio_content_Document
@@ -1117,10 +1073,7 @@ input UserCreateInput {
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
-scalar JSON
-  @specifiedBy(
-    url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf"
-  )
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Mutation {
   createAbout(data: AboutCreateInput!): About
@@ -1131,19 +1084,13 @@ type Mutation {
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
   createBigPicture(data: BigPictureCreateInput!): BigPicture
   createBigPictures(data: [BigPictureCreateInput!]!): [BigPicture]
-  updateBigPicture(
-    where: BigPictureWhereUniqueInput!
-    data: BigPictureUpdateInput!
-  ): BigPicture
+  updateBigPicture(where: BigPictureWhereUniqueInput!, data: BigPictureUpdateInput!): BigPicture
   updateBigPictures(data: [BigPictureUpdateArgs!]!): [BigPicture]
   deleteBigPicture(where: BigPictureWhereUniqueInput!): BigPicture
   deleteBigPictures(where: [BigPictureWhereUniqueInput!]!): [BigPicture]
   createDataTemp(data: DataTempCreateInput!): DataTemp
   createDataTemps(data: [DataTempCreateInput!]!): [DataTemp]
-  updateDataTemp(
-    where: DataTempWhereUniqueInput!
-    data: DataTempUpdateInput!
-  ): DataTemp
+  updateDataTemp(where: DataTempWhereUniqueInput!, data: DataTempUpdateInput!): DataTemp
   updateDataTemps(data: [DataTempUpdateArgs!]!): [DataTemp]
   deleteDataTemp(where: DataTempWhereUniqueInput!): DataTemp
   deleteDataTemps(where: [DataTempWhereUniqueInput!]!): [DataTemp]
@@ -1167,28 +1114,19 @@ type Mutation {
   deleteHomePage(where: [HomeWhereUniqueInput!]!): [Home]
   createHomeSlide(data: HomeSlideCreateInput!): HomeSlide
   createHomeSlides(data: [HomeSlideCreateInput!]!): [HomeSlide]
-  updateHomeSlide(
-    where: HomeSlideWhereUniqueInput!
-    data: HomeSlideUpdateInput!
-  ): HomeSlide
+  updateHomeSlide(where: HomeSlideWhereUniqueInput!, data: HomeSlideUpdateInput!): HomeSlide
   updateHomeSlides(data: [HomeSlideUpdateArgs!]!): [HomeSlide]
   deleteHomeSlide(where: HomeSlideWhereUniqueInput!): HomeSlide
   deleteHomeSlides(where: [HomeSlideWhereUniqueInput!]!): [HomeSlide]
   createMediaItem(data: MediaItemCreateInput!): MediaItem
   createMediaItems(data: [MediaItemCreateInput!]!): [MediaItem]
-  updateMediaItem(
-    where: MediaItemWhereUniqueInput!
-    data: MediaItemUpdateInput!
-  ): MediaItem
+  updateMediaItem(where: MediaItemWhereUniqueInput!, data: MediaItemUpdateInput!): MediaItem
   updateMediaItems(data: [MediaItemUpdateArgs!]!): [MediaItem]
   deleteMediaItem(where: MediaItemWhereUniqueInput!): MediaItem
   deleteMediaItems(where: [MediaItemWhereUniqueInput!]!): [MediaItem]
   createNewsItem(data: NewsItemCreateInput!): NewsItem
   createNewsItems(data: [NewsItemCreateInput!]!): [NewsItem]
-  updateNewsItem(
-    where: NewsItemWhereUniqueInput!
-    data: NewsItemUpdateInput!
-  ): NewsItem
+  updateNewsItem(where: NewsItemWhereUniqueInput!, data: NewsItemUpdateInput!): NewsItem
   updateNewsItems(data: [NewsItemUpdateArgs!]!): [NewsItem]
   deleteNewsItem(where: NewsItemWhereUniqueInput!): NewsItem
   deleteNewsItems(where: [NewsItemWhereUniqueInput!]!): [NewsItem]
@@ -1213,100 +1151,40 @@ type Mutation {
 }
 
 type Query {
-  abouts(
-    where: AboutWhereInput! = {}
-    orderBy: [AboutOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [About!]
+  abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
-  bigPictures(
-    where: BigPictureWhereInput! = {}
-    orderBy: [BigPictureOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [BigPicture!]
+  bigPictures(where: BigPictureWhereInput! = {}, orderBy: [BigPictureOrderByInput!]! = [], take: Int, skip: Int! = 0): [BigPicture!]
   bigPicture(where: BigPictureWhereUniqueInput!): BigPicture
   bigPicturesCount(where: BigPictureWhereInput! = {}): Int
-  dataTemps(
-    where: DataTempWhereInput! = {}
-    orderBy: [DataTempOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [DataTemp!]
+  dataTemps(where: DataTempWhereInput! = {}, orderBy: [DataTempOrderByInput!]! = [], take: Int, skip: Int! = 0): [DataTemp!]
   dataTemp(where: DataTempWhereUniqueInput!): DataTemp
   dataTempsCount(where: DataTempWhereInput! = {}): Int
-  events(
-    where: EventWhereInput! = {}
-    orderBy: [EventOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Event!]
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
-  filters(
-    where: FilterWhereInput! = {}
-    orderBy: [FilterOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Filter!]
+  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0): [Filter!]
   filter(where: FilterWhereUniqueInput!): Filter
   filtersCount(where: FilterWhereInput! = {}): Int
-  homePage(
-    where: HomeWhereInput! = {}
-    orderBy: [HomeOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Home!]
+  homePage(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
   home(where: HomeWhereUniqueInput!): Home
   homePageCount(where: HomeWhereInput! = {}): Int
-  homeSlides(
-    where: HomeSlideWhereInput! = {}
-    orderBy: [HomeSlideOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [HomeSlide!]
+  homeSlides(where: HomeSlideWhereInput! = {}, orderBy: [HomeSlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [HomeSlide!]
   homeSlide(where: HomeSlideWhereUniqueInput!): HomeSlide
   homeSlidesCount(where: HomeSlideWhereInput! = {}): Int
-  mediaItems(
-    where: MediaItemWhereInput! = {}
-    orderBy: [MediaItemOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [MediaItem!]
+  mediaItems(where: MediaItemWhereInput! = {}, orderBy: [MediaItemOrderByInput!]! = [], take: Int, skip: Int! = 0): [MediaItem!]
   mediaItem(where: MediaItemWhereUniqueInput!): MediaItem
   mediaItemsCount(where: MediaItemWhereInput! = {}): Int
-  newsItems(
-    where: NewsItemWhereInput! = {}
-    orderBy: [NewsItemOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [NewsItem!]
+  newsItems(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0): [NewsItem!]
   newsItem(where: NewsItemWhereUniqueInput!): NewsItem
   newsItemsCount(where: NewsItemWhereInput! = {}): Int
-  people(
-    where: PersonWhereInput! = {}
-    orderBy: [PersonOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Person!]
+  people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
-  studios(
-    where: StudioWhereInput! = {}
-    orderBy: [StudioOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Studio!]
+  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0): [Studio!]
   studio(where: StudioWhereUniqueInput!): Studio
   studiosCount(where: StudioWhereInput! = {}): Int
-  users(
-    where: UserWhereInput! = {}
-    orderBy: [UserOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [User!]
+  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
   keystone: KeystoneMeta!
@@ -1317,8 +1195,6 @@ type KeystoneMeta {
 }
 
 type KeystoneAdminMeta {
-  enableSignout: Boolean!
-  enableSessionItem: Boolean!
   lists: [KeystoneAdminUIListMeta!]!
   list(key: String!): KeystoneAdminUIListMeta
 }
@@ -1340,6 +1216,7 @@ type KeystoneAdminUIListMeta {
   fields: [KeystoneAdminUIFieldMeta!]!
   initialSort: KeystoneAdminUISort
   isHidden: Boolean!
+  isSingleton: Boolean
 }
 
 type KeystoneAdminUIFieldMeta {

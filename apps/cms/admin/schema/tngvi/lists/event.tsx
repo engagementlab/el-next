@@ -106,7 +106,7 @@ const Event: Lists.Event = list({
           [1, 2, 1],
         ],
         ui: {
-          views: 'admin/components/component-blocks',
+          views: './admin/components/component-blocks',
         },
   
         componentBlocks,

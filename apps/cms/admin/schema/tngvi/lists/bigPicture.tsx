@@ -55,7 +55,7 @@ const BigPicture: Lists.BigPicture = list({
                 [1, 2, 1],
             ],
             ui: {
-                views: path.join(process.cwd(), 'admin/components/component-blocks')
+                views: './admin/components/component-blocks'
             },
             componentBlocks,
             hooks: {

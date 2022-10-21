@@ -1,8 +1,19 @@
-import { AzureStorageConfig, azureStorageFile, azureStorageImage } from '@k6-contrib/fields-azure';
+import { AzureStorageDataType, GetFileNameFunc } from '@el-next/fields-azure/src/lib/types';
 
 if(!process.env.AZURE_STORAGE_ACCOUNT || !process.env.AZURE_STORAGE_ACCESS_KEY || !process.env.AZURE_STORAGE_CONTAINER)
     throw new Error(`Please provide AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCESS_KEY, AZURE_STORAGE_CONTAINER`);
 
+type AzureStorageConfig = {
+  transformFilename?: (str: string) => string;
+  getFilename?: (args: GetFileNameFunc) => string;
+  getUrl?: (config: AzureStorageConfig, fileData: AzureStorageDataType) => string;
+  azureStorageOptions: {
+    account: string;
+    accessKey: string;
+    container: string;
+    url?: string;
+  };
+};
 const azConfig: AzureStorageConfig = {
     azureStorageOptions: {
     account: process.env.AZURE_STORAGE_ACCOUNT,
@@ -10,4 +21,4 @@ const azConfig: AzureStorageConfig = {
     container: process.env.AZURE_STORAGE_CONTAINER,
     },
 };
-export { azConfig, azureStorageFile };
+export { azConfig };

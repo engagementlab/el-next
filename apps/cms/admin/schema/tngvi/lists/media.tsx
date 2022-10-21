@@ -18,7 +18,7 @@ import {
 } from '.keystone/types';
 import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
-import { azureStorageFile } from '@el-next/fields-azure';
+import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
@@ -88,7 +88,7 @@ const MediaItem: Lists.MediaItem = list({
           [1, 2, 1],
         ],
         ui: {
-          views: path.join(process.cwd(), 'admin/components/component-blocks')
+          views: './admin/components/component-blocks'
         },
   
         componentBlocks,

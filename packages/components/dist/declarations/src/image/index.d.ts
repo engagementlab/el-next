@@ -1,3 +1,4 @@
+/// <reference types="react" />
 declare type ImageProps = {
     alt: string;
     id: string;

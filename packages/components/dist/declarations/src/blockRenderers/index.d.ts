@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { InferRenderersForComponentBlocks } from "@keystone-6/fields-document/component-blocks";
 export declare const BlockRenderers: (imageOveride?: (props: any) => JSX.Element, peopleOveride?: (peopleProps: any) => JSX.Element) => InferRenderersForComponentBlocks<{
     image: import("@keystone-6/fields-document/component-blocks").ComponentBlock<{
@@ -12,5 +13,7 @@ export declare const BlockRenderers: (imageOveride?: (props: any) => JSX.Element
     }>;
     associatedPeople: import("@keystone-6/fields-document/component-blocks").ComponentBlock<{
         title: import("@keystone-6/fields-document/component-blocks").ChildField;
+        showTitles: import("@keystone-6/fields-document/component-blocks").FormField<boolean, undefined>;
+        selectedPeople: import("@keystone-6/fields-document/component-blocks").RelationshipField<true>;
     }>;
 }>;

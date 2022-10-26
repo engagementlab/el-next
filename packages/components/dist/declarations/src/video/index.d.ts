@@ -1,3 +1,4 @@
+/// <reference types="react" />
 declare type VideoProps = {
     thumbUrl: string;
     videoUrl: string;

@@ -93,7 +93,7 @@ const NewsItem: Lists.NewsItem = list({
         html: 'If external link is used, <em>body</em> is not required.',
         iconType: HelperIcon.info,
         ui: {
-          createView: {
+          listView: {
             fieldMode: 'hidden'
           },
           itemView: {

@@ -5,7 +5,6 @@
 
 nvm use;
 yarn;
-yarn build;
 
 cd apps/cms;
 yarn;

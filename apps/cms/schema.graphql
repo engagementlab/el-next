@@ -772,9 +772,15 @@ input NewsItemUpdateInput {
   thumbnail: Upload
   thumbAltText: String
   publishDate: DateTime
+  linkHelper: HelperFieldInput
   externalLink: String
   blurb: String
   body: JSON
+}
+
+input HelperFieldInput {
+  html: String
+  iconType: String
 }
 
 input NewsItemUpdateArgs {
@@ -795,11 +801,6 @@ input NewsItemCreateInput {
   externalLink: String
   blurb: String
   body: JSON
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
 }
 
 type Person {
@@ -875,6 +876,7 @@ input PersonOrderByInput {
 }
 
 input PersonUpdateInput {
+  docsHelper: HelperFieldInput
   name: String
   key: String
   title: String
@@ -1010,6 +1012,7 @@ input StudioUpdateInput {
   blurb: String
   filters: FilterRelateToManyForUpdateInput
   associatedPeople: PersonRelateToManyForUpdateInput
+  helper: HelperFieldInput
   content: JSON
 }
 

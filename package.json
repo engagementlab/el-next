@@ -4,7 +4,7 @@
   "scripts": {
     "build": "preconstruct build",
     "fix": "preconstruct fix",
-    "postinstall": "preconstruct dev",
+    "postinstall": "preconstruct build",
     "watch": "preconstruct watch"
   },
   "dependencies": {

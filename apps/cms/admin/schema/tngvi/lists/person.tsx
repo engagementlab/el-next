@@ -22,10 +22,32 @@ import {
   CreatedTimestamp,
   CreateKey
 } from '../../hooks';
+import { helper, HelperIcon } from '../../../components/helper';
 
 const Person: Lists.Person = list({
     access: allowAll,
   fields: {
+    docsHelper: helper({
+      html: `<b> Links to necessary docs: </b>
+              <ul>
+                <li>
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1-5w_AuwA99uS3jD5CeuTp9yCrzulu-yI8odFn-Vsf7w/edit#gid=1896436944"
+                    >Spreadsheet of submitted biographic information
+                  </a>
+                  <li>
+                    <a href="https://drive.google.com/drive/u/1/folders/15Ef9FUiSeU15BiXcNi-QwYwTpQD0NP4GOP8d2FjxQnOTfqaMXeu2mV78TSRRGjrBYD3iZ3qo">
+                      Folder of submitted people photos
+                    </a>
+                  </li>
+                </li>
+              </ul>`,
+      iconType: HelperIcon.info,
+      ui: {
+        itemView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
+      }
+    }),
     name: text({
       validation: {
         isRequired: true

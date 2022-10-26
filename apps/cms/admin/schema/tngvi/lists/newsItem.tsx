@@ -26,6 +26,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { BlockRenderers } from '@el-next/components';
+import { helper, HelperIcon } from '../../../components/helper';
 
 export function renderContent(content: any) {
   return ReactDOMServer.renderToString(<DocumentRenderer document={content} componentBlocks={BlockRenderers()} />);
@@ -61,8 +62,9 @@ const NewsItem: Lists.NewsItem = list({
           { label: 'ELab Home', value: 'elab' },
           { label: 'TNGVI', value: 'tngvi' },
         ],
-        ui:
-        { description: 'Where should this be published?', }
+        ui: { 
+          description: 'Specify the app(s) this item will be published to.',
+        }
       }),
       thumbnail: cloudinaryImage({
         label: 'Thumbnail/Header Image',
@@ -80,20 +82,28 @@ const NewsItem: Lists.NewsItem = list({
         label: 'Describe appearance of Thumbnail/Header Image'
       }),
       publishDate: timestamp({
-          validation:{
-              isRequired: true,
-          }
+        validation:{
+            isRequired: true,
+        },
+        ui: { 
+          description: 'This field is purely cosmetic, not to schedule this item for future publishing. News items for the future should not be enabled until ready for review and publishing.',
+        }
+      }),
+      linkHelper: helper({
+        html: 'If external link is used, <em>body</em> is not required.',
+        iconType: HelperIcon.info,
       }),
       externalLink: text({
         label: 'External link'
       }),
       blurb: text({
-        label: 'Blurb (appears on News index page)',
+        label: 'Blurb',
         validation: {
           isRequired: true
         },
         ui: {
-          displayMode: 'textarea'
+          displayMode: 'textarea',
+          description: 'Appears on News index page.'
         }
       }),
       bodyHTML: virtual({
@@ -155,7 +165,6 @@ const NewsItem: Lists.NewsItem = list({
       }
     },
     ui: {
-      description: 'If external link is used, body is not required.',
       listView: { 
         initialColumns: ['title', 'publishDate', 'thumbnail'],
         initialSort: { field: 'publishDate', direction: 'DESC' },

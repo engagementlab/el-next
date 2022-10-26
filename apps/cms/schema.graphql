@@ -710,6 +710,7 @@ type NewsItem {
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   publishDate: DateTime
+  linkHelper: HelperFieldOutput
   externalLink: String
   blurb: String
   bodyHTML: String
@@ -719,6 +720,11 @@ type NewsItem {
 enum NewsItemAppType {
   elab
   tngvi
+}
+
+interface HelperFieldOutput {
+  html: String!
+  iconType: String
 }
 
 type NewsItem_body_Document {
@@ -785,13 +791,20 @@ input NewsItemCreateInput {
   thumbnail: Upload
   thumbAltText: String
   publishDate: DateTime
+  linkHelper: HelperFieldInput
   externalLink: String
   blurb: String
   body: JSON
 }
 
+input HelperFieldInput {
+  html: String
+  iconType: String
+}
+
 type Person {
   id: ID!
+  docsHelper: HelperFieldOutput
   name: String
   key: String
   title: String
@@ -898,6 +911,7 @@ input PersonUpdateArgs {
 }
 
 input PersonCreateInput {
+  docsHelper: HelperFieldInput
   name: String
   key: String
   title: String
@@ -937,7 +951,7 @@ type Studio {
   filtersCount(where: FilterWhereInput! = {}): Int
   associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
-  helper: String
+  helper: HelperFieldOutput
   content: Studio_content_Document
 }
 
@@ -984,7 +998,6 @@ input StudioOrderByInput {
   enabled: OrderDirection
   order: OrderDirection
   blurb: OrderDirection
-  helper: OrderDirection
 }
 
 input StudioUpdateInput {
@@ -997,7 +1010,6 @@ input StudioUpdateInput {
   blurb: String
   filters: FilterRelateToManyForUpdateInput
   associatedPeople: PersonRelateToManyForUpdateInput
-  helper: String
   content: JSON
 }
 
@@ -1016,7 +1028,7 @@ input StudioCreateInput {
   blurb: String
   filters: FilterRelateToManyForCreateInput
   associatedPeople: PersonRelateToManyForCreateInput
-  helper: String
+  helper: HelperFieldInput
   content: JSON
 }
 

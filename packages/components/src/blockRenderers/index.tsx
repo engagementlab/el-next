@@ -6,7 +6,7 @@ import Image from "../image";
 import { Video } from "../video";
 
 export const BlockRenderers = (imageOveride?: { (props: any): JSX.Element }, peopleOveride?: { (peopleProps: any): JSX.Element }) => {
-  let blocks: InferRenderersForComponentBlocks<typeof componentBlocks>  = {
+  let blocks = {
     image: (props: any) => {
       return imageOveride ? imageOveride(props) : 
         (

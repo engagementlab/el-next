@@ -85,6 +85,14 @@ const Studio: Lists.Studio = list({
     }),
     helper: helper({
       html: 'Please follow the <a href="https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit" target="_blank">Studio Template</a>.',
+      ui: {
+        createView: {
+          fieldMode: 'hidden'
+        },
+        itemView: {
+          fieldMode: 'hidden'
+        }
+      } 
     }),
     content: document({
       formatting: {

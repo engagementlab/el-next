@@ -92,10 +92,21 @@ const NewsItem: Lists.NewsItem = list({
       linkHelper: helper({
         html: 'If external link is used, <em>body</em> is not required.',
         iconType: HelperIcon.info,
+        ui: {
+          createView: {
+            fieldMode: 'hidden'
+          },
+          itemView: {
+            fieldMode: 'hidden'
+          }
+        }
       }),
       externalLink: text({
         label: 'External link'
       }),
+      // externalLink: text({
+      //   label: 'External link'
+      // }),
       blurb: text({
         label: 'Blurb',
         validation: {

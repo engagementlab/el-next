@@ -1,6 +1,7 @@
 ﻿import { AzureFunction, Context } from '@azure/functions';
 
 import { v2 as cloudinary } from 'cloudinary';
+import cuid = require('cuid');
 
 const { Client } = require('pg');
 
@@ -19,7 +20,7 @@ const activityFunction: AzureFunction = async function (context: Context) {
   await client.connect();
 
   const userId = body.get('name').toLocaleLowerCase().replace(/ /g, '-');
-  const getImgDataText = `SELECT "data" FROM "Temp" WHERE "id" = '${userId}'`;
+  const getImgDataText = `SELECT "data" FROM "DataTemp" WHERE "id" = '${userId}'`;
 
   // Retrieve base64 img string for new user from DB
   const imgDataResult = await client.query(getImgDataText);
@@ -41,18 +42,18 @@ const activityFunction: AzureFunction = async function (context: Context) {
     const updateProfileText = `UPDATE "Person" SET "name" = $1, "title" = $2, "blurb" = $3, "remembrance" = $4${
       imgResponse ? ', "image" = $5' : ''
     } WHERE "id" = '${bioIdResult.rows[0].bioId}'`;
-    const values = [
+    const values: any[] = [
       body.get('name'),
       body.get('title'),
       body.get('blurb'),
       body.get('remembrance') ? body.get('remembrance') : '',
     ];
-    if (imgResponse) values.push(imgResponse);
+    if (imgResponse) values.push({ id: cuid(), _meta: imgResponse });
 
     await client.query(updateProfileText, values);
 
     if (imgDataResult.rowCount === 1) {
-      const delImgDataText = `DELETE FROM "Temp" WHERE "id" = '${userId}'`;
+      const delImgDataText = `DELETE FROM "DataTemp" WHERE "id" = '${userId}'`;
       const delResult = await client.query(delImgDataText);
 
       if (delResult.rowCount === 0) {

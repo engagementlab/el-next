@@ -7,7 +7,7 @@ import query from "../../apollo-client";
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import { DocRenderers } from '@el-next/components/docRenderers';
 import { HeadingStyle } from '@el-next/components/headingStyle';
-import { Image } from '@el-next/components/image';
+import Image from '@el-next/components/image';
 import Layout from '../../components/Layout';
 
 type BigPicturePage = {
@@ -17,8 +17,8 @@ type BigPicturePage = {
 const image = (props: any) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Image id={'img-' + props.image.data.image.publicId} alt={props.image.data.altText} imgId={props.image.data.image.publicId} aspectDefault={true} />
-      <p>{props.image.data.caption}</p>
+      <Image id={'img-' + props.image.publicId} alt={props.image.alt} imgId={props.image.publicId} aspectDefault={true} />
+      {/* <p>{props.image.data.caption}</p> */}
     </div>
   );
 };

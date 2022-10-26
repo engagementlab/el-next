@@ -2,8 +2,9 @@
 // Modify your Keystone config when you want to change this.
 
 datasource postgresql {
-  url      = env("DATABASE_URL")
-  provider = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider          = "postgresql"
 }
 
 generator client {
@@ -15,6 +16,7 @@ model About {
   id      String @id @default(cuid())
   name    String @unique @default("About Page")
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  values  Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model BigPicture {
@@ -23,10 +25,9 @@ model BigPicture {
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
-model Community {
-  id     String @id @default(cuid())
-  name   String @unique @default("Community Page")
-  values Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+model DataTemp {
+  id   String @id @default(cuid())
+  data String @default("")
 }
 
 model Event {
@@ -79,6 +80,7 @@ model MediaItem {
   thumbnail        Json?
   shortDescription String    @default("")
   filters          Filter[]  @relation("MediaItem_filters")
+  associatedPeople Person[]  @relation("MediaItem_associatedPeople")
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   videos           Json?
   file_filename    String?
@@ -86,43 +88,56 @@ model MediaItem {
 }
 
 model NewsItem {
-  id           String    @id @default(cuid())
-  title        String    @default("")
-  key          String    @unique @default("")
-  createdDate  DateTime?
-  enabled      Boolean   @default(true)
-  thumbnail    Json?
-  thumbAltText String    @default("")
-  publishDate  DateTime
-  externalLink String    @default("")
-  blurb        String    @default("")
-  body         Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                  String    @id @default(cuid())
+  title               String    @default("")
+  key                 String    @unique @default("")
+  createdDate         DateTime?
+  enabled             Boolean   @default(true)
+  apps                Json      @default("[]")
+  thumbnail           Json?
+  thumbAltText        String    @default("")
+  publishDate         DateTime
+  linkHelper_html     String    @default("<p>Need HTML!</p>")
+  linkHelper_iconType icon?     @default(help)
+  externalLink        String    @default("")
+  blurb               String    @default("")
+  body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Person {
-  id          String         @id @default(cuid())
-  name        String         @default("")
-  title       String         @default("")
-  createdDate DateTime?
-  enabled     Boolean        @default(true)
-  tag         PersonTagType?
-  image       Json?
-  blurb       String         @default("")
-  remembrance String         @default("")
-  content     Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                  String      @id @default(cuid())
+  docsHelper_html     String      @default("<p>Need HTML!</p>")
+  docsHelper_iconType icon?       @default(help)
+  name                String      @default("")
+  key                 String      @default("")
+  title               String      @default("")
+  abbreviatedTitle    String      @default("")
+  createdDate         DateTime?
+  enabled             Boolean     @default(true)
+  currentlyActive     Boolean     @default(true)
+  tag                 Json        @default("[]")
+  image               Json?
+  blurb               String      @default("")
+  remembrance         String      @default("")
+  content             Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  mediaItems          MediaItem[] @relation("MediaItem_associatedPeople")
+  studios             Studio[]    @relation("Person_studios")
 }
 
 model Studio {
-  id          String    @id @default(cuid())
-  name        String    @default("")
-  key         String    @unique @default("")
-  createdDate DateTime?
-  enabled     Boolean   @default(true)
-  order       Int?
-  thumbnail   Json?
-  blurb       String    @default("")
-  filters     Filter[]  @relation("Studio_filters")
-  content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  order            Int?
+  thumbnail        Json?
+  blurb            String    @default("")
+  filters          Filter[]  @relation("Studio_filters")
+  associatedPeople Person[]  @relation("Person_studios")
+  helper_html      String    @default("<p>Need HTML!</p>")
+  helper_iconType  icon?     @default(help)
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model User {
@@ -149,9 +164,7 @@ enum FilterSectionType {
   studio
 }
 
-enum PersonTagType {
-  student
-  faculty
-  partner
-  staff
+enum icon {
+  help
+  info
 }

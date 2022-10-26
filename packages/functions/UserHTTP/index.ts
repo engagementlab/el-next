@@ -27,7 +27,7 @@ const httpStart: AzureFunction = async function (
 
   // Store base64 img string for new user in temp DB due to body size limit in DF activity
   if (body.get('img')) {
-    const text = 'INSERT INTO "Temp" (id, "data") VALUES ($1, $2)';
+    const text = 'INSERT INTO "DataTemp" (id, "data") VALUES ($1, $2)';
     const values = [
       body.get('name').toLocaleLowerCase().replace(/ /g, '-'),
       body.get('img'),

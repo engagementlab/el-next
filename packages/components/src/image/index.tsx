@@ -35,7 +35,7 @@ type ImageProps = {
     aspectDefault ? : boolean,
 };
 
-export const Image = ({
+const Image = ({
         alt,
         className,
         id,
@@ -63,14 +63,13 @@ export const Image = ({
                 })
             );
 
-        return(        
-            <AdvancedImage
+        return <AdvancedImage
                 id={id}
                 className={className}
                 cldImg={cloudImage}
                 alt={alt}
                 plugins={plugins}
                 style={{ maxWidth: width + `px` }}
-            />
-            );
+            />;
 }
+export default Image;

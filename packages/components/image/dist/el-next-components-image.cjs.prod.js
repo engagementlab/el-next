@@ -16,6 +16,7 @@ var cld = new urlGen.Cloudinary({
     secure: true
   }
 });
+
 var Image = function Image(_ref) {
   var alt = _ref.alt,
       className = _ref.className,
@@ -48,4 +49,4 @@ var Image = function Image(_ref) {
   });
 };
 
-exports.Image = Image;
+exports["default"] = Image;

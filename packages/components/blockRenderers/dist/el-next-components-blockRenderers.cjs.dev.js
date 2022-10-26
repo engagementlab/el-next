@@ -17,15 +17,15 @@ function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; 
 
 var Link__default = /*#__PURE__*/_interopDefault(Link);
 
-var BlockRenderers = function BlockRenderers(imageOveride) {
+var BlockRenderers = function BlockRenderers(imageOveride, peopleOveride) {
   var blocks = {
     image: function image(props) {
-      return /*#__PURE__*/jsxRuntime.jsx("div", {
+      return imageOveride ? imageOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
         style: {
           display: 'flex',
           flexDirection: 'column'
         },
-        children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage.Image, {
+        children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
           id: 'img-' + props.image.publicId,
           alt: props.image.alt,
           imgId: props.image.publicId,
@@ -49,9 +49,19 @@ var BlockRenderers = function BlockRenderers(imageOveride) {
           children: props.label
         })
       });
+    },
+    associatedPeople: function associatedPeople(props) {
+      return peopleOveride ? peopleOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
+        style: {
+          display: 'flex',
+          flexDirection: 'column'
+        },
+        children: /*#__PURE__*/jsxRuntime.jsx("p", {
+          children: "ppl"
+        })
+      });
     }
-  }; // if(imageOveride) blocks['image'] = imageOveride(props);
-
+  };
   return blocks;
 };
 

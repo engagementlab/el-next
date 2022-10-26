@@ -1,0 +1,1 @@
+/Users/john_richardson/Documents/Projects/transform-narratives/packages/fields-azure/src/views/file/index.tsx

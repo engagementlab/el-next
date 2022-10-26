@@ -11,6 +11,7 @@ import {
 import {
   document
 } from '@keystone-6/fields-document';
+import { allowAll } from '@keystone-6/core/access';
 import {
   Lists
 } from '.keystone/types';
@@ -20,8 +21,10 @@ import {
 } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { helper } from '../../../components/helper';
 
 const Studio: Lists.Studio = list({
+    access: allowAll,
   fields: {
     name: text({
       validation: {
@@ -73,6 +76,24 @@ const Studio: Lists.Studio = list({
         displayMode: 'select',
       }
     }),
+    associatedPeople: relationship({
+      ref: 'Person.studios',
+      many: true,
+      ui: {
+        description: 'Use + button -> "Associated People" on toolbar to display in Content document.'
+      }
+    }),
+    helper: helper({
+      html: 'Please follow the <a href="https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit" target="_blank">Studio Template</a>.',
+      ui: {
+        createView: {
+          fieldMode: 'hidden'
+        },
+        itemView: {
+          fieldMode: 'hidden'
+        }
+      } 
+    }),
     content: document({
       formatting: {
         headingLevels: [3, 4],  
@@ -91,8 +112,15 @@ const Studio: Lists.Studio = list({
         // [1, 2],
         // [1, 2, 1],
       ],
+      // relationships: {
+      //   people: {
+      //     listKey: 'Person',
+      //     label: 'People Involved',
+      //     selection: 'id name',
+      //   },
+      // },
       ui: {
-        views: path.join(process.cwd(), 'admin/components/component-blocks')
+        views: './admin/components/component-blocks',
       },
 
       componentBlocks,

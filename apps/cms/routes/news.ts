@@ -16,6 +16,7 @@ export async function getNews(req: Request, res: Response) {
             publicId
           }
           thumbAltText
+          apps
       `,
       where: { enabled: { equals: true } },
       orderBy: {
@@ -23,15 +24,17 @@ export async function getNews(req: Request, res: Response) {
       },
       take: req.params.key === 'recent' ? 3 : undefined,
     });
+    const elabItems = news.filter((item) => item.apps.includes('elab'));
+
     // And return the result as JSON
-    res.json(news);
+    res.json(elabItems);
   } else {
     const newsItem = await context.query.NewsItem.findOne({
       query: `
       title
       bodyHTML
       publishDate
-  `,
+    `,
       where: { key: req.params.key },
     });
     // And return the result as JSON

@@ -6,7 +6,7 @@ import { FormField, HydratedRelationshipData } from '@keystone-6/fields-document
 import Select, { GroupBase, OptionProps } from 'react-select'
 import { FieldContainer } from '@keystone-ui/fields';
 import { css as emCss } from '@emotion/css';
-import { Box, Grid, IconButton, MenuItem, Modal, Select as MUISelect, TextField } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, Grid, IconButton, MenuItem, Modal, Select as MUISelect, TextField } from '@mui/material';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -522,4 +522,37 @@ export const componentBlocks = {
       },
       chromeless: true
    }),
+   associatedPeople: component({
+     label: 'Associated People',
+     preview: props => {
+       return (
+        <>
+          <NotEditable>{props.fields.title.element}</NotEditable>
+          <FormControlLabel control={<Checkbox disabled checked={props.fields.showTitles.value} />} label="Show titles"></FormControlLabel>
+          {props.fields.selectedPeople.value.length > 0 && <p><strong>Show only:</strong></p>}
+          {props.fields.selectedPeople.value.map((value, index) => {
+            return <div key={index}>{value.label}</div>
+          })}
+          
+        </>
+       );
+     },
+     schema: {
+       title: fields.child({ kind: 'inline', placeholder: 'Associated people will appear here.' }),
+       showTitles: fields.checkbox({ label: 'Show titles' }),
+       selectedPeople: fields.relationship({ listKey: 'Person', label: 'Show only these people (optional):', selection: 'key name title abbreviatedTitle', many: true }),
+     },
+    //  preview: props => {
+    //    return (
+    //     <div>
+    //      <div style={{ fontStyle: 'italic', color: '#4A5568' }}>
+    //       {props.fields.title.element}
+    //       </div>
+    //      <p>{!props.fields.person.value?.label ? <span>Click <em>Edit</em> to select person</span> : <NotEditable>{props.fields.person.value?.label}</NotEditable>}</p>
+    //       </div>
+    //    );
+    //  },
+    //  chromeless: true,
+   }),
+
  }

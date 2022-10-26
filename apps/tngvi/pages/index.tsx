@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType } from 'next';
 import { SlideshowProps } from 'react-slideshow-image';
-import { Button } from '@el-next/components/button';
-import { Image } from '@el-next/components/image';
+import {Button} from '@el-next/components';
+import Image from '@el-next/components/image';
 
 import query from "../apollo-client";
 
@@ -26,7 +26,8 @@ export default function Home({ homePage }: InferGetStaticPropsType<typeof getSta
   const pseudoBlurBg = 'fixed bg-lynx block -z-10 blur-xl rounded-full w-full h-full md:blur-2xl md:h-20 md:-translate-y-1/4'.split(' ').map(c => {
     return `before:${c}`
   }).join(' ');
-
+  
+// console.log(Image({id:'img-home' ,alt:'', imgId:'tngvi/homepage', width:2200}))
   return (
     <Layout>
         <div className='relative w-full mt-20 lg:max-h-screen overflow-clip'>
@@ -34,7 +35,7 @@ export default function Home({ homePage }: InferGetStaticPropsType<typeof getSta
             <div className='w-2/3 lg:mt-6 max-w-md text-center z-10'>
               <h2 className='sm:text-xl lg:text-2xl font-semibold'>Nearly every person in the U.S. will know someone who has been shot in their lifetime.</h2>
               <h1 className='text-xl lg:text-[2rem] font-bold text-purple mt-6'>Everyone has a story to tell.</h1>
-              <Button className='' link='/archive' label='Listen to our stories' />
+              <Button link='/archive' label='Listen to our stories' />
             </div>
           </div>
 

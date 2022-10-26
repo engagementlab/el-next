@@ -2,19 +2,16 @@ import {
   list
 } from '@keystone-6/core';
 import {
-  checkbox,
   text
 } from '@keystone-6/core/fields';
-import { document } from '@keystone-6/fields-document';
+import { allowAll } from '@keystone-6/core/access';
 import {
   Lists
 } from '.keystone/types';
-import {
-  cloudinaryImage
-} from '../../../components/cloudinary';
 import { CreatedTimestamp } from '../../hooks';
 
 const User: Lists.Person = list({
+  access: allowAll,
   fields: {
     name: text({
       validation: {

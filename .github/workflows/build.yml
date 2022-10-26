@@ -58,7 +58,7 @@ jobs:
         run: |
           yarn add typescript @types/node
           yarn
-          yarn build
+          yarn build-ci
           pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app tngvi
 
       - name: Make production build

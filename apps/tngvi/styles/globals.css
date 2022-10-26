@@ -52,7 +52,7 @@ hr {
   line-height: 1.25;
 }
 
-.content-container .w-full + div p a {
+.content-container a {
   color: #026670;
   cursor: pointer;
   font-weight: 600;

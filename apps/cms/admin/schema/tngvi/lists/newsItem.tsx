@@ -8,6 +8,7 @@ import {
 import {
   checkbox,
     json,
+    multiselect,
     relationship,
     text,
     timestamp,
@@ -16,6 +17,7 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
@@ -23,11 +25,14 @@ import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { BlockRenderers } from '@el-next/components';
+import { helper, HelperIcon } from '../../../components/helper';
 
 export function renderContent(content: any) {
-  return ReactDOMServer.renderToString(<DocumentRenderer document={content} />);
+  return ReactDOMServer.renderToString(<DocumentRenderer document={content} componentBlocks={BlockRenderers()} />);
 }
 const NewsItem: Lists.NewsItem = list({
+    access: allowAll,
     fields: {
       title: text({
         validation: {
@@ -50,6 +55,17 @@ const NewsItem: Lists.NewsItem = list({
       enabled: checkbox({
         defaultValue: true,
       }),
+      apps: multiselect({
+        label: 'Where should this be published?',
+        type: 'enum',
+        options: [
+          { label: 'ELab Home', value: 'elab' },
+          { label: 'TNGVI', value: 'tngvi' },
+        ],
+        ui: { 
+          description: 'Specify the app(s) this item will be published to.',
+        }
+      }),
       thumbnail: cloudinaryImage({
         label: 'Thumbnail/Header Image',
         cloudinary: {
@@ -66,26 +82,39 @@ const NewsItem: Lists.NewsItem = list({
         label: 'Describe appearance of Thumbnail/Header Image'
       }),
       publishDate: timestamp({
-          validation:{
-              isRequired: true,
+        validation:{
+            isRequired: true,
+        },
+        ui: { 
+          description: 'This field is purely cosmetic, not to schedule this item for future publishing. News items for the future should not be enabled until ready for review and publishing.',
+        }
+      }),
+      linkHelper: helper({
+        html: 'If external link is used, <em>body</em> is not required.',
+        iconType: HelperIcon.info,
+        ui: {
+          createView: {
+            fieldMode: 'hidden'
+          },
+          itemView: {
+            fieldMode: 'hidden'
           }
+        }
       }),
       externalLink: text({
-        validation: {
-          match: { 
-            regex: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
-            explanation: 'Not a valid URL'
-          }
-        },
         label: 'External link'
       }),
+      // externalLink: text({
+      //   label: 'External link'
+      // }),
       blurb: text({
-        label: 'Blurb (appears on News index page)',
+        label: 'Blurb',
         validation: {
           isRequired: true
         },
         ui: {
-          displayMode: 'textarea'
+          displayMode: 'textarea',
+          description: 'Appears on News index page.'
         }
       }),
       bodyHTML: virtual({
@@ -93,6 +122,7 @@ const NewsItem: Lists.NewsItem = list({
           type: graphql.String,
           resolve(item, args, context) {
             //@ts-ignore
+            console.log(item.body)
             return renderContent(item.body);
           },
         }),
@@ -120,7 +150,7 @@ const NewsItem: Lists.NewsItem = list({
               [1, 2, 1],
           ],
           ui: {
-              views: path.join(process.cwd(), 'admin/components/component-blocks')
+              views: './admin/components/component-blocks'
           },
           componentBlocks,
       }),
@@ -146,7 +176,6 @@ const NewsItem: Lists.NewsItem = list({
       }
     },
     ui: {
-      description: 'If external link is used, body is not required.',
       listView: { 
         initialColumns: ['title', 'publishDate', 'thumbnail'],
         initialSort: { field: 'publishDate', direction: 'DESC' },

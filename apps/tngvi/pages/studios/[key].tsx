@@ -7,6 +7,7 @@ import query from "../../apollo-client";
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import Layout from '../../components/Layout';
 import { DocRenderers } from '@el-next/components/docRenderers';
+import Link from 'next/link';
 
 type Studio = {
   id: string;
@@ -15,9 +16,39 @@ type Studio = {
   filters: any[];
   content: any;
   associatedMedia:[{ videos: any[]}];
+  associatedPeople: [{
+    name: string;
+    key: string
+    abbreviatedTitle: string;
+    tag: string[];
+  }]
 };
 
 export default function Studio({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
+
+const associatedPeople = (props: { selectedPeople: any[]; showTitles: boolean; }) => {
+  // Show only selected people?
+  const onlySelectedPeople = props.selectedPeople.length > 0;
+  const singlePerson = props.selectedPeople.length === 1;
+  const selectedPeopleKeys = _.map(props.selectedPeople, 'data.key');
+  //  className='text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all'
+  if(singlePerson) return <span><Link href={`/about/community/${props.selectedPeople[0].data.key}`} passHref><a>{props.selectedPeople[0].label}</a></Link></span>;
+  return (
+    <div className='flex flex-col'>
+      {
+        item.associatedPeople.map((person, i) => {
+          if((onlySelectedPeople &&  selectedPeopleKeys.includes(person.key)) || !onlySelectedPeople) {
+            // Fallback to the person's first tag if no abbreviatedTitle
+            const title = props.showTitles ? `, ${person.abbreviatedTitle ? person.abbreviatedTitle : person.tag[0]}` : '';
+            return (
+              <p key={person.key} className='mt-1'><Link href={`/about/community/${person.key}`} passHref>{person.name}</Link>{title}</p>
+            );
+          }
+        })
+      }
+    </div>
+  );
+};
   return (
   !item ? 'Not found!' :
   <Layout>
@@ -26,7 +57,7 @@ export default function Studio({ item }: InferGetStaticPropsType<typeof getStati
             <h1 className="text-2xl font-bold text-bluegreen mb-2">{item.name}</h1>
             {/* <p className="text-bluegreen mb-10">{_.map(item.filters, 'name').join(', ')}</p> */}
 
-            <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} />
+            <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers(undefined, associatedPeople)} renderers={DocRenderers()} />
 {/* 
             {item.associatedMedia &&
               <div className='mt-14'>
@@ -103,13 +134,20 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     `studios(where: { key: { equals: "${params!.key}" } }) {
        name 
        filters { 
-         name
+        name
+       } 
+       associatedPeople {
+        name
+        key
+        abbreviatedTitle
+        tag
        } 
        content {
-         document(hydrateRelationships: true)
+        document(hydrateRelationships: true)
        } 
       }`);
   const item = itemResult[0] as Studio;
+  // console.log(item.content.document[0].children[1].children[1]);
   // const item = (await query.Studio.findOne({
   //     where: { key: params!.key as string },
   //     query: '',

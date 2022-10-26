@@ -24,7 +24,7 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.tsx",
+      "index.ts",
       "blockRenderers/index.tsx",
       "button/index.tsx",
       "dateFormat/index.tsx",

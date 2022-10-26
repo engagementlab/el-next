@@ -7,6 +7,7 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
@@ -17,6 +18,7 @@ import {
 import { FixButtons } from '../../hooks';
 
 const About: Lists.About = list({
+    access: allowAll,
     fields: {
         name: text({
             isIndexed: 'unique',
@@ -50,7 +52,7 @@ const About: Lists.About = list({
                 [1, 2, 1],
             ],
             ui: {
-                views: path.join(process.cwd(), 'admin/components/component-blocks')
+                views: './admin/components/component-blocks'
             },
             componentBlocks,
             

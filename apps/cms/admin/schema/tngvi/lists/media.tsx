@@ -12,16 +12,19 @@ import {
 import {
     document
 } from '@keystone-6/fields-document';
+import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
 import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
-import { azConfig, azureStorageFile } from '../../azure';
+import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { azConfig } from '../../azure';
 
 const MediaItem: Lists.MediaItem = list({
+    access: allowAll,
     fields: {
       title: text({
         validation: {
@@ -66,6 +69,13 @@ const MediaItem: Lists.MediaItem = list({
           displayMode: 'select',
         }
       }),
+      associatedPeople: relationship({
+        ref: 'Person.mediaItems',
+        many: true,
+        ui: {
+          description: 'Use + button -> "Associated People" on toolbar to display in Content document.'
+        }
+      }),
       content: document({
         formatting: true,
         dividers: true,
@@ -78,7 +88,7 @@ const MediaItem: Lists.MediaItem = list({
           [1, 2, 1],
         ],
         ui: {
-          views: path.join(process.cwd(), 'admin/components/component-blocks')
+          views: './admin/components/component-blocks'
         },
   
         componentBlocks,

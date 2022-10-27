@@ -10,10 +10,9 @@ import session from 'express-session';
 import { v2 as cloudinary } from 'cloudinary';
 
 import { elab, tngvi } from './admin/schema';
-
-import type { Context } from '.keystone/types';
 import { getNews } from './routes/news';
 import { setPplKeys } from './routes/people';
+import * as _ from 'underscore';
 
 type schemaIndexType = {
   [key: string]: object;
@@ -199,6 +198,47 @@ let ksConfig = (lists: any) => {
               `${process.env.DEPLOY_API_PATH}&name=transform-narratives`
             );
             res.status(200).send(response.data);
+          } catch (err: any) {
+            res.status(500).send(err.message);
+          }
+        });
+
+        app.get('/media/videos', async (req, res, next) => {
+          try {
+            let videoData: {
+              label: any;
+              value: any;
+              thumb: any;
+              thumbSm: any;
+            }[] = [];
+            const getData = async (
+              apiPath: string = '/channels/1773240/videos?per_page=100'
+            ) => {
+              const response = await axios.get(
+                `https://api.vimeo.com${apiPath}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
+                  },
+                }
+              );
+              const resData = response.data;
+              let m = _.map(resData.data, (val) => {
+                return {
+                  label: val.name,
+                  value: val.player_embed_url,
+                  thumb: val.pictures.sizes[val.pictures.sizes.length - 1].link,
+                  thumbSm: val.pictures.sizes[1].link,
+                };
+              });
+              videoData = videoData.concat(videoData, m);
+
+              if (resData.paging.next) getData(resData.paging.next);
+              else {
+                res.status(200).send(videoData);
+              }
+            };
+            getData();
           } catch (err: any) {
             res.status(500).send(err.message);
           }

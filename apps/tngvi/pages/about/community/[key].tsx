@@ -3,6 +3,7 @@ import {
     GetStaticPropsContext,
     InferGetStaticPropsType
 } from 'next';
+import Link from 'next/link';
 
 import query from '../../../apollo-client';
 
@@ -16,6 +17,13 @@ type Person = {
     blurb: string;
     image: any;
     content: any;
+    studios: {
+      name: string;
+      key: string;
+      thumbnail: {
+        publicId: string;
+      }
+    }[];
 };
 
 export default function Person({
@@ -59,37 +67,26 @@ export default function Person({
                     )}
                   </div>
                   {/* <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} /> */}
-                  {/*
-                      <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
-
-                      {relatedItems &&
-                      <div>
-                      <div className='flex flex-col lg:flex-row justify-between items-center'>
-                      <p>Browse other stories to keep learning</p>
-                      <Link href='/media-archive' passHref>
-                      <a>
-                      See All
-                      </a>
-                      </Link>
-                      </div>
-                      <div className='flex flex-col lg:flex-row'>
-                      {relatedItems.map((relatedItem, i) => (
-                          <Link key={i} href={`/media/${relatedItem.key}`} passHref>
-                          <a className="w-full lg:w-1/3">
-                          <div>
-                          <Image id={`thumb-${i}`} alt={`Thumbnail for media with name "${relatedItem.title}"`} imgId={relatedItem.thumbnail.publicId} width={302}  />
-                          <h4 className='text-xl font-semibold mt-3'>{relatedItem.title}</h4>
-                          
-                          <p className='text-base'>{relatedItem.shortDescription}</p>
-                          <p>{_.map(relatedItem.filters, 'name').join(', ')}</p>
-                          </div>
-                          </a>
-                          </Link>
-                          ))}
-                          </div>
-                          </div>
-                      } */}
+                  
               </div>
+     
+              <hr />
+              <h3 className='text-xl font-semibold my-4'>Associated Studios</h3>
+
+              {person.studios &&
+              <div className='flex flex-col lg:flex-row'>
+                {person.studios.map((studio, i) => (
+                    <Link key={`studio-link-${studio.key}`} href={`/studios/${studio.key}`} passHref>
+                    <a className="w-full lg:w-1/3">
+                      <div>
+                        <Image id={`thumb-${i}`} alt={`Thumbnail for studio with name "${studio.name}"`} imgId={studio.thumbnail.publicId} width={302}  />
+                        <h4 className='mt-3'>{studio.name}</h4>
+                      </div>
+                    </a>
+                    </Link>
+                ))}
+              </div>
+              }
             </div>
         </Layout>
   );
@@ -130,21 +127,16 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               content {
                 document
               }
+              studios {
+                name
+                key
+                thumbnail
+                {
+                  publicId
+                }
+              }
             }`);
     const person = itemResult[0] as Person;
-    // const relatedItems = (await query.MediaItem.findMany({
-    //     where: { 
-    //         filters: { 
-    //             some:{
-    //                 OR: [
-    //                     { name: { equals: "2022" } },
-    //                     { name: { equals: "Rural Voices" } }
-    //                 ]
-    //             } 
-    //         }
-    //     },
-    //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
-    // })) as MediaItem[];
     return { props: { person } };
     
 }

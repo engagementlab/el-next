@@ -8,14 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import axios from 'axios';
 
-import create, {
-    Mutate,
-    GetState,
-    SetState,
-    StoreApi,
-    UseBoundStore,
-    State
-} from 'zustand';
+import create from 'zustand';
 import React from 'react';
 
 type NavState = {
@@ -90,6 +83,8 @@ export default function Deploy () {
             </p>
             :
             <>
+                <p style={{color: 'grey'}}>Looking to deploy <em>Engagement Lab Home</em>? Please go <a href="https://api.elab.emerson.edu/cms/engagement-lab-home/deploy">here</a>.</p>
+                <hr style={{borderWidth: '1px', width: '20%'}} />
                 <p>This action will copy the content from the current QA build to production.
                 </p>
                 <p>

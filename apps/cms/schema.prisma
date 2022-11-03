@@ -99,6 +99,7 @@ model NewsItem {
   publishDate         DateTime
   linkHelper_html     String    @default("<p>Need HTML!</p>")
   linkHelper_iconType icon?     @default(help)
+  source              String    @default("")
   externalLink        String    @default("")
   blurb               String    @default("")
   body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

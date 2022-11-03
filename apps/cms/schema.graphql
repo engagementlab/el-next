@@ -711,6 +711,7 @@ type NewsItem {
   thumbAltText: String
   publishDate: DateTime
   linkHelper: HelperFieldOutput
+  source: String
   externalLink: String
   blurb: String
   bodyHTML: String
@@ -747,6 +748,7 @@ input NewsItemWhereInput {
   enabled: BooleanFilter
   thumbAltText: StringFilter
   publishDate: DateTimeFilter
+  source: StringFilter
   externalLink: StringFilter
   blurb: StringFilter
 }
@@ -759,6 +761,7 @@ input NewsItemOrderByInput {
   enabled: OrderDirection
   thumbAltText: OrderDirection
   publishDate: OrderDirection
+  source: OrderDirection
   externalLink: OrderDirection
   blurb: OrderDirection
 }
@@ -773,6 +776,7 @@ input NewsItemUpdateInput {
   thumbAltText: String
   publishDate: DateTime
   linkHelper: HelperFieldInput
+  source: String
   externalLink: String
   blurb: String
   body: JSON
@@ -798,6 +802,7 @@ input NewsItemCreateInput {
   thumbAltText: String
   publishDate: DateTime
   linkHelper: HelperFieldInput
+  source: String
   externalLink: String
   blurb: String
   body: JSON

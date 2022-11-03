@@ -15,6 +15,7 @@ import { DocRenderers } from '@el-next/components/docRenderers';
 type NewsItem = {
   title: string;
   publishDate: string;
+  source: string;
   body: any;
   thumbnail: any;
   thumbAltText: string;
@@ -32,6 +33,7 @@ export default function NewsItem({ item, relatedItems }: InferGetStaticPropsType
             }
             <div className='px-4 xl:px-8'>
                 <h1 className="text-coated text-2xl font-extrabold mt-5">{item.title}</h1>
+                {item.source && <h2 className="text-coated text-1xl mt-5"><span className='italic'>Source:</span> {item.source}</h2>}
                 <div className="text-coated font-medium">
                     {new Date(item.publishDate).toLocaleDateString('en-US', {
                         weekday: 'long',
@@ -101,10 +103,11 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'newsItems',
     `newsItems(where: { key: { equals: "${params!.key}" } }) {
        title 
-       publishDate 
+       publishDate
+       source 
        thumbnail { 
-           publicId }
-
+           publicId
+       }
        thumbAltText 
        body { 
            document(hydrateRelationships: true) 

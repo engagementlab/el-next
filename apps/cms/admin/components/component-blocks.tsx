@@ -360,7 +360,7 @@ function imageSelect({
       useEffect(() => {
         if(data && data.length > 1) return;
         // Get CDN data
-        axios.get('/media/get/upload').then((response) =>{
+        axios.get('/media/get/upload').then((response: { data: any; }) =>{
           let data = response.data;
           // If image pre-selected, move it to the front of array
           if(currentId.length > 0) {

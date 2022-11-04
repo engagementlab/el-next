@@ -1,7 +1,6 @@
 import React from "react";
-import { InferRenderersForComponentBlocks } from "@keystone-6/fields-document/component-blocks";
 import Link from "next/link";
-import {componentBlocks} from '../../../../apps/cms/admin/components';
+
 import Image from "../image";
 import { Video } from "../video";
 

@@ -20,8 +20,13 @@ var DocRenderers = function DocRenderers(renderOverrides) {
         var children = _ref2.children,
             href = _ref2.href;
         var label = children.at(0).props.node.text;
-        return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.link ? renderOverrides.link(children, href) : /*#__PURE__*/jsxRuntime.jsx("a", {
-          href: href,
+        var fixedHref = ''; // Is href missing scheme?
+
+        var hrefNoScheme = href.search(/https:\/\/|http:\/\//gm) === -1;
+        fixedHref = hrefNoScheme ? "https://".concat(href) : href;
+        fixedHref = fixedHref.replace('qa.', '');
+        return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.link ? renderOverrides.link(children, fixedHref) : /*#__PURE__*/jsxRuntime.jsx("a", {
+          href: fixedHref,
           target: "_blank",
           className: "text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all",
           children: label

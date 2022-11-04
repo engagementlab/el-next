@@ -13,8 +13,15 @@ let blocks: DocumentRendererProps['renderers'] = {
         },
         link: ({ children, href }) => {
             const label = (children as any).at(0).props.node.text;
-            return renderOverrides?.link ? renderOverrides.link(children, href) : <a href={href} target="_blank" className='text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all'>{label}</a>;
-        }
+            let fixedHref = '';
+            // Is href missing scheme?
+            const hrefNoScheme = href.search(/https:\/\/|http:\/\//gm) === -1;
+            fixedHref = hrefNoScheme ? `https://${href}` : href;
+            if(process.env.NODE_ENV === 'production')
+                fixedHref = fixedHref.replace('qa.', '');
+             
+            return renderOverrides?.link ? renderOverrides.link(children, fixedHref) : <a href={fixedHref} target="_blank" className='text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all'>{label}</a>;
+        }    
     }, 
     block: {
         heading: ({ level, children, textAlign }) => {

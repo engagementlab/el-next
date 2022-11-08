@@ -9,7 +9,7 @@ import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { elab, tngvi } from './admin/schema';
+import { elab, tngvi, sjm } from './admin/schema';
 import { getNews } from './routes/news';
 import { setPplKeys } from './routes/people';
 import * as _ from 'underscore';
@@ -28,6 +28,7 @@ const argv: any = yargs(process.argv.slice(2)).options({
 const schemaMap: schemaIndexType = {
   elab: elab,
   tngvi: tngvi,
+  sjm: sjm,
 };
 
 const multer = require('multer');

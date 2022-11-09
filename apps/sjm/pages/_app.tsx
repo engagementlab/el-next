@@ -15,7 +15,7 @@ function App({ Component, pageProps }: AppProps) {
     <div>
       <div>
         <Head>
-          <title>Transforming Narratives of Gun Violence</title>
+          {/* <title>Transforming Narratives of Gun Violence</title> */}
           {/* Block indexing on non-prod */}
           {process.env.NODE_ENV !== 'production' && <meta name="robots" content="noindex" />}
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -24,15 +24,15 @@ function App({ Component, pageProps }: AppProps) {
         </Head>
       </div>
       <main className='w-full mb-24 font-sans'>
-      <Header />
-      <AnimatePresence
-                exitBeforeEnter
-                initial={false}
-                onExitComplete={() => window.scrollTo(0, 0)}>
+        <Header />
+        <AnimatePresence
+                  exitBeforeEnter
+                  initial={false}
+                  onExitComplete={() => window.scrollTo(0, 0)}>
 
-        <Component {...pageProps} />
-      </AnimatePresence>
-      <Footer />
+          <Component {...pageProps} />
+        </AnimatePresence>
+        <Footer />
       </main>
     </div>
   )

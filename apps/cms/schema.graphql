@@ -94,6 +94,49 @@ input AboutCreateInput {
   content: JSON
 }
 
+type Home {
+  id: ID!
+  name: String
+  content: Home_content_Document
+}
+
+type Home_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input HomeWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input HomeWhereInput {
+  AND: [HomeWhereInput!]
+  OR: [HomeWhereInput!]
+  NOT: [HomeWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input HomeOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input HomeUpdateInput {
+  name: String
+  content: JSON
+}
+
+input HomeUpdateArgs {
+  where: HomeWhereUniqueInput!
+  data: HomeUpdateInput!
+}
+
+input HomeCreateInput {
+  name: String
+  content: JSON
+}
+
 type Person {
   id: ID!
   name: String
@@ -234,49 +277,6 @@ input PersonCreateInput {
   content: JSON
 }
 
-type Symposium {
-  id: ID!
-  name: String
-  content: Symposium_content_Document
-}
-
-type Symposium_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input SymposiumWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input SymposiumWhereInput {
-  AND: [SymposiumWhereInput!]
-  OR: [SymposiumWhereInput!]
-  NOT: [SymposiumWhereInput!]
-  id: IDFilter
-  name: StringFilter
-}
-
-input SymposiumOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input SymposiumUpdateInput {
-  name: String
-  content: JSON
-}
-
-input SymposiumUpdateArgs {
-  where: SymposiumWhereUniqueInput!
-  data: SymposiumUpdateInput!
-}
-
-input SymposiumCreateInput {
-  name: String
-  content: JSON
-}
-
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -289,30 +289,30 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
+  createHome(data: HomeCreateInput!): Home
+  createHomes(data: [HomeCreateInput!]!): [Home]
+  updateHome(where: HomeWhereUniqueInput!, data: HomeUpdateInput!): Home
+  updateHomes(data: [HomeUpdateArgs!]!): [Home]
+  deleteHome(where: HomeWhereUniqueInput!): Home
+  deleteHomes(where: [HomeWhereUniqueInput!]!): [Home]
   createPerson(data: PersonCreateInput!): Person
   createPeople(data: [PersonCreateInput!]!): [Person]
   updatePerson(where: PersonWhereUniqueInput!, data: PersonUpdateInput!): Person
   updatePeople(data: [PersonUpdateArgs!]!): [Person]
   deletePerson(where: PersonWhereUniqueInput!): Person
   deletePeople(where: [PersonWhereUniqueInput!]!): [Person]
-  createSymposium(data: SymposiumCreateInput!): Symposium
-  createSymposia(data: [SymposiumCreateInput!]!): [Symposium]
-  updateSymposium(where: SymposiumWhereUniqueInput!, data: SymposiumUpdateInput!): Symposium
-  updateSymposia(data: [SymposiumUpdateArgs!]!): [Symposium]
-  deleteSymposium(where: SymposiumWhereUniqueInput!): Symposium
-  deleteSymposia(where: [SymposiumWhereUniqueInput!]!): [Symposium]
 }
 
 type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
+  homes(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
+  home(where: HomeWhereUniqueInput!): Home
+  homesCount(where: HomeWhereInput! = {}): Int
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
-  symposia(where: SymposiumWhereInput! = {}, orderBy: [SymposiumOrderByInput!]! = [], take: Int, skip: Int! = 0): [Symposium!]
-  symposium(where: SymposiumWhereUniqueInput!): Symposium
-  symposiaCount(where: SymposiumWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 

@@ -11,7 +11,7 @@ import { allowAll } from "@keystone-6/core/access"
 import {
     Lists
 } from '.keystone/types';
-import path from 'path';
+
 import {
     componentBlocks
 } from '../../../components/component-blocks';

@@ -18,6 +18,12 @@ model About {
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model Home {
+  id      String @id @default(cuid())
+  name    String @unique @default("")
+  content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
 model Person {
   id          String    @id @default(cuid())
   name        String    @default("")
@@ -28,10 +34,4 @@ model Person {
   image       Json?
   blurb       String    @default("")
   content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Symposium {
-  id      String @id @default(cuid())
-  name    String @unique @default("Symposium")
-  content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }

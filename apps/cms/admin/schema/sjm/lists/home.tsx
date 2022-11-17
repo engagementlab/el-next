@@ -17,21 +17,21 @@ import {
 } from '../../../components/component-blocks';
 import { FixButtons } from '../../hooks';
 
-const Symposium: Lists.Symposium = list({
+const Home: Lists.Home = list({
     access: allowAll,
     fields: {
         name: text({
             isIndexed: 'unique',
             isFilterable: true,
-            defaultValue: 'Symposium',
-            ui: {
-                createView: {
-                    fieldMode: 'hidden'
-                },
-                itemView: {
-                    fieldMode: 'read'
-                }
-            }
+            // defaultValue: 'Home',
+            // ui: {
+            //     createView: {
+            //         fieldMode: 'hidden'
+            //     },
+            //     itemView: {
+            //         fieldMode: 'read'
+            //     }
+            // }
         }),
         content: document({
             formatting: {
@@ -68,11 +68,11 @@ const Symposium: Lists.Symposium = list({
         }),
     },
     ui: {
-        hideCreate: true,
-        hideDelete: true,
+        // hideCreate: true,
+        // hideDelete: true,
         listView: { 
             initialColumns: ['name']
         }
     },
   });
-  export default Symposium;
+  export default Home;

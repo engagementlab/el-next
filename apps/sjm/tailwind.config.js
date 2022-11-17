@@ -13,6 +13,7 @@ module.exports = {
       },
       colors: {
         blossom: '#ba739a',
+        blue: '#4bccda',
         gold: '#ffde5f',
       },
     },

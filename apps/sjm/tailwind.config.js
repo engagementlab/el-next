@@ -1,4 +1,4 @@
-const defaultTheme = require(`tailwindcss/defaultTheme`);
+const { fontFamily } = require('tailwindcss/defaultTheme');
 
 module.exports = {
   content: [
@@ -9,11 +9,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: [`Inter`, ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-work-sans)', ...fontFamily.sans],
       },
       colors: {
         blossom: '#ba739a',
-        blue: '#4bccda',
+        blue: '#1aaae0',
         gold: '#ffde5f',
       },
     },

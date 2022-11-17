@@ -4,12 +4,20 @@ import '../styles/globals.scss'
 import React from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head'
+
+import { Work_Sans } from '@next/font/google'
+
 import { Favicon } from '@el-next/components/favicon';
 
 import Header from '../components/Header'
 import Footer from '../components/Footer';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import { AnimatePresence } from 'framer-motion';
+
+const workSans = Work_Sans({
+  subsets: ['latin'],
+  variable: '--font-work-sans',
+})
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -24,7 +32,7 @@ function App({ Component, pageProps }: AppProps) {
           <Favicon />
         </Head>
       </div>
-      <main className='w-full mb-24 font-sans'>
+      <main className={`w-full mb-24 ${workSans.variable} font-sans`}>
         <Header />
         <ParallaxProvider>
           <AnimatePresence

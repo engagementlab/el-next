@@ -1,13 +1,10 @@
-// @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300&family=Inter:wght@500;600;800&display=swap');
-// @import "react-slideshow-image/dist/styles.css";
-
 @tailwind base;
 
-@layer base {
-  p {
-    @apply my-4;
-  }
-}
+// @layer base {
+//   p {
+//     @apply my-4;
+//   }
+// }
 
 @tailwind components;
 @tailwind utilities;

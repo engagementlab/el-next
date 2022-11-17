@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import _ from 'lodash';
 import { motion } from "framer-motion";
 
-import query from "../../apollo-client";
+import query from "../../../..//apollo-client";
 
 import Filtering from "../../components/filtering";
 import Image from '@el-next/components/image';

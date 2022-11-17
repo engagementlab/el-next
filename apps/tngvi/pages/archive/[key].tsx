@@ -16,7 +16,7 @@ import {
     CopyToClipboard
 } from 'react-copy-to-clipboard';
 
-import query from '../../apollo-client';
+import query from '../../../../apollo-client';
 
 import { BlockRenderers, Video } from '@el-next/components';
 import { DocRenderers } from '@el-next/components/docRenderers';

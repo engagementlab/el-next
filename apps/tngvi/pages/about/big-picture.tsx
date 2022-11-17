@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer, } from '@keystone-6/document-renderer';
 
-import query from "../../apollo-client";
+import query from "../../../../apollo-client";
 
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import { DocRenderers } from '@el-next/components/docRenderers';

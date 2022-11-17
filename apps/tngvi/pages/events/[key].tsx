@@ -4,7 +4,7 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import query from "../../apollo-client";
+import query from "../../../../apollo-client";
 
 import Image from '@el-next/components/image';
 import { BlockRenderers } from '@el-next/components/blockRenderers';

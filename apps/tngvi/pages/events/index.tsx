@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import Link from "next/link";
 import _ from 'lodash';
 
-import query from "../../apollo-client";
+import query from "../../../../apollo-client";
 
 import Image from '@el-next/components/image';
 import Layout from "../../components/Layout";

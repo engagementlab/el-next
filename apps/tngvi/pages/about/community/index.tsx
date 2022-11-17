@@ -18,7 +18,7 @@ import {
 } from "framer-motion"
 
 import Layout from '../../../components/Layout';
-import query from "../../../apollo-client";
+import query from "../../../../../apollo-client";
 
 import Link from 'next/link';
 

@@ -5,7 +5,7 @@ import {
 } from 'next';
 import Link from 'next/link';
 
-import query from '../../../apollo-client';
+import query from '../../../../../apollo-client';
 
 import Image from '@el-next/components/image';
 import Layout from '../../../components/Layout';
@@ -17,6 +17,13 @@ type Person = {
     blurb: string;
     image: any;
     content: any;
+    mediaItems: {
+      title: string;
+      key: string;
+      thumbnail: {
+        publicId: string;
+      }
+    }[];
     studios: {
       name: string;
       key: string;
@@ -29,16 +36,6 @@ type Person = {
 export default function Person({
     person
 }: InferGetStaticPropsType < typeof getStaticProps > ): "Not found!" | JSX.Element {
-    // const origin =
-    //     typeof window !== 'undefined' && window.location.origin
-    //         ? window.location.origin
-    //         : '';
-    // const thisUrl = `${origin}${useRouter().asPath}`;
-    // const toggleCopied = useStore(state => state.toggleCopied);
-    // const wasCopied = useStore(state => state.urlCopied);
-
-    // const filterClass = 'no-underline border-b-2 border-b-[rgba(255,255,255,0)] hover:border-b-[rgba(255,255,255,1)] transition-all';
-    
     return (
       !person ? 'Not found!' :
         <Layout>
@@ -69,23 +66,45 @@ export default function Person({
                   {/* <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} /> */}
                   
               </div>
-     
-              <hr />
-              <h3 className='text-xl font-semibold my-4'>Associated Studios</h3>
 
-              {person.studios &&
-              <div className='flex flex-col lg:flex-row'>
-                {person.studios.map((studio, i) => (
-                    <Link key={`studio-link-${studio.key}`} href={`/studios/${studio.key}`} passHref>
-                    <a className="w-full lg:w-1/3">
-                      <div>
-                        <Image id={`thumb-${i}`} alt={`Thumbnail for studio with name "${studio.name}"`} imgId={studio.thumbnail.publicId} width={302}  />
-                        <h4 className='mt-3'>{studio.name}</h4>
-                      </div>
-                    </a>
-                    </Link>
-                ))}
-              </div>
+              {(person.mediaItems && person.mediaItems.length > 0) &&
+                <div>
+                  <hr />
+                  <h3 className='text-xl font-semibold my-4'>Associated Media</h3>
+
+                  <div className='flex flex-col lg:flex-row'>
+                    {person.mediaItems.map((item, i) => (
+                        <Link key={`item-link-${item.key}`} href={`/archive/${item.key}`} passHref>
+                        <a className="w-full lg:w-1/3">
+                          <div>
+                            <Image id={`thumb-${i}`} alt={`Thumbnail for media item with name "${item.title}"`} imgId={item.thumbnail.publicId} width={302}  />
+                            <h4 className='mt-3'>{item.title}</h4>
+                          </div>
+                        </a>
+                        </Link>
+                    ))}
+                  </div>
+                </div>
+              }
+
+              {(person.studios && person.studios.length > 0) &&
+                <div>
+                  <hr />
+                  <h3 className='text-xl font-semibold my-4'>Associated Studios</h3>
+
+                  <div className='flex flex-col lg:flex-row'>
+                    {person.studios.map((studio, i) => (
+                        <Link key={`studio-link-${studio.key}`} href={`/studios/${studio.key}`} passHref>
+                        <a className="w-full lg:w-1/3">
+                          <div>
+                            <Image id={`thumb-${i}`} alt={`Thumbnail for studio with name "${studio.name}"`} imgId={studio.thumbnail.publicId} width={302}  />
+                            <h4 className='mt-3'>{studio.name}</h4>
+                          </div>
+                        </a>
+                        </Link>
+                    ))}
+                  </div>
+                </div>
               }
             </div>
         </Layout>
@@ -126,6 +145,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               } 
               content {
                 document
+              }
+              mediaItems {
+                title
+                key
+                thumbnail
+                {
+                  publicId
+                }
               }
               studios {
                 name

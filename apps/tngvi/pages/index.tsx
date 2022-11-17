@@ -3,7 +3,7 @@ import { SlideshowProps } from 'react-slideshow-image';
 import {Button} from '@el-next/components';
 import Image from '@el-next/components/image';
 
-import query from "../apollo-client";
+import query from "../../../apollo-client";
 
 import Layout from '../components/Layout';
 

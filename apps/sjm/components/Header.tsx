@@ -83,7 +83,7 @@ const NavItems = () => {
                         className='hidden xl:block text-center rounded-3xl px-10 py-3 uppercase bg-blossom transition-all duration-700 hover:bg-gold'
                         onClick={(e)=>{ e.preventDefault() }}>{link.label}</a>
 
-                        <p>{link.label}</p>
+                        <p className='xl:hidden'>{link.label}</p>
                     <ul
                     className={`xl:opacity-0 xl:border-2 z-50 text-gray-700 transition-all group-hover:opacity-100 group-hover:translate-y-0 ${customEase}`}>
                         {link.subMenu.map((subLink: NavLink) => {

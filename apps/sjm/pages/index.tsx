@@ -5,8 +5,7 @@ import _ from 'lodash';
 
 import query from "../../../apollo-client";
 
-import { BlockRenderers } from '@el-next/components/blockRenderers';
-import { DocRenderers } from '@el-next/components/docRenderers';
+import { Blocks, Doc } from '../components/Renderers';
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 
 type Home = {
@@ -63,7 +62,7 @@ export default function Home({ item }: InferGetStaticPropsType<typeof getStaticP
       <div className='bg-blossom text-white p-5 lg:px-48 xl:px-96'>
         <h2 className='text-3xl lg:text-6xl font-bold my-4 md:my-7'>The Symposium</h2>
         <div className='lg:ml-10'>
-          <DocumentRenderer document={_.find(item, {name: 'The Symposium'}).content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} />
+          <DocumentRenderer document={_.find(item, {name: 'The Symposium'}).content.document} componentBlocks={Blocks()} renderers={Doc()} />
         </div>
       </div>
       <ParallaxBanner
@@ -81,7 +80,32 @@ export default function Home({ item }: InferGetStaticPropsType<typeof getStaticP
       className="aspect-[2/1]" />
       <div className='bg-blue text-white p-5 lg:px-48 xl:px-96'>
         <h2 className='text-3xl lg:text-6xl font-bold my-4 md:my-7'>Academic Awards</h2>
-          <DocumentRenderer document={_.find(item, {name: 'Academic Awards'}).content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers(rendererOverrides)} />
+          <DocumentRenderer document={_.find(item, {name: 'Academic Awards'}).content.document} componentBlocks={Blocks()} renderers={Doc(rendererOverrides)} />
+      </div>
+      <ParallaxBanner
+      layers={[
+        {
+          speed: -20,
+          children: (
+            <div className="absolute inset-0">
+              <Image id="bg-3" alt="A black and white photo of several people seated at a table on a stage during a conference panel presentation" imgId='sjm/bg-index-3'
+                width={2200} className='w-full' />
+            </div>
+          )
+        },
+      ]}
+      className="aspect-[2/1]" />
+      <div className=' bg-gradient-to-b from-clay via-pink to-wind text-white p-5 lg:px-48 xl:px-72'>
+            <h2 className='text-3xl lg:text-6xl font-bold my-4 md:my-7 lg:ml-28 w-full'>In Memory of<br />Moses Shumow</h2>
+        <div className='flex flex-col md:flex-row'>
+          <div className='w-full md:1/4 lg:w-1/2 flex-shrink-0'>
+            <Image id="img-moses" alt="A photo of Moses Shumow smiling" imgId='sjm/moses_2_edited'
+                width={600} transforms='f_auto,dpr_auto' className='w-full md:w-1/4' />
+          </div>
+          <div className='md:1/2'>
+            <DocumentRenderer document={_.find(item, {name: 'About Moses Shumow'}).content.document} componentBlocks={Blocks()} renderers={Doc(rendererOverrides)} />
+          </div>
+        </div>
       </div>
     </> 
   )

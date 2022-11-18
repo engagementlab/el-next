@@ -17,7 +17,15 @@ function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; 
 
 var Link__default = /*#__PURE__*/_interopDefault(Link);
 
-var BlockRenderers = function BlockRenderers(buttonClass) {
+/**
+ * Engagement Lab 'Next' shared component library
+ * Developed by Engagement Lab, 2022
+ *
+ * @author Johnny Richardson
+ * KeystoneJS document field block renderers
+ * ==========
+ */
+var BlockRenderers = function BlockRenderers(styles) {
   return function (imageOveride, peopleOveride) {
     var blocks = {
       image: function image(props) {
@@ -46,7 +54,7 @@ var BlockRenderers = function BlockRenderers(buttonClass) {
           href: props.link.props.node.children[0].text,
           passHref: true,
           children: /*#__PURE__*/jsxRuntime.jsx("button", {
-            className: "block lg:inline-block transition-all uppercase whitespace-nowrap ".concat(buttonClass || 'px-9 py-7 mt-4'),
+            className: "block lg:inline-block transition-all uppercase whitespace-nowrap ".concat(styles.buttonClass || 'px-9 py-7 mt-4'),
             children: props.label
           })
         });

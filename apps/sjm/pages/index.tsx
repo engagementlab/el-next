@@ -96,18 +96,19 @@ export default function Home({ item }: InferGetStaticPropsType<typeof getStaticP
       ]}
       className="aspect-[2/1]" />
       <div className=' bg-gradient-to-b from-clay via-pink to-wind text-white p-5 lg:px-48 xl:px-72'>
-            <h2 className='text-3xl lg:text-6xl font-bold my-4 md:my-7 lg:ml-28 w-full'>In Memory of<br />Moses Shumow</h2>
-        <div className='flex flex-col md:flex-row'>
+        <h2 className='text-3xl lg:text-6xl font-bold my-4 md:my-7 lg:ml-28 w-full'>In Memory of<br />Moses Shumow</h2>
+
+        <div className='flex flex-col lg:flex-row'>
           <div className='w-full md:1/4 lg:w-1/2 flex-shrink-0'>
             <Image id="img-moses" alt="A photo of Moses Shumow smiling" imgId='sjm/moses_2_edited'
-                width={600} transforms='f_auto,dpr_auto' className='w-full md:w-1/4' />
+                width={600} transforms='f_auto,dpr_auto' className='w-full' />
           </div>
           <div className='md:1/2'>
             <DocumentRenderer document={_.find(item, {name: 'About Moses Shumow'}).content.document} componentBlocks={Blocks()} renderers={Doc(rendererOverrides)} />
           </div>
         </div>
       </div>
-    </> 
+    </>
   )
 }
 export async function getStaticProps({ params }: GetStaticPropsContext) {

@@ -18,6 +18,24 @@ model About {
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model Event {
+  id            String         @id @default(cuid())
+  name          String         @unique @default("Event Name")
+  intro         Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  awards        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  location      Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  gallerySlides GallerySlide[] @relation("Event_gallerySlides")
+}
+
+model GallerySlide {
+  id            String  @id @default(cuid())
+  gallerySlides Event[] @relation("Event_gallerySlides")
+  image         Json?
+  altText       String  @default("")
+  caption       String  @default("")
+}
+
 model Home {
   id      String @id @default(cuid())
   name    String @unique @default("")

@@ -94,6 +94,211 @@ input AboutCreateInput {
   content: JSON
 }
 
+type Event {
+  id: ID!
+  name: String
+  intro: Event_intro_Document
+  agenda: Event_agenda_Document
+  awards: Event_awards_Document
+  location: Event_location_Document
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
+}
+
+type Event_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_agenda_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_awards_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_location_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input EventWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input EventWhereInput {
+  AND: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  NOT: [EventWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  gallerySlides: GallerySlideManyRelationFilter
+}
+
+input GallerySlideManyRelationFilter {
+  every: GallerySlideWhereInput
+  some: GallerySlideWhereInput
+  none: GallerySlideWhereInput
+}
+
+input EventOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input EventUpdateInput {
+  name: String
+  intro: JSON
+  agenda: JSON
+  awards: JSON
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForUpdateInput
+}
+
+input GallerySlideRelateToManyForUpdateInput {
+  disconnect: [GallerySlideWhereUniqueInput!]
+  set: [GallerySlideWhereUniqueInput!]
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+input EventUpdateArgs {
+  where: EventWhereUniqueInput!
+  data: EventUpdateInput!
+}
+
+input EventCreateInput {
+  name: String
+  intro: JSON
+  agenda: JSON
+  awards: JSON
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForCreateInput
+}
+
+input GallerySlideRelateToManyForCreateInput {
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+type GallerySlide {
+  id: ID!
+  gallerySlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
+  gallerySlidesCount(where: EventWhereInput! = {}): Int
+  image: CloudinaryImage_File
+  altText: String
+  caption: String
+}
+
+type CloudinaryImage_File {
+  id: ID
+  filename: String
+  originalFilename: String
+  mimetype: String
+  encoding: String
+  publicId: String
+  publicUrl: String
+  publicUrlTransformed(transformation: CloudinaryImageFormat): String
+}
+
+"""
+Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
+All options are strings as they ultimately end up in a URL.
+"""
+input CloudinaryImageFormat {
+  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  """
+  prettyName: String
+  width: String
+  height: String
+  crop: String
+  aspect_ratio: String
+  gravity: String
+  zoom: String
+  x: String
+  y: String
+  format: String
+  fetch_format: String
+  quality: String
+  radius: String
+  angle: String
+  effect: String
+  opacity: String
+  border: String
+  background: String
+  overlay: String
+  underlay: String
+  default_image: String
+  delay: String
+  color: String
+  color_space: String
+  dpr: String
+  page: String
+  density: String
+  flags: String
+  transformation: String
+}
+
+input GallerySlideWhereUniqueInput {
+  id: ID
+}
+
+input GallerySlideWhereInput {
+  AND: [GallerySlideWhereInput!]
+  OR: [GallerySlideWhereInput!]
+  NOT: [GallerySlideWhereInput!]
+  id: IDFilter
+  gallerySlides: EventManyRelationFilter
+  altText: StringFilter
+  caption: StringFilter
+}
+
+input EventManyRelationFilter {
+  every: EventWhereInput
+  some: EventWhereInput
+  none: EventWhereInput
+}
+
+input GallerySlideOrderByInput {
+  id: OrderDirection
+  altText: OrderDirection
+  caption: OrderDirection
+}
+
+input GallerySlideUpdateInput {
+  gallerySlides: EventRelateToManyForUpdateInput
+  image: Upload
+  altText: String
+  caption: String
+}
+
+input EventRelateToManyForUpdateInput {
+  disconnect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input GallerySlideUpdateArgs {
+  where: GallerySlideWhereUniqueInput!
+  data: GallerySlideUpdateInput!
+}
+
+input GallerySlideCreateInput {
+  gallerySlides: EventRelateToManyForCreateInput
+  image: Upload
+  altText: String
+  caption: String
+}
+
+input EventRelateToManyForCreateInput {
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
 type Home {
   id: ID!
   name: String
@@ -150,55 +355,6 @@ type Person {
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
-
-type CloudinaryImage_File {
-  id: ID
-  filename: String
-  originalFilename: String
-  mimetype: String
-  encoding: String
-  publicId: String
-  publicUrl: String
-  publicUrlTransformed(transformation: CloudinaryImageFormat): String
-}
-
-"""
-Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
-All options are strings as they ultimately end up in a URL.
-"""
-input CloudinaryImageFormat {
-  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
-  """
-  prettyName: String
-  width: String
-  height: String
-  crop: String
-  aspect_ratio: String
-  gravity: String
-  zoom: String
-  x: String
-  y: String
-  format: String
-  fetch_format: String
-  quality: String
-  radius: String
-  angle: String
-  effect: String
-  opacity: String
-  border: String
-  background: String
-  overlay: String
-  underlay: String
-  default_image: String
-  delay: String
-  color: String
-  color_space: String
-  dpr: String
-  page: String
-  density: String
-  flags: String
-  transformation: String
-}
 
 type Person_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
@@ -258,9 +414,6 @@ input PersonUpdateInput {
   content: JSON
 }
 
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
 input PersonUpdateArgs {
   where: PersonWhereUniqueInput!
   data: PersonUpdateInput!
@@ -289,6 +442,18 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
+  createEvent(data: EventCreateInput!): Event
+  createEvents(data: [EventCreateInput!]!): [Event]
+  updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
+  updateEvents(data: [EventUpdateArgs!]!): [Event]
+  deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
+  createGallerySlide(data: GallerySlideCreateInput!): GallerySlide
+  createGallerySlides(data: [GallerySlideCreateInput!]!): [GallerySlide]
+  updateGallerySlide(where: GallerySlideWhereUniqueInput!, data: GallerySlideUpdateInput!): GallerySlide
+  updateGallerySlides(data: [GallerySlideUpdateArgs!]!): [GallerySlide]
+  deleteGallerySlide(where: GallerySlideWhereUniqueInput!): GallerySlide
+  deleteGallerySlides(where: [GallerySlideWhereUniqueInput!]!): [GallerySlide]
   createHome(data: HomeCreateInput!): Home
   createHomes(data: [HomeCreateInput!]!): [Home]
   updateHome(where: HomeWhereUniqueInput!, data: HomeUpdateInput!): Home
@@ -307,6 +472,12 @@ type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
+  event(where: EventWhereUniqueInput!): Event
+  eventsCount(where: EventWhereInput! = {}): Int
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
+  gallerySlide(where: GallerySlideWhereUniqueInput!): GallerySlide
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
   homes(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
   home(where: HomeWhereUniqueInput!): Home
   homesCount(where: HomeWhereInput! = {}): Int

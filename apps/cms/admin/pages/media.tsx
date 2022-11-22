@@ -13,25 +13,24 @@ import {
     Alert,
     Box,
     Button,
-    ButtonBase,
-    Card,
-    CardActions,
-    CardContent,
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
     Fab,
-    Grid,
+    FormControl,
     IconButton,
     ImageList,
     ImageListItem,
+    InputLabel,
+    MenuItem,
     Modal,
+    OutlinedInput,
     Pagination,
-    Paper,
+    Select,
     Snackbar,
-    Typography
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -43,6 +42,7 @@ import Image from '@el-next/components/image';
 
 type NavState = {
     data: any[]
+    folders: string[]
     deleteConfirmOpen: boolean
     errorOpen: boolean
     imgIdToDelete: string;
@@ -52,7 +52,7 @@ type NavState = {
     uploadOpen: boolean
 
     toggleWaiting: () => void
-    setData: (imgData: any[]) => void
+    setData: (imgData: any[], folders: string[]) => void
     setId: (id: string) => void
     setImageIdToDelete: (id: string) => void
     setIndex: (imgIndex: number) => void
@@ -103,9 +103,11 @@ export default function Media() {
     const [useStore] = useState(() =>
         create < NavState > (set => ({
             data: [],
+            folders: [],
             errorOpen: false,
             imgIdToDelete: '',
             selectedImgId: '',
+            selectedFolders: [],
             uploadOpen: false,
             deleteConfirmOpen: false,
             waiting: true,
@@ -115,16 +117,23 @@ export default function Media() {
                     waiting: !state.waiting
                 };
             }),
-            setData: (imgData: any[]) => set((state) => {
+            setData: (imgData: any[], folders: string[]) => set((state) => {
                 return {
                     ...state,
                     data: imgData,
+                    folders
                 }
             }),
             setId: (id: string) => set((state) => {
                 return {
                     ...state,
                     selectedImgId: id,
+                }
+            }),
+            setImageIdToDelete: (id: string) => set((state) => {
+                return {
+                    ...state,
+                    imgIdToDelete: id,
                 }
             }),
             setImageIdToDelete: (id: string) => set((state) => {
@@ -204,7 +213,7 @@ export default function Media() {
                         if(e.loaded !== e.total) return;
                         setUploadOpen(false);
                         axios.get('/media/get/upload').then((response) => {
-                            setData(response.data);
+                            setData(response.data.imgs, response.data.folders);
                             toggleWaiting();
                         });
                     };
@@ -234,7 +243,7 @@ export default function Media() {
                     
                     toggleWaiting();
                     axios.get('/media/get/upload').then((response) => {
-                        setData(response.data);
+                        setData(response.data.imgs, response.data.folders);
                         toggleWaiting();
                     });
                     return;
@@ -252,7 +261,7 @@ export default function Media() {
         if (data && data.length > 1) return;
         axios.get('/media/get/upload').then((response) => {
             //   setData(localData);
-            setData(response.data);
+            setData(response.data.imgs, response.data.folders);
             toggleWaiting();
         });
     })
@@ -324,7 +333,35 @@ export default function Media() {
                 <Fab color="secondary" aria-label="add" onClick={() => {setUploadOpen(true); }} style={{margin: '2rem'}}>
                     <AddIcon/>
                 </Fab>
-
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+                    <Select
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    multiple
+                    value={personName}
+                    onChange={handleChange}
+                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                        ))}
+                        </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    >
+                    {names.map((name) => (
+                        <MenuItem
+                        key={name}
+                        value={name}
+                        style={getStyles(name, personName, theme)}
+                        >
+                        {name}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
                 <Pagination count={Math.floor(data.length / 30)+1} page={pgIndex+1} onChange={((e, pg) => { setIndex(pg-1) })} />
                 <Box sx={{ flexGrow: 1 }}>
                     <ImageList variant="masonry" cols={4} gap={8}>

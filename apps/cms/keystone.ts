@@ -247,31 +247,37 @@ let ksConfig = (lists: any) => {
 
         app.get('/media/get/:type', async (req, res) => {
           try {
-            cloudinary.api.resources(
-              {
-                prefix: 'tngvi',
-                resource_type: 'image',
-                type: req.params.type,
-                max_results: 500,
-              },
-              (e, response) => {
-                const sorted = response.resources.sort(
-                  (
-                    a: {
-                      created_at: number;
-                    },
-                    b: {
-                      created_at: number;
-                    }
-                  ) => {
-                    return (
-                      new Date(b.created_at).getTime() -
-                      new Date(a.created_at).getTime()
+            cloudinary.api.sub_folders(
+              appName || 'tngvi',
+              { max_results: 100 },
+              (e, folders) => {
+                cloudinary.api.resources(
+                  {
+                    prefix: appName || 'tngvi',
+                    resource_type: 'image',
+                    type: req.params.type,
+                    max_results: 500,
+                  },
+                  (e, response) => {
+                    const sorted = response.resources.sort(
+                      (
+                        a: {
+                          created_at: number;
+                        },
+                        b: {
+                          created_at: number;
+                        }
+                      ) => {
+                        return (
+                          new Date(b.created_at).getTime() -
+                          new Date(a.created_at).getTime()
+                        );
+                      }
                     );
+
+                    res.status(200).send({ folders, imgs: sorted });
                   }
                 );
-
-                res.status(200).send(sorted);
               }
             );
           } catch (err: any) {

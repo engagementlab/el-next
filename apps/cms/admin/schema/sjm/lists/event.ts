@@ -3,7 +3,9 @@ import { relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
+
 import { BaseDocConfig } from '../../config';
+import { CreateKey } from '../../hooks';
 
 const Event: Lists.Event = list({
   access: allowAll,
@@ -12,6 +14,18 @@ const Event: Lists.Event = list({
       isIndexed: 'unique',
       isFilterable: true,
       defaultValue: 'Event Name',
+    }),
+    key: text({
+      isIndexed: 'unique',
+      isFilterable: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
     }),
     intro: document(BaseDocConfig()),
     agenda: document(BaseDocConfig([[1, 1]])),
@@ -35,6 +49,25 @@ const Event: Lists.Event = list({
   ui: {
     listView: {
       initialColumns: ['name'],
+    },
+  },
+  hooks: {
+    resolveInput: async ({
+      listKey,
+      operation,
+      inputData,
+      item,
+      resolvedData,
+      context,
+    }) => {
+      if (resolvedData.name) {
+        resolvedData = {
+          ...resolvedData,
+          key: CreateKey(resolvedData.name),
+        };
+      }
+      // console.log()
+      return resolvedData;
     },
   },
 });

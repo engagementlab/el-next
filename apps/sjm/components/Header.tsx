@@ -18,10 +18,10 @@ const links: NavLink[] = [
     {
         label:  'Symposium',
         subMenu : [
-            {url: '2023-las-vegas', label: '2023: Las Vegas'},
-            {url: '2022-miami', label: '2022: Miami'},
-            {url: '2021', label: '2021: Virtual'},
-            {url: '2020', label: '2020: Boston'},  
+            {url: '/events/2023', label: '2023: Las Vegas'},
+            {url: '/events/2022', label: '2022: Miami'},
+            {url: '/events/2021', label: '2021: Virtual'},
+            {url: '/events/2020-persistence', label: '2020: Boston'},  
         ]
     },
     {

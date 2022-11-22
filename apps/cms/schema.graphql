@@ -97,6 +97,7 @@ input AboutCreateInput {
 type Event {
   id: ID!
   name: String
+  key: String
   intro: Event_intro_Document
   agenda: Event_agenda_Document
   awards: Event_awards_Document
@@ -124,6 +125,7 @@ type Event_location_Document {
 input EventWhereUniqueInput {
   id: ID
   name: String
+  key: String
 }
 
 input EventWhereInput {
@@ -132,6 +134,7 @@ input EventWhereInput {
   NOT: [EventWhereInput!]
   id: IDFilter
   name: StringFilter
+  key: StringFilter
   gallerySlides: GallerySlideManyRelationFilter
 }
 
@@ -144,10 +147,12 @@ input GallerySlideManyRelationFilter {
 input EventOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  key: OrderDirection
 }
 
 input EventUpdateInput {
   name: String
+  key: String
   intro: JSON
   agenda: JSON
   awards: JSON
@@ -169,6 +174,7 @@ input EventUpdateArgs {
 
 input EventCreateInput {
   name: String
+  key: String
   intro: JSON
   agenda: JSON
   awards: JSON

@@ -21,6 +21,7 @@ model About {
 model Event {
   id            String         @id @default(cuid())
   name          String         @unique @default("Event Name")
+  key           String         @unique @default("")
   intro         Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   awards        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

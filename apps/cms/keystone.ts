@@ -250,7 +250,7 @@ let ksConfig = (lists: any) => {
             cloudinary.api.sub_folders(
               appName || 'tngvi',
               { max_results: 100 },
-              (e, folders) => {
+              (e, foldersResponse) => {
                 cloudinary.api.resources(
                   {
                     prefix: appName || 'tngvi',
@@ -275,7 +275,11 @@ let ksConfig = (lists: any) => {
                       }
                     );
 
-                    res.status(200).send({ folders, imgs: sorted });
+                    console.log(foldersResponse);
+                    res.status(200).send({
+                      folders: foldersResponse.folders,
+                      imgs: sorted,
+                    });
                   }
                 );
               }
@@ -298,7 +302,7 @@ let ksConfig = (lists: any) => {
         app.post('/media/upload', upload.none(), async (req, res) => {
           try {
             const response = await cloudinary.uploader.upload(req.body.img, {
-              folder: 'tngvi',
+              folder: appName || 'tngvi',
             });
             res.status(200).send(response);
           } catch (err: any) {

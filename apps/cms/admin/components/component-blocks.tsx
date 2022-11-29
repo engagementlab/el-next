@@ -303,8 +303,8 @@ function imageSelect({
             gridOpen: true,
             data: [],
             index: 0,
-            id: value?.image.publicId || '',
-            alt: value?.image.alt || '',
+            id: value?.image?.publicId || '',
+            alt: value?.image?.alt || '',
             toggleWaiting: () => set((state) => { 
                 return { waiting: !state.waiting }; 
             }),
@@ -361,7 +361,7 @@ function imageSelect({
         if(data && data.length > 1) return;
         // Get CDN data
         axios.get('/media/get/upload').then((response: { data: any; }) =>{
-          let data = response.data;
+          let data = response.data.imgs;
           // If image pre-selected, move it to the front of array
           if(currentId.length > 0) {
             const itemIndex = data.findIndex((item: { public_id: string; }) => item.public_id === currentId);

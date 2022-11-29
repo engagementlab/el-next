@@ -1,11 +1,12 @@
-import Image from '@el-next/components/image';
+import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
+import Image from '@el-next/components/image';
 import _ from 'lodash';
+import ImageGallery from 'react-image-gallery';
 
 import query from "../../../../apollo-client";
 
 import { Blocks, Doc } from '../../components/Renderers';
-import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 
 type Event = {
     name: string;
@@ -13,6 +14,13 @@ type Event = {
     agenda: any;
     awards: any;
     location: any;
+    gallerySlides: {
+        image: {
+            publicId: string;
+        }
+        altText: string;
+        caption: string;
+    }[]
 }
 const rendererOverrides = {
   layout: (layout: any, children: any) => {
@@ -31,19 +39,33 @@ const rendererOverrides = {
 
   }
 };
+const renderItem = (item: any) => {
+    return <>
+            <Image id={`img-${item.original}`} imgId={item.original} alt={item.altText} />
+           </>;
+};
 export default function Event({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
-  return (
-    <>
-      <section className="relative mt-6 lg:mt-0">
-        <div className="flex flex-col justify-center items-center w-full">
-          <h1 className='text-2xl lg:text-7xl'>{item.name}</h1>
-        <div className='lg:ml-10'>
-          <DocumentRenderer document={item.intro.document} componentBlocks={Blocks()} renderers={Doc()} />
-        </div>
-      </div>
-    </section> 
-    </>
-  )
+
+    const images = _.map(item.gallerySlides, (imgItem) => { return {original: imgItem.image.publicId, altText: imgItem.altText}}) ;
+console.log(images)
+    return (
+        <>
+            <section className="relative mt-6 lg:mt-0">
+            <div className="flex flex-col justify-center items-center w-full">
+                <h1 className='text-2xl lg:text-7xl'>{item.name}</h1>
+            <div className='lg:ml-10'>
+                <DocumentRenderer document={item.intro.document} componentBlocks={Blocks()} renderers={Doc()} />
+            </div>
+
+            <ImageGallery
+            //   ref={i => this._imageGallery = i}
+                items={images}
+                renderItem={renderItem}
+                />
+            </div>
+        </section> 
+        </>
+    )
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
@@ -81,7 +103,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         }
         location {
             document
-        }    
+        }
+        gallerySlides{
+            image {
+                publicId
+            }
+            altText
+            caption
+        }
     }`);
     const item = itemResult[0] as Event;
   

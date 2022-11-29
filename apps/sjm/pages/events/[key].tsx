@@ -44,10 +44,21 @@ const renderItem = (item: any) => {
             <Image id={`img-${item.original}`} imgId={item.original} alt={item.altText} />
            </>;
 };
+const renderThumb = (item: any) => {
+    return <>
+            <Image id={`img-thumb-${item.original}`} imgId={item.thumbnail} alt={`Thumbnail for ${item.altText}`} height={120} />
+           </>;
+};
 export default function Event({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
+    
+    const images = _.map(item.gallerySlides, (imgItem) => {
+        return {
+            original: imgItem.image.publicId,
+            thumbnail: imgItem.image.publicId,
+            altText: imgItem.altText
+        }
+    });
 
-    const images = _.map(item.gallerySlides, (imgItem) => { return {original: imgItem.image.publicId, altText: imgItem.altText}}) ;
-console.log(images)
     return (
         <>
             <section className="relative mt-6 lg:mt-0">
@@ -58,9 +69,12 @@ console.log(images)
             </div>
 
             <ImageGallery
-            //   ref={i => this._imageGallery = i}
                 items={images}
                 renderItem={renderItem}
+                renderThumbInner={renderThumb}
+                showPlayButton={false}
+                // showFullscreenButton={false}
+                additionalClass='max-w-3xl'
                 />
             </div>
         </section> 

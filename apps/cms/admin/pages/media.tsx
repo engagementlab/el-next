@@ -161,9 +161,14 @@ export default function Media() {
                 }
             }),
             setSelecedFolders: (event: SelectChangeEvent<{name: string, path: string}[]>) => set((state: NavState) => {
+                const folder = _.find(state.folders, {path: event.target.value[0]}) as {name: string, path: string}
+                console.log(folder.name, state.folders)
+                const updatedFolders = state.selectedFolders.includes(folder)
+                                        ? state.selectedFolders.filter(i => i !== folder) // remove item
+                                        : [ ...state.selectedFolders, folder ]; // add item
                 return {
                     ...state,
-                    selectedFolders: event.target.value as {name: string, path: string}[],
+                    selectedFolders: updatedFolders,
                 }
             }),
             setIndex: (imgIndex: number) => set((state) => {
@@ -366,7 +371,7 @@ export default function Media() {
                     <AddIcon/>
                 </Fab>
                 <hr />
-                <FormControl sx={{ m: 1, width: 600 }}>
+                {/* <FormControl sx={{ m: 1, width: 600 }}>
                     <InputLabel id="demo-multiple-chip-label">Filter by Folder</InputLabel>
                     <Select
                     labelId="demo-multiple-chip-label"
@@ -379,8 +384,8 @@ export default function Media() {
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                         {selected.map((value) => (
                     <>
-                        {value}
-                            <Chip key={value.path} label={value} />
+                        {typeof value}
+                    <Chip key={value.path} label={value} />
                     </>
                         ))}
                         </Box>
@@ -397,7 +402,7 @@ export default function Media() {
                         </MenuItem>
                     ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
                 
                 <Pagination count={Math.floor(data.length / 30)+1} page={pgIndex+1} onChange={((e, pg) => { setIndex(pg-1) })} />
                 

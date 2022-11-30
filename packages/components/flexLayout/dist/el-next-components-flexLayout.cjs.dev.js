@@ -19,22 +19,22 @@ var FlexLayout = function FlexLayout(layout, children) {
         }, i);
       })
     });
-  } else if (layout[0] === 1 && layout[1] === 1) {
-    return /*#__PURE__*/jsxRuntime.jsx("div", {
-      className: flexClass,
-      children: children.map(function (element, i) {
-        return /*#__PURE__*/jsxRuntime.jsx("div", {
-          className: "".concat(i === 0 ? 'w-full lg:w-1/2' : ''),
-          children: element
-        }, i);
-      })
-    });
   } else if (layout[0] === 1 && layout[1] === 1 && layout[2] === 1) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
       className: flexClass,
       children: children.map(function (element, i) {
         return /*#__PURE__*/jsxRuntime.jsx("div", {
           className: "w-full lg:w-1/3",
+          children: element
+        }, i);
+      })
+    });
+  } else if (layout[0] === 1 && layout[1] === 1) {
+    return /*#__PURE__*/jsxRuntime.jsx("div", {
+      className: flexClass,
+      children: children.map(function (element, i) {
+        return /*#__PURE__*/jsxRuntime.jsx("div", {
+          className: "".concat(i === 0 ? 'w-full lg:w-1/2' : ''),
           children: element
         }, i);
       })

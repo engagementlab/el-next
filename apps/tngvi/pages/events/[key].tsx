@@ -1,17 +1,16 @@
 import { ReactNode } from 'react';
 import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import Link from 'next/link';
 import _ from 'lodash';
+
+import { HeadingStyle } from '@el-next/components/headingStyle';
+import Image from '@el-next/components/image';
 
 import query from "../../../../apollo-client";
 
-import Image from '@el-next/components/image';
-import { BlockRenderers } from '@el-next/components/blockRenderers';
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import { HeadingStyle } from '@el-next/components/headingStyle';
-import { DocRenderers } from '@el-next/components/docRenderers';
+import { Blocks, Doc } from '../../components/Renderers';
 
 type Event = {
   name: string;
@@ -55,7 +54,7 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
                     })}
                 </div>
   
-                <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers(rendererOverrides)} />
+                <DocumentRenderer document={item.content.document} componentBlocks={Blocks()} renderers={Doc(rendererOverrides)} />
 
                {/*  {relatedItems &&
                     <div>

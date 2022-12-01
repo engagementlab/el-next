@@ -3,12 +3,14 @@ import {
     GetStaticPropsContext,
     InferGetStaticPropsType
 } from 'next';
+import Link from 'next/link';
 import {
     useRouter
 } from 'next/router';
 import {
     DocumentRenderer,
 } from '@keystone-6/document-renderer';
+import { Video } from '@el-next/components';
 
 import _ from 'lodash';
 import create from 'zustand';
@@ -17,12 +19,8 @@ import {
 } from 'react-copy-to-clipboard';
 
 import query from '../../../../apollo-client';
-
-import { BlockRenderers, Video } from '@el-next/components';
-import { DocRenderers } from '@el-next/components/docRenderers';
 import Layout from '../../components/Layout';
-import Link from 'next/link';
-import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal } from 'react';
+import { Blocks, Doc } from '../../components/Renderers';
 
 type MediaItem = {
     title: string;
@@ -92,7 +90,7 @@ export default function MediaItem({
                     </div>
                 </div>
                 <div className='content-container container w-full mt-14 mb-24 xl:mt-16 px-4 xl:px-8'>
-                    <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} />
+                    <DocumentRenderer document={item.content.document} componentBlocks={Blocks()} renderers={Doc()} />
                     {/*
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
 

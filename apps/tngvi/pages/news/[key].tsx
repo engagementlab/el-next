@@ -4,13 +4,12 @@ import { DocumentRenderer, } from '@keystone-6/document-renderer';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import query from "../../../../apollo-client";
-
 import Image from '@el-next/components/image';
-import { BlockRenderers } from '@el-next/components/blockRenderers';
-import Layout from '../../components/Layout';
+
+import query from "../../../../apollo-client";
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import { DocRenderers } from '@el-next/components/docRenderers';
+import Layout from '../../components/Layout';
+import { Blocks, Doc } from '../../components/Renderers';
 
 type NewsItem = {
   title: string;
@@ -43,7 +42,7 @@ export default function NewsItem({ item, relatedItems }: InferGetStaticPropsType
                         year: 'numeric',
                     })}
                 </div>
-                <DocumentRenderer document={item.body.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} />
+                <DocumentRenderer document={item.body.document} componentBlocks={Blocks()} renderers={Doc()} />
 
                 {relatedItems &&
                     <div>

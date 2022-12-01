@@ -30,19 +30,6 @@ const links: NavLink[] = [
                 {url: '/transformative-ml-scholar', label: 'Transformative ML Scholar'},
                 {url: '/tranformational-research', label: 'Transformational Research'}
         ]
-    },
-    {
-        label: 'Gallery',
-        subMenu : [
-                {url: '/2020#gallery', label: '2020'},
-                {url: '/2022-miami#gallery', label: '2022'}
-        ]
-    },
-    {
-        label: 'About',
-        subMenu : [
-                {url: '/mosesshumow', label: 'Dr. Moses Shumow'}
-        ]
     }
 ];
 

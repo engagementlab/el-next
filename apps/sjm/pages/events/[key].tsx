@@ -1,12 +1,16 @@
 import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import Image from '@el-next/components/image';
+
+import Image, {ImageUrl} from '@el-next/components/image';
+// import ImageUrl from '@el-next/components/image';
+
 import _ from 'lodash';
 import ImageGallery from 'react-image-gallery';
 
 import query from "../../../../apollo-client";
 
 import { Blocks, Doc } from '../../components/Renderers';
+import { useEffect, useState } from 'react';
 
 type Event = {
     name: string;
@@ -20,12 +24,18 @@ type Event = {
         }
         altText: string;
         caption: string;
-    }[]
+    }[] 
+    bgImage1: {
+        publicId: string;
+    }
+    bgImage2: {
+        publicId: string;
+    }
 }
-const rendererOverrides = {
+const agendaRendererOverrides = {
   layout: (layout: any, children: any) => {
-    const flexClass = 'flex gap-y-5 flex-col xl:flex-row justify-between';
-    if(layout[0] === 1 && layout[1] === 1) {
+    const flexClass = 'flex gap-y-5 flex-col mt-10 xl:flex-row justify-between';
+    if(layout[0] === 1 && layout[1] === 2) {
         return (
             <div
                 className={flexClass}
@@ -46,11 +56,32 @@ const renderItem = (item: any) => {
 };
 const renderThumb = (item: any) => {
     return <>
-            <Image id={`img-thumb-${item.original}`} imgId={item.thumbnail} alt={`Thumbnail for ${item.altText}`} height={120} />
+            <Image id={`img-thumb-${item.original}`} imgId={item.thumbnail} alt={`Thumbnail for ${item.altText}`} />
            </>;
 };
 export default function Event({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
-    
+
+    const [bgImg1, setBgImg1] = useState('')
+    const [bgImg2, setBgImg2] = useState('')
+    useEffect(() => {
+        if(item.bgImage1)
+            setBgImg1(
+                ImageUrl({
+                    imgId: item.bgImage1.publicId,
+                    width: window.innerWidth,
+                    transforms: `f_auto,dpr_auto,c_thumb,g_face,ar_4:3,e_colorize:70,co_rgb:ffdb66,o_60,w_${window.innerWidth}`
+                }))
+        if(item.bgImage2)
+            setBgImg2(
+                ImageUrl({
+                    imgId: item.bgImage2.publicId,
+                    width: window.innerWidth,
+                    transforms: `f_auto,dpr_auto,c_thumb,g_face,ar_4:3,e_colorize:70,co_rgb:ffdb66,o_60,w_${window.innerWidth}`
+                }))
+    }, []);
+
+    const lavenderStyle = 'bg-lavender text-white flex justify-center p-8';
+
     const images = _.map(item.gallerySlides, (imgItem) => {
         return {
             original: imgItem.image.publicId,
@@ -62,22 +93,46 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
     return (
         <>
             <section className="relative mt-6 lg:mt-0">
-            <div className="flex flex-col justify-center items-center w-full">
-                <h1 className='text-2xl lg:text-7xl'>{item.name}</h1>
-            <div className='lg:ml-10'>
-                <DocumentRenderer document={item.intro.document} componentBlocks={Blocks()} renderers={Doc()} />
-            </div>
+                {/* <div className="flex flex-col justify-center items-center w-full"> */}
+                    <div className={lavenderStyle}>
+                        <div className='lg:ml-10 w-full xl:w-8/12'>
+                            <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>{item.name}</h1>
+                            <DocumentRenderer document={item.intro.document} componentBlocks={Blocks()}
+                                renderers={Doc()} />
+                        </div>
+                    </div>
+                    <div className='bg-cover' style={{backgroundImage: `url(${bgImg1})`}}>
+                        <div className='lg:ml-10 w-full xl:w-8/12'>
+                            <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full text-right'>Agenda</h1>
+                            <DocumentRenderer document={item.agenda.document} componentBlocks={Blocks()}
+                                renderers={Doc(agendaRendererOverrides)} />
+                        </div>
+                    </div>
+                    <div className={lavenderStyle}>
+                        <div className='lg:ml-10 w-full xl:w-8/12'>
 
-            <ImageGallery
-                items={images}
-                renderItem={renderItem}
-                renderThumbInner={renderThumb}
-                showPlayButton={false}
-                // showFullscreenButton={false}
-                additionalClass='max-w-3xl'
-                />
-            </div>
-        </section> 
+                            <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>Awards</h1>
+                            <DocumentRenderer document={item.awards.document} componentBlocks={Blocks()}
+                                renderers={Doc()} />
+                        </div>
+                    </div>
+                    <div className='bg-cover' style={{backgroundImage: `url(${bgImg2})`}}>
+                        <div className='lg:ml-10 w-full xl:w-8/12'>
+                            <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full text-right'>Location</h1>
+                            <DocumentRenderer document={item.location.document} componentBlocks={Blocks()}
+                                renderers={Doc()} />
+                        </div>
+                    </div>
+                    <div className={lavenderStyle}>
+                        <div className='lg:ml-10 w-full xl:w-8/12'>
+
+                        <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>Galllery</h1>
+                        <ImageGallery items={images} renderItem={renderItem} renderThumbInner={renderThumb}
+                            showPlayButton={false} />
+                    </div>
+                    </div>
+                {/* </div> */}
+            </section>
         </>
     )
 }
@@ -125,8 +180,13 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             altText
             caption
         }
+        bgImage1 {
+            publicId
+        }
+        bgImage2 {
+            publicId
+        }
     }`);
     const item = itemResult[0] as Event;
-  
   return { props: { item } };
 }

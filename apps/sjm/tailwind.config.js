@@ -16,6 +16,7 @@ module.exports = {
         blue: '#1aaae0',
         clay: '#df8f87',
         gold: '#ffde5f',
+        lavender: '#7851a9',
         pink: '#cd5fa3',
         wind: '#5face3',
       },

@@ -303,7 +303,7 @@ function imageSelect({
             gridOpen: true,
             data: [],
             index: 0,
-            id: value?.image?.publicId || '',
+            id: (value?.publicId as unknown as string) || value?.image.publicId || '',
             alt: value?.image?.alt || '',
             toggleWaiting: () => set((state) => { 
                 return { waiting: !state.waiting }; 

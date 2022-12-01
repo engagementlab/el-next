@@ -4,7 +4,7 @@ import { componentBlocks } from '../components/component-blocks';
 // import { FixButtons } from './hooks';
 
 const BaseDocConfig = (
-  layouts?: number[][]
+  layouts?: readonly (readonly [number, ...number[]])[]
 ): DocumentFieldConfig<BaseListTypeInfo> => {
   return {
     componentBlocks,

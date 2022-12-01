@@ -38,7 +38,7 @@ var DocRenderers = function DocRenderers(styles) {
           return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.link ? renderOverrides.link(children, fixedHref) : /*#__PURE__*/jsxRuntime.jsx("a", {
             href: fixedHref,
             target: "_blank",
-            className: "no-underlin border-b-2 transition-all ".concat(styles.linkClass),
+            className: "no-underline border-b-2 transition-all ".concat(styles && styles.linkClass),
             children: label
           });
         }

@@ -39,10 +39,11 @@ export const BlockRenderers = (styles?: {
         return <Video videoLabel={props.video.label} videoUrl={props.video.value} thumbUrl={props.video.thumb} />;
       },
       button: (props: any) => {
+
         return (
           <Link href={props.link.props.node.children[0].text} passHref>
             <button
-              className={`block lg:inline-block transition-all uppercase whitespace-nowrap ${styles.buttonClass || 'px-9 py-7 mt-4'}`}>
+              className={`block lg:inline-block transition-all uppercase whitespace-nowrap ${styles && styles.buttonClass ? styles.buttonClass : 'px-9 py-7 mt-4'}`}>
               {props.label}
             </button>
           </Link>

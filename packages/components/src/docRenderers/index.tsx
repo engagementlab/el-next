@@ -39,7 +39,7 @@ export const DocRenderers =  (styles?: {
                     if(process.env.NODE_ENV === 'production')
                         fixedHref = fixedHref.replace('qa.', '');
                     // text-purple border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)]
-                    return renderOverrides?.link ? renderOverrides.link(children, fixedHref) : <a href={fixedHref} target="_blank" className={`no-underlin border-b-2 transition-all ${styles.linkClass}`}>{label}</a>;
+                    return renderOverrides?.link ? renderOverrides.link(children, fixedHref) : <a href={fixedHref} target="_blank" className={`no-underline border-b-2 transition-all ${styles && styles.linkClass}`}>{label}</a>;
                 }    
             }, 
             block: {

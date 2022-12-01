@@ -54,7 +54,7 @@ var BlockRenderers = function BlockRenderers(styles) {
           href: props.link.props.node.children[0].text,
           passHref: true,
           children: /*#__PURE__*/jsxRuntime.jsx("button", {
-            className: "block lg:inline-block transition-all uppercase whitespace-nowrap ".concat(styles.buttonClass || 'px-9 py-7 mt-4'),
+            className: "block lg:inline-block transition-all uppercase whitespace-nowrap ".concat(styles && styles.buttonClass ? styles.buttonClass : 'px-9 py-7 mt-4'),
             children: props.label
           })
         });

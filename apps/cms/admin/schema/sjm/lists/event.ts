@@ -6,6 +6,7 @@ import { Lists } from '.keystone/types';
 
 import { BaseDocConfig } from '../../config';
 import { CreateKey } from '../../hooks';
+import { cloudinaryImage } from '../../../components/cloudinary';
 
 const Event: Lists.Event = list({
   access: allowAll,
@@ -28,8 +29,26 @@ const Event: Lists.Event = list({
       },
     }),
     intro: document(BaseDocConfig()),
-    agenda: document(BaseDocConfig([[1, 1]])),
+    agenda: document(BaseDocConfig([[1, 2]])),
+    bgImage1: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'sjm/backgrounds',
+      },
+      label: 'Agenda Background Image',
+    }),
     awards: document(BaseDocConfig()),
+    bgImage2: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'sjm/backgrounds',
+      },
+      label: 'Location Background Image',
+    }),
     location: document(BaseDocConfig()),
     gallerySlides: relationship({
       ref: 'GallerySlide.gallerySlides',

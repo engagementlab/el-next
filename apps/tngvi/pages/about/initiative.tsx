@@ -1,12 +1,12 @@
+import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
-import query from "../../apollo-client";
 import { DocumentRenderer, DocumentRendererProps } from '@keystone-6/document-renderer';
-import { BlockRenderers } from '@el-next/components/blockRenderers';
+import { HeadingStyle } from '@el-next/components';
+
+import query from "../../../../apollo-client";
+import { Blocks, Doc } from '../../components/Renderers';
 import Layout from '../../components/Layout';
 
-import { DocRenderers } from '@el-next/components/docRenderers';
-import { HeadingStyle } from '@el-next/components';
-import { ReactNode } from 'react';
 
 type AboutPage = {
   content: any;
@@ -33,9 +33,9 @@ export default function AboutInitiative({ page }: InferGetStaticPropsType<typeof
   return (
     <Layout>
       <div className='about-container container mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-10/12 xl:w-9/12'>
-        <DocumentRenderer document={page.content.document} renderers={DocRenderers(rendererOverrides)} componentBlocks={BlockRenderers()} />
+        <DocumentRenderer document={page.content.document} renderers={Doc(rendererOverrides)} componentBlocks={Blocks()} />
 
-        <DocumentRenderer document={page.values.document} renderers={DocRenderers(valuesRendererOverrides)} componentBlocks={BlockRenderers()} />
+        <DocumentRenderer document={page.values.document} renderers={Doc(valuesRendererOverrides)} componentBlocks={Blocks()} />
       </div>
     </Layout>
   );

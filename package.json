@@ -4,10 +4,11 @@
   "scripts": {
     "build": "preconstruct build",
     "fix": "preconstruct fix",
-    "postinstall": "preconstruct dev",
+    "postinstall": "preconstruct build",
     "watch": "preconstruct watch"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.1",
     "@babel/preset-env": "^7.18.9",
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",

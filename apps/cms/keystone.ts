@@ -9,11 +9,10 @@ import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { elab, tngvi } from './admin/schema';
-
-import type { Context } from '.keystone/types';
+import { elab, tngvi, sjm } from './admin/schema';
 import { getNews } from './routes/news';
 import { setPplKeys } from './routes/people';
+import * as _ from 'underscore';
 
 type schemaIndexType = {
   [key: string]: object;
@@ -29,6 +28,7 @@ const argv: any = yargs(process.argv.slice(2)).options({
 const schemaMap: schemaIndexType = {
   elab: elab,
   tngvi: tngvi,
+  sjm: sjm,
 };
 
 const multer = require('multer');
@@ -204,33 +204,84 @@ let ksConfig = (lists: any) => {
           }
         });
 
+        app.get('/media/videos', async (req, res, next) => {
+          try {
+            let videoData: {
+              label: any;
+              value: any;
+              thumb: any;
+              thumbSm: any;
+            }[] = [];
+            const getData = async (
+              apiPath: string = '/channels/1773240/videos?per_page=100'
+            ) => {
+              const response = await axios.get(
+                `https://api.vimeo.com${apiPath}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
+                  },
+                }
+              );
+              const resData = response.data;
+              let m = _.map(resData.data, (val) => {
+                return {
+                  label: val.name,
+                  value: val.player_embed_url,
+                  thumb: val.pictures.sizes[val.pictures.sizes.length - 1].link,
+                  thumbSm: val.pictures.sizes[1].link,
+                };
+              });
+              videoData = videoData.concat(videoData, m);
+
+              if (resData.paging.next) getData(resData.paging.next);
+              else {
+                res.status(200).send(videoData);
+              }
+            };
+            getData();
+          } catch (err: any) {
+            res.status(500).send(err.message);
+          }
+        });
+
         app.get('/media/get/:type', async (req, res) => {
           try {
-            cloudinary.api.resources(
-              {
-                prefix: 'tngvi',
-                resource_type: 'image',
-                type: req.params.type,
-                max_results: 500,
-              },
-              (e, response) => {
-                const sorted = response.resources.sort(
-                  (
-                    a: {
-                      created_at: number;
-                    },
-                    b: {
-                      created_at: number;
-                    }
-                  ) => {
-                    return (
-                      new Date(b.created_at).getTime() -
-                      new Date(a.created_at).getTime()
+            cloudinary.api.sub_folders(
+              appName || 'tngvi',
+              { max_results: 100 },
+              (e, foldersResponse) => {
+                cloudinary.api.resources(
+                  {
+                    prefix: appName || 'tngvi',
+                    resource_type: 'image',
+                    type: req.params.type,
+                    max_results: 500,
+                  },
+                  (e, response) => {
+                    const sorted = response.resources.sort(
+                      (
+                        a: {
+                          created_at: number;
+                        },
+                        b: {
+                          created_at: number;
+                        }
+                      ) => {
+                        return (
+                          new Date(b.created_at).getTime() -
+                          new Date(a.created_at).getTime()
+                        );
+                      }
                     );
+
+                    console.log(foldersResponse);
+                    res.status(200).send({
+                      folders: foldersResponse.folders,
+                      imgs: sorted,
+                    });
                   }
                 );
-
-                res.status(200).send(sorted);
               }
             );
           } catch (err: any) {
@@ -251,7 +302,7 @@ let ksConfig = (lists: any) => {
         app.post('/media/upload', upload.none(), async (req, res) => {
           try {
             const response = await cloudinary.uploader.upload(req.body.img, {
-              folder: 'tngvi',
+              folder: appName || 'tngvi',
             });
             res.status(200).send(response);
           } catch (err: any) {

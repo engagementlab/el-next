@@ -1,13 +1,11 @@
+import Link from 'next/link';
 import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import _ from 'lodash';
 
-import query from "../../apollo-client";
-
-import { BlockRenderers } from '@el-next/components/blockRenderers';
+import query from "../../../../apollo-client";
 import Layout from '../../components/Layout';
-import { DocRenderers } from '@el-next/components/docRenderers';
-import Link from 'next/link';
+import { Blocks, Doc } from '../../components/Renderers';
 
 type Studio = {
   id: string;
@@ -57,7 +55,7 @@ const associatedPeople = (props: { selectedPeople: any[]; showTitles: boolean; }
             <h1 className="text-2xl font-bold text-bluegreen mb-2">{item.name}</h1>
             {/* <p className="text-bluegreen mb-10">{_.map(item.filters, 'name').join(', ')}</p> */}
 
-            <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers(undefined, associatedPeople)} renderers={DocRenderers()} />
+            <DocumentRenderer document={item.content.document} componentBlocks={Blocks(undefined, associatedPeople)} renderers={Doc()} />
 {/* 
             {item.associatedMedia &&
               <div className='mt-14'>

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "keystone dev",
     "start": "keystone start",
-    "build": "node vimeo.js && keystone build",
+    "build": "keystone build",
     "build-ci": "keystone build",
     "build-export": "npx babel export/src -d export/lib --extensions .ts,.tsx",
     "export": "npm run build-export && node ./export/lib",

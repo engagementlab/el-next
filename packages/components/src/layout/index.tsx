@@ -4,8 +4,6 @@ import { motion } from 'framer-motion'
 
 type Props = {
     children: ReactNode
-    // title: string
-    // description: string
 }
 
 const variants = {

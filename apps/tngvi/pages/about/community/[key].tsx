@@ -3,8 +3,9 @@ import {
     GetStaticPropsContext,
     InferGetStaticPropsType
 } from 'next';
+import Link from 'next/link';
 
-import query from '../../../apollo-client';
+import query from '../../../../../apollo-client';
 
 import Image from '@el-next/components/image';
 import Layout from '../../../components/Layout';
@@ -16,21 +17,25 @@ type Person = {
     blurb: string;
     image: any;
     content: any;
+    mediaItems: {
+      title: string;
+      key: string;
+      thumbnail: {
+        publicId: string;
+      }
+    }[];
+    studios: {
+      name: string;
+      key: string;
+      thumbnail: {
+        publicId: string;
+      }
+    }[];
 };
 
 export default function Person({
     person
 }: InferGetStaticPropsType < typeof getStaticProps > ): "Not found!" | JSX.Element {
-    // const origin =
-    //     typeof window !== 'undefined' && window.location.origin
-    //         ? window.location.origin
-    //         : '';
-    // const thisUrl = `${origin}${useRouter().asPath}`;
-    // const toggleCopied = useStore(state => state.toggleCopied);
-    // const wasCopied = useStore(state => state.urlCopied);
-
-    // const filterClass = 'no-underline border-b-2 border-b-[rgba(255,255,255,0)] hover:border-b-[rgba(255,255,255,1)] transition-all';
-    
     return (
       !person ? 'Not found!' :
         <Layout>
@@ -59,37 +64,48 @@ export default function Person({
                     )}
                   </div>
                   {/* <DocumentRenderer document={item.content.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} /> */}
-                  {/*
-                      <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
-
-                      {relatedItems &&
-                      <div>
-                      <div className='flex flex-col lg:flex-row justify-between items-center'>
-                      <p>Browse other stories to keep learning</p>
-                      <Link href='/media-archive' passHref>
-                      <a>
-                      See All
-                      </a>
-                      </Link>
-                      </div>
-                      <div className='flex flex-col lg:flex-row'>
-                      {relatedItems.map((relatedItem, i) => (
-                          <Link key={i} href={`/media/${relatedItem.key}`} passHref>
-                          <a className="w-full lg:w-1/3">
-                          <div>
-                          <Image id={`thumb-${i}`} alt={`Thumbnail for media with name "${relatedItem.title}"`} imgId={relatedItem.thumbnail.publicId} width={302}  />
-                          <h4 className='text-xl font-semibold mt-3'>{relatedItem.title}</h4>
-                          
-                          <p className='text-base'>{relatedItem.shortDescription}</p>
-                          <p>{_.map(relatedItem.filters, 'name').join(', ')}</p>
-                          </div>
-                          </a>
-                          </Link>
-                          ))}
-                          </div>
-                          </div>
-                      } */}
+                  
               </div>
+
+              {(person.mediaItems && person.mediaItems.length > 0) &&
+                <div>
+                  <hr />
+                  <h3 className='text-xl font-semibold my-4'>Associated Media</h3>
+
+                  <div className='flex flex-col lg:flex-row'>
+                    {person.mediaItems.map((item, i) => (
+                        <Link key={`item-link-${item.key}`} href={`/archive/${item.key}`} passHref>
+                        <a className="w-full lg:w-1/3">
+                          <div>
+                            <Image id={`thumb-${i}`} alt={`Thumbnail for media item with name "${item.title}"`} imgId={item.thumbnail.publicId} width={302}  />
+                            <h4 className='mt-3'>{item.title}</h4>
+                          </div>
+                        </a>
+                        </Link>
+                    ))}
+                  </div>
+                </div>
+              }
+
+              {(person.studios && person.studios.length > 0) &&
+                <div>
+                  <hr />
+                  <h3 className='text-xl font-semibold my-4'>Associated Studios</h3>
+
+                  <div className='flex flex-col lg:flex-row'>
+                    {person.studios.map((studio, i) => (
+                        <Link key={`studio-link-${studio.key}`} href={`/studios/${studio.key}`} passHref>
+                        <a className="w-full lg:w-1/3">
+                          <div>
+                            <Image id={`thumb-${i}`} alt={`Thumbnail for studio with name "${studio.name}"`} imgId={studio.thumbnail.publicId} width={302}  />
+                            <h4 className='mt-3'>{studio.name}</h4>
+                          </div>
+                        </a>
+                        </Link>
+                    ))}
+                  </div>
+                </div>
+              }
             </div>
         </Layout>
   );
@@ -130,21 +146,24 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               content {
                 document
               }
+              mediaItems {
+                title
+                key
+                thumbnail
+                {
+                  publicId
+                }
+              }
+              studios {
+                name
+                key
+                thumbnail
+                {
+                  publicId
+                }
+              }
             }`);
     const person = itemResult[0] as Person;
-    // const relatedItems = (await query.MediaItem.findMany({
-    //     where: { 
-    //         filters: { 
-    //             some:{
-    //                 OR: [
-    //                     { name: { equals: "2022" } },
-    //                     { name: { equals: "Rural Voices" } }
-    //                 ]
-    //             } 
-    //         }
-    //     },
-    //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
-    // })) as MediaItem[];
     return { props: { person } };
     
 }

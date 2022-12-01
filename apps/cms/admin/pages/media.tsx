@@ -8,30 +8,32 @@ import {
 } from 'react-dropzone';
 import { css as emCss } from '@emotion/css';
 import axios from 'axios';
+import _ from 'lodash';
 
 import {
     Alert,
     Box,
     Button,
-    ButtonBase,
-    Card,
-    CardActions,
-    CardContent,
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
     Fab,
-    Grid,
+    FormControl,
     IconButton,
     ImageList,
     ImageListItem,
+    InputLabel,
+    MenuItem,
     Modal,
+    OutlinedInput,
     Pagination,
-    Paper,
+    Select,
+    SelectChangeEvent,
     Snackbar,
-    Typography
+    Theme,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -41,8 +43,29 @@ import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
 
 import Image from '@el-next/components/image';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+function getStyles(folder: string, personName: readonly string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(folder) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
 type NavState = {
     data: any[]
+    folders: {name: string, path: string}[]
+    selectedFolders: {name: string, path: string}[]
     deleteConfirmOpen: boolean
     errorOpen: boolean
     imgIdToDelete: string;
@@ -52,9 +75,10 @@ type NavState = {
     uploadOpen: boolean
 
     toggleWaiting: () => void
-    setData: (imgData: any[]) => void
+    setData: (imgData: any[], folders: {name: string, path: string}[]) => void
     setId: (id: string) => void
     setImageIdToDelete: (id: string) => void
+    setSelecedFolders: (event: SelectChangeEvent<{name: string, path: string}[]>) => void
     setIndex: (imgIndex: number) => void
     setErrorOpen: (open: boolean) => void
     setUploadOpen: (open: boolean) => void
@@ -103,9 +127,11 @@ export default function Media() {
     const [useStore] = useState(() =>
         create < NavState > (set => ({
             data: [],
+            folders: [],
             errorOpen: false,
             imgIdToDelete: '',
             selectedImgId: '',
+            selectedFolders: [],
             uploadOpen: false,
             deleteConfirmOpen: false,
             waiting: true,
@@ -115,10 +141,11 @@ export default function Media() {
                     waiting: !state.waiting
                 };
             }),
-            setData: (imgData: any[]) => set((state) => {
+            setData: (imgData: any[], folders: {name: string, path: string}[]) => set((state) => {
                 return {
                     ...state,
                     data: imgData,
+                    folders
                 }
             }),
             setId: (id: string) => set((state) => {
@@ -131,6 +158,17 @@ export default function Media() {
                 return {
                     ...state,
                     imgIdToDelete: id,
+                }
+            }),
+            setSelecedFolders: (event: SelectChangeEvent<{name: string, path: string}[]>) => set((state: NavState) => {
+                const folder = _.find(state.folders, {path: event.target.value[0]}) as {name: string, path: string}
+                console.log(folder.name, state.folders)
+                const updatedFolders = state.selectedFolders.includes(folder)
+                                        ? state.selectedFolders.filter(i => i !== folder) // remove item
+                                        : [ ...state.selectedFolders, folder ]; // add item
+                return {
+                    ...state,
+                    selectedFolders: updatedFolders,
                 }
             }),
             setIndex: (imgIndex: number) => set((state) => {
@@ -168,6 +206,7 @@ export default function Media() {
     const setErrorOpen = useStore(state => state.setErrorOpen);
     const setId = useStore(state => state.setId);
     const setImageIdToDelete = useStore(state => state.setImageIdToDelete);
+    const setSelecedFolders = useStore(state => state.setSelecedFolders);
     const setIndex = useStore(state => state.setIndex);
     const setUploadOpen = useStore(state => state.setUploadOpen);
 
@@ -175,11 +214,19 @@ export default function Media() {
     const currentId = useStore(state => state.selectedImgId);
     const errorOpen = useStore(state => state.errorOpen);
     const imgIdToDelete = useStore(state => state.imgIdToDelete);
+    const selectedFolders = useStore(state => state.selectedFolders);
+    const folders = useStore(state => state.folders);
     const data = useStore(state => state.data);
     const waiting = useStore(state => state.waiting);
     const pgIndex = useStore(state => state.pgIndex);
     const uploadOpen = useStore(state => state.uploadOpen);
     
+    const filteredData = data.filter(
+                                        // If selected filters empty, show all...
+                                        item => selectedFolders.length === 0 ||
+                                        // ...otherwise, item's filters must match ALL selected filters
+                                        selectedFolders.indexOf(item) > 0);
+
     const beginIndex = pgIndex * 30;
     const endIndex = beginIndex + 30;
     
@@ -204,7 +251,7 @@ export default function Media() {
                         if(e.loaded !== e.total) return;
                         setUploadOpen(false);
                         axios.get('/media/get/upload').then((response) => {
-                            setData(response.data);
+                            setData(response.data.imgs, response.data.folders);
                             toggleWaiting();
                         });
                     };
@@ -234,7 +281,7 @@ export default function Media() {
                     
                     toggleWaiting();
                     axios.get('/media/get/upload').then((response) => {
-                        setData(response.data);
+                        setData(response.data.imgs, response.data.folders);
                         toggleWaiting();
                     });
                     return;
@@ -251,8 +298,7 @@ export default function Media() {
     useEffect(() => {
         if (data && data.length > 1) return;
         axios.get('/media/get/upload').then((response) => {
-            //   setData(localData);
-            setData(response.data);
+            setData(response.data.imgs, response.data.folders);
             toggleWaiting();
         });
     })
@@ -324,20 +370,55 @@ export default function Media() {
                 <Fab color="secondary" aria-label="add" onClick={() => {setUploadOpen(true); }} style={{margin: '2rem'}}>
                     <AddIcon/>
                 </Fab>
-
+                <hr />
+                {/* <FormControl sx={{ m: 1, width: 600 }}>
+                    <InputLabel id="demo-multiple-chip-label">Filter by Folder</InputLabel>
+                    <Select
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    multiple
+                    value={selectedFolders}
+                    onChange={(val) => { setSelecedFolders(val); }}
+                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                    <>
+                        {typeof value}
+                    <Chip key={value.path} label={value} />
+                    </>
+                        ))}
+                        </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    >
+                    {folders.map((folder) => (
+                        <MenuItem
+                        key={folder.path}
+                        value={folder.path}
+                        // style={getStyles(folder, personName, theme)}
+                        >
+                        {folder.name.toLocaleUpperCase()}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl> */}
+                
                 <Pagination count={Math.floor(data.length / 30)+1} page={pgIndex+1} onChange={((e, pg) => { setIndex(pg-1) })} />
+                
                 <Box sx={{ flexGrow: 1 }}>
                     <ImageList variant="masonry" cols={4} gap={8}>
-                        {data.slice(beginIndex, endIndex).map(d => {
+                        {filteredData.slice(beginIndex, endIndex).map(d => {
                             return (
                                 <ImageListItem key={d.public_id} sx={styles.item} onMouseEnter={()=> {setId(d.public_id)}}
-                                    onMouseLeave={() => {setId('')}}>
+                                onMouseLeave={() => {setId('')}}>
                                     <Image id={d.public_id} alt={`Image with public ID ${d.public_id}`}
                                         imgId={d.public_id} width={300}
                                         transforms='f_auto,dpr_auto,c_crop,g_center,q_50' lazy={false}
                                         aspectDefault={true} className={d.public_id === currentId ? `${styles.imgHover}` : ''} />
                                   {d.public_id === currentId &&
                                     <IconButton color='warning' size='large' sx={actionsStyle} aria-label="delete image" onClick={() => { setDeleteConfirm(true); setImageIdToDelete(d.public_id); }}>
+                                        {/* {d.folder} */}
                                         <DeleteForeverTwoToneIcon fontSize='large' />
                                     </IconButton>}
                                 </ImageListItem>

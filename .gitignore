@@ -1,6 +1,8 @@
 .pa11yci
 apps/cms/.keystone
+apps/tngvi/out
 node_modules
 node_modules
 .DS_Store
 .env
+apps/sjm/.next

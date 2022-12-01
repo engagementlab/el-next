@@ -2,10 +2,9 @@ import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer, } from '@keystone-6/document-renderer';
 
-import query from "../../apollo-client";
+import query from "../../../../apollo-client";
 
-import { BlockRenderers } from '@el-next/components/blockRenderers';
-import { DocRenderers } from '@el-next/components/docRenderers';
+import { Blocks, Doc } from '../../components/Renderers';
 import { HeadingStyle } from '@el-next/components/headingStyle';
 import Image from '@el-next/components/image';
 import Layout from '../../components/Layout';
@@ -14,7 +13,7 @@ type BigPicturePage = {
   content: any;
 };
 
-const image = (props: any) => {
+const imageOverride = (props: any) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Image id={'img-' + props.image.publicId} alt={props.image.alt} imgId={props.image.publicId} aspectDefault={true} />
@@ -62,7 +61,7 @@ export default function BigPicture({ page }: InferGetStaticPropsType<typeof getS
   return (
     <Layout>
       <div className='about-container container mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-10/12 xl:w-9/12'>
-         <DocumentRenderer document={page.content.document} componentBlocks={BlockRenderers(image)} renderers={DocRenderers(rendererOverrides)} />
+         <DocumentRenderer document={page.content.document} componentBlocks={Blocks(imageOverride)} renderers={Doc(rendererOverrides)} />
       </div>
     </Layout>
   );

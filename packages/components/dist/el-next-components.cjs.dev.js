@@ -14,7 +14,7 @@ require('framer-motion');
 require('react/jsx-runtime');
 var flexLayout_dist_elNextComponentsFlexLayout = require('../flexLayout/dist/el-next-components-flexLayout.cjs.dev.js');
 var headingStyle_dist_elNextComponentsHeadingStyle = require('../headingStyle/dist/el-next-components-headingStyle.cjs.dev.js');
-require('../image/dist/el-next-components-image.cjs.dev.js');
+var image_dist_elNextComponentsImage = require('../image/dist/el-next-components-image.cjs.dev.js');
 var video_dist_elNextComponentsVideo = require('../video/dist/el-next-components-video.cjs.dev.js');
 require('next/link');
 require('@el-next/components/flexLayout');
@@ -32,4 +32,5 @@ exports.DocRenderers = docRenderers_dist_elNextComponentsDocRenderers.DocRendere
 exports.Favicon = favicon_dist_elNextComponentsFavicon.Favicon;
 exports.FlexLayout = flexLayout_dist_elNextComponentsFlexLayout.FlexLayout;
 exports.HeadingStyle = headingStyle_dist_elNextComponentsHeadingStyle.HeadingStyle;
+exports.ImageUrl = image_dist_elNextComponentsImage.ImageUrl;
 exports.Video = video_dist_elNextComponentsVideo.Video;

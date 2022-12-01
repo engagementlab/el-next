@@ -5,14 +5,9 @@ type About {
   id: ID!
   name: String
   content: About_content_Document
-  values: About_values_Document
 }
 
 type About_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type About_values_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -87,7 +82,6 @@ enum OrderDirection {
 input AboutUpdateInput {
   name: String
   content: JSON
-  values: JSON
 }
 
 input AboutUpdateArgs {
@@ -98,103 +92,109 @@ input AboutUpdateArgs {
 input AboutCreateInput {
   name: String
   content: JSON
-  values: JSON
-}
-
-type BigPicture {
-  id: ID!
-  name: String
-  content: BigPicture_content_Document
-}
-
-type BigPicture_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input BigPictureWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input BigPictureWhereInput {
-  AND: [BigPictureWhereInput!]
-  OR: [BigPictureWhereInput!]
-  NOT: [BigPictureWhereInput!]
-  id: IDFilter
-  name: StringFilter
-}
-
-input BigPictureOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input BigPictureUpdateInput {
-  name: String
-  content: JSON
-}
-
-input BigPictureUpdateArgs {
-  where: BigPictureWhereUniqueInput!
-  data: BigPictureUpdateInput!
-}
-
-input BigPictureCreateInput {
-  name: String
-  content: JSON
-}
-
-type DataTemp {
-  id: ID!
-  data: String
-}
-
-input DataTempWhereUniqueInput {
-  id: ID
-}
-
-input DataTempWhereInput {
-  AND: [DataTempWhereInput!]
-  OR: [DataTempWhereInput!]
-  NOT: [DataTempWhereInput!]
-  id: IDFilter
-  data: StringFilter
-}
-
-input DataTempOrderByInput {
-  id: OrderDirection
-  data: OrderDirection
-}
-
-input DataTempUpdateInput {
-  data: String
-}
-
-input DataTempUpdateArgs {
-  where: DataTempWhereUniqueInput!
-  data: DataTempUpdateInput!
-}
-
-input DataTempCreateInput {
-  data: String
 }
 
 type Event {
   id: ID!
   name: String
   key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  eventDate: DateTime
-  registrationLink: String
-  address: String
-  blurb: String
-  content: Event_content_Document
+  intro: Event_intro_Document
+  agenda: Event_agenda_Document
+  awards: Event_awards_Document
+  location: Event_location_Document
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
 }
 
-scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+type Event_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_agenda_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_awards_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_location_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input EventWhereUniqueInput {
+  id: ID
+  name: String
+  key: String
+}
+
+input EventWhereInput {
+  AND: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  NOT: [EventWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+  gallerySlides: GallerySlideManyRelationFilter
+}
+
+input GallerySlideManyRelationFilter {
+  every: GallerySlideWhereInput
+  some: GallerySlideWhereInput
+  none: GallerySlideWhereInput
+}
+
+input EventOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+}
+
+input EventUpdateInput {
+  name: String
+  key: String
+  intro: JSON
+  agenda: JSON
+  awards: JSON
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForUpdateInput
+}
+
+input GallerySlideRelateToManyForUpdateInput {
+  disconnect: [GallerySlideWhereUniqueInput!]
+  set: [GallerySlideWhereUniqueInput!]
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+input EventUpdateArgs {
+  where: EventWhereUniqueInput!
+  data: EventUpdateInput!
+}
+
+input EventCreateInput {
+  name: String
+  key: String
+  intro: JSON
+  agenda: JSON
+  awards: JSON
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForCreateInput
+}
+
+input GallerySlideRelateToManyForCreateInput {
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+type GallerySlide {
+  id: ID!
+  gallerySlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
+  gallerySlidesCount(where: EventWhereInput! = {}): Int
+  image: CloudinaryImage_File
+  altText: String
+  caption: String
+}
 
 type CloudinaryImage_File {
   id: ID
@@ -245,28 +245,141 @@ input CloudinaryImageFormat {
   transformation: String
 }
 
-type Event_content_Document {
+input GallerySlideWhereUniqueInput {
+  id: ID
+}
+
+input GallerySlideWhereInput {
+  AND: [GallerySlideWhereInput!]
+  OR: [GallerySlideWhereInput!]
+  NOT: [GallerySlideWhereInput!]
+  id: IDFilter
+  gallerySlides: EventManyRelationFilter
+  altText: StringFilter
+  caption: StringFilter
+}
+
+input EventManyRelationFilter {
+  every: EventWhereInput
+  some: EventWhereInput
+  none: EventWhereInput
+}
+
+input GallerySlideOrderByInput {
+  id: OrderDirection
+  altText: OrderDirection
+  caption: OrderDirection
+}
+
+input GallerySlideUpdateInput {
+  gallerySlides: EventRelateToManyForUpdateInput
+  image: Upload
+  altText: String
+  caption: String
+}
+
+input EventRelateToManyForUpdateInput {
+  disconnect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input GallerySlideUpdateArgs {
+  where: GallerySlideWhereUniqueInput!
+  data: GallerySlideUpdateInput!
+}
+
+input GallerySlideCreateInput {
+  gallerySlides: EventRelateToManyForCreateInput
+  image: Upload
+  altText: String
+  caption: String
+}
+
+input EventRelateToManyForCreateInput {
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+type Home {
+  id: ID!
+  name: String
+  content: Home_content_Document
+}
+
+type Home_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-input EventWhereUniqueInput {
+input HomeWhereUniqueInput {
   id: ID
-  key: String
+  name: String
 }
 
-input EventWhereInput {
-  AND: [EventWhereInput!]
-  OR: [EventWhereInput!]
-  NOT: [EventWhereInput!]
+input HomeWhereInput {
+  AND: [HomeWhereInput!]
+  OR: [HomeWhereInput!]
+  NOT: [HomeWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input HomeOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input HomeUpdateInput {
+  name: String
+  content: JSON
+}
+
+input HomeUpdateArgs {
+  where: HomeWhereUniqueInput!
+  data: HomeUpdateInput!
+}
+
+input HomeCreateInput {
+  name: String
+  content: JSON
+}
+
+type Person {
+  id: ID!
+  name: String
+  key: String
+  title: String
+  createdDate: DateTime
+  enabled: Boolean
+  image: CloudinaryImage_File
+  blurb: String
+  content: Person_content_Document
+}
+
+scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+type Person_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input PersonWhereUniqueInput {
+  id: ID
+}
+
+input PersonWhereInput {
+  AND: [PersonWhereInput!]
+  OR: [PersonWhereInput!]
+  NOT: [PersonWhereInput!]
   id: IDFilter
   name: StringFilter
   key: StringFilter
+  title: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
-  thumbAltText: StringFilter
-  eventDate: DateTimeFilter
-  registrationLink: StringFilter
-  address: StringFilter
   blurb: StringFilter
 }
 
@@ -286,623 +399,25 @@ input BooleanFilter {
   not: BooleanFilter
 }
 
-input DateTimeFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeFilter
-}
-
-input EventOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  thumbAltText: OrderDirection
-  eventDate: OrderDirection
-  registrationLink: OrderDirection
-  address: OrderDirection
-  blurb: OrderDirection
-}
-
-input EventUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: Upload
-  thumbAltText: String
-  eventDate: DateTime
-  registrationLink: String
-  address: String
-  blurb: String
-  content: JSON
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input EventUpdateArgs {
-  where: EventWhereUniqueInput!
-  data: EventUpdateInput!
-}
-
-input EventCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: Upload
-  thumbAltText: String
-  eventDate: DateTime
-  registrationLink: String
-  address: String
-  blurb: String
-  content: JSON
-}
-
-type Filter {
-  id: ID!
-  name: String
-  key: String
-  enabled: Boolean
-  type: FilterTypeType
-  section: FilterSectionType
-}
-
-enum FilterTypeType {
-  Voices
-  Media
-  Departments
-  Year
-  Department
-  Partner
-  Faculty
-  Semester
-}
-
-enum FilterSectionType {
-  media
-  studio
-}
-
-input FilterWhereUniqueInput {
-  id: ID
-}
-
-input FilterWhereInput {
-  AND: [FilterWhereInput!]
-  OR: [FilterWhereInput!]
-  NOT: [FilterWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  enabled: BooleanFilter
-  type: FilterTypeTypeNullableFilter
-  section: FilterSectionTypeNullableFilter
-}
-
-input FilterTypeTypeNullableFilter {
-  equals: FilterTypeType
-  in: [FilterTypeType!]
-  notIn: [FilterTypeType!]
-  not: FilterTypeTypeNullableFilter
-}
-
-input FilterSectionTypeNullableFilter {
-  equals: FilterSectionType
-  in: [FilterSectionType!]
-  notIn: [FilterSectionType!]
-  not: FilterSectionTypeNullableFilter
-}
-
-input FilterOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  enabled: OrderDirection
-  type: OrderDirection
-  section: OrderDirection
-}
-
-input FilterUpdateInput {
-  name: String
-  key: String
-  enabled: Boolean
-  type: FilterTypeType
-  section: FilterSectionType
-}
-
-input FilterUpdateArgs {
-  where: FilterWhereUniqueInput!
-  data: FilterUpdateInput!
-}
-
-input FilterCreateInput {
-  name: String
-  key: String
-  enabled: Boolean
-  type: FilterTypeType
-  section: FilterSectionType
-}
-
-type Home {
-  id: ID!
-  name: String
-  intro: Home_intro_Document
-  slides(where: HomeSlideWhereInput! = {}, orderBy: [HomeSlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [HomeSlide!]
-  slidesCount(where: HomeSlideWhereInput! = {}): Int
-}
-
-type Home_intro_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input HomeWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input HomeWhereInput {
-  AND: [HomeWhereInput!]
-  OR: [HomeWhereInput!]
-  NOT: [HomeWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  slides: HomeSlideManyRelationFilter
-}
-
-input HomeSlideManyRelationFilter {
-  every: HomeSlideWhereInput
-  some: HomeSlideWhereInput
-  none: HomeSlideWhereInput
-}
-
-input HomeOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input HomeUpdateInput {
-  name: String
-  intro: JSON
-  slides: HomeSlideRelateToManyForUpdateInput
-}
-
-input HomeSlideRelateToManyForUpdateInput {
-  disconnect: [HomeSlideWhereUniqueInput!]
-  set: [HomeSlideWhereUniqueInput!]
-  create: [HomeSlideCreateInput!]
-  connect: [HomeSlideWhereUniqueInput!]
-}
-
-input HomeUpdateArgs {
-  where: HomeWhereUniqueInput!
-  data: HomeUpdateInput!
-}
-
-input HomeCreateInput {
-  name: String
-  intro: JSON
-  slides: HomeSlideRelateToManyForCreateInput
-}
-
-input HomeSlideRelateToManyForCreateInput {
-  create: [HomeSlideCreateInput!]
-  connect: [HomeSlideWhereUniqueInput!]
-}
-
-type HomeSlide {
-  id: ID!
-  homeSlides(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
-  homeSlidesCount(where: HomeWhereInput! = {}): Int
-  image: CloudinaryImage_File
-  altText: String
-  quote: String
-}
-
-input HomeSlideWhereUniqueInput {
-  id: ID
-}
-
-input HomeSlideWhereInput {
-  AND: [HomeSlideWhereInput!]
-  OR: [HomeSlideWhereInput!]
-  NOT: [HomeSlideWhereInput!]
-  id: IDFilter
-  homeSlides: HomeManyRelationFilter
-  altText: StringFilter
-  quote: StringFilter
-}
-
-input HomeManyRelationFilter {
-  every: HomeWhereInput
-  some: HomeWhereInput
-  none: HomeWhereInput
-}
-
-input HomeSlideOrderByInput {
-  id: OrderDirection
-  altText: OrderDirection
-  quote: OrderDirection
-}
-
-input HomeSlideUpdateInput {
-  homeSlides: HomeRelateToManyForUpdateInput
-  image: Upload
-  altText: String
-  quote: String
-}
-
-input HomeRelateToManyForUpdateInput {
-  disconnect: [HomeWhereUniqueInput!]
-  set: [HomeWhereUniqueInput!]
-  create: [HomeCreateInput!]
-  connect: [HomeWhereUniqueInput!]
-}
-
-input HomeSlideUpdateArgs {
-  where: HomeSlideWhereUniqueInput!
-  data: HomeSlideUpdateInput!
-}
-
-input HomeSlideCreateInput {
-  homeSlides: HomeRelateToManyForCreateInput
-  image: Upload
-  altText: String
-  quote: String
-}
-
-input HomeRelateToManyForCreateInput {
-  create: [HomeCreateInput!]
-  connect: [HomeWhereUniqueInput!]
-}
-
-type MediaItem {
-  id: ID!
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: CloudinaryImage_File
-  shortDescription: String
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
-  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
-  associatedPeopleCount(where: PersonWhereInput! = {}): Int
-  content: MediaItem_content_Document
-  videos: JSON
-  file: AzureStorageFileFieldOutput
-}
-
-type MediaItem_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-interface AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
-input MediaItemWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
-input MediaItemWhereInput {
-  AND: [MediaItemWhereInput!]
-  OR: [MediaItemWhereInput!]
-  NOT: [MediaItemWhereInput!]
-  id: IDFilter
-  title: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  shortDescription: StringFilter
-  filters: FilterManyRelationFilter
-  associatedPeople: PersonManyRelationFilter
-}
-
-input FilterManyRelationFilter {
-  every: FilterWhereInput
-  some: FilterWhereInput
-  none: FilterWhereInput
-}
-
-input PersonManyRelationFilter {
-  every: PersonWhereInput
-  some: PersonWhereInput
-  none: PersonWhereInput
-}
-
-input MediaItemOrderByInput {
-  id: OrderDirection
-  title: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  shortDescription: OrderDirection
-}
-
-input MediaItemUpdateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: Upload
-  shortDescription: String
-  filters: FilterRelateToManyForUpdateInput
-  associatedPeople: PersonRelateToManyForUpdateInput
-  content: JSON
-  videos: JSON
-  file: AzureStorageFileFieldInput
-}
-
-input FilterRelateToManyForUpdateInput {
-  disconnect: [FilterWhereUniqueInput!]
-  set: [FilterWhereUniqueInput!]
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
-}
-
-input PersonRelateToManyForUpdateInput {
-  disconnect: [PersonWhereUniqueInput!]
-  set: [PersonWhereUniqueInput!]
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
-input AzureStorageFileFieldInput {
-  upload: Upload
-  ref: String
-}
-
-input MediaItemUpdateArgs {
-  where: MediaItemWhereUniqueInput!
-  data: MediaItemUpdateInput!
-}
-
-input MediaItemCreateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: Upload
-  shortDescription: String
-  filters: FilterRelateToManyForCreateInput
-  associatedPeople: PersonRelateToManyForCreateInput
-  content: JSON
-  videos: JSON
-  file: AzureStorageFileFieldInput
-}
-
-input FilterRelateToManyForCreateInput {
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
-}
-
-input PersonRelateToManyForCreateInput {
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
-type NewsItem {
-  id: ID!
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  apps: [NewsItemAppType!]
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  publishDate: DateTime
-  linkHelper: HelperFieldOutput
-  externalLink: String
-  blurb: String
-  bodyHTML: String
-  body: NewsItem_body_Document
-}
-
-enum NewsItemAppType {
-  elab
-  tngvi
-}
-
-interface HelperFieldOutput {
-  html: String!
-  iconType: String
-}
-
-type NewsItem_body_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input NewsItemWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input NewsItemWhereInput {
-  AND: [NewsItemWhereInput!]
-  OR: [NewsItemWhereInput!]
-  NOT: [NewsItemWhereInput!]
-  id: IDFilter
-  title: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  thumbAltText: StringFilter
-  publishDate: DateTimeFilter
-  externalLink: StringFilter
-  blurb: StringFilter
-}
-
-input NewsItemOrderByInput {
-  id: OrderDirection
-  title: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  thumbAltText: OrderDirection
-  publishDate: OrderDirection
-  externalLink: OrderDirection
-  blurb: OrderDirection
-}
-
-input NewsItemUpdateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  apps: [NewsItemAppType!]
-  thumbnail: Upload
-  thumbAltText: String
-  publishDate: DateTime
-  externalLink: String
-  blurb: String
-  body: JSON
-}
-
-input NewsItemUpdateArgs {
-  where: NewsItemWhereUniqueInput!
-  data: NewsItemUpdateInput!
-}
-
-input NewsItemCreateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  apps: [NewsItemAppType!]
-  thumbnail: Upload
-  thumbAltText: String
-  publishDate: DateTime
-  linkHelper: HelperFieldInput
-  externalLink: String
-  blurb: String
-  body: JSON
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
-}
-
-type Person {
-  id: ID!
-  docsHelper: HelperFieldOutput
-  name: String
-  key: String
-  title: String
-  abbreviatedTitle: String
-  createdDate: DateTime
-  enabled: Boolean
-  currentlyActive: Boolean
-  tag: [String!]
-  image: CloudinaryImage_File
-  blurb: String
-  remembrance: String
-  content: Person_content_Document
-  mediaItems(where: MediaItemWhereInput! = {}, orderBy: [MediaItemOrderByInput!]! = [], take: Int, skip: Int! = 0): [MediaItem!]
-  mediaItemsCount(where: MediaItemWhereInput! = {}): Int
-  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0): [Studio!]
-  studiosCount(where: StudioWhereInput! = {}): Int
-}
-
-type Person_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input PersonWhereUniqueInput {
-  id: ID
-}
-
-input PersonWhereInput {
-  AND: [PersonWhereInput!]
-  OR: [PersonWhereInput!]
-  NOT: [PersonWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  title: StringFilter
-  abbreviatedTitle: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  currentlyActive: BooleanFilter
-  blurb: StringFilter
-  remembrance: StringFilter
-  mediaItems: MediaItemManyRelationFilter
-  studios: StudioManyRelationFilter
-}
-
-input MediaItemManyRelationFilter {
-  every: MediaItemWhereInput
-  some: MediaItemWhereInput
-  none: MediaItemWhereInput
-}
-
-input StudioManyRelationFilter {
-  every: StudioWhereInput
-  some: StudioWhereInput
-  none: StudioWhereInput
-}
-
 input PersonOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
   title: OrderDirection
-  abbreviatedTitle: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
-  currentlyActive: OrderDirection
   blurb: OrderDirection
-  remembrance: OrderDirection
 }
 
 input PersonUpdateInput {
   name: String
   key: String
   title: String
-  abbreviatedTitle: String
   createdDate: DateTime
   enabled: Boolean
-  currentlyActive: Boolean
-  tag: [String!]
   image: Upload
   blurb: String
-  remembrance: String
   content: JSON
-  mediaItems: MediaItemRelateToManyForUpdateInput
-  studios: StudioRelateToManyForUpdateInput
-}
-
-input MediaItemRelateToManyForUpdateInput {
-  disconnect: [MediaItemWhereUniqueInput!]
-  set: [MediaItemWhereUniqueInput!]
-  create: [MediaItemCreateInput!]
-  connect: [MediaItemWhereUniqueInput!]
-}
-
-input StudioRelateToManyForUpdateInput {
-  disconnect: [StudioWhereUniqueInput!]
-  set: [StudioWhereUniqueInput!]
-  create: [StudioCreateInput!]
-  connect: [StudioWhereUniqueInput!]
 }
 
 input PersonUpdateArgs {
@@ -911,175 +426,14 @@ input PersonUpdateArgs {
 }
 
 input PersonCreateInput {
-  docsHelper: HelperFieldInput
   name: String
   key: String
   title: String
-  abbreviatedTitle: String
   createdDate: DateTime
   enabled: Boolean
-  currentlyActive: Boolean
-  tag: [String!]
   image: Upload
   blurb: String
-  remembrance: String
   content: JSON
-  mediaItems: MediaItemRelateToManyForCreateInput
-  studios: StudioRelateToManyForCreateInput
-}
-
-input MediaItemRelateToManyForCreateInput {
-  create: [MediaItemCreateInput!]
-  connect: [MediaItemWhereUniqueInput!]
-}
-
-input StudioRelateToManyForCreateInput {
-  create: [StudioCreateInput!]
-  connect: [StudioWhereUniqueInput!]
-}
-
-type Studio {
-  id: ID!
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  order: Int
-  thumbnail: CloudinaryImage_File
-  blurb: String
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
-  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
-  associatedPeopleCount(where: PersonWhereInput! = {}): Int
-  helper: HelperFieldOutput
-  content: Studio_content_Document
-}
-
-type Studio_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input StudioWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input StudioWhereInput {
-  AND: [StudioWhereInput!]
-  OR: [StudioWhereInput!]
-  NOT: [StudioWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  order: IntNullableFilter
-  blurb: StringFilter
-  filters: FilterManyRelationFilter
-  associatedPeople: PersonManyRelationFilter
-}
-
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
-}
-
-input StudioOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  order: OrderDirection
-  blurb: OrderDirection
-}
-
-input StudioUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  order: Int
-  thumbnail: Upload
-  blurb: String
-  filters: FilterRelateToManyForUpdateInput
-  associatedPeople: PersonRelateToManyForUpdateInput
-  content: JSON
-}
-
-input StudioUpdateArgs {
-  where: StudioWhereUniqueInput!
-  data: StudioUpdateInput!
-}
-
-input StudioCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  order: Int
-  thumbnail: Upload
-  blurb: String
-  filters: FilterRelateToManyForCreateInput
-  associatedPeople: PersonRelateToManyForCreateInput
-  helper: HelperFieldInput
-  content: JSON
-}
-
-type User {
-  id: ID!
-  name: String
-  accessToken: String
-  createdDate: DateTime
-  bioId: String
-}
-
-input UserWhereUniqueInput {
-  id: ID
-}
-
-input UserWhereInput {
-  AND: [UserWhereInput!]
-  OR: [UserWhereInput!]
-  NOT: [UserWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  accessToken: StringFilter
-  createdDate: DateTimeNullableFilter
-  bioId: StringFilter
-}
-
-input UserOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  accessToken: OrderDirection
-  createdDate: OrderDirection
-  bioId: OrderDirection
-}
-
-input UserUpdateInput {
-  name: String
-  accessToken: String
-  createdDate: DateTime
-  bioId: String
-}
-
-input UserUpdateArgs {
-  where: UserWhereUniqueInput!
-  data: UserUpdateInput!
-}
-
-input UserCreateInput {
-  name: String
-  accessToken: String
-  createdDate: DateTime
-  bioId: String
 }
 
 """
@@ -1094,111 +448,48 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
-  createBigPicture(data: BigPictureCreateInput!): BigPicture
-  createBigPictures(data: [BigPictureCreateInput!]!): [BigPicture]
-  updateBigPicture(where: BigPictureWhereUniqueInput!, data: BigPictureUpdateInput!): BigPicture
-  updateBigPictures(data: [BigPictureUpdateArgs!]!): [BigPicture]
-  deleteBigPicture(where: BigPictureWhereUniqueInput!): BigPicture
-  deleteBigPictures(where: [BigPictureWhereUniqueInput!]!): [BigPicture]
-  createDataTemp(data: DataTempCreateInput!): DataTemp
-  createDataTemps(data: [DataTempCreateInput!]!): [DataTemp]
-  updateDataTemp(where: DataTempWhereUniqueInput!, data: DataTempUpdateInput!): DataTemp
-  updateDataTemps(data: [DataTempUpdateArgs!]!): [DataTemp]
-  deleteDataTemp(where: DataTempWhereUniqueInput!): DataTemp
-  deleteDataTemps(where: [DataTempWhereUniqueInput!]!): [DataTemp]
   createEvent(data: EventCreateInput!): Event
   createEvents(data: [EventCreateInput!]!): [Event]
   updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
   updateEvents(data: [EventUpdateArgs!]!): [Event]
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
-  createFilter(data: FilterCreateInput!): Filter
-  createFilters(data: [FilterCreateInput!]!): [Filter]
-  updateFilter(where: FilterWhereUniqueInput!, data: FilterUpdateInput!): Filter
-  updateFilters(data: [FilterUpdateArgs!]!): [Filter]
-  deleteFilter(where: FilterWhereUniqueInput!): Filter
-  deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
+  createGallerySlide(data: GallerySlideCreateInput!): GallerySlide
+  createGallerySlides(data: [GallerySlideCreateInput!]!): [GallerySlide]
+  updateGallerySlide(where: GallerySlideWhereUniqueInput!, data: GallerySlideUpdateInput!): GallerySlide
+  updateGallerySlides(data: [GallerySlideUpdateArgs!]!): [GallerySlide]
+  deleteGallerySlide(where: GallerySlideWhereUniqueInput!): GallerySlide
+  deleteGallerySlides(where: [GallerySlideWhereUniqueInput!]!): [GallerySlide]
   createHome(data: HomeCreateInput!): Home
-  createHomePage(data: [HomeCreateInput!]!): [Home]
+  createHomes(data: [HomeCreateInput!]!): [Home]
   updateHome(where: HomeWhereUniqueInput!, data: HomeUpdateInput!): Home
-  updateHomePage(data: [HomeUpdateArgs!]!): [Home]
+  updateHomes(data: [HomeUpdateArgs!]!): [Home]
   deleteHome(where: HomeWhereUniqueInput!): Home
-  deleteHomePage(where: [HomeWhereUniqueInput!]!): [Home]
-  createHomeSlide(data: HomeSlideCreateInput!): HomeSlide
-  createHomeSlides(data: [HomeSlideCreateInput!]!): [HomeSlide]
-  updateHomeSlide(where: HomeSlideWhereUniqueInput!, data: HomeSlideUpdateInput!): HomeSlide
-  updateHomeSlides(data: [HomeSlideUpdateArgs!]!): [HomeSlide]
-  deleteHomeSlide(where: HomeSlideWhereUniqueInput!): HomeSlide
-  deleteHomeSlides(where: [HomeSlideWhereUniqueInput!]!): [HomeSlide]
-  createMediaItem(data: MediaItemCreateInput!): MediaItem
-  createMediaItems(data: [MediaItemCreateInput!]!): [MediaItem]
-  updateMediaItem(where: MediaItemWhereUniqueInput!, data: MediaItemUpdateInput!): MediaItem
-  updateMediaItems(data: [MediaItemUpdateArgs!]!): [MediaItem]
-  deleteMediaItem(where: MediaItemWhereUniqueInput!): MediaItem
-  deleteMediaItems(where: [MediaItemWhereUniqueInput!]!): [MediaItem]
-  createNewsItem(data: NewsItemCreateInput!): NewsItem
-  createNewsItems(data: [NewsItemCreateInput!]!): [NewsItem]
-  updateNewsItem(where: NewsItemWhereUniqueInput!, data: NewsItemUpdateInput!): NewsItem
-  updateNewsItems(data: [NewsItemUpdateArgs!]!): [NewsItem]
-  deleteNewsItem(where: NewsItemWhereUniqueInput!): NewsItem
-  deleteNewsItems(where: [NewsItemWhereUniqueInput!]!): [NewsItem]
+  deleteHomes(where: [HomeWhereUniqueInput!]!): [Home]
   createPerson(data: PersonCreateInput!): Person
   createPeople(data: [PersonCreateInput!]!): [Person]
   updatePerson(where: PersonWhereUniqueInput!, data: PersonUpdateInput!): Person
   updatePeople(data: [PersonUpdateArgs!]!): [Person]
   deletePerson(where: PersonWhereUniqueInput!): Person
   deletePeople(where: [PersonWhereUniqueInput!]!): [Person]
-  createStudio(data: StudioCreateInput!): Studio
-  createStudios(data: [StudioCreateInput!]!): [Studio]
-  updateStudio(where: StudioWhereUniqueInput!, data: StudioUpdateInput!): Studio
-  updateStudios(data: [StudioUpdateArgs!]!): [Studio]
-  deleteStudio(where: StudioWhereUniqueInput!): Studio
-  deleteStudios(where: [StudioWhereUniqueInput!]!): [Studio]
-  createUser(data: UserCreateInput!): User
-  createUsers(data: [UserCreateInput!]!): [User]
-  updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
-  updateUsers(data: [UserUpdateArgs!]!): [User]
-  deleteUser(where: UserWhereUniqueInput!): User
-  deleteUsers(where: [UserWhereUniqueInput!]!): [User]
 }
 
 type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
-  bigPictures(where: BigPictureWhereInput! = {}, orderBy: [BigPictureOrderByInput!]! = [], take: Int, skip: Int! = 0): [BigPicture!]
-  bigPicture(where: BigPictureWhereUniqueInput!): BigPicture
-  bigPicturesCount(where: BigPictureWhereInput! = {}): Int
-  dataTemps(where: DataTempWhereInput! = {}, orderBy: [DataTempOrderByInput!]! = [], take: Int, skip: Int! = 0): [DataTemp!]
-  dataTemp(where: DataTempWhereUniqueInput!): DataTemp
-  dataTempsCount(where: DataTempWhereInput! = {}): Int
   events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0): [Filter!]
-  filter(where: FilterWhereUniqueInput!): Filter
-  filtersCount(where: FilterWhereInput! = {}): Int
-  homePage(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
+  gallerySlide(where: GallerySlideWhereUniqueInput!): GallerySlide
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
+  homes(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Home!]
   home(where: HomeWhereUniqueInput!): Home
-  homePageCount(where: HomeWhereInput! = {}): Int
-  homeSlides(where: HomeSlideWhereInput! = {}, orderBy: [HomeSlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [HomeSlide!]
-  homeSlide(where: HomeSlideWhereUniqueInput!): HomeSlide
-  homeSlidesCount(where: HomeSlideWhereInput! = {}): Int
-  mediaItems(where: MediaItemWhereInput! = {}, orderBy: [MediaItemOrderByInput!]! = [], take: Int, skip: Int! = 0): [MediaItem!]
-  mediaItem(where: MediaItemWhereUniqueInput!): MediaItem
-  mediaItemsCount(where: MediaItemWhereInput! = {}): Int
-  newsItems(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0): [NewsItem!]
-  newsItem(where: NewsItemWhereUniqueInput!): NewsItem
-  newsItemsCount(where: NewsItemWhereInput! = {}): Int
+  homesCount(where: HomeWhereInput! = {}): Int
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
-  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0): [Studio!]
-  studio(where: StudioWhereUniqueInput!): Studio
-  studiosCount(where: StudioWhereInput! = {}): Int
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
-  user(where: UserWhereUniqueInput!): User
-  usersCount(where: UserWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 

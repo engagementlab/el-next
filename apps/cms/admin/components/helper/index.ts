@@ -28,7 +28,7 @@ const HelperFieldInput = graphql.inputObject({
 const HelperFieldOutput = graphql.interface<Omit<helperConfig, 'type'>>()({
   name: 'HelperFieldOutput',
   fields: fileOutputFields,
-  resolveType: () => 'HelperFieldOutputType',
+  // resolveType: () => 'HelperFieldOutputType',
 });
 
 function inputResolver(
@@ -88,24 +88,29 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
         create: {
           arg: graphql.arg({ type: HelperFieldInput }),
           resolve(val) {
-            return inputResolver(val);
+            return {
+              html: 'not used',
+              iconType: HelperIcon.help.toString(),
+            };
           },
         },
-        // update: { arg: graphql.arg({ type: graphql.String }) },
+        update: {
+          arg: graphql.arg({ type: HelperFieldInput }),
+          resolve(val) {
+            return {
+              html: 'not used',
+              iconType: HelperIcon.help.toString(),
+            };
+          },
+        },
         // orderBy: { arg: graphql.arg({ type: orderDirectionEnum }) },
       },
       output: graphql.field({
         type: HelperFieldOutput,
-        resolve({ value: { html, iconType } }) {
-          if (iconType === undefined)
-            return { html, iconType: HelperIcon.help.toString() };
-
-          if (html !== null && iconType)
-            return { html, iconType: iconType.toString() };
-
+        resolve(val) {
           return {
-            html: '<p>Need HTML!</p>',
-            iconType: HelperIcon.help.toString(),
+            html: 'not used',
+            iconType: HelperIcon.help,
           };
         },
       }),

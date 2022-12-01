@@ -4,17 +4,17 @@ import { DocumentRenderer, } from '@keystone-6/document-renderer';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import query from "../../apollo-client";
-
 import Image from '@el-next/components/image';
-import { BlockRenderers } from '@el-next/components/blockRenderers';
-import Layout from '../../components/Layout';
+
+import query from "../../../../apollo-client";
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import { DocRenderers } from '@el-next/components/docRenderers';
+import Layout from '../../components/Layout';
+import { Blocks, Doc } from '../../components/Renderers';
 
 type NewsItem = {
   title: string;
   publishDate: string;
+  source: string;
   body: any;
   thumbnail: any;
   thumbAltText: string;
@@ -32,6 +32,7 @@ export default function NewsItem({ item, relatedItems }: InferGetStaticPropsType
             }
             <div className='px-4 xl:px-8'>
                 <h1 className="text-coated text-2xl font-extrabold mt-5">{item.title}</h1>
+                {item.source && <h2 className="text-coated text-1xl mt-5"><span className='italic'>Source:</span> {item.source}</h2>}
                 <div className="text-coated font-medium">
                     {new Date(item.publishDate).toLocaleDateString('en-US', {
                         weekday: 'long',
@@ -41,7 +42,7 @@ export default function NewsItem({ item, relatedItems }: InferGetStaticPropsType
                         year: 'numeric',
                     })}
                 </div>
-                <DocumentRenderer document={item.body.document} componentBlocks={BlockRenderers()} renderers={DocRenderers()} />
+                <DocumentRenderer document={item.body.document} componentBlocks={Blocks()} renderers={Doc()} />
 
                 {relatedItems &&
                     <div>
@@ -101,10 +102,11 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'newsItems',
     `newsItems(where: { key: { equals: "${params!.key}" } }) {
        title 
-       publishDate 
+       publishDate
+       source 
        thumbnail { 
-           publicId }
-
+           publicId
+       }
        thumbAltText 
        body { 
            document(hydrateRelationships: true) 

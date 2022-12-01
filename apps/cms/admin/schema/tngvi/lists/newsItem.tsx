@@ -93,7 +93,7 @@ const NewsItem: Lists.NewsItem = list({
         html: 'If external link is used, <em>body</em> is not required.',
         iconType: HelperIcon.info,
         ui: {
-          createView: {
+          listView: {
             fieldMode: 'hidden'
           },
           itemView: {
@@ -101,12 +101,14 @@ const NewsItem: Lists.NewsItem = list({
           }
         }
       }),
+      source: text({
+        ui: {
+          description: 'e.g. The Boston Globe, CommonWealth Magazine'
+        }
+      }),
       externalLink: text({
         label: 'External link'
       }),
-      // externalLink: text({
-      //   label: 'External link'
-      // }),
       blurb: text({
         label: 'Blurb',
         validation: {

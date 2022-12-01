@@ -130,11 +130,17 @@ const Person: Lists.Person = list({
     }),
     mediaItems: relationship({
       ref: 'MediaItem.associatedPeople',
-      many: true
+      many: true, 
+      ui: {
+        hideCreate: true,
+      }
     }),
     studios: relationship({
       ref: 'Studio.associatedPeople',
-      many: true
+      many: true, 
+      ui: {
+        hideCreate: true,
+      }
     }),
   },
   ui: {

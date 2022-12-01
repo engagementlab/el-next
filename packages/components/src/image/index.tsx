@@ -32,11 +32,10 @@ const cld = new Cloudinary({
 });
 
 /**
- * @typedef Props
+ * @typedef ImageProps
  * @prop {string} alt - The image's alt text
  * @prop {string} id - The image's ID attribute
  * @prop {string} imgId - The image's cloud public id attribute
- * @prop {boolean} [urlOnly=false] -
  * @prop {string} [className] - The image element's optional class
  * @prop {string} [transforms] - The image's optional cloud transformations
  * @prop {number} [width] - The image's optional width
@@ -47,7 +46,6 @@ type ImageProps = {
     alt: string,
     id: string,
     imgId: string,
-    urlOnly ? : boolean,
     className ? : string,
     transforms ? : string,
     width ? : number,
@@ -56,11 +54,25 @@ type ImageProps = {
 };
 
 /**
+ * @typedef ImageUrlProps
+ * @prop {string} imgId - The image's cloud public id attribute
+ * @prop {number} width - The image's width
+ * @prop {string} [transforms] - The image's optional cloud transformations
+ * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
+ */
+type ImageUrlProps = {
+    imgId: string,
+    width: number,
+    transforms ? : string,
+    aspectDefault ? : boolean,
+};
+
+/**
  * Return a Cloudinary AdvancedImage component
  * @component
  * @returns {React.ReactElement} The image component
  * 
- * @typedef {object} Props
+ * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
@@ -69,7 +81,6 @@ const Image = ({
         className,
         id,
         imgId,
-        urlOnly,
         transforms,
         width,
         lazy,
@@ -102,17 +113,31 @@ const Image = ({
                 style={{ maxWidth: width + `px` }}
             />;
 }
-const ImageUrl = ({
-        imgId,
-        transforms,
-        aspectDefault
-    }) => {
-        // Instantiate a CloudinaryImage object for the image with public ID;
-        const cloudImage = cld.image(`${imgId}`);
 
-        // Create image transforms
-        cloudImage.addTransformation(transforms || `f_auto,dpr_auto,c_crop,g_center${aspectDefault ? '' : ',ar_4:3'}`);
-console.log( cloudImage.toURL())
-        return cloudImage.toURL();
+/**
+ * Return a Cloudinary url
+ * @returns {string} The image URL
+ * 
+ * @typedef {object} ImageUrlProps
+ *
+ * @extends {Component<Props>}
+ */
+const ImageUrl = ({
+    imgId,
+    width,
+    transforms,
+    aspectDefault
+}: ImageUrlProps) => {
+    // Instantiate a CloudinaryImage object for the image with public ID;
+    const cloudImage = cld.image(`${imgId}`);
+
+    // Create image transforms
+    cloudImage.addTransformation(transforms || `f_auto,dpr_auto,c_crop,g_center${aspectDefault ? '' : ',ar_4:3'},w_${width}`);
+
+    return cloudImage.toURL();
 }
-export {Image as default, ImageUrl};
+
+export {
+    Image as
+    default, ImageUrl
+};

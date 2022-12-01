@@ -24,7 +24,9 @@ model Event {
   key           String         @unique @default("")
   intro         Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  bgImage1      Json?
   awards        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  bgImage2      Json?
   location      Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   gallerySlides GallerySlide[] @relation("Event_gallerySlides")
 }

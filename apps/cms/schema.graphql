@@ -100,7 +100,9 @@ type Event {
   key: String
   intro: Event_intro_Document
   agenda: Event_agenda_Document
+  bgImage1: CloudinaryImage_File
   awards: Event_awards_Document
+  bgImage2: CloudinaryImage_File
   location: Event_location_Document
   gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
   gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
@@ -112,88 +114,6 @@ type Event_intro_Document {
 
 type Event_agenda_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Event_awards_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Event_location_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input EventWhereUniqueInput {
-  id: ID
-  name: String
-  key: String
-}
-
-input EventWhereInput {
-  AND: [EventWhereInput!]
-  OR: [EventWhereInput!]
-  NOT: [EventWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  gallerySlides: GallerySlideManyRelationFilter
-}
-
-input GallerySlideManyRelationFilter {
-  every: GallerySlideWhereInput
-  some: GallerySlideWhereInput
-  none: GallerySlideWhereInput
-}
-
-input EventOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-}
-
-input EventUpdateInput {
-  name: String
-  key: String
-  intro: JSON
-  agenda: JSON
-  awards: JSON
-  location: JSON
-  gallerySlides: GallerySlideRelateToManyForUpdateInput
-}
-
-input GallerySlideRelateToManyForUpdateInput {
-  disconnect: [GallerySlideWhereUniqueInput!]
-  set: [GallerySlideWhereUniqueInput!]
-  create: [GallerySlideCreateInput!]
-  connect: [GallerySlideWhereUniqueInput!]
-}
-
-input EventUpdateArgs {
-  where: EventWhereUniqueInput!
-  data: EventUpdateInput!
-}
-
-input EventCreateInput {
-  name: String
-  key: String
-  intro: JSON
-  agenda: JSON
-  awards: JSON
-  location: JSON
-  gallerySlides: GallerySlideRelateToManyForCreateInput
-}
-
-input GallerySlideRelateToManyForCreateInput {
-  create: [GallerySlideCreateInput!]
-  connect: [GallerySlideWhereUniqueInput!]
-}
-
-type GallerySlide {
-  id: ID!
-  gallerySlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
-  gallerySlidesCount(where: EventWhereInput! = {}): Int
-  image: CloudinaryImage_File
-  altText: String
-  caption: String
 }
 
 type CloudinaryImage_File {
@@ -245,6 +165,95 @@ input CloudinaryImageFormat {
   transformation: String
 }
 
+type Event_awards_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_location_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input EventWhereUniqueInput {
+  id: ID
+  name: String
+  key: String
+}
+
+input EventWhereInput {
+  AND: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  NOT: [EventWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+  gallerySlides: GallerySlideManyRelationFilter
+}
+
+input GallerySlideManyRelationFilter {
+  every: GallerySlideWhereInput
+  some: GallerySlideWhereInput
+  none: GallerySlideWhereInput
+}
+
+input EventOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+}
+
+input EventUpdateInput {
+  name: String
+  key: String
+  intro: JSON
+  agenda: JSON
+  bgImage1: Upload
+  awards: JSON
+  bgImage2: Upload
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForUpdateInput
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input GallerySlideRelateToManyForUpdateInput {
+  disconnect: [GallerySlideWhereUniqueInput!]
+  set: [GallerySlideWhereUniqueInput!]
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+input EventUpdateArgs {
+  where: EventWhereUniqueInput!
+  data: EventUpdateInput!
+}
+
+input EventCreateInput {
+  name: String
+  key: String
+  intro: JSON
+  agenda: JSON
+  bgImage1: Upload
+  awards: JSON
+  bgImage2: Upload
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForCreateInput
+}
+
+input GallerySlideRelateToManyForCreateInput {
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+type GallerySlide {
+  id: ID!
+  gallerySlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
+  gallerySlidesCount(where: EventWhereInput! = {}): Int
+  image: CloudinaryImage_File
+  altText: String
+  caption: String
+}
+
 input GallerySlideWhereUniqueInput {
   id: ID
 }
@@ -284,9 +293,6 @@ input EventRelateToManyForUpdateInput {
   create: [EventCreateInput!]
   connect: [EventWhereUniqueInput!]
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input GallerySlideUpdateArgs {
   where: GallerySlideWhereUniqueInput!

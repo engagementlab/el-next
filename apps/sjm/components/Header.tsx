@@ -33,7 +33,7 @@ const links: NavLink[] = [
     }
 ];
 
-const customEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300';
+const customEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';
 
 type NavState = {
     navOpen: boolean
@@ -59,20 +59,18 @@ const ActiveLink = (href: string | undefined) => {
 
 const NavItems = () => {
     const toggleNavOpen = useStore(state => state.toggleNavOpen);
-    const linkClass = 'py-3 xl:py-1 xl:px-6 w-full text-center';
+    const linkClass = 'xl:py-1 xl:px-2 w-full text-center';
     return (
-        <ul className="flex flex-col xl:flex-row justify-between pt-10 w-full list-none text-blosson text-2xl xl:text-lg text-right">
-        {links.map((link: NavLink) => {
+        <ul className="flex flex-row justify-around w-full list-none text-blosson text-right mt-1">
+        {links.map((link: NavLink, i) => {
             if(link.subMenu) {
                 return ( 
-                    <li key={link.label} className='flex flex-col max-w-[190px] group'>
+                    <li key={link.label} className={`max-w-[${i === 0 ? '190' : '160'}px] group`}>
                     <a href="#"
-                        className='hidden xl:block text-center rounded-3xl px-10 py-3 uppercase bg-blossom transition-all duration-700 hover:bg-gold'
+                        className='text-center relative rounded-3xl px-10 py-3 text-lg uppercase bg-blossom transition-all duration-300 z-50 hover:bg-gold'
                         onClick={(e)=>{ e.preventDefault() }}>{link.label}</a>
-
-                        <p className='xl:hidden'>{link.label}</p>
                     <ul
-                    className={`xl:opacity-0 xl:border-2 z-50 text-gray-700 transition-all group-hover:opacity-100 group-hover:translate-y-0 ${customEase}`}>
+                    className={`opacity-0 -mt-[100%] xl:border-2 text-gray-700 transition-all duration-1000 group-hover:opacity-100 group-hover:mt-5 ${customEase}`}>
                         {link.subMenu.map((subLink: NavLink) => {
                         return (
                             <li key={subLink.label}>
@@ -122,17 +120,17 @@ const Header = () => {
   });
   
   return (
-    <div className="flex justify-center xl:px-8">
-      <nav className="w-full xl:w-3/4 mt-9 mb-1 flex flex-col md:flex-row">
-        <div className="w-full xl:w-1/3 xl:px-0 px-6 flex justify-between xl:justify-center">
-          <Link href="/">
+    <div className='xl:flex justify-center'>
+      <nav className="w-full xl:w-3/4 mt-9 mb-1 flex flex-col md:flex-row justify-center xl:justify-around">
+          <Link href="/" className='flex justify-center'>
             <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/logos/sjm'
-                width={250} className='hidden xl:block' />
-            <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/icon'
-                width={75} className='block xl:hidden' />
+                width={250} aspectDefault={true} className='max-h-[97px]' />
           </Link>
+          <div className='p-5 w-full'>
+            {NavItems()}
+          </div>
           {/* Mobile/tablet */}
-          <div id="lines" className='block xl:hidden relative z-50 cursor-pointer' onClick={(e)=>{
+          {/* <div id="lines" className='relative z-50 cursor-pointer ' onClick={(e)=>{
             toggleNavOpen(!navOpen) }}>
             <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 origin-center transition-all
               ${customEase} ${navOpen ? 'opacity-0 left-4' : ' left-0'
@@ -143,17 +141,11 @@ const Header = () => {
             <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
               ${customEase} ${navOpen ? '-rotate-45 top-0' : 'top-8'
               }`}></span>
-          </div>
-        </div>
-        <div className={`xl:hidden block w-full fixed overflow-y-scroll top-0 left-full h-full p-5 pt-20 z-40 bg-white
-            transition-all ${customEase} ${!navOpen ? 'opacity-0'
-            : '-translate-x-full opacity-100' }`}>
-          {NavItems()}
-        </div>
+          </div> */}
         {/* Desktop */}
-        <div className="hidden xl:flex flex-grow mt-4 items-center">
+        {/* <div className="hidden xl:flex flex-grow mt-4 items-center">
           {NavItems()}
-        </div>
+        </div> */}
       </nav>
     </div>
   );

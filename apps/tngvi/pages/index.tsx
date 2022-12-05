@@ -1,6 +1,6 @@
 import { InferGetStaticPropsType } from 'next';
 import { SlideshowProps } from 'react-slideshow-image';
-import {Button} from '@el-next/components';
+import {Button, Video} from '@el-next/components';
 import Image from '@el-next/components/image';
 
 import query from "../../../apollo-client";
@@ -27,9 +27,10 @@ export default function Home({ homePage }: InferGetStaticPropsType<typeof getSta
     return `before:${c}`
   }).join(' ');
   
-// console.log(Image({id:'img-home' ,alt:'', imgId:'tngvi/homepage', width:2200}))
   return (
     <Layout>
+          <div className='flex flex-col xl:flex-row'>
+
         <div className='relative w-full mt-20 lg:max-h-screen overflow-clip'>
           <div className='flex flex-col items-center'>
             <div className='w-2/3 lg:mt-6 max-w-md text-center z-10'>
@@ -38,22 +39,13 @@ export default function Home({ homePage }: InferGetStaticPropsType<typeof getSta
               <Button link='/archive' label='Listen to our stories' />
             </div>
           </div>
-
-
         </div>
-        <div className='w-full flex flex-col items-center -translate-y-10 md:-translate-y-20 xl:-translate-y-40'>
+        <div className='w-full flex flex-col items-center -translate-y-10 md:-translate-y-20'>
         <Image id='img-home' alt='' imgId='tngvi/homepage' width={2200} className='w-full' lazy={false} />
-
-          {/* <Fade {...slidesProps}>
-            {homePage.slides.map((slide, i) => (
-              <div key={`slide-${i}`} className='text-center flex flex-col items-center'>
-                <p className={`absolute w-full md:relative md:px-44 translate-y-20 md:translate-y-40 text-xl lg:text-2xl text-purple ${pseudoBlurBg}`}>&ldquo;{slide.quote}&rdquo;</p>
-                <Image id={'img-' + slide.image.publicId} alt={slide.altText} imgId={slide.image.publicId} width={1900} className='w-full aspect-[3/2]' lazy={true} />
-              </div>
-            ))}
-          </Fade> */}
         <p className='w-4/5 md:w-1/2 lg:w-full text-sm lg:text-lg my-8 text-bluegreen text-center quote-shadow font-semibold '>Through local and collaborative storytelling, we seek to inspire solutions and interrupt cycles of gun violence.</p>
         </div>
+        </div>
+        <Video videoLabel='Transforming Narratives of Gun Violence' videoUrl='https://vimeo.com/manage/videos/654694654' thumbUrl='https://res.cloudinary.com/engagement-lab-home/image/upload/v1670264461/tngvi/8c1ec98fa1cde870f3512551b62184a3.jpg' />
 
     </Layout>
   );

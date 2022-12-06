@@ -59,18 +59,15 @@ const ActiveLink = (href: string | undefined) => {
 
 const NavItems = () => {
     const toggleNavOpen = useStore(state => state.toggleNavOpen);
-    const linkClass = 'xl:py-1 xl:px-2 w-full text-center';
+    const linkClass = 'py-1 xl:px-2 w-full text-lg no-underline';
     return (
-        <div className="flex flex-col w-full list-none text-blosson text-right mt-1">
+        <div className="flex flex-col justify-center w-full text-center text-blosson mt-1">
         {links.map((link: NavLink, i) => {
             if(link.subMenu) {
                 return ( 
-                    <><details
-                    className='text-center relative rounded-3xl px-10 py-3 text-lg uppercase bg-blossom transition-all duration-300 z-50 hover:bg-gold'>
-                    <summary>
-                      {link.label}
-                    </summary>
-                  </details><div
+                    <>
+                  <h3 className='w-full text-3xl font-bold uppercase text-blossom'>{link.label}</h3>
+                  <div
                     className={`sublinks xl:border-2 text-gray-700 ${customEase}`}>
                       {link.subMenu.map((subLink: NavLink) => {
                         return (
@@ -78,7 +75,7 @@ const NavItems = () => {
                             {ActiveLink(subLink.url) ?
                               <span onClick={() => { toggleNavOpen(false); } } className={`${linkClass} block bg-blossom `}>{subLink.label}</span>
                               :
-                              <Link href={subLink.url || ''} className={`${linkClass} inline-block transition-all duration-700 hover:bg-gold cursor-pointer`}>
+                              <Link href={subLink.url || ''} className={linkClass}>
                                 {subLink.label}
                               </Link>}
                           </li>
@@ -102,12 +99,12 @@ const NavItems = () => {
             );
         }
         })}
-{/* 
-        <li >
-            <Link href="/" className='rounded-3xl px-10 py-3 text-lg uppercase bg-blossom transition-all duration-300 z-50 hover:bg-gold'>
+        <hr className='py-2 border-gold w-1/2' />
+        <div>
+            <Link href="/" className={`${linkClass}`}>
               Dr. Moses Shumow
             </Link>
-        </li> */}
+        </div>
     </div>
     
     )
@@ -126,17 +123,11 @@ const Header = () => {
   
   return (
     <div className='xl:flex justify-center'>
-      <nav className="w-full xl:w-3/4 mt-9 mb-1 flex flex-col md:flex-row justify-center xl:justify-around">
+      <nav className="w-full xl:w-3/4 mt-9 mb-1 flex flex-row justify-around">
           <Link href="/" className='flex justify-center'>
             <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/logos/sjm'
-                width={250} aspectDefault={true} className='max-h-[97px]' />
+                width={250} aspectDefault={true} className='max-h-[97px] w-1/2' />
           </Link>
-        <div className={`block w-full fixed overflow-y-scroll top-0 left-full h-full p-5 pt-20 z-40 bg-white
-            transition-all ${customEase}`}>
-          {NavItems()}
-        </div>
-
-          {/* Mobile/tablet */}
           <div id="lines" className='relative z-50 cursor-pointer ' onClick={(e)=>{
             toggleNavOpen(!navOpen) }}>
             <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 origin-center transition-all
@@ -149,6 +140,14 @@ const Header = () => {
               ${customEase} ${navOpen ? '-rotate-45 top-0' : 'top-8'
               }`}></span>
           </div>
+        <div className={`block w-full fixed overflow-y-scroll top-0 left-0 h-full p-5 pt-20 z-40 bg-white
+            transition-all ${customEase} ${!navOpen ? 'opacity-0'
+            : 'opacity-100' }`}>
+
+          {NavItems()}
+        </div>
+
+          {/* Mobile/tablet */}
         {/* Desktop */}
         {/* <div className="hidden xl:flex flex-grow mt-4 items-center">
           {NavItems()}

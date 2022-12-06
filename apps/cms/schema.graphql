@@ -4,10 +4,20 @@
 type About {
   id: ID!
   name: String
-  content: About_content_Document
+  intro: About_intro_Document
+  books: About_books_Document
+  selectWritings: About_selectWritings_Document
 }
 
-type About_content_Document {
+type About_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_books_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_selectWritings_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -81,7 +91,9 @@ enum OrderDirection {
 
 input AboutUpdateInput {
   name: String
-  content: JSON
+  intro: JSON
+  books: JSON
+  selectWritings: JSON
 }
 
 input AboutUpdateArgs {
@@ -91,28 +103,26 @@ input AboutUpdateArgs {
 
 input AboutCreateInput {
   name: String
-  content: JSON
+  intro: JSON
+  books: JSON
+  selectWritings: JSON
 }
 
-type Event {
+type Award {
   id: ID!
   name: String
   key: String
-  intro: Event_intro_Document
-  agenda: Event_agenda_Document
+  intro: Award_intro_Document
+  apply: Award_apply_Document
   bgImage1: CloudinaryImage_File
-  awards: Event_awards_Document
-  bgImage2: CloudinaryImage_File
-  location: Event_location_Document
-  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
-  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
+  pastRecipients: Award_pastRecipients_Document
 }
 
-type Event_intro_Document {
+type Award_intro_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-type Event_agenda_Document {
+type Award_apply_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -165,6 +175,79 @@ input CloudinaryImageFormat {
   transformation: String
 }
 
+type Award_pastRecipients_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input AwardWhereUniqueInput {
+  id: ID
+  name: String
+  key: String
+}
+
+input AwardWhereInput {
+  AND: [AwardWhereInput!]
+  OR: [AwardWhereInput!]
+  NOT: [AwardWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+}
+
+input AwardOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+}
+
+input AwardUpdateInput {
+  name: String
+  key: String
+  intro: JSON
+  apply: JSON
+  bgImage1: Upload
+  pastRecipients: JSON
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input AwardUpdateArgs {
+  where: AwardWhereUniqueInput!
+  data: AwardUpdateInput!
+}
+
+input AwardCreateInput {
+  name: String
+  key: String
+  intro: JSON
+  apply: JSON
+  bgImage1: Upload
+  pastRecipients: JSON
+}
+
+type Event {
+  id: ID!
+  name: String
+  key: String
+  intro: Event_intro_Document
+  agenda: Event_agenda_Document
+  bgImage1: CloudinaryImage_File
+  awards: Event_awards_Document
+  bgImage2: CloudinaryImage_File
+  location: Event_location_Document
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
+}
+
+type Event_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_agenda_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
 type Event_awards_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
@@ -212,9 +295,6 @@ input EventUpdateInput {
   location: JSON
   gallerySlides: GallerySlideRelateToManyForUpdateInput
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input GallerySlideRelateToManyForUpdateInput {
   disconnect: [GallerySlideWhereUniqueInput!]
@@ -454,6 +534,12 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
+  createAward(data: AwardCreateInput!): Award
+  createAwards(data: [AwardCreateInput!]!): [Award]
+  updateAward(where: AwardWhereUniqueInput!, data: AwardUpdateInput!): Award
+  updateAwards(data: [AwardUpdateArgs!]!): [Award]
+  deleteAward(where: AwardWhereUniqueInput!): Award
+  deleteAwards(where: [AwardWhereUniqueInput!]!): [Award]
   createEvent(data: EventCreateInput!): Event
   createEvents(data: [EventCreateInput!]!): [Event]
   updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
@@ -484,6 +570,9 @@ type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
+  awards(where: AwardWhereInput! = {}, orderBy: [AwardOrderByInput!]! = [], take: Int, skip: Int! = 0): [Award!]
+  award(where: AwardWhereUniqueInput!): Award
+  awardsCount(where: AwardWhereInput! = {}): Int
   events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int

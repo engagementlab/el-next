@@ -13,9 +13,21 @@ generator client {
 }
 
 model About {
-  id      String @id @default(cuid())
-  name    String @unique @default("About Page")
-  content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id             String @id @default(cuid())
+  name           String @unique @default("About Moses Shumow")
+  intro          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  books          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  selectWritings Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
+model Award {
+  id             String @id @default(cuid())
+  name           String @unique @default("Award Name")
+  key            String @unique @default("")
+  intro          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  apply          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  bgImage1       Json?
+  pastRecipients Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Event {

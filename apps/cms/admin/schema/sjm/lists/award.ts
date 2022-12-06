@@ -3,32 +3,45 @@ import { text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
+
 import { BaseDocConfig } from '../../config';
 import { CreateKey } from '../../hooks';
+import { cloudinaryImage } from '../../../components/cloudinary';
 
-const About: Lists.About = list({
+const Award: Lists.Award = list({
   access: allowAll,
   fields: {
     name: text({
       isIndexed: 'unique',
       isFilterable: true,
-      defaultValue: 'About Moses Shumow',
+      defaultValue: 'Award Name',
+    }),
+    key: text({
+      isIndexed: 'unique',
+      isFilterable: true,
       ui: {
         createView: {
           fieldMode: 'hidden',
         },
         itemView: {
-          fieldMode: 'read',
+          fieldMode: 'hidden',
         },
       },
     }),
     intro: document(BaseDocConfig()),
-    books: document(BaseDocConfig()),
-    selectWritings: document(BaseDocConfig()),
+    apply: document(BaseDocConfig()),
+    bgImage1: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'sjm/backgrounds',
+      },
+      label: 'Past Recipients Image',
+    }),
+    pastRecipients: document(BaseDocConfig()),
   },
   ui: {
-    hideCreate: true,
-    hideDelete: true,
     listView: {
       initialColumns: ['name'],
     },
@@ -53,4 +66,4 @@ const About: Lists.About = list({
     },
   },
 });
-export default About;
+export default Award;

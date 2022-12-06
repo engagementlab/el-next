@@ -53,7 +53,8 @@ const useStore = create<NavState>(set => ({
 const ActiveLink = (href: string | undefined) => {
 
     const router = useRouter();
-    return router.asPath === `/${href}/`;
+    // debugger
+    return router.asPath === `${href}/`;
 
 }
 
@@ -65,15 +66,15 @@ const NavItems = () => {
         {links.map((link: NavLink, i) => {
             if(link.subMenu) {
                 return ( 
-                    <>
+                    <div key={link.label}>
                   <h3 className='w-full text-3xl font-bold uppercase text-blossom'>{link.label}</h3>
                   <div
-                    className={`sublinks xl:border-2 text-gray-700 ${customEase}`}>
+                    className={`sublinks text-gray-700 ${customEase}`}>
                       {link.subMenu.map((subLink: NavLink) => {
                         return (
                           <li key={subLink.label} className='flex items-center'>
                             {ActiveLink(subLink.url) ?
-                              <span onClick={() => { toggleNavOpen(false); } } className={`${linkClass} block bg-blossom `}>{subLink.label}</span>
+                              <span onClick={() => { toggleNavOpen(false); } } className={`${linkClass} opacity-70`}>{subLink.label}</span>
                               :
                               <Link href={subLink.url || ''} className={linkClass}>
                                 {subLink.label}
@@ -81,7 +82,7 @@ const NavItems = () => {
                           </li>
                         );
                       })}
-                    </div></>
+                    </div></div>
             );
         }
         else {
@@ -99,9 +100,9 @@ const NavItems = () => {
             );
         }
         })}
-        <hr className='py-2 border-gold w-1/2' />
+        <hr className='my-4 w-1/2 mx-auto border-gold' />
         <div>
-            <Link href="/" className={`${linkClass}`}>
+            <Link href="/moses-shumow" className={`${linkClass}`}>
               Dr. Moses Shumow
             </Link>
         </div>
@@ -123,35 +124,30 @@ const Header = () => {
   
   return (
     <div className='xl:flex justify-center'>
-      <nav className="w-full xl:w-3/4 mt-9 mb-1 flex flex-row justify-around">
-          <Link href="/" className='flex justify-center'>
+      <nav className="w-full xl:w-3/4 mt-9">
+        <div className='w-full flex flex-row justify-between'>
+          <Link href="/" className='ml-3 w-1/2 md:w-3/4'>
             <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/logos/sjm'
-                width={250} aspectDefault={true} className='max-h-[97px] w-1/2' />
+                width={250} aspectDefault={true} className='max-h-[97px] w-full' />
           </Link>
-          <div id="lines" className='relative z-50 cursor-pointer ' onClick={(e)=>{
+          <div id="lines" className='relative z-50 mr-3 cursor-pointer ' onClick={(e)=>{
             toggleNavOpen(!navOpen) }}>
             <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 origin-center transition-all
               ${customEase} ${navOpen ? 'opacity-0 left-4' : ' left-0'
-              }`}></span>
+            }`}></span>
             <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
               ${customEase} ${navOpen ? 'rotate-45 top-0' : 'top-4'
-              }`}></span>
+            }`}></span>
             <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
               ${customEase} ${navOpen ? '-rotate-45 top-0' : 'top-8'
-              }`}></span>
+            }`}></span>
           </div>
-        <div className={`block w-full fixed overflow-y-scroll top-0 left-0 h-full p-5 pt-20 z-40 bg-white
-            transition-all ${customEase} ${!navOpen ? 'opacity-0'
-            : 'opacity-100' }`}>
-
+        </div>
+        <div className={`w-full fixed overflow-y-scroll left-0 top-0 h-full pt-20 z-40 bg-white
+            transition-all duration-300 ${customEase} ${!navOpen ? 'opacity-0 -translate-y-full'
+            : 'opacity-100 translate-y-0' }`}>
           {NavItems()}
         </div>
-
-          {/* Mobile/tablet */}
-        {/* Desktop */}
-        {/* <div className="hidden xl:flex flex-grow mt-4 items-center">
-          {NavItems()}
-        </div> */}
       </nav>
     </div>
   );

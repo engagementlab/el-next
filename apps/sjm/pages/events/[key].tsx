@@ -2,7 +2,6 @@ import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import Image, {ImageUrl} from '@el-next/components/image';
-// import ImageUrl from '@el-next/components/image';
 
 import _ from 'lodash';
 import ImageGallery from 'react-image-gallery';
@@ -63,6 +62,7 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
 
     const [bgImg1, setBgImg1] = useState('')
     const [bgImg2, setBgImg2] = useState('')
+    
     useEffect(() => {
         if(item.bgImage1)
             setBgImg1(
@@ -93,7 +93,6 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
     return (
         <>
             <section className="relative mt-6 lg:mt-0">
-                {/* <div className="flex flex-col justify-center items-center w-full"> */}
                     <div className={lavenderStyle}>
                         <div className='lg:ml-10 w-full xl:w-8/12'>
                             <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>{item.name}</h1>
@@ -126,12 +125,11 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
                     <div className={lavenderStyle}>
                         <div className='lg:ml-10 w-full xl:w-8/12'>
 
-                        <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>Galllery</h1>
-                        <ImageGallery items={images} renderItem={renderItem} renderThumbInner={renderThumb}
-                            showPlayButton={false} />
+                            <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>Galllery</h1>
+                            <ImageGallery items={images} renderItem={renderItem} renderThumbInner={renderThumb}
+                                showPlayButton={false} />
+                        </div>
                     </div>
-                    </div>
-                {/* </div> */}
             </section>
         </>
     )

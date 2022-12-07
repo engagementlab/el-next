@@ -27,8 +27,8 @@ const links: NavLink[] = [
     {
         label: 'Awards',
         subMenu : [
-                {url: '/transformative-ml-scholar', label: 'Transformative ML Scholar'},
-                {url: '/tranformational-research', label: 'Transformational Research'}
+                {url: '/awards/transformative-media-literacy-scholar', label: 'Transformative ML Scholar'},
+                {url: '/awards/tranformational-research', label: 'Transformational Research'}
         ]
     }
 ];
@@ -123,23 +123,23 @@ const Header = () => {
   });
   
   return (
-    <div className='xl:flex justify-center'>
+    <div className='xl:flex justify-center mb-7'>
       <nav className="w-full xl:w-3/4 mt-9">
         <div className='w-full flex flex-row justify-between'>
           <Link href="/" className='ml-3 w-1/2 md:w-3/4'>
             <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/logos/sjm'
                 width={250} aspectDefault={true} className='max-h-[97px] w-full' />
           </Link>
-          <div id="lines" className='relative z-50 mr-3 cursor-pointer ' onClick={(e)=>{
+          <div id="lines" className='relative z-50 mr-3 cursor-pointer group' onClick={(e)=>{
             toggleNavOpen(!navOpen) }}>
-            <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 origin-center transition-all
+            <span className={`block relative h-[2px] group-hover:h-[4px] w-12 bg-blossom opacity-100 origin-center transition-all
               ${customEase} ${navOpen ? 'opacity-0 left-4' : ' left-0'
             }`}></span>
-            <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
-              ${customEase} ${navOpen ? 'rotate-45 top-0' : 'top-4'
+            <span className={`block relative h-[2px] group-hover:h-[4px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
+              ${customEase} ${navOpen ? 'h-[4px] rotate-45 top-0' : 'top-4'
             }`}></span>
-            <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
-              ${customEase} ${navOpen ? '-rotate-45 top-0' : 'top-8'
+            <span className={`block relative h-[2px] group-hover:h-[4px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
+              ${customEase} ${navOpen ? 'h-[4px] -rotate-45 -top-1' : 'top-8'
             }`}></span>
           </div>
         </div>

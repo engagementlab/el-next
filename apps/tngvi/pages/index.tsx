@@ -45,7 +45,7 @@ export default function Home({ homePage }: InferGetStaticPropsType<typeof getSta
           {/* <Image id='img-home' alt='' imgId='tngvi/homepage' width={2200} className='w-full' lazy={false} /> */}
         </div>
       </div>
-      <Video videoLabel='Transforming Narratives of Gun Violence' videoUrl='https://vimeo.com/654694654'
+      <Video videoLabel='Transforming Narratives of Gun Violence' videoUrl='https://player.vimeo.com/video/654694654'
         thumbUrl='https://res.cloudinary.com/engagement-lab-home/image/upload/v1670433897/tngvi/home-video-thumb.png' />
       <div className='flex flex-col items-center w-full text-center'>
         <h3 className='w-4/5 md:w-1/2 lg:w-full text-sm lg:text-2xl my-5 md:my-6 text-purple font-bold'>Transforming Narratives of Gun Violence</h3>

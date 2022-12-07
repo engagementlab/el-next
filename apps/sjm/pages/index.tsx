@@ -95,7 +95,7 @@ export default function Home({ item }: InferGetStaticPropsType<typeof getStaticP
         },
       ]}
       className="aspect-[2/1]" />
-      <div className=' bg-gradient-to-b from-clay via-pink to-wind text-white p-5 lg:px-48 xl:px-72'>
+      <div className='bg-gradient-to-r from-clay via-pink to-wind text-white p-5 lg:px-48 xl:px-72'>
         <h2 className='text-3xl lg:text-6xl font-bold my-4 md:my-7 lg:ml-28 w-full'>In Memory of<br />Moses Shumow</h2>
 
         <div className='flex flex-col lg:flex-row'>

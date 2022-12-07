@@ -1,12 +1,10 @@
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-
-import Image, {ImageUrl} from '@el-next/components/image';
-
 import _ from 'lodash';
 
-import query from "../../../apollo-client";
+import Image from '@el-next/components/image';
 
+import query from "../../../apollo-client";
 import { Blocks, Doc } from '../components/Renderers';
 
 type About = {
@@ -16,25 +14,56 @@ type About = {
     selectWritings: any;
 }
 
+
+const imageOverride = (props: any) => {
+  return (
+      <Image id={'img-' + props.image.publicId} alt={props.image.alt} imgId={props.image.publicId} aspectDefault={true} className='max-w-[150px]' />
+  );
+};
+
+const booksRendererOverrides = {
+  layout: (layout: any, children: any) => {
+    const flexClass = 'flex gap-y-5 flex-col mt-10 xl:flex-row justify-between';
+    if(layout[0] === 2 && layout[1] === 1) {
+        return (
+            <div
+                className={flexClass}
+            >
+            {children.map((element: any, i: number) => (
+                <div key={i} className={`${i === 0 ? 'w-full lg:w-3/4' : ''}`}>{element}</div>
+            ))}
+            </div>
+        );
+    }
+
+  }
+};
+
 export default function About({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
 
     return (
         <>
             <section className="relative mt-6 lg:mt-0">
-                    <div className='bg-lavender text-white flex justify-center p-8'>
+                    <div className='flex justify-center bg-lavender text-white p-8'>
                         <div className='lg:ml-10 w-full xl:w-8/12'>
                             <h1 className='text-2xl lg:text-7xl font-semibold mb-7'>{item.name}</h1>
                             <DocumentRenderer document={item.intro.document} componentBlocks={Blocks()}
                                 renderers={Doc()} />
                         </div>
                     </div>
-                    {/* <div className='bg-cover' style={{backgroundImage: `url(${bgImg1})`}}>
+                    <div className='flex justify-center bg-gradient-to-r from-clay via-pink to-wind text-white p-8'>
                         <div className='lg:ml-10 w-full xl:w-8/12'>
-                            <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full text-right'>Agenda</h1>
-                            <DocumentRenderer document={item.agenda.document} componentBlocks={Blocks()}
-                                renderers={Doc(agendaRendererOverrides)} />
+                            <h2 className='text-xl lg:text-6xl font-bold my-4 md:my-7'>Books</h2>
+                            <DocumentRenderer document={item.books.document} componentBlocks={Blocks(imageOverride)} renderers={Doc()} />
                         </div>
-                    </div> */}
+                    </div>
+                    <div className='flex justify-center bg-lavender text-white p-8'>
+                        <div className='lg:ml-10 w-full xl:w-8/12'>
+                            <h2 className='text-xl lg:text-6xl font-bold my-4 md:my-7'>Select Writings</h2>
+                            <DocumentRenderer document={item.selectWritings.document} componentBlocks={Blocks()}
+                                renderers={Doc()} />
+                        </div>
+                    </div>
             </section>
         </>
     )

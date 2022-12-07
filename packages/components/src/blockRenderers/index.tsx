@@ -27,10 +27,13 @@ export const BlockRenderers = (styles?: {
   return (imageOveride?: { (props: any): JSX.Element }, peopleOveride?: { (peopleProps: any): JSX.Element }) => {
     let blocks = {
       image: (props: any) => {
+        const publicId = props.image.publicId || props.image.image.publicId ;
+        const alt = props.image.alt || props.image.image.alt;
+        
         return imageOveride ? imageOveride(props) : 
           (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Image id={'img-' + props.image.publicId} alt={props.image.alt} imgId={props.image.publicId} aspectDefault={true} />
+              <Image id={'img-' + publicId} alt={alt} imgId={publicId} aspectDefault={true} />
               {/* <p>{props.image.data.caption}</p> */}
             </div>
           );

@@ -15,5 +15,6 @@ pm2 restart 'el-cms-new';
 cd ../tngvi;
 nvm use;
 yarn;
+yarn build;
 
 pm2 restart 'transform-narratives'; 

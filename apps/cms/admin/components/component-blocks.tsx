@@ -304,7 +304,7 @@ function imageSelect({
             data: [],
             index: 0,
             id: (value?.publicId as unknown as string) || value?.image.publicId || '',
-            alt: value?.image?.alt || '',
+            alt: (value?.alt as unknown as string) || value?.image?.alt || '',
             toggleWaiting: () => set((state) => { 
                 return { waiting: !state.waiting }; 
             }),
@@ -392,7 +392,7 @@ function imageSelect({
                     onChange={((val) => { setIndex(!val ? 0 : val.target.value as number) })}
                     >
                     {[...new Array(dataLength)].map((v, i) => (
-                      <MenuItem value={i}>{i+1}</MenuItem>
+                      <MenuItem value={i} key={i}>{i+1}</MenuItem>
                     ))}
                 </MUISelect>
                 <IconButton aria-label="go to right page" disabled={index === dataLength-1} onClick={((val) => { setIndex(index+1) })}>
@@ -405,7 +405,7 @@ function imageSelect({
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
                   {data.slice(beginIndex, endIndex).map((item) => (
-                    <Grid item xs={3}>
+                    <Grid item xs={3} key={item.public_id}>
                       <a style={{ position: 'relative'}}
                         onClick={(e) => {
                           setId(item.public_id); 
@@ -434,7 +434,7 @@ function imageSelect({
                 value={currentAlt} 
                 onChange={(e)=> {
                     setAlt(e.target.value); 
-                    onChange({image: {publicId: currentId, alt: e.target.value}});
+                    onChange({publicId: currentId, alt: e.target.value});
                 }}
               />
               <br />
@@ -457,22 +457,24 @@ function imageSelect({
 export const componentBlocks = {
   image: component({
     preview: props => {
+      const publicId = props.fields.image.value.publicId || props.fields.image.value.image.publicId;
+      const alt = props.fields.image.value.alt || props.fields.image.value.image?.alt;
+
       return (
           <>
-            {!props.fields.image.value.publicId ? <span>Click <em>Edit</em></span> 
+            {!publicId ? <span>Click <em>Edit</em></span> 
             :
             <div>
               <img
-                  src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_250/${props.fields.image.value.publicId}`}
+                  src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_250/${publicId}`}
                 />
-              {props.fields.image.value.alt && 
-              <>
+              {alt && 
                 <em>
                   <>
-                    (Alt: {props.fields.image.value.alt})
+                    (Alt: {alt})
                   </>
                 </em>
-              </>}
+              }
             </div>
             }
           </>

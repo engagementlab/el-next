@@ -14,29 +14,10 @@ type About = {
     selectWritings: any;
 }
 
-
 const imageOverride = (props: any) => {
   return (
       <Image id={'img-' + props.image.publicId} alt={props.image.alt} imgId={props.image.publicId} aspectDefault={true} className='max-w-[150px]' />
   );
-};
-
-const booksRendererOverrides = {
-  layout: (layout: any, children: any) => {
-    const flexClass = 'flex gap-y-5 flex-col mt-10 xl:flex-row justify-between';
-    if(layout[0] === 2 && layout[1] === 1) {
-        return (
-            <div
-                className={flexClass}
-            >
-            {children.map((element: any, i: number) => (
-                <div key={i} className={`${i === 0 ? 'w-full lg:w-3/4' : ''}`}>{element}</div>
-            ))}
-            </div>
-        );
-    }
-
-  }
 };
 
 export default function About({ item }: InferGetStaticPropsType<typeof getStaticProps>) {

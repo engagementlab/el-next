@@ -27,6 +27,24 @@ const imageOverride = (props: any) => {
   );
 };
 
+const rendererOverrides = {
+    layout: (layout: any, children: any) => {
+        const flexClass = 'flex gap-x-5 flex-col md:flex-row justify-between';
+        if(layout[0] === 1 && layout[1] === 2) {
+            return (
+                <div
+                    className={flexClass}
+                >
+                {children.map((element: any, i: number) => (
+                    <div key={i} className={`${i === 1 ? 'w-full lg:w-4/5' : ''}`}>{element}</div>
+                ))}
+                </div>
+            );
+        }
+        else return <div>{children}</div>;
+      }
+};
+
 export default function Award({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
 
     const [bgImg1, setBgImg1] = useState('')
@@ -37,7 +55,7 @@ export default function Award({ item }: InferGetStaticPropsType<typeof getStatic
                 ImageUrl({
                     imgId: item.bgImage1.publicId,
                     width: window.innerWidth,
-                    transforms: `f_auto,dpr_auto,c_thumb,g_face,ar_4:3,e_colorize:70,co_rgb:ffdb66,o_60,w_${window.innerWidth}`
+                    transforms: `f_auto,dpr_auto,c_crop,ar_4:3,e_colorize:80,co_rgb:aa7b5f,o_60,w_${window.innerWidth}`
                 }))
     }, []);
 
@@ -52,11 +70,18 @@ export default function Award({ item }: InferGetStaticPropsType<typeof getStatic
                         renderers={Doc()} />
                 </div>
             </div>
-            <div className='bg-cover' style={{backgroundImage: `url(${bgImg1})`}}>
+            <div className='bg-gradient-to-r from-clay via-pink to-wind text-white p-5 lg:px-48'>
                 <div className='lg:ml-10 w-full xl:w-8/12'>
                     <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full text-right'>How to Apply</h1>
                     <DocumentRenderer document={item.apply.document} componentBlocks={Blocks()}
                         renderers={Doc()} />
+                </div>
+            </div>
+            <div className='p-5 lg:px-48 text-white' style={{backgroundImage: `url(${bgImg1})`}}>
+                    <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full'>Past Recipients</h1>
+                <div className='w-full'>
+                    <DocumentRenderer document={item.pastRecipients.document} componentBlocks={Blocks(imageOverride)}
+                        renderers={Doc(rendererOverrides)} />
                 </div>
             </div>
         </section>

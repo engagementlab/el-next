@@ -11,8 +11,7 @@ import { v2 as cloudinary } from 'cloudinary';
 
 import { elab, tngvi, sjm } from './admin/schema';
 import { getNews } from './routes/news';
-import { setPplKeys } from './routes/people';
-import * as _ from 'underscore';
+import _ from 'lodash';
 
 type schemaIndexType = {
   [key: string]: object;
@@ -191,7 +190,6 @@ let ksConfig = (lists: any) => {
         });
 
         app.get('/rest/news/:key?', getNews);
-        app.get('/rest/people', setPplKeys);
 
         app.get('/prod-deploy', async (req, res, next) => {
           try {
@@ -224,14 +222,22 @@ let ksConfig = (lists: any) => {
                 }
               );
               const resData = response.data;
-              let m = _.map(resData.data, (val) => {
-                return {
-                  label: val.name,
-                  value: val.player_embed_url,
-                  thumb: val.pictures.sizes[val.pictures.sizes.length - 1].link,
-                  thumbSm: val.pictures.sizes[1].link,
-                };
-              });
+              let m = _.map(
+                resData.data,
+                (val: {
+                  name: any;
+                  player_embed_url: any;
+                  pictures: { sizes: string | any[] };
+                }) => {
+                  return {
+                    label: val.name,
+                    value: val.player_embed_url,
+                    thumb:
+                      val.pictures.sizes[val.pictures.sizes.length - 1].link,
+                    thumbSm: val.pictures.sizes[1].link,
+                  };
+                }
+              );
               videoData = videoData.concat(videoData, m);
 
               if (resData.paging.next) getData(resData.paging.next);
@@ -275,7 +281,6 @@ let ksConfig = (lists: any) => {
                       }
                     );
 
-                    console.log(foldersResponse);
                     res.status(200).send({
                       folders: foldersResponse.folders,
                       imgs: sorted,

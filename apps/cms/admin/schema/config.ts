@@ -4,11 +4,13 @@ import { componentBlocks } from '../components/component-blocks';
 // import { FixButtons } from './hooks';
 
 const BaseDocConfig = (
-  layouts?: number[][]
+  layouts?: readonly (readonly [number, ...number[]])[]
 ): DocumentFieldConfig<BaseListTypeInfo> => {
   return {
     componentBlocks,
     formatting: true,
+    dividers: true,
+    links: true,
     layouts: layouts || [
       [1, 1],
       [1, 1, 1],

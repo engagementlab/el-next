@@ -25,11 +25,10 @@ var cld = new urlGen.Cloudinary({
   }
 });
 /**
- * @typedef Props
+ * @typedef ImageProps
  * @prop {string} alt - The image's alt text
  * @prop {string} id - The image's ID attribute
  * @prop {string} imgId - The image's cloud public id attribute
- * @prop {boolean} [urlOnly=false] -
  * @prop {string} [className] - The image element's optional class
  * @prop {string} [transforms] - The image's optional cloud transformations
  * @prop {number} [width] - The image's optional width
@@ -42,7 +41,7 @@ var cld = new urlGen.Cloudinary({
  * @component
  * @returns {React.ReactElement} The image component
  * 
- * @typedef {object} Props
+ * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
@@ -50,9 +49,8 @@ var Image = function Image(_ref) {
   var alt = _ref.alt,
       className = _ref.className,
       id = _ref.id,
-      imgId = _ref.imgId;
-      _ref.urlOnly;
-      var transforms = _ref.transforms,
+      imgId = _ref.imgId,
+      transforms = _ref.transforms,
       width = _ref.width,
       lazy = _ref.lazy,
       aspectDefault = _ref.aspectDefault;
@@ -78,16 +76,25 @@ var Image = function Image(_ref) {
     }
   });
 };
+/**
+ * Return a Cloudinary url
+ * @returns {string} The image URL
+ * 
+ * @typedef {object} ImageUrlProps
+ *
+ * @extends {Component<Props>}
+ */
+
 
 var ImageUrl = function ImageUrl(_ref2) {
   var imgId = _ref2.imgId,
+      width = _ref2.width,
       transforms = _ref2.transforms,
       aspectDefault = _ref2.aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID;
   var cloudImage = cld.image("".concat(imgId)); // Create image transforms
 
-  cloudImage.addTransformation(transforms || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3'));
-  console.log(cloudImage.toURL());
+  cloudImage.addTransformation(transforms || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3', ",w_").concat(width));
   return cloudImage.toURL();
 };
 

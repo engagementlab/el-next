@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { relationship, text } from '@keystone-6/core/fields';
+import { text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -8,13 +8,13 @@ import { BaseDocConfig } from '../../config';
 import { CreateKey } from '../../hooks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 
-const Event: Lists.Event = list({
+const Award: Lists.Award = list({
   access: allowAll,
   fields: {
     name: text({
       isIndexed: 'unique',
       isFilterable: true,
-      defaultValue: 'Event Name',
+      defaultValue: 'Award Name',
     }),
     key: text({
       isIndexed: 'unique',
@@ -29,7 +29,7 @@ const Event: Lists.Event = list({
       },
     }),
     intro: document(BaseDocConfig()),
-    agenda: document(BaseDocConfig([[1, 2]])),
+    apply: document(BaseDocConfig()),
     bgImage1: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -37,33 +37,9 @@ const Event: Lists.Event = list({
         apiSecret: `${process.env.CLOUDINARY_SECRET}`,
         folder: 'sjm/backgrounds',
       },
-      label: 'Agenda Background Image',
+      label: 'Past Recipients Background Image',
     }),
-    awards: document(BaseDocConfig()),
-    bgImage2: cloudinaryImage({
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'sjm/backgrounds',
-      },
-      label: 'Location Background Image',
-    }),
-    location: document(BaseDocConfig()),
-    gallerySlides: relationship({
-      ref: 'GallerySlide.gallerySlides',
-      many: true,
-      ui: {
-        displayMode: 'cards',
-        cardFields: ['image', 'altText', 'caption'],
-        inlineCreate: {
-          fields: ['image', 'altText', 'caption'],
-        },
-        inlineEdit: {
-          fields: ['image', 'altText', 'caption'],
-        },
-      },
-    }),
+    pastRecipients: document(BaseDocConfig()),
   },
   ui: {
     listView: {
@@ -90,4 +66,4 @@ const Event: Lists.Event = list({
     },
   },
 });
-export default Event;
+export default Award;

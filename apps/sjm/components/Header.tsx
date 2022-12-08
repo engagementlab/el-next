@@ -27,26 +27,13 @@ const links: NavLink[] = [
     {
         label: 'Awards',
         subMenu : [
-                {url: '/transformative-ml-scholar', label: 'Transformative ML Scholar'},
-                {url: '/tranformational-research', label: 'Transformational Research'}
-        ]
-    },
-    {
-        label: 'Gallery',
-        subMenu : [
-                {url: '/2020#gallery', label: '2020'},
-                {url: '/2022-miami#gallery', label: '2022'}
-        ]
-    },
-    {
-        label: 'About',
-        subMenu : [
-                {url: '/mosesshumow', label: 'Dr. Moses Shumow'}
+                {url: '/awards/transformative-media-literacy-scholar', label: 'Transformative ML Scholar'},
+                {url: '/awards/tranformational-research', label: 'Transformational Research'}
         ]
     }
 ];
 
-const customEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300';
+const customEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';
 
 type NavState = {
     navOpen: boolean
@@ -66,42 +53,36 @@ const useStore = create<NavState>(set => ({
 const ActiveLink = (href: string | undefined) => {
 
     const router = useRouter();
-    return router.asPath === `/${href}/`;
+    // debugger
+    return router.asPath === `${href}/`;
 
 }
 
 const NavItems = () => {
     const toggleNavOpen = useStore(state => state.toggleNavOpen);
-    const linkClass = 'py-3 xl:py-1 xl:px-6 w-full text-center';
+    const linkClass = 'py-1 xl:px-2 w-full text-lg no-underline';
     return (
-        <ul className="flex flex-col xl:flex-row justify-between pt-10 w-full list-none text-blosson text-2xl xl:text-lg text-right">
-        {links.map((link: NavLink) => {
+        <div className="flex flex-col justify-center w-full text-center text-blosson mt-1">
+        {links.map((link: NavLink, i) => {
             if(link.subMenu) {
                 return ( 
-                    <li key={link.label} className='flex flex-col max-w-[190px] group'>
-                    <a href="#"
-                        className='hidden xl:block text-center rounded-3xl px-10 py-3 uppercase bg-blossom transition-all duration-700 hover:bg-gold'
-                        onClick={(e)=>{ e.preventDefault() }}>{link.label}</a>
-
-                        <p className='xl:hidden'>{link.label}</p>
-                    <ul
-                    className={`xl:opacity-0 xl:border-2 z-50 text-gray-700 transition-all group-hover:opacity-100 group-hover:translate-y-0 ${customEase}`}>
-                        {link.subMenu.map((subLink: NavLink) => {
+                    <div key={link.label}>
+                  <h3 className='w-full text-3xl font-bold uppercase text-blossom'>{link.label}</h3>
+                  <div
+                    className={`sublinks text-gray-700 ${customEase}`}>
+                      {link.subMenu.map((subLink: NavLink) => {
                         return (
-                            <li key={subLink.label}>
-                            {
-                            ActiveLink(subLink.url) ? 
-                                <span onClick={()=>{toggleNavOpen(false) }} className={`${linkClass} block bg-blossom `}>{subLink.label}</span> 
-                            :
-                                <Link href={subLink.url || '' } className={`${linkClass} inline-block transition-all duration-700 hover:bg-gold cursor-pointer`}>
-                                    {subLink.label}
-                                </Link>
-                            }
-                            </li>
+                          <li key={subLink.label} className='flex items-center'>
+                            {ActiveLink(subLink.url) ?
+                              <span onClick={() => { toggleNavOpen(false); } } className={`${linkClass} opacity-70`}>{subLink.label}</span>
+                              :
+                              <Link href={subLink.url || ''} className={linkClass}>
+                                {subLink.label}
+                              </Link>}
+                          </li>
                         );
-                        })}
-                    </ul>
-                </li>
+                      })}
+                    </div></div>
             );
         }
         else {
@@ -119,7 +100,14 @@ const NavItems = () => {
             );
         }
         })}
-    </ul>
+        <hr className='my-4 w-1/2 mx-auto border-gold' />
+        <div>
+            <Link href="/moses-shumow" className={`${linkClass}`}>
+              Dr. Moses Shumow
+            </Link>
+        </div>
+    </div>
+    
     )
 }
 
@@ -135,36 +123,29 @@ const Header = () => {
   });
   
   return (
-    <div className="flex justify-center xl:px-8">
-      <nav className="w-full xl:w-3/4 mt-9 mb-1 flex flex-col md:flex-row">
-        <div className="w-full xl:w-1/3 xl:px-0 px-6 flex justify-between xl:justify-center">
-          <Link href="/">
+    <div className='xl:flex justify-center mb-7'>
+      <nav className="w-full xl:w-3/4 mt-9">
+        <div className='w-full flex flex-row justify-between'>
+          <Link href="/" className='ml-3 w-1/2 md:w-3/4'>
             <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/logos/sjm'
-                width={250} className='hidden xl:block' />
-            <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/icon'
-                width={75} className='block xl:hidden' />
+                width={250} aspectDefault={true} className='max-h-[97px] w-full' />
           </Link>
-          {/* Mobile/tablet */}
-          <div id="lines" className='block xl:hidden relative z-50 cursor-pointer' onClick={(e)=>{
+          <div id="lines" className='relative z-50 mr-3 cursor-pointer group' onClick={(e)=>{
             toggleNavOpen(!navOpen) }}>
-            <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 origin-center transition-all
+            <span className={`block relative h-[2px] group-hover:h-[4px] w-12 bg-blossom opacity-100 origin-center transition-all
               ${customEase} ${navOpen ? 'opacity-0 left-4' : ' left-0'
-              }`}></span>
-            <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
-              ${customEase} ${navOpen ? 'rotate-45 top-0' : 'top-4'
-              }`}></span>
-            <span className={`block relative h-[1px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
-              ${customEase} ${navOpen ? '-rotate-45 top-0' : 'top-8'
-              }`}></span>
+            }`}></span>
+            <span className={`block relative h-[2px] group-hover:h-[4px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
+              ${customEase} ${navOpen ? 'h-[4px] rotate-45 top-0' : 'top-4'
+            }`}></span>
+            <span className={`block relative h-[2px] group-hover:h-[4px] w-12 bg-blossom opacity-100 left-0 origin-center transition-all
+              ${customEase} ${navOpen ? 'h-[4px] -rotate-45 -top-1' : 'top-8'
+            }`}></span>
           </div>
         </div>
-        <div className={`xl:hidden block w-full fixed overflow-y-scroll top-0 left-full h-full p-5 pt-20 z-40 bg-white
-            transition-all ${customEase} ${!navOpen ? 'opacity-0'
-            : '-translate-x-full opacity-100' }`}>
-          {NavItems()}
-        </div>
-        {/* Desktop */}
-        <div className="hidden xl:flex flex-grow mt-4 items-center">
+        <div className={`w-full fixed overflow-y-scroll left-0 top-0 h-full pt-20 z-40 bg-white
+            transition-all duration-300 ${customEase} ${!navOpen ? 'opacity-0 -translate-y-full'
+            : 'opacity-100 translate-y-0' }`}>
           {NavItems()}
         </div>
       </nav>

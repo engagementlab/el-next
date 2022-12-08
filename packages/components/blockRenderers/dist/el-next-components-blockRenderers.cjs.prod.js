@@ -29,15 +29,19 @@ var BlockRenderers = function BlockRenderers(styles) {
   return function (imageOveride, peopleOveride) {
     var blocks = {
       image: function image(props) {
+        var _props$image$image;
+
+        var publicId = props.image.publicId || props.image.image.publicId;
+        var alt = props.image.alt || ((_props$image$image = props.image.image) === null || _props$image$image === void 0 ? void 0 : _props$image$image.alt);
         return imageOveride ? imageOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
           style: {
             display: 'flex',
             flexDirection: 'column'
           },
           children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
-            id: 'img-' + props.image.publicId,
-            alt: props.image.alt,
-            imgId: props.image.publicId,
+            id: 'img-' + publicId,
+            alt: alt || '',
+            imgId: publicId,
             aspectDefault: true
           })
         });

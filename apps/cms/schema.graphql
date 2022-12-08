@@ -4,10 +4,20 @@
 type About {
   id: ID!
   name: String
-  content: About_content_Document
+  intro: About_intro_Document
+  books: About_books_Document
+  selectWritings: About_selectWritings_Document
 }
 
-type About_content_Document {
+type About_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_books_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_selectWritings_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -81,7 +91,9 @@ enum OrderDirection {
 
 input AboutUpdateInput {
   name: String
-  content: JSON
+  intro: JSON
+  books: JSON
+  selectWritings: JSON
 }
 
 input AboutUpdateArgs {
@@ -91,7 +103,127 @@ input AboutUpdateArgs {
 
 input AboutCreateInput {
   name: String
-  content: JSON
+  intro: JSON
+  books: JSON
+  selectWritings: JSON
+}
+
+type Award {
+  id: ID!
+  name: String
+  key: String
+  intro: Award_intro_Document
+  apply: Award_apply_Document
+  bgImage1: CloudinaryImage_File
+  pastRecipients: Award_pastRecipients_Document
+}
+
+type Award_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Award_apply_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type CloudinaryImage_File {
+  id: ID
+  filename: String
+  originalFilename: String
+  mimetype: String
+  encoding: String
+  publicId: String
+  publicUrl: String
+  publicUrlTransformed(transformation: CloudinaryImageFormat): String
+}
+
+"""
+Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
+All options are strings as they ultimately end up in a URL.
+"""
+input CloudinaryImageFormat {
+  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  """
+  prettyName: String
+  width: String
+  height: String
+  crop: String
+  aspect_ratio: String
+  gravity: String
+  zoom: String
+  x: String
+  y: String
+  format: String
+  fetch_format: String
+  quality: String
+  radius: String
+  angle: String
+  effect: String
+  opacity: String
+  border: String
+  background: String
+  overlay: String
+  underlay: String
+  default_image: String
+  delay: String
+  color: String
+  color_space: String
+  dpr: String
+  page: String
+  density: String
+  flags: String
+  transformation: String
+}
+
+type Award_pastRecipients_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input AwardWhereUniqueInput {
+  id: ID
+  name: String
+  key: String
+}
+
+input AwardWhereInput {
+  AND: [AwardWhereInput!]
+  OR: [AwardWhereInput!]
+  NOT: [AwardWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+}
+
+input AwardOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+}
+
+input AwardUpdateInput {
+  name: String
+  key: String
+  intro: JSON
+  apply: JSON
+  bgImage1: Upload
+  pastRecipients: JSON
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input AwardUpdateArgs {
+  where: AwardWhereUniqueInput!
+  data: AwardUpdateInput!
+}
+
+input AwardCreateInput {
+  name: String
+  key: String
+  intro: JSON
+  apply: JSON
+  bgImage1: Upload
+  pastRecipients: JSON
 }
 
 type Event {
@@ -100,7 +232,9 @@ type Event {
   key: String
   intro: Event_intro_Document
   agenda: Event_agenda_Document
+  bgImage1: CloudinaryImage_File
   awards: Event_awards_Document
+  bgImage2: CloudinaryImage_File
   location: Event_location_Document
   gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0): [GallerySlide!]
   gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
@@ -155,7 +289,9 @@ input EventUpdateInput {
   key: String
   intro: JSON
   agenda: JSON
+  bgImage1: Upload
   awards: JSON
+  bgImage2: Upload
   location: JSON
   gallerySlides: GallerySlideRelateToManyForUpdateInput
 }
@@ -177,7 +313,9 @@ input EventCreateInput {
   key: String
   intro: JSON
   agenda: JSON
+  bgImage1: Upload
   awards: JSON
+  bgImage2: Upload
   location: JSON
   gallerySlides: GallerySlideRelateToManyForCreateInput
 }
@@ -194,55 +332,6 @@ type GallerySlide {
   image: CloudinaryImage_File
   altText: String
   caption: String
-}
-
-type CloudinaryImage_File {
-  id: ID
-  filename: String
-  originalFilename: String
-  mimetype: String
-  encoding: String
-  publicId: String
-  publicUrl: String
-  publicUrlTransformed(transformation: CloudinaryImageFormat): String
-}
-
-"""
-Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
-All options are strings as they ultimately end up in a URL.
-"""
-input CloudinaryImageFormat {
-  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
-  """
-  prettyName: String
-  width: String
-  height: String
-  crop: String
-  aspect_ratio: String
-  gravity: String
-  zoom: String
-  x: String
-  y: String
-  format: String
-  fetch_format: String
-  quality: String
-  radius: String
-  angle: String
-  effect: String
-  opacity: String
-  border: String
-  background: String
-  overlay: String
-  underlay: String
-  default_image: String
-  delay: String
-  color: String
-  color_space: String
-  dpr: String
-  page: String
-  density: String
-  flags: String
-  transformation: String
 }
 
 input GallerySlideWhereUniqueInput {
@@ -284,9 +373,6 @@ input EventRelateToManyForUpdateInput {
   create: [EventCreateInput!]
   connect: [EventWhereUniqueInput!]
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input GallerySlideUpdateArgs {
   where: GallerySlideWhereUniqueInput!
@@ -448,6 +534,12 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
+  createAward(data: AwardCreateInput!): Award
+  createAwards(data: [AwardCreateInput!]!): [Award]
+  updateAward(where: AwardWhereUniqueInput!, data: AwardUpdateInput!): Award
+  updateAwards(data: [AwardUpdateArgs!]!): [Award]
+  deleteAward(where: AwardWhereUniqueInput!): Award
+  deleteAwards(where: [AwardWhereUniqueInput!]!): [Award]
   createEvent(data: EventCreateInput!): Event
   createEvents(data: [EventCreateInput!]!): [Event]
   updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
@@ -478,6 +570,9 @@ type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
+  awards(where: AwardWhereInput! = {}, orderBy: [AwardOrderByInput!]! = [], take: Int, skip: Int! = 0): [Award!]
+  award(where: AwardWhereUniqueInput!): Award
+  awardsCount(where: AwardWhereInput! = {}): Int
   events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int

@@ -9,6 +9,8 @@ const BaseDocConfig = (
   return {
     componentBlocks,
     formatting: true,
+    dividers: true,
+    links: true,
     layouts: layouts || [
       [1, 1],
       [1, 1, 1],

@@ -37,7 +37,7 @@ const Award: Lists.Award = list({
         apiSecret: `${process.env.CLOUDINARY_SECRET}`,
         folder: 'sjm/backgrounds',
       },
-      label: 'Past Recipients Image',
+      label: 'Past Recipients Background Image',
     }),
     pastRecipients: document(BaseDocConfig()),
   },

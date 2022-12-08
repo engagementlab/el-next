@@ -1,15 +1,15 @@
+import { ReactNode, useEffect, useState } from 'react';
 import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import Image, {ImageUrl} from '@el-next/components/image';
+import { HeadingStyle } from '@el-next/components/headingStyle';
 
 import _ from 'lodash';
-import ImageGallery from 'react-image-gallery';
 
 import query from "../../../../apollo-client";
 
 import { Blocks, Doc } from '../../components/Renderers';
-import { useEffect, useState } from 'react';
 
 type Award = {
     name: string;
@@ -28,6 +28,12 @@ const imageOverride = (props: any) => {
 };
 
 const rendererOverrides = {
+    heading: (level: number, children: ReactNode, textAlign: any) => {
+        const customRenderers = {
+            3: 'text-xl font-medium tracking-wide my-4'
+        };
+        return HeadingStyle(level, children, textAlign, customRenderers);
+    },
     layout: (layout: any, children: any) => {
         const flexClass = 'flex gap-x-5 flex-col md:flex-row justify-between';
         if(layout[0] === 1 && layout[1] === 2) {
@@ -65,20 +71,20 @@ export default function Award({ item }: InferGetStaticPropsType<typeof getStatic
         <section className="relative mt-6 lg:mt-0">
             <div className={lavenderStyle}>
                 <div className='lg:ml-10 w-full xl:w-8/12'>
-                    <h1 className='text-2xl lg:text-7xl mb-7'>{item.name}</h1>
+                    <h1 className='text-4xl lg:text-7xl mb-7'>{item.name}</h1>
                     <DocumentRenderer document={item.intro.document} componentBlocks={Blocks(imageOverride)}
-                        renderers={Doc()} />
+                        renderers={Doc(rendererOverrides)} />
                 </div>
             </div>
             <div className='bg-gradient-to-r from-clay via-pink to-wind text-white p-5 lg:px-48'>
                 <div className='lg:ml-10 w-full xl:w-8/12'>
-                    <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full text-right'>How to Apply</h1>
+                    <h1 className='text-4xl lg:text-7xl font-normal mb-7 w-full text-right'>How to Apply</h1>
                     <DocumentRenderer document={item.apply.document} componentBlocks={Blocks()}
                         renderers={Doc()} />
                 </div>
             </div>
-            <div className='p-5 lg:px-48 text-white' style={{backgroundImage: `url(${bgImg1})`}}>
-                    <h1 className='text-2xl lg:text-7xl font-semibold mb-7 w-full'>Past Recipients</h1>
+            <div className='bg-cover p-5 lg:px-48 text-white' style={{backgroundImage: `url(${bgImg1})`}}>
+                    <h1 className='text-4xl lg:text-7xl font-normal mb-7 w-full'>Past Recipients</h1>
                 <div className='w-full'>
                     <DocumentRenderer document={item.pastRecipients.document} componentBlocks={Blocks(imageOverride)}
                         renderers={Doc(rendererOverrides)} />

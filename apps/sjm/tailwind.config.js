@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-work-sans)', ...fontFamily.sans],
+        overpass: ['var(--font-overpass)'],
       },
       colors: {
         blossom: '#ba739a',

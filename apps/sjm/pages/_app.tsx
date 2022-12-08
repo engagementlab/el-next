@@ -5,7 +5,7 @@ import React from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head'
 
-import { Work_Sans } from '@next/font/google'
+import { Work_Sans, Overpass } from '@next/font/google'
 
 import { Favicon } from '@el-next/components/favicon';
 
@@ -17,6 +17,11 @@ import { AnimatePresence } from 'framer-motion';
 const workSans = Work_Sans({
   subsets: ['latin'],
   variable: '--font-work-sans',
+})
+
+const overpass = Overpass({
+  subsets: ['latin'],
+  variable: '--font-overpass',
 })
 
 function App({ Component, pageProps }: AppProps) {
@@ -32,7 +37,7 @@ function App({ Component, pageProps }: AppProps) {
           <Favicon />
         </Head>
       </div>
-      <main className={`w-full mb-24 ${workSans.variable} font-sans`}>
+      <main className={`w-full mb-24 ${workSans.variable} ${overpass.variable} font-sans`}>
         <Header />
         <ParallaxProvider>
           <AnimatePresence

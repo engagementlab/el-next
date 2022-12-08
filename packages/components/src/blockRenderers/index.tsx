@@ -28,12 +28,12 @@ export const BlockRenderers = (styles?: {
     let blocks = {
       image: (props: any) => {
         const publicId = props.image.publicId || props.image.image.publicId ;
-        const alt = props.image.alt || props.image.image.alt;
+        const alt = props.image.alt || props.image.image?.alt;
         
         return imageOveride ? imageOveride(props) : 
           (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Image id={'img-' + publicId} alt={alt} imgId={publicId} aspectDefault={true} />
+              <Image id={'img-' + publicId} alt={alt || ''} imgId={publicId} aspectDefault={true} />
               {/* <p>{props.image.data.caption}</p> */}
             </div>
           );

@@ -20,7 +20,7 @@ const ImageOverride: any = (width: number) => {
         alt={props.image.alt}
         imgId={props.image.publicId}
         aspectDefault={true}
-        className={`max-w-[${width}px]`}
+        className={`max-w-[${width}px] mb-5 md:mb-0`}
       />
     );
   }

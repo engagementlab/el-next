@@ -11,7 +11,7 @@ class Footer extends Component {
           <div className='w-full xl:w-1/2 text-center'>
             <h2 className='text-blossom'>Social Justice + Media Symposium Partners</h2>
             <div className='flex flex-col xl:flex-row xl:flex-wrap justify-around items-center'>
-              <Image id="emerson-logo" alt="Emerson College logo" imgId='sjm/logos/emerson' height={55} width={150}
+              <Image id="emerson-logo" alt="Emerson College logo" imgId='sjm/logos/emerson' width={150}
                 transforms='f_auto,dpr_auto' />
               <Image id="fiu-logo" alt="Florida International University logo" imgId='sjm/logos/FIU' width={248}
                 transforms='f_auto,dpr_auto' />

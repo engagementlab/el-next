@@ -9,15 +9,11 @@ exports.default = void 0;
 
 var _path = _interopRequireDefault(require("path"));
 
-var _fs = _interopRequireDefault(require("fs"));
-
 var _yargs = _interopRequireDefault(require("yargs/yargs"));
 
 var _express = _interopRequireDefault(require("express"));
 
 var _keystone6CoreSystemCjs = require("@keystone-6/core/system/dist/keystone-6-core-system.cjs.js");
-
-var _keystone6CoreArtifactsCjs = require("@keystone-6/core/artifacts/dist/keystone-6-core-artifacts.cjs.js");
 
 /**
  *
@@ -38,22 +34,23 @@ const argv = (0, _yargs.default)(process.argv.slice(2)).options({
 var _default = (async () => {
   var _config$ui;
 
-  const apiFile = _path.default.join(process.cwd(), `.keystone/${argv.app}/.next/server/pages/api/__keystone_api_build.js`);
-
-  if (!_fs.default.existsSync(apiFile)) {
-    console.log('🚨 keystone build must be run before running keystone start');
-    throw new Error('run build');
-  } // webpack will make modules that import Node ESM externals(which must be loaded with dynamic import)
+  const apiFile = _path.default.join(process.cwd(), `.keystone/${argv.app}/config.js`); // if (!fs.existsSync(apiFile)) {
+  //   console.log('🚨 keystone build must be run before running keystone start');
+  //   throw new Error('run build' + apiFile);
+  // }
+  // webpack will make modules that import Node ESM externals(which must be loaded with dynamic import)
   // export a promise that resolves to the actual export so yeah, we need to await a require call
-  // console.log(require(apiFile));
 
 
-  const config = (0, _keystone6CoreSystemCjs.initConfig)((await require(apiFile)).config);
+  const config = (0, _keystone6CoreSystemCjs.initConfig)((await require(apiFile)).default);
+  console.log(config);
   const {
     getKeystone,
     graphQLSchema
   } = (0, _keystone6CoreSystemCjs.createSystem)(config);
-  const prismaClient = (0, _keystone6CoreArtifactsCjs.requirePrismaClient)(process.cwd());
+
+  const prismaClient = require(_path.default.join(process.cwd(), `.keystone/${argv.app}/.prisma/client`));
+
   const keystone = getKeystone(prismaClient);
   console.log('✨ Connecting to the database');
   await keystone.connect();
@@ -65,8 +62,8 @@ var _default = (async () => {
 
   if (!((_config$ui = config.ui) !== null && _config$ui !== void 0 && _config$ui.isDisabled)) {
     console.log('✨ Preparing Admin UI Next.js app');
-    const middleware = await (0, _keystone6CoreSystemCjs.createAdminUIMiddleware)(config, keystone.createContext, false, _path.default.join(process.cwd(), `.keystone/${argv.app}`));
-    expressServer.use('/_next/static/', _express.default.static(_path.default.join(process.cwd(), `.keystone/${argv.app}/.next/static`)));
+    const middleware = await (0, _keystone6CoreSystemCjs.createAdminUIMiddleware)(config, keystone.createContext, false, _path.default.join(process.cwd(), `.keystone/${argv.app}/admin`));
+    expressServer.use('/_next/static/', _express.default.static(_path.default.join(process.cwd(), `.keystone/${argv.app}/admin/.next/static`)));
     expressServer.use((req, res) => middleware(req, res));
     expressServer.use((req, res) => {
       console.log(req.path);

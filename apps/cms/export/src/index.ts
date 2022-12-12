@@ -16,22 +16,24 @@ const cwd = (file: string) => {
   return path.join(process.cwd(), file);
 };
 
-// const colors = require('colors');
-// const glob = require('glob');
-
 let appNames: string[] = [];
 let appPort = 3000;
 let spawnIndex = 0;
 
 const spawnBuild = () => {
-  const schemaFixChild = spawn('npm', ['run', 'postinstall']);
+  fs.writeFileSync(path.join(process.cwd(), '.app'), `${appNames[spawnIndex]}`);
+
+  const schemaFixChild = spawn('yarn', ['keystone', 'postinstall', '--fix']);
   schemaFixChild.on('error', (chunk: any) => {
     console.error(chunk);
   });
   schemaFixChild.stderr.on('data', (errout: { toString: () => any }) => {
     console.error(errout.toString());
   });
-
+  schemaFixChild.stdout.setEncoding('utf8');
+  schemaFixChild.stdout.on('data', (data: { toString: () => any }) => {
+    console.log(data.toString());
+  });
   schemaFixChild.on('exit', (err: any, info: any) => {
     const child = spawn('npm', ['run', 'build', `--port=${appPort}`]);
 
@@ -41,19 +43,34 @@ const spawnBuild = () => {
       console.error(chunk);
     });
     child.stderr.on('data', (errout: { toString: () => any }) => {
-      console.error(errout.toString());
+      console.error('ERROR', errout.toString());
+    });
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (data: { toString: () => any }) => {
+      console.log(data.toString());
     });
     child.on('exit', (err: any, info: any) => {
       console.log(err, info);
-      fs.move(cwd('.keystone/admin'), cwd(`.keystone/${appNames[spawnIndex]}`));
+      fs.moveSync(
+        cwd('.keystone/admin'),
+        cwd(`.keystone/${appNames[spawnIndex]}/admin`)
+      );
+      fs.moveSync(
+        cwd('.keystone/config.js'),
+        cwd(`.keystone/${appNames[spawnIndex]}/config.js`)
+      );
+      fs.moveSync(
+        cwd('node_modules/.prisma/client'),
+        cwd(`.keystone/${appNames[spawnIndex]}/.prisma/client`)
+      );
+      fs.unlink(path.join(process.cwd(), '.app'));
+
       pm2.connect(function (err: any) {
         if (err) {
           console.error(err);
           process.exit(2);
         }
         pm2.list((err: any, list: any[]) => {
-          // console.log(err, list);
-
           if (
             list.find((proc) => proc.name === `cms-${appNames[spawnIndex]}`)
           ) {

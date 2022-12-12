@@ -54,13 +54,17 @@ cloudinary.config({
   secure: true,
 });
 
-const bodyParser = require('body-parser');
+const fs = require('fs-extra');
 const passport = require('passport');
 const AuthStrategy = require('passport-google-oauth20').Strategy;
 const MongoStore = require('connect-mongo')(session);
 const DB = require('./db');
 
-const appName: string = argv.app || 'tngvi';
+let appName: string = argv.app || 'tngvi';
+if (fs.existsSync('.app')) {
+  appName = fs.readFileSync('.app');
+  console.log('Found app name: ' + appName);
+}
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -127,7 +131,6 @@ const Passport = () => {
               );
               return done(err);
             }
-            // console.log(err, user);
             return done(err, user);
           }
         );

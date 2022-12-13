@@ -71,6 +71,16 @@ const spawnBuild = () => {
           process.exit(2);
         }
         pm2.list((err: any, list: any[]) => {
+          // We have to wait a couple of seconds before spawning the next build so that
+          // pm2 has a chance to launch the start script, since starting one during this can
+          // result in the subsequent build being used when loading this app's config
+          const done = () => {
+            setTimeout(() => {
+              spawnIndex++;
+              appPort++;
+              if (spawnIndex < appNames.length) spawnBuild();
+            }, 2000);
+          };
           if (
             list.find((proc) => proc.name === `cms-${appNames[spawnIndex]}`)
           ) {
@@ -78,6 +88,7 @@ const spawnBuild = () => {
               `cms-${appNames[spawnIndex]}`,
               (err: any, proc: any) => {
                 pm2.disconnect();
+                done;
               }
             );
           } else {
@@ -92,14 +103,12 @@ const spawnBuild = () => {
                   console.error(err);
                 }
                 pm2.disconnect();
+                done();
               }
             );
           }
         });
       });
-      spawnIndex++;
-      appPort++;
-      if (spawnIndex < appNames.length) spawnBuild();
     });
   });
 };

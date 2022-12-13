@@ -69,6 +69,11 @@ const spawnBuild = () => {
           if (list.find(proc => proc.name === `cms-${appNames[spawnIndex]}`)) {
             pm2.restart(`cms-${appNames[spawnIndex]}`, (err, proc) => {
               pm2.disconnect();
+              setTimeout(() => {
+                spawnIndex++;
+                appPort++;
+                if (spawnIndex < appNames.length) spawnBuild();
+              }, 2000);
             });
           } else {
             pm2.start({
@@ -81,13 +86,15 @@ const spawnBuild = () => {
               }
 
               pm2.disconnect();
+              setTimeout(() => {
+                spawnIndex++;
+                appPort++;
+                if (spawnIndex < appNames.length) spawnBuild();
+              }, 2000);
             });
           }
         });
       });
-      spawnIndex++;
-      appPort++;
-      if (spawnIndex < appNames.length) spawnBuild();
     });
   });
 };

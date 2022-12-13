@@ -9,7 +9,7 @@ import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { elab, tngvi, sjm } from './admin/schema';
+import { tngvi, sjm, elab } from './admin/schema';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 
@@ -25,9 +25,10 @@ const argv: any = yargs(process.argv.slice(2)).options({
   },
 }).argv;
 const schemaMap: schemaIndexType = {
-  elab: elab,
+  // elab: elab,
   tngvi: tngvi,
   sjm: sjm,
+  elab: elab,
 };
 
 const multer = require('multer');
@@ -37,15 +38,6 @@ const upload = multer({
   },
 });
 const port = argv.port || 3000;
-const allowedHosts = [
-  'localhost:8080',
-  'localhost:8081',
-  `localhost:${port}`,
-  'qa.transformnarratives.org',
-  'cms.qa.transformnarratives.org',
-  'https://qa.transformnarratives.org',
-  'https://cms.qa.transformnarratives.org',
-];
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,

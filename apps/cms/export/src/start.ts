@@ -24,14 +24,14 @@ const argv: any = yargs(process.argv.slice(2)).options({
 export default (async () => {
   const apiFile = path.join(process.cwd(), `.keystone/${argv.app}/config.js`);
 
-  // if (!fs.existsSync(apiFile)) {
-  //   console.log('🚨 keystone build must be run before running keystone start');
-  //   throw new Error('run build' + apiFile);
-  // }
+
+  if (!fs.existsSync(apiFile)) {
+    console.log('🚨 keystone build must be run before running keystone start');
+    throw new Error('run build' + apiFile);
+  }
   // webpack will make modules that import Node ESM externals(which must be loaded with dynamic import)
   // export a promise that resolves to the actual export so yeah, we need to await a require call
   const config = initConfig((await require(apiFile)).default);
-  console.log(config);
   const { getKeystone, graphQLSchema } = createSystem(config);
 
   const prismaClient = require(path.join(

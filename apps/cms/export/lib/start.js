@@ -9,6 +9,8 @@ exports.default = void 0;
 
 var _path = _interopRequireDefault(require("path"));
 
+var _fs = _interopRequireDefault(require("fs"));
+
 var _yargs = _interopRequireDefault(require("yargs/yargs"));
 
 var _express = _interopRequireDefault(require("express"));
@@ -34,11 +36,14 @@ const argv = (0, _yargs.default)(process.argv.slice(2)).options({
 var _default = (async () => {
   var _config$ui;
 
-  const apiFile = _path.default.join(process.cwd(), `.keystone/${argv.app}/config.js`); // if (!fs.existsSync(apiFile)) {
-  //   console.log('🚨 keystone build must be run before running keystone start');
-  //   throw new Error('run build' + apiFile);
-  // }
-  // webpack will make modules that import Node ESM externals(which must be loaded with dynamic import)
+  const apiFile = _path.default.join(process.cwd(), `.keystone/${argv.app}/config.js`);
+
+  console.log(_fs.default.readdirSync(_path.default.join(process.cwd(), `.keystone`)));
+
+  if (!_fs.default.existsSync(apiFile)) {
+    console.log('🚨 keystone build must be run before running keystone start');
+    throw new Error('run build' + apiFile);
+  } // webpack will make modules that import Node ESM externals(which must be loaded with dynamic import)
   // export a promise that resolves to the actual export so yeah, we need to await a require call
 
 

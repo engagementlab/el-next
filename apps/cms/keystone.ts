@@ -16,6 +16,10 @@ import _ from 'lodash';
 type schemaIndexType = {
   [key: string]: object;
 };
+type authCallbackIndexType = {
+  [key: string]: string;
+};
+
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
     type: 'string',
@@ -24,11 +28,17 @@ const argv: any = yargs(process.argv.slice(2)).options({
     type: 'number',
   },
 }).argv;
+
 const schemaMap: schemaIndexType = {
   // elab: elab,
   tngvi: tngvi,
   sjm: sjm,
   elab: elab,
+};
+
+const authCallbackMap: authCallbackIndexType = {
+  tngvi: 'https://cms.qa.transformnarratives.org/cms/callback',
+  sjm: 'https://qa.sjmsymposium.org/cms/callback',
 };
 
 const multer = require('multer');
@@ -91,11 +101,15 @@ if (process.env.DB_URI) {
 }
 
 const Passport = () => {
+  let authCallbackUrl = `http://localhost:${port}/cms/callback`;
+  if (process.env.NODE_ENV === 'production')
+    authCallbackUrl = authCallbackMap[appName];
+
   const strategy = new AuthStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.AUTH_CALLBACK_URL,
+      callbackURL: authCallbackUrl,
     },
     (
       request: any,

@@ -434,7 +434,7 @@ function imageSelect({
                 value={currentAlt} 
                 onChange={(e)=> {
                     setAlt(e.target.value); 
-                    onChange({publicId: currentId, alt: e.target.value});
+                    onChange({publicId: currentId as any, alt: e.target.value as any});
                 }}
               />
               <br />

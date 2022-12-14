@@ -88,7 +88,7 @@ const spawnBuild = () => {
               `cms-${appNames[spawnIndex]}`,
               (err: any, proc: any) => {
                 pm2.disconnect();
-                done;
+                done();
               }
             );
           } else {

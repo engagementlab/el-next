@@ -21,8 +21,6 @@ let appPort = 3000;
 let spawnIndex = 0;
 
 const spawnBuild = () => {
-  fs.writeFileSync(path.join(process.cwd(), '.app'), `${appNames[spawnIndex]}`);
-
   const schemaFixChild = spawn('yarn', ['keystone', 'postinstall', '--fix']);
   schemaFixChild.on('error', (chunk: any) => {
     console.error(chunk);
@@ -63,7 +61,6 @@ const spawnBuild = () => {
         cwd('node_modules/.prisma/client'),
         cwd(`.keystone/${appNames[spawnIndex]}/.prisma/client`)
       );
-      fs.unlink(path.join(process.cwd(), '.app'));
 
       pm2.connect(function (err: any) {
         if (err) {
@@ -97,6 +94,9 @@ const spawnBuild = () => {
                 script: cwd('/export/lib/start.js'),
                 name: `cms-${appNames[spawnIndex]}`,
                 args: `--app=${appNames[spawnIndex]} --port=${appPort}`,
+                env: {
+                  APP: appNames[spawnIndex],
+                },
               },
               function (err: any, apps: any) {
                 if (err) {

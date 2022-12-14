@@ -63,8 +63,8 @@ const MongoStore = require('connect-mongo')(session);
 const DB = require('./db');
 
 let appName: string = argv.app || 'tngvi';
-if (fs.existsSync('.app')) {
-  appName = fs.readFileSync('.app');
+if (process.env.APP) {
+  appName = process.env.APP;
   console.log('Found app name: ' + appName);
 }
 

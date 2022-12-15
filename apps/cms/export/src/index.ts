@@ -21,7 +21,9 @@ let appPort = 3000;
 let spawnIndex = 0;
 
 const spawnBuild = () => {
-  const schemaFixChild = spawn('yarn', ['keystone', 'postinstall', '--fix']);
+  const schemaFixChild = spawn('yarn', ['keystone', 'postinstall', '--fix'], {
+    env: { ...process.env, APP: appNames[spawnIndex] },
+  });
   schemaFixChild.on('error', (chunk: any) => {
     console.error(chunk);
   });
@@ -33,7 +35,9 @@ const spawnBuild = () => {
     console.log(data.toString());
   });
   schemaFixChild.on('exit', (err: any, info: any) => {
-    const child = spawn('npm', ['run', 'build', `--port=${appPort}`]);
+    const child = spawn('npm', ['run', 'build', `--port=${appPort}`], {
+      env: { ...process.env, APP: appNames[spawnIndex] },
+    });
 
     console.log(`Building ${appNames[spawnIndex]}`);
     child.stderr.pipe(process.stderr);
@@ -72,11 +76,9 @@ const spawnBuild = () => {
           // pm2 has a chance to launch the start script, since starting one during this can
           // result in the subsequent build being used when loading this app's config
           const done = () => {
-            setTimeout(() => {
-              spawnIndex++;
-              appPort++;
-              if (spawnIndex < appNames.length) spawnBuild();
-            }, 2000);
+            spawnIndex++;
+            appPort++;
+            if (spawnIndex < appNames.length) spawnBuild();
           };
           if (
             list.find((proc) => proc.name === `cms-${appNames[spawnIndex]}`)

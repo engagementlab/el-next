@@ -102,8 +102,8 @@ if (process.env.DB_URI) {
 
 const Passport = () => {
   let authCallbackUrl = `http://localhost:${port}/cms/callback`;
-  if (process.env.NODE_ENV === 'production')
-    authCallbackUrl = authCallbackMap[appName];
+  // If app env defined, use callback url defined in map (production)
+  if (process.env.APP) authCallbackUrl = authCallbackMap[appName];
 
   const strategy = new AuthStrategy(
     {

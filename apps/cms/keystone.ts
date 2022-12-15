@@ -1,4 +1,8 @@
-import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
+import {
+  BaseKeystoneTypeInfo,
+  DatabaseConfig,
+  KeystoneConfig,
+} from '@keystone-6/core/types';
 import axios from 'axios';
 
 import yargs from 'yargs/yargs';
@@ -171,6 +175,7 @@ let ksConfig = (lists: any) => {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
+
     lists,
     server: {
       port,
@@ -417,6 +422,27 @@ let ksConfig = (lists: any) => {
           });
         }
       },
+    },
+    ui: {
+      getAdditionalFiles: [
+        async (config: KeystoneConfig) => [
+          {
+            mode: 'write',
+            src: `
+            const keystoneConfig =
+              require("@keystone-6/core/___internal-do-not-use-will-break-in-patch/admin-ui/next-config").config;
+
+            const config = {
+              ...keystoneConfig,
+              basePath: "/cms",
+            };
+
+            module.exports = config;
+            `,
+            outputPath: 'next.config.js',
+          },
+        ],
+      ],
     },
   };
 };

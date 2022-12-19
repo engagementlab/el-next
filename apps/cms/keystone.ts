@@ -41,7 +41,7 @@ const schemaMap: schemaIndexType = {
 };
 
 const authCallbackMap: authCallbackIndexType = {
-  tngvi: 'https://cms.qa.transformnarratives.org/cms/callback',
+  tngvi: 'https://qa.transformnarratives.org/cms/callback',
   sjm: 'https://qa.sjmsymposium.org/cms/callback',
 };
 

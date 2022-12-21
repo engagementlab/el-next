@@ -129,6 +129,7 @@ const Header = () => {
           <Link href="/" className='ml-3 w-1/2 md:w-3/4'>
             <Image id="sjm-logo" alt="Social Justice and Media Symposium logo" imgId='sjm/logos/sjm'
                 width={250} aspectDefault={true} className='max-h-[97px] w-full' />
+                
           </Link>
           <div id="lines" className='relative z-50 mr-3 cursor-pointer group' onClick={(e)=>{
             toggleNavOpen(!navOpen) }}>

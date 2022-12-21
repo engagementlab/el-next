@@ -26,7 +26,7 @@ const overpass = Overpass({
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <div>
+    <div className={`w-full mb-24 ${workSans.variable} ${overpass.variable} font-sans`}>
       <div>
         <Head>
           <title>Social Justice + Media Symposium</title>
@@ -37,7 +37,7 @@ function App({ Component, pageProps }: AppProps) {
           <Favicon />
         </Head>
       </div>
-      <main className={`w-full mb-24 ${workSans.variable} ${overpass.variable} font-sans`}>
+      <main className='w-full mb-24'>
         <Header />
         <ParallaxProvider>
           <AnimatePresence

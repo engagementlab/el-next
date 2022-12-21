@@ -58,7 +58,7 @@ export default function Deploy () {
 
     const deployFetch = async () => {
             toggleWaiting();
-            const response = await axios.get('/prod-deploy',
+            const response = await axios.get('/cms/prod-deploy',
             );
             setActionsLink(`https://github.com/engagementlab/${response.data.repo}/actions/runs/${response.data.id}?check_suite_focus=true`);
             toggleDone();

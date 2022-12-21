@@ -198,14 +198,14 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        app.use('/rest', async (req, res, next) => {
+        app.use('/cms/rest', async (req, res, next) => {
           (req as any).context = await createContext(req, res);
           next();
         });
 
-        app.get('/rest/news/:key?', getNews);
+        app.get('/cms/rest/news/:key?', getNews);
 
-        app.get('/prod-deploy', async (req, res, next) => {
+        app.get('/cms/prod-deploy', async (req, res, next) => {
           try {
             const response = await axios.get(
               `${process.env.DEPLOY_API_PATH}&name=transform-narratives`
@@ -216,7 +216,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.get('/media/videos', async (req, res, next) => {
+        app.get('/cms/media/videos', async (req, res, next) => {
           try {
             let videoData: {
               label: any;
@@ -265,7 +265,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.get('/media/get/:type', async (req, res) => {
+        app.get('/cms/media/get/:type', async (req, res) => {
           try {
             cloudinary.api.sub_folders(
               appName || 'tngvi',
@@ -308,7 +308,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.get('/media/delete', async (req, res) => {
+        app.get('/cms/media/delete', async (req, res) => {
           try {
             cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
               res.status(200).send(response)
@@ -318,7 +318,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.post('/media/upload', upload.none(), async (req, res) => {
+        app.post('/cms/media/upload', upload.none(), async (req, res) => {
           try {
             const response = await cloudinary.uploader.upload(req.body.img, {
               folder: appName || 'tngvi',

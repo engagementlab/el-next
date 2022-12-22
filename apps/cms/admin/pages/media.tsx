@@ -246,11 +246,11 @@ export default function Media() {
                     formData.append('img', reader.result as string);
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/media/upload', true);
+                    xhr.open('POST', '/cms/media/upload', true);
                     xhr.onprogress = (e) => {
                         if(e.loaded !== e.total) return;
                         setUploadOpen(false);
-                        axios.get('/media/get/upload').then((response) => {
+                        axios.get('/cms/media/get/upload').then((response) => {
                             setData(response.data.imgs, response.data.folders);
                             toggleWaiting();
                         });
@@ -275,12 +275,12 @@ export default function Media() {
     }
     const deleteImg = () => {
         try {
-            axios.get(`/media/delete?id=${imgIdToDelete}`).then((response) => {
+            axios.get(`/cms/media/delete?id=${imgIdToDelete}`).then((response) => {
                 if(response.data.result === 'ok') {
                     setDeleteConfirm(false);
                     
                     toggleWaiting();
-                    axios.get('/media/get/upload').then((response) => {
+                    axios.get('/cms/media/get/upload').then((response) => {
                         setData(response.data.imgs, response.data.folders);
                         toggleWaiting();
                     });
@@ -297,7 +297,7 @@ export default function Media() {
 
     useEffect(() => {
         if (data && data.length > 1) return;
-        axios.get('/media/get/upload').then((response) => {
+        axios.get('/cms/media/get/upload').then((response) => {
             setData(response.data.imgs, response.data.folders);
             toggleWaiting();
         });

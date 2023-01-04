@@ -18,9 +18,10 @@ import {
 import {
   controller
 } from '@keystone-6/core/fields/types/json/views';
-import {
+import React, {
   ComponentType,
   Fragment,
+  useEffect,
   useState
 } from 'react';
 
@@ -33,46 +34,72 @@ import Select, {
 import {
   css as emCss
 } from '@emotion/css';
+import { Box, CircularProgress, Grid, IconButton, MenuItem, Modal, Select as MUISelect } from '@mui/material';
+
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
+import create from 'zustand';
+import axios from 'axios';
+
 // const _ = require('underscore');
 const videoData = require('../../../videoData');
 
 interface RelatedVideo {
   label: string;
-  videoUrl: string;
+  value: string;
+  thumb: string;
+  thumbSm: string;
   caption: string;
 }
 
+
+type VideoGridState = {
+  pgIndex: number;
+  currentVideos: RelatedVideo[];
+  gridOpen: boolean;
+  waiting: boolean;
+  data: any[];
+
+  toggleWaiting: () => void
+  setData: (vidData: any[]) => void
+  setPageIndex: (pgIndex: number) => void
+  setVideo: (value: RelatedVideo) => void
+  setGridOpen: (open: boolean) => void
+}
 const styles = {
   form: {
-    field: emCss `
+    field: emCss`
       align-items: center;
       width: 100%;
       margin: 1rem 0 0 0;
     `,
-    label: emCss `
+    label: emCss`
       width: 10%;
     `,
-    input: emCss `
+    input: emCss`
       width: 90%;
     `,
-    button: emCss `
+    button: emCss`
       margin: .4rem;
     `,
-    select: emCss `
+    select: emCss`
       position: relative;
       z-index: 100;
       min-width: 100%;
     `,
-    option: emCss `
+    option: emCss`
       display: flex!important;
       flex-direction: row;
+      padding: 1rem;
+      cursor: pointer;
       p {
         width: 50%;
-      }
-    `
+      }`
   },
   list: {
-    ul: emCss `
+    ul: emCss`
       list-style: none;
       margin: 1rem 0 0 0;
       padding: 0;
@@ -85,8 +112,7 @@ const styles = {
 
       &:nth-of-type(2n) > div:nth-of-type(1) {
         background-color: white;
-      }
-    `,
+      }`,
     data: emCss `
       background-color: #eff3f6;
       padding: 0.5rem;
@@ -103,22 +129,95 @@ const styles = {
     `,
     optionButton: emCss `
       margin: 0 0 0 0.5rem;
-    `,
+      &:hover {
+        background: #2D3130;
+        color: white;
+      }
+    `,       
+  },
+  imagesModal: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 900,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4
   },
 };
-
 export const Field = ({
     field,
     value,
     onChange,
     autoFocus
   }: FieldProps < typeof controller > ) => {
-    const [currentValue, setCurrentValue] = useState < RelatedVideo > ();
+    // const [currentValue, setCurrentValue] = useState < RelatedVideo > ();
     const [videoCaption, setVideoCaption] = useState('');
     const [index, setIndex] = useState < number | null > (null);
 
-    const currentVideos: RelatedVideo[] = value ? JSON.parse(value) : [];
+    // const currentVideos: RelatedVideo[] = value ? JSON.parse(value) : [];
+    
+    console.log(value);
+          // Create store with Zustand
+          const [useStore] = useState(() => 
+              create<VideoGridState>(set => ({
+                gridOpen: false,
+                pgIndex: 0,
+                data: [],
+                waiting: true,
+                videoUrl: value,
+                currentVideos: value ? JSON.parse(value) : [],
+                toggleWaiting: () => set((state) => { 
+                  console.log(state.waiting)
+                    return { waiting: !state.waiting }; 
+                }),
+                setPageIndex: (index: number) => set((state) => {
+                    return {
+                        ...state,
+                        pgIndex: index,
+                    }
+                }),
+                setData: (vidData: any[]) => set((state) => {
+                    return {
+                        ...state,
+                        data: vidData,
+                    }
+                }),
+                setVideo: (value: RelatedVideo) => set((state) => {
+                    const videosCopy: RelatedVideo[] = [...currentVideos, value];
+                    onChange(JSON.stringify(videosCopy));
+                    return {
+                        ...state,
+                        currentVideos: videosCopy,
+                    }
+                }),
+                setGridOpen: (open: boolean) => set((state) => {
+                    return {
+                        ...state,
+                        gridOpen: open
+                    }
+                }),
+              })
+          ));
+    
+          const setPageIndex = useStore(state => state.setPageIndex);
+          const setVideo = useStore(state => state.setVideo);
+          const setGridOpen = useStore(state => state.setGridOpen);
+          const toggleWaiting = useStore(state => state.toggleWaiting);
+          const setData = useStore(state => state.setData);
+    
+          const data = useStore(state => state.data);
+          const waiting = useStore(state => state.waiting);
+          const gridOpen = useStore(state => state.gridOpen);
+          const pgIndex = useStore(state => state.pgIndex);
+          const currentVideos = useStore(state => state.currentVideos);
 
+          const beginIndex = pgIndex * 8;
+          const endIndex = beginIndex + 8;
+          const dataLength = Math.floor(data.length / 8)+1;   
+          
     const onSubmitNewVideo = () => {
       if (onChange) {
         const newCaption = {
@@ -203,8 +302,86 @@ export const Field = ({
       <FieldLabel>{field.label}</FieldLabel>
       {onChange && (
         <Fragment>
-          <div className={styles.form.field}>
 
+        <Button
+          size="small"
+          disabled={onChange === undefined}
+          onClick={() => {
+
+            if(data && data.length > 1) return;
+            // Get Vimeo data
+            axios.get('/cms/media/videos').then((response: { data: any[]; }) =>{
+              setData(response.data);
+              toggleWaiting();
+            }); 
+           setGridOpen(true);
+          }}
+          tone="positive"
+        >
+          Open
+        </Button>
+           <Modal
+                  open={gridOpen}
+                  onClose={() => {setGridOpen(false); }}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                  >  
+                <Box sx={styles.imagesModal}>
+                {!waiting ? 
+                  <>
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <IconButton aria-label="go to last page" disabled={pgIndex === 0} onClick={((val) => { setPageIndex(pgIndex-1) })}>
+                        <ArrowCircleLeftOutlinedIcon fontSize='large' />
+                      </IconButton>
+                        <MUISelect
+                          value={pgIndex}
+                          label="Page"
+                          onChange={((val) => { setPageIndex(!val ? 0 : val.target.value as number) })}
+                          >
+                          {[...new Array(dataLength)].map((v, i) => (
+                            <MenuItem value={i}>{i+1}</MenuItem>
+                          ))}
+                      </MUISelect>
+                      <IconButton aria-label="go to right page" disabled={pgIndex === dataLength-1} onClick={((val) => { setPageIndex(pgIndex+1) })}>
+                        <ArrowCircleRightOutlinedIcon fontSize='large' />
+                      </IconButton>
+                    </div>
+                    
+                    <hr style={{borderTopWidth: '2px', borderColor: '#f6a536'}} />
+
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Grid container spacing={2}>
+                        {data.slice(beginIndex, endIndex).map((item: any, i: number) => (
+                          <Grid item xs={3}>
+                            <a style={{ position: 'relative', cursor: 'pointer'}}
+                              onClick={(e) => { 
+                                setVideo(item as RelatedVideo);
+                               }}>
+                              <div style={{position: 'absolute', top: 0, left: 0}}>
+                                {currentVideos.includes(item as RelatedVideo) && <CheckCircleOutlineIcon fontSize='large' htmlColor='#f6a536' />}
+                              </div>
+                              <img
+                                src={item.thumbSm}
+                                // style={{opacity: videoUrl === item.value ? .5 : 1}}
+                              />
+                              <p>{item.label}</p>
+                            </a>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
+
+                    <br />
+                    {/* <IconButton aria-label="done" disabled={videoUrl === ''} onClick={(() => { setGridOpen(false); })}>
+                      <CheckTwoToneIcon fontSize='large' color='success' />
+                    </IconButton> */}
+                  </>
+                : 
+                  <CircularProgress color='success' />
+                  }
+                </Box> 
+              </Modal>
+          {/* <div className={styles.form.field}>
             <Select
               id={field.path}
               isClearable
@@ -249,7 +426,7 @@ export const Field = ({
             )
             )}
           </div>
-          </div>
+          </div> */}
         </Fragment>
       )}
       <ul className={styles.list.ul}>

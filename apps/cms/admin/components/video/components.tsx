@@ -21,7 +21,7 @@ import {
 import {
   css as emCss
 } from '@emotion/css';
-import { Box, CircularProgress, Grid, IconButton, InputBase, MenuItem, Modal, Paper, Select as MUISelect } from '@mui/material';
+import { Box, LinearProgress, Grid, IconButton, MenuItem, Modal, Select as MUISelect } from '@mui/material';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
@@ -122,7 +122,7 @@ const styles = {
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      width: 900,
+      width: 1200,
       bgcolor: 'background.paper',
       border: '2px solid #000',
       boxShadow: 24,
@@ -203,13 +203,13 @@ export const Field = ({
 
   const data = useStore((state: { data: any; }) => state.data);
   const waiting = useStore((state: { waiting: any; }) => state.waiting);
-  const gridOpen = useStore((state: { gridOpen: any; }) => state.gridOpen);
+  const gridOpen = useStore((state: { gridOpen: boolean; }) => state.gridOpen);
   const pgIndex = useStore((state: { pgIndex: any; }) => state.pgIndex);
   const currentVideos: any = useStore((state: { currentVideos: any; }) => state.currentVideos);
 
-  const beginIndex = pgIndex * 8;
-  const endIndex = beginIndex + 8;
-  const dataLength = Math.floor(data.length / 8)+1;   
+  const beginIndex = pgIndex * 12;
+  const endIndex = beginIndex + 12;
+  const dataLength = Math.floor(data.length / 12)+1;   
   
   return (
     <FieldContainer>
@@ -219,88 +219,87 @@ export const Field = ({
           size="small"
           disabled={onChange === undefined}
           onClick={() => {
-
-            if(data && data.length > 1) return;
-
+            setGridOpen(true);
             // Get Vimeo data
             axios.get('/cms/media/videos').then((response: { data: any[]; }) =>{
               setData(response.data);
               toggleWaiting();
             });
 
-           setGridOpen(true);
           }}
           tone="positive"
         >
           Select Videos
         </Button>
            <Modal
-                  open={gridOpen}
-                  onClose={() => {setGridOpen(false); }}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                  >  
-                <Box sx={styles.imagesModal}>
-                {!waiting ? 
-                  <>
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                      <IconButton aria-label="go to last page" disabled={pgIndex === 0} onClick={((val) => { setPageIndex(pgIndex-1) })}>
-                        <ArrowCircleLeftOutlinedIcon fontSize='large' />
-                      </IconButton>
-                        <MUISelect
-                          value={pgIndex}
-                          label="Page"
-                          onChange={((val) => { setPageIndex(!val ? 0 : val.target.value as number) })}
-                          >
-                          {[...new Array(dataLength)].map((v, i) => (
-                            <MenuItem value={i} key={`pg-${i}`}>{i+1}</MenuItem>
-                          ))}
-                      </MUISelect>
-                      <IconButton aria-label="go to right page" disabled={pgIndex === dataLength-1} onClick={((val) => { setPageIndex(pgIndex+1) })}>
-                        <ArrowCircleRightOutlinedIcon fontSize='large' />
-                      </IconButton>
-                    </div>
-                    
-                    <hr style={{borderTopWidth: '2px', borderColor: '#f6a536'}} />
+              open={gridOpen}
+              onClose={() => {setGridOpen(false); }}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              >
+                {!waiting ?  
+                  <Box sx={styles.imagesModal}>
+                      <>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                          <IconButton aria-label="go to last page" disabled={pgIndex === 0} onClick={((val) => { setPageIndex(pgIndex-1) })}>
+                            <ArrowCircleLeftOutlinedIcon fontSize='large' />
+                          </IconButton>
+                            <MUISelect
+                              value={pgIndex}
+                              label="Page"
+                              onChange={((val) => { setPageIndex(!val ? 0 : val.target.value as number) })}
+                              >
+                              {[...new Array(dataLength)].map((v, i) => (
+                                <MenuItem value={i} key={`pg-${i}`}>{i+1}</MenuItem>
+                              ))}
+                          </MUISelect>
+                          <IconButton aria-label="go to right page" disabled={pgIndex === dataLength-1} onClick={((val) => { setPageIndex(pgIndex+1) })}>
+                            <ArrowCircleRightOutlinedIcon fontSize='large' />
+                          </IconButton>
+                        </div>
+                        
+                        <hr style={{borderTopWidth: '2px', borderColor: '#f6a536'}} />
 
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Grid container spacing={2}>
-                        {data.slice(beginIndex, endIndex).map((item: RelatedVideo) => {
+                        <Box sx={{ flexGrow: 1 }}>
+                          <Grid container spacing={2}>
+                            {data.slice(beginIndex, endIndex).map((item: RelatedVideo) => {
 
-                          const selected = _.map(currentVideos, 'value').includes((item as RelatedVideo).value);
-                          return (
-                            <Grid item xs={3} key={item.value}>
-                              <a style={{ position: 'relative', cursor: 'pointer'}}
-                                onClick={() => { 
-                                  setVideo(item as RelatedVideo);
-                                  if(onChange) onChange(JSON.stringify(currentVideos));
-                                }}>
-                                  {selected &&
-                                    <div style={{position: 'absolute', top: 0, left: 0}}>
-                                      <CheckCircleOutlineIcon fontSize='large' htmlColor='#f6a536' />
-                                    </div>
-                                  }
-                                <img
-                                  src={item.thumbSm}
-                                  style={{opacity: selected ? .5 : 1}}
-                                />
-                                <p>{item.label}</p>
-                              </a>
-                            </Grid>
-                          );
-                          })}
-                      </Grid>
-                    </Box>
-                    <br />
-                    <IconButton aria-label="done" onClick={(() => { setGridOpen(false); })}>
-                      <CheckTwoToneIcon fontSize='large' color='success' />
-                    </IconButton>
-                  </>
+                              const selected = _.map(currentVideos, 'value').includes((item as RelatedVideo).value);
+                              return (
+                                <Grid item xs={3} key={item.value}>
+                                  <a style={{ position: 'relative', cursor: 'pointer'}}
+                                    onClick={() => { 
+                                      setVideo(item as RelatedVideo);
+                                      if(onChange) onChange(JSON.stringify(currentVideos));
+                                    }}>
+                                      {selected &&
+                                        <div style={{position: 'absolute', top: 0, left: 0}}>
+                                          <CheckCircleOutlineIcon fontSize='large' htmlColor='#f6a536' />
+                                        </div>
+                                      }
+                                    <img
+                                      src={item.thumbSm}
+                                      style={{opacity: selected ? .5 : 1}}
+                                    />
+                                    <p>{item.label}</p>
+                                  </a>
+                                </Grid>
+                              );
+                              })}
+                          </Grid>
+                        </Box>
+                        <br />
+                        <IconButton aria-label="done" onClick={(() => { setGridOpen(false); })}>
+                          <CheckTwoToneIcon fontSize='large' color='success' />
+                        </IconButton>
+                      </>
+                  </Box> 
                 : 
-                  <CircularProgress color='success' />
-                  }
-                </Box> 
-              </Modal>
+                  <Box>
+                    <LinearProgress />
+                  </Box>
+                }
+          </Modal>
         </Fragment>
     
       <ul className={styles.list.ul}>

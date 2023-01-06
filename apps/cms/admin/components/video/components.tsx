@@ -11,12 +11,9 @@ import {
   FieldLabel,
 } from '@keystone-ui/fields';
 import {
-  EditIcon
-} from '@keystone-ui/icons';
-import {
   controller
 } from '@keystone-6/core/fields/types/json/views';
-import React, {
+import {
   Fragment,
   useState
 } from 'react';
@@ -113,17 +110,11 @@ const styles = {
       flex-wrap: nowrap;
     `,
     dataLabel: emCss `
-      width: 40%;
-    `,
-    dataHref: emCss `
-      width: 60%;
-    `,
-    optionButton: emCss `
-      margin: 0 0 0 0.5rem;
-      &:hover {
-        background: #2D3130;
-        color: white;
-      }
+      width: 50%;
+    `,        
+    input: emCss `
+      padding: 0.5rem;
+      border: 1px grey solid;
     `,       
   },
   imagesModal: {
@@ -205,7 +196,6 @@ export const Field = ({
     
   const setPageIndex = useStore((state: { setPageIndex: any; }) => state.setPageIndex);
   const setVideo = useStore((state: { setVideo: any; }) => state.setVideo);
-  const setVideoCaptionEdit = useStore((state) => state.setVideoCaptionEditing);
   const setVideoCaption = useStore((state) => state.setVideoCaption);
   const setGridOpen = useStore((state: { setGridOpen: any; }) => state.setGridOpen);
   const toggleWaiting = useStore((state: { toggleWaiting: any; }) => state.toggleWaiting);
@@ -214,7 +204,6 @@ export const Field = ({
   const data = useStore((state: { data: any; }) => state.data);
   const waiting = useStore((state: { waiting: any; }) => state.waiting);
   const gridOpen = useStore((state: { gridOpen: any; }) => state.gridOpen);
-  const videoEditIndex = useStore((state) => state.videoEditIndex);
   const pgIndex = useStore((state: { pgIndex: any; }) => state.pgIndex);
   const currentVideos: any = useStore((state: { currentVideos: any; }) => state.currentVideos);
 
@@ -225,7 +214,6 @@ export const Field = ({
   return (
     <FieldContainer>
       <FieldLabel>{field.label}</FieldLabel>
-      {/* {onChange && ( */}
         <Fragment>
         <Button
           size="small"
@@ -322,52 +310,17 @@ export const Field = ({
               <div className={styles.list.data}>
                 <div className={styles.list.dataLabel}>{relatedVideo.label}</div>
                 {onChange && (
-                  // <input 
-                  //   type='text'
-                  //   className={styles.list.dataLabel}
-                  //   placeholder={!relatedVideo.caption ? 'Add caption?' : ''}
-                  //   defaultValue={relatedVideo.caption}
-                  //   onKeyUp={(e) => {
-                  //     setVideoCaptionEdit(i);
-                  //     // if(onChange) onChange(JSON.stringify(currentVideos)); 
-                  //   }} />
-        <Paper
-          component="form"
-          sx={{ display: 'flex', alignItems: 'center', width: 300, boxShadow: 0, borderWidth: 1 }}
-        >
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-
-          placeholder={!relatedVideo.caption ? 'Add caption?' : ''}
-          defaultValue={relatedVideo.caption}
-          onKeyUp={(e) => {
-            setVideoCaptionEdit(i);
-            // if(onChange) onChange(JSON.stringify(currentVideos));
-          }}
-          onBlur={() => {
-            setVideoCaptionEdit(-1);
-          }}
-      />
-      {
-        videoEditIndex === i &&
-        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-          <EditIcon />
-        </IconButton>
-      }
-      </Paper>
+                  <input 
+                    type='text'
+                    className={styles.list.input}
+                    placeholder={!relatedVideo.caption ? 'Add caption?' : ''}
+                    defaultValue={relatedVideo.caption}
+                    onKeyUp={(e) => {
+                      setVideoCaption(i, e.currentTarget.value);
+                      if(onChange) onChange(JSON.stringify(currentVideos)); 
+                    }} />
                 )}
               </div>
-              {/* 
-                <div>
-                  <Button
-                    size="small"
-                    onClick={() => onEditVideo(i)}
-                    className={styles.list.optionButton}
-                  >
-                    <EditIcon size="small" color="blue" />
-                  </Button>
-                </div>
-               */}
             </li>
           );
         })}

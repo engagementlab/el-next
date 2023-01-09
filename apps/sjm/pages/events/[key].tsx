@@ -6,10 +6,20 @@ import  Image, {ImageUrl} from '@el-next/components/image';
 import _ from 'lodash';
 import ImageGallery from 'react-image-gallery';
 
+import type { Swiper as SwiperT } from 'swiper';
+import { FreeMode, Navigation, Thumbs } from "swiper";
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+
 import query from "../../../../apollo-client";
 
 import { Blocks, Doc, ImageOverride } from '../../components/Renderers';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 
 type Event = {
     name: string;
@@ -63,6 +73,8 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
     const [bgImg1, setBgImg1] = useState('')
     const [bgImg2, setBgImg2] = useState('')
     
+    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperT | null>(null);
+
     useEffect(() => {
         if(item.bgImage1)
             setBgImg1(
@@ -83,13 +95,13 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
     const lavenderStyle = 'bg-lavender text-white flex justify-center p-8';
     const bgImageStyle = 'bg-cover flex flex-col items-center text-lavender';
 
-    const images = _.map(item.gallerySlides, (imgItem) => {
-        return {
-            original: imgItem.image.publicId,
-            thumbnail: imgItem.image.publicId,
-            altText: imgItem.altText
-        }
-    });
+    // const images = _.map(item.gallerySlides, (imgItem) => {
+    //     return {
+    //         original: imgItem.image.publicId,
+    //         thumbnail: imgItem.image.publicId,
+    //         altText: imgItem.altText
+    //     }
+    // });
 
     return (
         <>
@@ -129,8 +141,47 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
                         <div className='lg:ml-10 w-full xl:w-8/12'>
 
                             <h1 className='text-5xl lg:text-7xl font-normal mb-7'>Gallery</h1>
-                            <ImageGallery items={images} renderItem={renderItem} renderThumbInner={renderThumb}
-                                showPlayButton={false} />
+                            {/* <ImageGallery items={images} renderItem={renderItem} renderThumbInner={renderThumb}
+                                showPlayButton={false} /> */}
+                                 {/* Main Swiper -> pass thumbs swiper instance */}
+
+                                    <Swiper
+                                        // style={{
+                                        // "--swiper-navigation-color": "#fff",
+                                        // "--swiper-pagination-color": "#fff",
+                                        // }}
+                                        slidesPerView={1}
+                                        // spaceBetween={20}
+                                        // centeredSlides={true}
+                                        navigation={true}
+                                        thumbs={{
+                                            swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+                                        }}
+                                        modules={[FreeMode, Navigation, Thumbs]}
+                                    >
+                                        {item.gallerySlides.map((image, index) => (
+                                            <SwiperSlide key={index} className='flex justify-center'>    
+                                                <Image id="" alt="" imgId={image.image.publicId}
+                                                    width={600} transforms='f_auto,dpr_auto' className='w-full' />
+                                            </SwiperSlide>
+                                        ))}
+                                    </Swiper>
+                                    <Swiper 
+                                    onSwiper={setThumbsSwiper}
+                                    // spaceBetween={10}
+                                    slidesPerView={10}
+                                    freeMode={true}
+                                    watchSlidesProgress={true}
+                                    modules={[FreeMode, Navigation, Thumbs]}>
+
+                                        {item.gallerySlides.map((image, index) => (
+                                            <SwiperSlide key={`thumb-${index}`} className='cursor-pointer'>      
+                                                <Image key={`img-thumb-${index}`} id="" alt="" imgId={image.image.publicId}
+                                                    width={100} transforms='f_auto,dpr_auto' className='w-full' />
+                                            </SwiperSlide>
+                                        ))}
+                                        
+                                    </Swiper>
                         </div>
                     </div>
             </section>

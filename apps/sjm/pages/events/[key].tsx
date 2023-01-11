@@ -86,6 +86,7 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
     const bgImageStyle = 'bg-cover flex flex-col items-center text-lavender';
 
     const hasAwards = item.awards.document[0].children[0].text !== '';
+    const hasLocation = item.location.document[0].children[0].text !== '';
 
     return (
         <>
@@ -116,13 +117,15 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
                             </div>
                         </div>
                     }
-                    <div className={bgImageStyle} style={{backgroundImage: `url(${bgImg2})`}}>
+                    {
+                        hasLocation && <div className={bgImageStyle} style={{backgroundImage: `url(${bgImg2})`}}>
                         <div className='lg:ml-10 w-full xl:w-8/12 mb-10 p-5'>
                             <h1 className='text-5xl lg:text-7xl font-normal py-10 w-full text-right'>Location</h1>
                             <DocumentRenderer document={item.location.document} componentBlocks={Blocks()}
                                 renderers={Doc()} />
                         </div>
-                    </div>
+                        </div>
+                    }
                     {item.gallerySlides.length > 0 &&
                         <div className={lavenderStyle}>
                             <div className='lg:ml-10 w-full xl:w-8/12'>

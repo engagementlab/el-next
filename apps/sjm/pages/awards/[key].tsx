@@ -36,7 +36,7 @@ const rendererOverrides = {
     },
     layout: (layout: any, children: any) => {
         const flexClass = 'flex gap-x-5 flex-col md:flex-row justify-between';
-        if(layout[0] === 1 && layout[1] === 2) {
+        if((layout[0] === 1 && layout[1] === 2) || layout[0] === 2 && layout[1] === 1) {
             return (
                 <div
                     className={flexClass}
@@ -66,6 +66,7 @@ export default function Award({ item }: InferGetStaticPropsType<typeof getStatic
     }, []);
 
     const lavenderStyle = 'bg-blue text-white flex justify-center p-8';
+    const hasApply = item.apply.document[0].children[0].text !== '';
 
     return (
         <section className="relative mt-6 lg:mt-0">
@@ -76,13 +77,15 @@ export default function Award({ item }: InferGetStaticPropsType<typeof getStatic
                         renderers={Doc(rendererOverrides)} />
                 </div>
             </div>
-            <div className='bg-gradient-to-r from-clay via-pink to-wind text-white p-5 lg:px-48'>
-                <div className='lg:ml-10 w-full xl:w-8/12'>
-                    <h1 className='text-4xl lg:text-7xl font-normal mb-7 w-full text-right'>How to Apply</h1>
-                    <DocumentRenderer document={item.apply.document} componentBlocks={Blocks()}
-                        renderers={Doc()} />
+            {hasApply && 
+                <div className='bg-gradient-to-r from-clay via-pink to-wind text-white p-5 lg:px-48'>
+                    <div className='lg:ml-10 w-full xl:w-8/12'>
+                        <h1 className='text-4xl lg:text-7xl font-normal mb-7 w-full text-right'>How to Apply</h1>
+                        <DocumentRenderer document={item.apply.document} componentBlocks={Blocks()}
+                            renderers={Doc()} />
+                    </div>
                 </div>
-            </div>
+            }
             <div className='bg-cover p-5 lg:px-48 text-white' style={{backgroundImage: `url(${bgImg1})`}}>
                     <h1 className='text-4xl lg:text-7xl font-normal mb-7 w-full'>Past Recipients</h1>
                 <div className='w-full'>

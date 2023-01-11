@@ -57,6 +57,7 @@ const agendaRendererOverrides = {
 
   }
 };
+
 export default function Event({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
 
     const [bgImg1, setBgImg1] = useState('')
@@ -128,10 +129,10 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
 
                                 <h1 className='text-5xl lg:text-7xl font-normal mb-7'>Gallery</h1>
                                     <Swiper
-                                        style={{
-                                        "--swiper-navigation-color": "#fff",
-                                        "--swiper-pagination-color": "#fff",
-                                        }}
+                                        // style={{
+                                        // "--swiper-navigation-color": "#fff",
+                                        // "--swiper-pagination-color": "#fff",
+                                        // }}
                                         slidesPerView={1}
                                         navigation={true}
                                         thumbs={{

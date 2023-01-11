@@ -97,7 +97,7 @@ export default function Award({ item }: InferGetStaticPropsType<typeof getStatic
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const items = await query(
         'awards',
-        ` awards {
+        `awards {
             key
         }
         `

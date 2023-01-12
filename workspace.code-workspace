@@ -6,7 +6,11 @@
             "source.fixAll.eslint": true
         },
         "[javascriptreact]": {
-            "editor.formatOnSave": true
+            "editor.formatOnSave": true,
+        },
+        "[typescriptreact]": {
+            "editor.formatOnSave": true,
+            "editor.defaultFormatter": "esbenp.prettier-vscode" 
         },
         "debug.internalConsoleOptions": "neverOpen",
         "yaml.schemas": {

@@ -1,6 +1,6 @@
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022
+ * Developed by Engagement Lab, 2022-2023
  *
  * @author Johnny Richardson
  * KeystoneJS document field renderers

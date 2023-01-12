@@ -23,5 +23,5 @@ nvm use;
 yarn;
 yarn build;
 
-pm2 restart 'transform-narratives'; 
-pm2 restart 'sjm-symposium'; 
+pm2 restart 'app-tngvi'; 
+pm2 restart 'app-sjm'; 

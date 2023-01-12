@@ -50,15 +50,16 @@ export default function Home({
   return (
     <>
       <section className="relative mt-6 lg:mt-0 bg-black">
-        <div className="flex flex-col w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white">
+        <div className="flex flex-col items-center w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white">
           <Image
             id="logos"
             alt="Engagement Lab and Emerson College logos"
             imgId="sjm/logos/elab-emerson"
-            width={500}
+            // width={500}
             transforms="f_auto,dpr_auto"
+            className="max-w-full xl:max-w-screen-sm"
           />
-          <h1 className="text-3xl md:text-7xl xl:text-8xl md:mt-8 w-full">
+          <h1 className="text-3xl md:text-7xl xl:text-8xl md:mt-8 w-full text-center">
             Social Justice <br /> + Media Symposium
           </h1>
           <h3 className="md:text-2xl xl:text-3xl mt-1 md:mt-8 xl:w-3/4">

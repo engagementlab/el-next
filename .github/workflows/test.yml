@@ -1,0 +1,92 @@
+name: test
+on: 
+  repository_dispatch:
+    types: deploy-test
+    inputs:
+      appName:
+        description: 'Name of App to deploy'
+        required: false
+        default: 'tngvi'
+env:
+  CI: true
+  DB_URI: ${{ secrets.DB_URI }}
+  NODE_ENV: production
+  AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+jobs:
+  build-tests:
+    name: "Make build, run cms"
+    # Do not run on automated commits (interpretation of TravisCI feature)
+    if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+      - id: string-app-name
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.event.inputs.appName }}
+
+      - name: Checkout code on HEAD
+        uses: actions/checkout@v2
+
+      - name: Setup node.js ${{ matrix.node-version }}
+      
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install local monorepo packages and run preconstruct
+        run : yarn 
+
+      - name: Run CMS
+        working-directory: ./apps/cms  
+        env:
+          DB_URI: ${{ format('{0}/{1}' secrets.DB_URI_PREFIX, github.event.inputs.appName) }}
+        run: |
+          yarn add typescript @types/node
+          yarn
+          yarn build-ci
+          pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.inputs.appName }}
+
+      - name: Send Slack message on success
+        id: slack
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          # Build succeeded
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run succeeded."
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: Send Slack message on failure
+        id: slack-failure
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          # Build failed
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run failed."
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

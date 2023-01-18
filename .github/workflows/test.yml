@@ -2,11 +2,11 @@ name: test
 on: 
   repository_dispatch:
     types: deploy-test
-    inputs:
-      appName:
-        description: 'Name of App to deploy'
-        required: false
-        default: 'tngvi'
+    # inputs:
+    #   appName:
+    #     description: 'Name of App to deploy'
+    #     required: false
+    #     default: 'tngvi'
 env:
   CI: true
   DB_URI: ${{ secrets.DB_URI }}
@@ -25,7 +25,7 @@ jobs:
       - id: string-app-name
         uses: ASzc/change-string-case-action@v5
         with:
-          string: ${{ github.event.inputs.appName }}
+          string: ${{ github.event.client_payload.appName }}
 
       - name: Checkout code on HEAD
         uses: actions/checkout@v2
@@ -42,12 +42,12 @@ jobs:
       - name: Run CMS
         working-directory: ./apps/cms  
         env:
-          DB_URI: ${{ format('{0}/{1}' secrets.DB_URI_PREFIX, github.event.inputs.appName) }}
+          DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
         run: |
           yarn add typescript @types/node
           yarn
           yarn build-ci
-          pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.inputs.appName }}
+          pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
 
       - name: Send Slack message on success
         id: slack

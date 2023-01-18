@@ -51,7 +51,7 @@ jobs:
         run: |
           yarn add typescript @types/node
           yarn
-          yarn build-ci --app ${{ github.event.client_payload.appName }}
+          yarn build --app ${{ github.event.client_payload.appName }}
           pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
 
       - name: Send Slack message on success

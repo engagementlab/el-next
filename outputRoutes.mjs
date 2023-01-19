@@ -1,6 +1,14 @@
 import fs from 'fs';
 import _ from 'lodash';
 import recursiveReaddirFiles from 'recursive-readdir-files';
+import yargs from 'yargs/yargs';
+
+const argv = yargs(process.argv.slice(2)).demandOption({
+  app: {
+    type: 'string',
+  },
+}).argv;
+
 export default (async () => {
   const files = await recursiveReaddirFiles(`${process.cwd()}/out`, {
     ignored: /(\.js|.css|.json|.ico|.png|.DS_Store|favicon)$/,
@@ -10,7 +18,7 @@ export default (async () => {
   });
   const urls = _.map(files, (file) => {
     return `"${file.path
-      .replace(process.cwd() + '/out', 'http://localhost:8080')
+      .replace(`${process.cwd()}/${argv.app}/out`, 'http://localhost:8080')
       .replace('index.html', '')}"`;
   });
 

@@ -2,11 +2,6 @@ name: test
 on: 
   repository_dispatch:
     types: deploy-test
-    # inputs:
-    #   appName:
-    #     description: 'Name of App to deploy'
-    #     required: false
-    #     default: 'tngvi'
 env:
   CI: true
   DB_URI: ${{ secrets.DB_URI }}
@@ -30,8 +25,7 @@ jobs:
       - name: Checkout code on HEAD
         uses: actions/checkout@v2
 
-      - name: Setup node.js ${{ matrix.node-version }}
-      
+      - name: Setup node.js ${{ matrix.node-version }}      
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
@@ -54,6 +48,33 @@ jobs:
           yarn postinstall --app sjm
           yarn build --app ${{ github.event.client_payload.appName }}
           pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+
+      - name: Make production build
+        working-directory: ${{ format('./apps/{0}', github.event.client_payload.appName) }}
+        env:
+          APOLLO_CLIENT_GRAPHQL_URI: ${{ format('{0}/api/graphql', github.event.client_payload.cmsUrl) }}
+        run: |
+          yarn add typescript @types/node
+          yarn
+          yarn build
+
+      - name: Serve build 
+        working-directory: ${{ format('./apps/{0}', github.event.client_payload.appName) }}
+        run: http-server out/ > http.log 2>&1 &
+
+      - name: Output all build paths to .pa11yci config and run pa11y
+        run: |
+          echo ${{ github.event.client_payload.storageAccount }}
+          node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
+          pa11y-ci
+
+      # Deploy static build to Azure storage if succeeded
+      - name: Deploy static build
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'repository_dispatch' }}
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        # run Bash scripts
+        run: chmod 777 ./scripts/test.sh && ./scripts/test.sh
 
       - name: Send Slack message on success
         id: slack

@@ -19,6 +19,7 @@ const httpTrigger: AzureFunction = async function (
   const repoName = req.query.name;
   const appName = req.query.app;
   const storageAccount = req.query.storageAccount;
+  const cmsUrl = req.query.cmsUrl;
   const event = req.query.event;
   const workflowError = `We were unable to get the status of this deployment, however you should be able to find its status here: https://github.com/engagementlab/${repoName}/actions`;
 
@@ -38,7 +39,14 @@ const httpTrigger: AzureFunction = async function (
     };
     return;
   }
-
+  if (!cmsUrl) {
+    context.res = {
+      status: 400,
+      err: true,
+      body: 'Missing CMS URL',
+    };
+    return;
+  }
   const requestWithAuth = request.defaults({
     headers: {
       authorization: `token ${process.env.GITHUB_TOKEN}`,

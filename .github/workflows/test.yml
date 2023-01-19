@@ -6,7 +6,6 @@ env:
   CI: true
   DB_URI: ${{ secrets.DB_URI }}
   NODE_ENV: production
-  AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
 jobs:
   build-tests:
     name: "Make build, run cms"
@@ -64,13 +63,11 @@ jobs:
 
       - name: Output all build paths to .pa11yci config and run pa11y
         run: |
-          echo ${{ github.event.client_payload.storageAccount }}
           node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
           pa11y-ci
 
       # Deploy static build to Azure storage if succeeded
       - name: Deploy static build
-        if: ${{ github.event_name == 'pull_request' || github.event_name == 'repository_dispatch' }}
         env:
           AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         # run Bash scripts

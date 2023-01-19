@@ -455,5 +455,5 @@ let ksConfig = (lists: any) => {
 };
 
 export default (() => {
-  return ksConfig(appConfigMap[appName]);
+  return ksConfig(appConfigMap[appName].schema);
 })();

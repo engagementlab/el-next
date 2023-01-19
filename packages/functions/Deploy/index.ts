@@ -17,6 +17,9 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   const repoName = req.query.name;
+  const appName = req.query.app;
+  const storageAccount = req.query.storageAccount;
+  const event = req.query.event;
   const workflowError = `We were unable to get the status of this deployment, however you should be able to find its status here: https://github.com/engagementlab/${repoName}/actions`;
 
   if (!repoName) {
@@ -24,6 +27,14 @@ const httpTrigger: AzureFunction = async function (
       status: 400,
       err: true,
       body: 'Missing repo name',
+    };
+    return;
+  }
+  if (!storageAccount) {
+    context.res = {
+      status: 400,
+      err: true,
+      body: 'Missing storage account name',
     };
     return;
   }
@@ -40,7 +51,11 @@ const httpTrigger: AzureFunction = async function (
       {
         owner: 'engagementlab',
         repo: repoName,
-        event_type: 'deploy-prod',
+        event_type: event || 'deploy-prod',
+        client_payload: {
+          appName: appName || 'tngvi',
+          storageAccount,
+        },
       }
     );
 

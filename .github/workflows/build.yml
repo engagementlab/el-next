@@ -64,14 +64,14 @@ jobs:
       - name: Make production build
         working-directory: ./apps/tngvi  
         env:
-          APOLLO_CLIENT_GRAPHQL_URI: ${{ secrets.APOLLO_CLIENT_GRAPHQL_URI}}
+          APOLLO_CLIENT_GRAPHQL_URI: ${{ secrets.APOLLO_CLIENT_GRAPHQL_URI }}
         run: |
           yarn add typescript @types/node
           yarn
           yarn build
 
       - name: Serve build 
-        working-directory: ./apps/tngvi  
+        working-directory: ./apps/tngvi
         run: http-server out/ > http.log 2>&1 &
 
       - name: Output all build paths to .pa11yci config and run pa11y

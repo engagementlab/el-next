@@ -14,8 +14,11 @@
     "@babel/preset-typescript": "^7.17.12",
     "@preconstruct/cli": "^2.1.5",
     "@types/react": "^18.0.14",
+    "@types/yargs": "^17.0.20",
     "react": "^18.2.0",
-    "typescript": "^4.7.4"
+    "recursive-readdir-files": "^2.3.0",
+    "typescript": "^4.7.4",
+    "yargs": "^17.6.2"
   },
   "workspaces": [
     "packages/components"

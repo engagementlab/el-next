@@ -21,7 +21,7 @@ type appConfigType = {
   [key: string]: {
     schema: object;
     storageAccount: string;
-    authCallbackUrl: string;
+    cmsUrl: string;
   };
 };
 
@@ -38,14 +38,14 @@ const appConfigMap: appConfigType = {
   tngvi: {
     schema: tngvi,
     storageAccount: 'tngvi',
-    authCallbackUrl: 'https://qa.transformnarratives.org/cms/callback',
+    cmsUrl: 'https://qa.transformnarratives.org',
   },
   sjm: {
     schema: sjm,
     storageAccount: 'sjmsymposium',
-    authCallbackUrl: 'https://qa.sjmsymposium.org/cms/callback',
+    cmsUrl: 'https://qa.sjmsymposium.org',
   },
-  elab: { schema: elab, storageAccount: 'elabhome', authCallbackUrl: '' },
+  elab: { schema: elab, storageAccount: 'elabhome', cmsUrl: '' },
 };
 
 const multer = require('multer');
@@ -109,15 +109,15 @@ if (process.env.DB_URI) {
 }
 
 const Passport = () => {
-  let authCallbackUrl = `http://localhost:${port}/cms/callback`;
+  let cmsUrl = `http://localhost:${port}/cms/callback`;
   // If app env defined, use callback url defined in map (production)
-  if (process.env.APP) authCallbackUrl = appConfigMap[appName].authCallbackUrl;
+  if (process.env.APP) cmsUrl = `${appConfigMap[appName].cmsUrl}/cms/callback`;
 
   const strategy = new AuthStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: authCallbackUrl,
+      callbackURL: cmsUrl,
     },
     (
       request: any,
@@ -212,7 +212,10 @@ let ksConfig = (lists: any) => {
         app.get('/cms/prod-deploy', async (req, res, next) => {
           try {
             const response = await axios.get(
-              `${process.env.DEPLOY_API_PATH}&name=el-next`
+              `${process.env.DEPLOY_API_PATH}
+                &name=el-next
+                &storageAccount=${appConfigMap[appName].storageAccount}
+                &cmsUrl=${appConfigMap[appName].cmsUrl}`
             );
             res.status(200).send(response.data);
           } catch (err: any) {

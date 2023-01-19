@@ -17,11 +17,12 @@ import { tngvi, sjm, elab } from './admin/schema';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 
-type schemaIndexType = {
-  [key: string]: object;
-};
-type authCallbackIndexType = {
-  [key: string]: string;
+type appConfigType = {
+  [key: string]: {
+    schema: object;
+    storageAccount: string;
+    authCallbackUrl: string;
+  };
 };
 
 const argv: any = yargs(process.argv.slice(2)).options({
@@ -33,16 +34,18 @@ const argv: any = yargs(process.argv.slice(2)).options({
   },
 }).argv;
 
-const schemaMap: schemaIndexType = {
-  // elab: elab,
-  tngvi: tngvi,
-  sjm: sjm,
-  elab: elab,
-};
-
-const authCallbackMap: authCallbackIndexType = {
-  tngvi: 'https://qa.transformnarratives.org/cms/callback',
-  sjm: 'https://qa.sjmsymposium.org/cms/callback',
+const appConfigMap: appConfigType = {
+  tngvi: {
+    schema: tngvi,
+    storageAccount: 'tngvi',
+    authCallbackUrl: 'https://qa.transformnarratives.org/cms/callback',
+  },
+  sjm: {
+    schema: sjm,
+    storageAccount: 'sjmsymposium',
+    authCallbackUrl: 'https://qa.sjmsymposium.org/cms/callback',
+  },
+  elab: { schema: elab, storageAccount: 'elabhome', authCallbackUrl: '' },
 };
 
 const multer = require('multer');
@@ -60,7 +63,6 @@ cloudinary.config({
   secure: true,
 });
 
-const fs = require('fs-extra');
 const passport = require('passport');
 const AuthStrategy = require('passport-google-oauth20').Strategy;
 const MongoStore = require('connect-mongo')(session);
@@ -90,7 +92,7 @@ declare module 'express-session' {
     };
   }
 }
-// const ciMode = process.env.NODE_ENV === 'ci';
+const devMode = process.env.NODE_ENV === 'development';
 
 // Fallback
 let dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = {
@@ -100,14 +102,16 @@ let dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = {
 if (process.env.DB_URI) {
   dbConfig = {
     provider: 'postgresql',
-    url: `${process.env.DB_URI}/${appName}`,
+    url: `${process.env.DB_URI}/${appName}${
+      !devMode ? '?sslmode=require' : ''
+    }`,
   };
 }
 
 const Passport = () => {
   let authCallbackUrl = `http://localhost:${port}/cms/callback`;
   // If app env defined, use callback url defined in map (production)
-  if (process.env.APP) authCallbackUrl = authCallbackMap[appName];
+  if (process.env.APP) authCallbackUrl = appConfigMap[appName].authCallbackUrl;
 
   const strategy = new AuthStrategy(
     {
@@ -208,7 +212,7 @@ let ksConfig = (lists: any) => {
         app.get('/cms/prod-deploy', async (req, res, next) => {
           try {
             const response = await axios.get(
-              `${process.env.DEPLOY_API_PATH}&name=transform-narratives`
+              `${process.env.DEPLOY_API_PATH}&name=el-next`
             );
             res.status(200).send(response.data);
           } catch (err: any) {
@@ -448,5 +452,5 @@ let ksConfig = (lists: any) => {
 };
 
 export default (() => {
-  return ksConfig(schemaMap[appName]);
+  return ksConfig(appConfigMap[appName]);
 })();

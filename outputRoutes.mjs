@@ -15,7 +15,7 @@ export default (async () => {
   const files = await recursiveReaddirFiles(
     `${process.cwd()}/apps/${argv.app}/out`,
     {
-      ignored: /(\.js|.css|.json|.ico|.png|.DS_Store|favicon)$/,
+      ignored: /(\.js|.css|.json|.ico|.png|.DS_Store|.woff2|favicon)$/,
       filter: (item) => {
         return item.path;
       },

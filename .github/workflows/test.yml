@@ -59,12 +59,12 @@ jobs:
           yarn build
 
       - name: Serve build 
-        working-directory: ${{ format('./apps/{0}', github.event.client_payload.appName) }}
-        run: http-server out/ > http.log 2>&1 &
+        working-directory: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
+        run: pm2 start `which http-server` --name server
 
       - name: Output all build paths to .pa11yci config and run pa11y
         run: |
-          cat http.log
+          pm2 logs server
           node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
           pa11y-ci
 

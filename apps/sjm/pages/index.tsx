@@ -41,6 +41,11 @@ export default function Home({
   item,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [bgVideo, setBgVideo] = useState('');
+  const scrollToLogos = () => {
+    document.querySelector('#partners')!.scrollIntoView({
+      behavior: 'smooth',
+    });
+  };
 
   useEffect(() => {
     setBgVideo(
@@ -50,24 +55,6 @@ export default function Home({
   return (
     <>
       <section className="relative mt-6 lg:mt-0 bg-black">
-        <div className="flex flex-col items-center w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white">
-          <Image
-            id="logos"
-            alt="Engagement Lab and Emerson College logos"
-            imgId="sjm/logos/elab-emerson"
-            // width={500}
-            transforms="f_auto,dpr_auto"
-            className="max-w-full xl:max-w-screen-sm"
-          />
-          <h1 className="text-3xl md:text-7xl xl:text-8xl md:mt-8 w-full text-center">
-            Social Justice <br /> + Media Symposium
-          </h1>
-          <h3 className="md:text-2xl xl:text-3xl mt-1 md:mt-8 xl:w-3/4">
-            An annual gathering of students, faculty, and stakeholders to
-            explore how media practices and pedagogies can support equity,
-            justice, and positive social change in daily life.
-          </h3>
-        </div>
         {bgVideo.length > 0 && (
           <video
             playsInline
@@ -80,6 +67,35 @@ export default function Home({
             Your browser does not support the video tag.
           </video>
         )}
+        <div className="flex flex-col items-center w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white z-50">
+          <Image
+            id="logos"
+            alt="Engagement Lab and Emerson College logos"
+            imgId="sjm/logos/elab-emerson"
+            // width={500}
+            transforms="f_auto,dpr_auto"
+            className="max-w-sm md:max-w-lg"
+          />
+          <h1 className="text-3xl md:text-7xl xl:text-8xl md:mt-8 w-full text-center">
+            Social Justice <br /> + Media Symposium
+          </h1>
+          <h3 className="md:text-2xl xl:text-3xl mt-1 md:mt-8 xl:w-3/4">
+            An annual gathering of students, faculty, and stakeholders to
+            explore how media practices and pedagogies can support equity,
+            justice, and positive social change in daily life.
+          </h3>
+          <h4 className="md:text-3xl xl:text-4xl mt-1 md:mt-8">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToLogos();
+              }}
+            >
+              View All Partners
+            </a>
+          </h4>
+        </div>
       </section>
       <ParallaxBanner
         layers={[

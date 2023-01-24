@@ -67,7 +67,7 @@ export default function Home({
             Your browser does not support the video tag.
           </video>
         )}
-        <div className="flex flex-col items-center w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white z-50">
+        <div className="flex flex-col items-center w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white z-20">
           <Image
             id="logos"
             alt="Engagement Lab and Emerson College logos"

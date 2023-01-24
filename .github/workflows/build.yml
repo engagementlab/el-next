@@ -75,9 +75,8 @@ jobs:
         run: http-server out/ > http.log 2>&1 &
 
       - name: Output all build paths to .pa11yci config and run pa11y
-        working-directory: ./apps/tngvi  
         run: |
-          node outputRoutes.mjs
+          node outputRoutes.mjs --app tngvi
           pa11y-ci
 
       # Deploy static build to Azure storage if succeeded

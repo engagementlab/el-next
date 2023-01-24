@@ -212,11 +212,10 @@ let ksConfig = (lists: any) => {
         app.get('/cms/prod-deploy', async (req, res, next) => {
           try {
             const response = await axios.get(
-              `${process.env.DEPLOY_API_PATH}
-                &name=el-next
-                &storageAccount=${appConfigMap[appName].storageAccount}
-                &cmsUrl=${appConfigMap[appName].cmsUrl}`
+              `${process.env.DEPLOY_API_PATH}&name=el-next`
             );
+            //     &storageAccount=${appConfigMap[appName].storageAccount}
+            //     &cmsUrl=${appConfigMap[appName].cmsUrl}
             res.status(200).send(response.data);
           } catch (err: any) {
             res.status(500).send(err.message);

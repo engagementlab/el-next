@@ -1,0 +1,61 @@
+name: "Checkout latest HEAD commit, make build for all apps"
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [production]
+  workflow_call:
+env:
+  CI: true
+  DB_URI: ${{ secrets.DB_URI }}
+  NODE_ENV: production
+  AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+jobs:
+  build-tests:
+    # Do not run on automated commits (interpretation of TravisCI feature)
+    if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+      - name: Checkout code on HEAD
+        uses: actions/checkout@v2
+        if: ${{ github.event_name != 'pull_request' }}
+
+      # Do this only for PR to production, since we need to work on main during later commit, and PR's work off of merge ref
+      - name: Checkout code of PR HEAD
+        uses: actions/checkout@v2
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      
+      - name: Setup node.js ${{ matrix.node-version }}
+      
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install global packages
+        run: npm install -g pa11y-ci http-server @lhci/cli@0.6.x yarn pm2 @preconstruct/cli
+
+      - name: Install local monorepo packages and run preconstruct
+        run: yarn
+
+      # - name: Make all CMS export builds 
+      #   working-directory: ./apps/cms  
+      #   env:
+      #     AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
+      #     AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
+      #     DB_URI: ${{ secrets.DB_URI}}
+      #   run: |
+      #     yarn add typescript @types/node
+      #     yarn
+      #     yarn build
+
+      # - name: Make production build
+      #   working-directory: ./apps/tngvi  
+      #   run: |
+      #     yarn add typescript @types/node
+      #     yarn
+      #     yarn build

@@ -4,11 +4,14 @@ on:
     types: deploy-test
 env:
   CI: true
-  DB_URI: ${{ secrets.DB_URI }}
   NODE_ENV: production
+  DB_URI: ${{ secrets.DB_URI }}
   AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
 jobs:
-  build-tests:
+  initial-setup:
+    uses: engagementlab/el-next/.github/workflows/init.yml@main
+  run-cms:
+    needs: initial-setup
     name: "Make build, run cms"
     # Do not run on automated commits (interpretation of TravisCI feature)
     if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
@@ -21,26 +24,10 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
       - id: string-app-name
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ github.event.client_payload.appName }}
-
-      - name: Checkout code on HEAD
-        uses: actions/checkout@v2
-
-      - name: Setup node.js ${{ matrix.node-version }}      
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install global packages
-        run : npm install -g pa11y-ci http-server @lhci/cli@0.6.x yarn pm2 @preconstruct/cli
-
-      - name: Install local monorepo packages and run preconstruct
-        run : yarn 
-
       - name: Run CMS
         working-directory: ./apps/cms  
         env:
@@ -53,73 +40,77 @@ jobs:
           yarn postinstall --app sjm
           yarn build --app ${{ github.event.client_payload.appName }}
           pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+ 
+  production-build:
+    needs: [initial-setup, run-cms]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+    - name: Make production build
+      working-directory: ${{ format('./apps/{0}', github.event.client_payload.appName) }}
+      env:
+        APOLLO_CLIENT_GRAPHQL_URI: ${{ format('{0}/api/graphql', github.event.client_payload.cmsUrl) }}
+      run: |
+        yarn add typescript @types/node
+        yarn
+        yarn build
+    - name: Serve build 
+      working-directory: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
+      run: pm2 start `which http-server` --name server
+    - name: Output all build paths to .pa11yci config and run pa11y
+      run: |
+        node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
+        pa11y-ci
+    # Deploy static build to Azure storage if succeeded
+    # - name: Deploy static build
+    #   env:
+    #     APP_NAME: ${{ github.event.client_payload.appName }}
+    #     STORAGE_ACCOUNT: ${{ github.event.client_payload.storageAccount }}
+    #   # run Bash scripts
+    #   run: chmod 777 ./scripts/test.sh && ./scripts/test.sh
 
-      - name: Make production build
-        working-directory: ${{ format('./apps/{0}', github.event.client_payload.appName) }}
-        env:
-          APOLLO_CLIENT_GRAPHQL_URI: ${{ format('{0}/api/graphql', github.event.client_payload.cmsUrl) }}
-        run: |
-          yarn add typescript @types/node
-          yarn
-          yarn build
-
-      - name: Serve build 
-        working-directory: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
-        run: pm2 start `which http-server` --name server
-
-      - name: Output all build paths to .pa11yci config and run pa11y
-        run: |
-          node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
-          pa11y-ci
-
-      # Deploy static build to Azure storage if succeeded
-      - name: Deploy static build
-        env:
-          APP_NAME: ${{ github.event.client_payload.appName }}
-          STORAGE_ACCOUNT: ${{ github.event.client_payload.storageAccount }}
-        # run Bash scripts
-        run: chmod 777 ./scripts/test.sh && ./scripts/test.sh
-
-      - name: Send Slack message on success
-        id: slack
-        uses: slackapi/slack-github-action@v1.18.0
-        if: ${{ success() }}
-        with:
-          # Build succeeded
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run succeeded."
-                  }
+    - name: Send Slack message on success
+      id: slack
+      uses: slackapi/slack-github-action@v1.18.0
+      if: ${{ success() }}
+      with:
+        # Build succeeded
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run succeeded."
                 }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-      - name: Send Slack message on failure
-        id: slack-failure
-        uses: slackapi/slack-github-action@v1.18.0
-        if: ${{ failure() }}
-        with:
-          # Build failed
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run failed."
-                  }
+    - name: Send Slack message on failure
+      id: slack-failure
+      uses: slackapi/slack-github-action@v1.18.0
+      if: ${{ failure() }}
+      with:
+        # Build failed
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run failed."
                 }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

@@ -10,4 +10,4 @@ az storage blob upload-batch --overwrite true --account-name $STORAGE_ACCOUNT -d
 
 echo "------- Clear CDN cache. -------"
 # Clear CDN cache
-az cdn endpoint purge -g web -n $APP_NAME --content-paths '/*' --profile-name web-apps
+az cdn endpoint purge -g web -n $STORAGE_ACCOUNT --content-paths '/*' --profile-name web-apps

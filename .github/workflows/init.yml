@@ -6,10 +6,7 @@ on:
     branches: [production]
   workflow_call:
 env:
-  CI: true
-  DB_URI: ${{ secrets.DB_URI }}
   NODE_ENV: production
-  AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
 jobs:
   build-tests:
     # Do not run on automated commits (interpretation of TravisCI feature)

@@ -43,7 +43,7 @@ jobs:
         run: yarn
 
       - name: Run CMS
-        working-directory: cms  
+        working-directory: apps/cms  
         env:
           AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
           AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
@@ -70,7 +70,7 @@ jobs:
         yarn add typescript @types/node
         yarn
         yarn build
-        
+
     - name: Serve build 
       working-directory: ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
       run: pm2 start `which http-server` --name server

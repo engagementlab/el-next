@@ -36,7 +36,7 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ format('artifacts-{0}', github.run_id) }}
+          name: ${{ format('artifact-repo-{0}', github.run_id) }}
           retention-days: 1
           path: ./
 

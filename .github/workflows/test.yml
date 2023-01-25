@@ -71,7 +71,8 @@ jobs:
       run: |
         node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
         pa11y-ci
-    Deploy static build to Azure storage if succeeded
+        
+    # Deploy static build to Azure storage if succeeded
     - name: Deploy static build
       env:
         APP_NAME: ${{ github.event.client_payload.appName }}

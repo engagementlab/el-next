@@ -20,6 +20,11 @@ jobs:
       matrix:
         node-version: [16.13.1]
     steps:
+      - name: Download artifacts from initial-setup job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ format('artifacts-{0}', github.run_id) }}
+          
       - name: Login to Azure
         uses: azure/login@v1
         with:

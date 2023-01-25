@@ -36,20 +36,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install global packages
-        run: npm install -g pa11y-ci http-server @lhci/cli@0.6.x yarn pm2 @preconstruct/cli
-
-      - name: Install local monorepo packages and run preconstruct
-        run: yarn
-
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ format('artifacts-{0}', github.run_id) }}
           retention-days: 1
-          path: |
-            apps/cms
-            ${{ format('apps/{0}', github.event.client_payload.appName) }}
+          path: ./
 
       # - name: Make all CMS export builds 
       #   working-directory: ./apps/cms  

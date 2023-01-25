@@ -57,7 +57,7 @@ jobs:
         node-version: [16.13.1]
     steps:
     - name: Make production build
-      working-directory: github.event.client_payload.appName
+      working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
       env:
         APOLLO_CLIENT_GRAPHQL_URI: ${{ format('{0}/api/graphql', github.event.client_payload.cmsUrl) }}
       run: |
@@ -65,14 +65,13 @@ jobs:
         yarn
         yarn build
     - name: Serve build 
-      working-directory: ${{ format('{0}/out', github.event.client_payload.appName) }}
+      working-directory: ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
       run: pm2 start `which http-server` --name server
     - name: Output all build paths to .pa11yci config and run pa11y
       run: |
         node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
         pa11y-ci
-
-    # Deploy static build to Azure storage if succeeded
+    Deploy static build to Azure storage if succeeded
     - name: Deploy static build
       env:
         APP_NAME: ${{ github.event.client_payload.appName }}

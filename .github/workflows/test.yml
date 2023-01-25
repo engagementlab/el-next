@@ -29,17 +29,20 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - id: string-app-name
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ github.event.client_payload.appName }}
+
       - name: Run CMS
-        working-directory: ./apps/cms  
+        working-directory: apps/cms  
         env:
           AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
           AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
           DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
         run: |
+          ls
           yarn add typescript @types/node
           yarn
           yarn postinstall --app sjm
@@ -54,7 +57,7 @@ jobs:
         node-version: [16.13.1]
     steps:
     - name: Make production build
-      working-directory: ${{ format('./apps/{0}', github.event.client_payload.appName) }}
+      working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
       env:
         APOLLO_CLIENT_GRAPHQL_URI: ${{ format('{0}/api/graphql', github.event.client_payload.cmsUrl) }}
       run: |
@@ -62,7 +65,7 @@ jobs:
         yarn
         yarn build
     - name: Serve build 
-      working-directory: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
+      working-directory: ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
       run: pm2 start `which http-server` --name server
     - name: Output all build paths to .pa11yci config and run pa11y
       run: |

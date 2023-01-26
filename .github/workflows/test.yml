@@ -61,6 +61,7 @@ jobs:
           path: |
             ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
             ./scripts/test.sh
+            outputRoutes.mjs
  
   production-publish:
     name: "Publish new build to production"
@@ -89,7 +90,7 @@ jobs:
       - name: Output all build paths to .pa11yci config and run pa11y
         run: |
           node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
-          pa11y-ci          
+          pa11y-ci
           
       - name: Login to Azure
         uses: azure/login@v1
@@ -107,7 +108,7 @@ jobs:
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
           chmod 777 ./scripts/upload.sh && ./scripts/upload.sh
-          # chmod 777 ./scripts/commit.sh && ./scripts/commit.sh
+        # chmod 777 ./scripts/commit.sh && ./scripts/commit.sh
 
       - name: Send Slack message on success
         id: slack
@@ -126,6 +127,15 @@ jobs:
                             ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to 
                             <${{ format('https://{0}', github.event.client_payload.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
                   }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${{ github.event.client_payload.userName }} pushed this build.""
+                    }
+                  ]
                 }
               ]
             }
@@ -148,6 +158,15 @@ jobs:
                     "type": "mrkdwn",
                     "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run failed."
                   }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${{ github.event.client_payload.userName }} pushed this build.""
+                    }
+                  ]
                 }
               ]
             }

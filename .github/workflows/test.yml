@@ -24,17 +24,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
-          
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - id: string-app-name
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ github.event.client_payload.appName }}
-
 
       - name: Install global packages
         run: npm install -g yarn pm2 @preconstruct/cli
@@ -71,7 +65,7 @@ jobs:
           retention-days: 1
           path: ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
  
-  production-build:
+  production-publish:
     needs: [initial-setup, run-cms]
     runs-on: ubuntu-latest
     strategy:
@@ -82,7 +76,7 @@ jobs:
       - name: Install global packages
         run: npm install -g pa11y-ci http-server
 
-      - name: Download artifacts from initial-setup job
+      - name: Download artifacts from production build job
         uses: actions/download-artifact@v3
         with:
           name: ${{ format('artifact-build-{0}', github.run_id) }}
@@ -93,7 +87,12 @@ jobs:
       # - name: Output all build paths to .pa11yci config and run pa11y
       #   run: |
       #     node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
-      #     pa11y-ci
+      #     pa11y-ci          
+          
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
           
       # Deploy static build to Azure storage if succeeded
       - name: Deploy static build

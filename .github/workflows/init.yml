@@ -38,7 +38,10 @@ jobs:
         with:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
           retention-days: 1
-          path: ./
+          path: |
+            apps/cms/*
+            ${{ format('apps/{0}/*', github.event.client_payload.appName) }}
+            scripts/*
 
       # - name: Make all CMS export builds 
       #   working-directory: ./apps/cms  

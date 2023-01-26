@@ -12,7 +12,7 @@ jobs:
     uses: engagementlab/el-next/.github/workflows/init.yml@main
   run-cms:
     needs: initial-setup
-    name: "Make build, run cms"
+    name: "Run CMS, make build"
     # Do not run on automated commits (interpretation of TravisCI feature)
     if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
     runs-on: ubuntu-latest
@@ -24,11 +24,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
-
-      - id: string-app-name
-        uses: ASzc/change-string-case-action@v5
-        with:
-          string: ${{ github.event.client_payload.appName }}
 
       - name: Install global packages
         run: npm install -g yarn pm2 @preconstruct/cli
@@ -47,12 +42,12 @@ jobs:
           yarn
           yarn postinstall --app sjm
           yarn build --app ${{ github.event.client_payload.appName }}
-          pm2 start yarn --name "el-cms-new" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+          pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
 
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
         env:
-          APOLLO_CLIENT_GRAPHQL_URI: ${{ format('{0}/api/graphql', github.event.client_payload.cmsUrl) }}
+          APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}
         run: |
           yarn add typescript @types/node
           yarn
@@ -68,12 +63,17 @@ jobs:
             ./scripts/test.sh
  
   production-publish:
+    name: "Publish new build to production"
     needs: [initial-setup, run-cms]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [16.13.1]
     steps:
+      - id: string-app-name
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.event.client_payload.appName }}
 
       - name: Install global packages
         run: npm install -g pa11y-ci http-server
@@ -83,13 +83,13 @@ jobs:
         with:
           name: ${{ format('artifact-build-{0}', github.run_id) }}
           
-      # - name: Serve build 
-      #   working-directory: ./
-      #   run: pm2 start `which http-server` --name server
-      # - name: Output all build paths to .pa11yci config and run pa11y
-      #   run: |
-      #     node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
-      #     pa11y-ci          
+      - name: Serve build 
+        working-directory: ./
+        run: pm2 start `which http-server` --name server
+      - name: Output all build paths to .pa11yci config and run pa11y
+        run: |
+          node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
+          pa11y-ci          
           
       - name: Login to Azure
         uses: azure/login@v1
@@ -101,8 +101,13 @@ jobs:
         env:
           APP_NAME: ${{ github.event.client_payload.appName }}
           STORAGE_ACCOUNT: ${{ github.event.client_payload.storageAccount }}
-        # run Bash scripts
-        run: chmod 777 ./scripts/test.sh && ./scripts/test.sh
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GHA_RUNNUM: ${{ github.run_number }}
+        # Install azure-cli, run Bash scripts
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          chmod 777 ./scripts/upload.sh && ./scripts/upload.sh
+          # chmod 777 ./scripts/commit.sh && ./scripts/commit.sh
 
       - name: Send Slack message on success
         id: slack
@@ -117,7 +122,9 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run succeeded."
+                    "text": "_This is a test_. :white_check_mark: The latest build of 
+                            ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to 
+                            <${{ format('https://{0}', github.event.client_payload.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
                   }
                 }
               ]

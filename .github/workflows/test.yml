@@ -77,7 +77,7 @@ jobs:
           string: ${{ github.event.client_payload.appName }}
 
       - name: Install packages
-        run: npm i -g pa11y-ci http-server pm2 recursive-readdir-files lodash yargs
+        run: npm i -g pa11y-ci http-server pm2 && npm i
 
       - name: Download artifacts from production build job
         uses: actions/download-artifact@v3

@@ -76,7 +76,7 @@ jobs:
           string: ${{ github.event.client_payload.appName }}
 
       - name: Install global packages
-        run: npm install -g pa11y-ci http-server
+        run: npm install -g pa11y-ci http-server pm2
 
       - name: Download artifacts from production build job
         uses: actions/download-artifact@v3

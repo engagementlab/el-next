@@ -21,7 +21,7 @@ type appConfigType = {
   [key: string]: {
     schema: object;
     storageAccount: string;
-    cmsUrl: string;
+    apexUrl: string;
   };
 };
 
@@ -38,14 +38,14 @@ const appConfigMap: appConfigType = {
   tngvi: {
     schema: tngvi,
     storageAccount: 'tngvi',
-    cmsUrl: 'https://qa.transformnarratives.org',
+    apexUrl: 'transformnarratives.org',
   },
   sjm: {
     schema: sjm,
     storageAccount: 'sjmsymposium',
-    cmsUrl: 'https://qa.sjmsymposium.org',
+    apexUrl: 'sjmsymposium.org',
   },
-  elab: { schema: elab, storageAccount: 'elabhome', cmsUrl: '' },
+  elab: { schema: elab, storageAccount: 'elabhome', apexUrl: '' },
 };
 
 const multer = require('multer');
@@ -109,15 +109,16 @@ if (process.env.DB_URI) {
 }
 
 const Passport = () => {
-  let cmsUrl = `http://localhost:${port}/cms/callback`;
+  let apexUrl = `http://localhost:${port}/cms/callback`;
   // If app env defined, use callback url defined in map (production)
-  if (process.env.APP) cmsUrl = `${appConfigMap[appName].cmsUrl}/cms/callback`;
+  if (process.env.APP)
+    apexUrl = `${appConfigMap[appName].apexUrl}/cms/callback`;
 
   const strategy = new AuthStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: cmsUrl,
+      callbackURL: apexUrl,
     },
     (
       request: any,
@@ -215,7 +216,7 @@ let ksConfig = (lists: any) => {
               `${process.env.DEPLOY_API_PATH}&name=el-next`
             );
             //     &storageAccount=${appConfigMap[appName].storageAccount}
-            //     &cmsUrl=${appConfigMap[appName].cmsUrl}
+            //     &apexUrl=${appConfigMap[appName].apexUrl}
             res.status(200).send(response.data);
           } catch (err: any) {
             res.status(500).send(err.message);

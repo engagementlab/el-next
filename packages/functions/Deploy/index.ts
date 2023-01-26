@@ -19,7 +19,7 @@ const httpTrigger: AzureFunction = async function (
   const repoName = req.query.name;
   const appName = req.query.app;
   const storageAccount = req.query.storageAccount;
-  const cmsUrl = req.query.cmsUrl;
+  const apexUrl = req.query.apexUrl;
   const event = req.query.event;
   const workflowError = `We were unable to get the status of this deployment, however you should be able to find its status here: https://github.com/engagementlab/${repoName}/actions`;
 
@@ -39,11 +39,11 @@ const httpTrigger: AzureFunction = async function (
     };
     return;
   }
-  if (!cmsUrl) {
+  if (!apexUrl) {
     context.res = {
       status: 400,
       err: true,
-      body: 'Missing CMS URL',
+      body: 'Missing App Apex URL (domain.org)',
     };
     return;
   }
@@ -63,6 +63,7 @@ const httpTrigger: AzureFunction = async function (
         client_payload: {
           appName: appName || 'tngvi',
           storageAccount,
+          apexUrl,
         },
       }
     );

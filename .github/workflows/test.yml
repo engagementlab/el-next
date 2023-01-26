@@ -63,7 +63,9 @@ jobs:
         with:
           name: ${{ format('artifact-build-{0}', github.run_id) }}
           retention-days: 1
-          path: ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
+          path: |
+            ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
+            ./scripts/test.sh
  
   production-publish:
     needs: [initial-setup, run-cms]
@@ -93,7 +95,7 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
+
       # Deploy static build to Azure storage if succeeded
       - name: Deploy static build
         env:

@@ -62,6 +62,7 @@ jobs:
             ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
             ./scripts/test.sh
             outputRoutes.mjs
+            package.json
  
   production-publish:
     name: "Publish new build to production"

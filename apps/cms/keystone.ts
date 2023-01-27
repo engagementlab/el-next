@@ -16,6 +16,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { tngvi, sjm, elab } from './admin/schema';
 import { getNews } from './routes/news';
 import _ from 'lodash';
+import cors from 'cors';
 
 type appConfigType = {
   [key: string]: {
@@ -109,16 +110,16 @@ if (process.env.DB_URI) {
 }
 
 const Passport = () => {
-  let apexUrl = `http://localhost:${port}/cms/callback`;
+  let callbackURL = `http://localhost:${port}/cms/callback`;
   // If app env defined, use callback url defined in map (production)
   if (process.env.APP)
-    apexUrl = `${appConfigMap[appName].apexUrl}/cms/callback`;
+    callbackURL = `${appConfigMap[appName].apexUrl}/cms/callback`;
 
   const strategy = new AuthStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: apexUrl,
+      callbackURL,
     },
     (
       request: any,
@@ -163,7 +164,6 @@ const Passport = () => {
   });
   passport.deserializeUser(
     (user: any, done: (arg0: null, arg1: any) => void) => {
-      // console.log('de', user);
       done(null, user);
     }
   );
@@ -186,6 +186,9 @@ let ksConfig = (lists: any) => {
       port,
       maxFileSize: 1024 * 1024 * 50,
       extendExpressApp: (app: e.Express, createContext: any) => {
+        app.use(cors({ credentials: true }));
+        app.enable('trust proxy');
+
         app.all('/*', (req, res, next) => {
           res.header('Access-Control-Allow-Origin', '*');
           // res.header('Access-Control-Allow-Credentials', true)
@@ -209,19 +212,6 @@ let ksConfig = (lists: any) => {
         });
 
         app.get('/cms/rest/news/:key?', getNews);
-
-        app.get('/cms/prod-deploy', async (req, res, next) => {
-          try {
-            const response = await axios.get(
-              `${process.env.DEPLOY_API_PATH}&name=el-next`
-            );
-            //     &storageAccount=${appConfigMap[appName].storageAccount}
-            //     &apexUrl=${appConfigMap[appName].apexUrl}
-            res.status(200).send(response.data);
-          } catch (err: any) {
-            res.status(500).send(err.message);
-          }
-        });
 
         app.get('/cms/media/videos', async (req, res, next) => {
           try {
@@ -368,6 +358,7 @@ let ksConfig = (lists: any) => {
             '/cms/login',
             p.authenticate('google', {
               scope: ['openid', 'email'],
+              session: true,
             })
           );
 
@@ -428,6 +419,26 @@ let ksConfig = (lists: any) => {
               next();
           });
         }
+
+        app.get('/cms/prod-deploy', async (req, res, next) => {
+          try {
+            const response = await axios.post(
+              process.env.DEPLOY_API_PATH as string,
+              {
+                repo: 'el-next',
+                appName,
+                storageAccount: appConfigMap[appName].storageAccount,
+                apexUrl: appConfigMap[appName].apexUrl,
+                userName: req.session.passport?.user.name,
+              }
+            );
+            res.status(200).send(response.data);
+            // console.log(req.session);
+            // res.status(200).send('response.data');
+          } catch (err: any) {
+            res.status(500).send(err.message);
+          }
+        });
       },
     },
     ui: {

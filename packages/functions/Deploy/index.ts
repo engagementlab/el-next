@@ -16,12 +16,15 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  const repoName = req.query.name;
-  const appName = req.query.app;
-  const storageAccount = req.query.storageAccount;
-  const apexUrl = req.query.apexUrl;
-  const event = req.query.event;
-  const workflowError = `We were unable to get the status of this deployment, however you should be able to find its status here: https://github.com/engagementlab/${repoName}/actions`;
+  const repoName = req.body.repo;
+  const appName = req.body.app;
+  const storageAccount = req.body.storageAccount;
+  const apexUrl = req.body.apexUrl;
+  const event = req.body.event;
+
+  const workflowError = `
+    We were unable to get the status of this deployment, however you should be able to find its status here: https://github.com/engagementlab/${repoName}/actions
+  `;
 
   if (!repoName) {
     context.res = {

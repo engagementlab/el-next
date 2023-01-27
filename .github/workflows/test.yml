@@ -72,6 +72,11 @@ jobs:
       matrix:
         node-version: [16.13.1]
     steps:
+      - name: Download artifacts from production build job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ format('artifact-build-{0}', github.run_id) }}
+          
       - id: string-app-name
         uses: ASzc/change-string-case-action@v5
         with:
@@ -79,11 +84,6 @@ jobs:
 
       - name: Install packages
         run: npm i -g pa11y-ci http-server pm2 && npm i
-
-      - name: Download artifacts from production build job
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ format('artifact-build-{0}', github.run_id) }}
           
       - name: Serve build 
         working-directory: ./

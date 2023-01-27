@@ -76,7 +76,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ format('artifact-build-{0}', github.run_id) }}
-          
+
       - id: string-app-name
         uses: ASzc/change-string-case-action@v5
         with:
@@ -124,7 +124,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "_This is a test_. :white_check_mark: The latest build of 
+                    "text": ":white_check_mark: The latest build of 
                             ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to 
                             <${{ format('https://{0}', github.event.client_payload.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
                   }
@@ -157,7 +157,8 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "_This is a test_. ${{ steps.string-app-name.outputs.uppercase }} test run failed."
+                    "text": ":x: The latest build of ${{ steps.string-app-name.outputs.uppercase }} just failed. 
+                              _(Build #${{ github.run_number }})_"
                   }
                 },
                 {
@@ -166,6 +167,15 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "${{ github.event.client_payload.userName }} pushed this build."
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "<@U044WFR24> please look at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|build logs>."
                     }
                   ]
                 }

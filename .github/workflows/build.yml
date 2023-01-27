@@ -132,16 +132,8 @@ jobs:
                     "type": "mrkdwn",
                     "text": ":x: The latest build of TNGVI just failed. _(Build #${{ github.run_number }})_"
                   }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "<@U044WFR24> please look at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|build logs>."
-                    }
-                  ]
-                }
+                }                &storageAccount=${appConfigMap[appName].storageAccount}
+
               ]
             }
         env:

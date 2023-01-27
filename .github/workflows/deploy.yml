@@ -1,7 +1,7 @@
-name: test
+name: Deploy app to production
 on: 
   repository_dispatch:
-    types: deploy-test
+    types: deploy-prod
 env:
   CI: true
   NODE_ENV: production

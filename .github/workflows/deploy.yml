@@ -9,6 +9,7 @@ env:
   AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
 jobs:
   initial-setup:
+    name: "Initial setup"
     uses: engagementlab/el-next/.github/workflows/init.yml@main
   run-cms:
     needs: initial-setup

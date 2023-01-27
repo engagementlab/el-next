@@ -113,7 +113,7 @@ const Passport = () => {
   let callbackURL = `http://localhost:${port}/cms/callback`;
   // If app env defined, use callback url defined in map (production)
   if (process.env.APP)
-    callbackURL = `${appConfigMap[appName].apexUrl}/cms/callback`;
+    callbackURL = `https://qa.${appConfigMap[appName].apexUrl}/cms/callback`;
 
   const strategy = new AuthStrategy(
     {

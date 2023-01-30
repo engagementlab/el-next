@@ -12,7 +12,7 @@
     "migrate": "keystone prisma migrate deploy",
     "watch-export": "npx babel export/src -d export/lib --extensions .ts,.tsx --watch",
     "postinstall": "keystone postinstall --fix --app sjm",
-    "postinstall-ci": "keystone postinstall --fix --app sjm"
+    "postinstall-ci": "keystone postinstall --fix"
   },
   "dependencies": {
     "@emotion/core": "10.3.1",

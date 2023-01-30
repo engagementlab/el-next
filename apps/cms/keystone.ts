@@ -69,11 +69,14 @@ const AuthStrategy = require('passport-google-oauth20').Strategy;
 const MongoStore = require('connect-mongo')(session);
 const DB = require('./db');
 
-let appName: string = argv.app || 'tngvi';
+let appName: string = argv.app;
 if (process.env.APP) {
   appName = process.env.APP;
-  console.log('Found app name: ' + appName);
 }
+if (appName === undefined || appName.length === 0)
+  throw new Error('--app argument must be specified');
+
+console.log('Found app name: ' + appName);
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -432,8 +435,8 @@ let ksConfig = (lists: any) => {
                 userName: req.session.passport?.user.name,
               }
             );
+            console.log(appName);
             res.status(200).send(response.data);
-            // console.log(req.session);
             // res.status(200).send('response.data');
           } catch (err: any) {
             res.status(500).send(err.message);

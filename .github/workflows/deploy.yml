@@ -32,18 +32,18 @@ jobs:
       - name: Install local monorepo packages and run preconstruct
         run: yarn
 
-      - name: Run CMS
-        working-directory: apps/cms  
-        env:
-          AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
-          AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
-          DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
-        run: |
-          yarn add typescript @types/node yargs
-          yarn
-          yarn postinstall --app ${{ github.event.client_payload.appName }}
-          yarn build --app ${{ github.event.client_payload.appName }}
-          pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+      # - name: Run CMS
+      #   working-directory: apps/cms  
+      #   env:
+      #     AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
+      #     AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
+      #     DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
+      #   run: |
+      #     yarn add typescript @types/node yargs
+      #     yarn
+      #     yarn postinstall --app ${{ github.event.client_payload.appName }}
+      #     yarn build --app ${{ github.event.client_payload.appName }}
+      #     pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
 
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}

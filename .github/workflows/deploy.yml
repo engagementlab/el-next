@@ -41,7 +41,7 @@ jobs:
         run: |
           yarn add typescript @types/node yargs
           yarn
-          yarn postinstall --app sjm
+          yarn postinstall --app ${{ github.event.client_payload.appName }}
           yarn build --app ${{ github.event.client_payload.appName }}
           pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
 

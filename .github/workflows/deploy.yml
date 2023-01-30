@@ -61,7 +61,8 @@ jobs:
           retention-days: 1
           path: |
             ${{ format('apps/{0}/out', github.event.client_payload.appName) }}
-            ./scripts/test.sh
+            ./scripts/upload.sh
+            ./scripts/commit.sh
             outputRoutes.mjs
             package.json
  
@@ -125,9 +126,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: The latest build of 
-                            ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to 
-                            <${{ format('https://{0}', github.event.client_payload.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
+                    "text": ":white_check_mark: The latest build of ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to <${{ format('https://{0}', github.event.client_payload.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
                   }
                 },
                 {
@@ -158,8 +157,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: The latest build of ${{ steps.string-app-name.outputs.uppercase }} just failed. 
-                              _(Build #${{ github.run_number }})_"
+                    "text": ":x: The latest build of ${{ steps.string-app-name.outputs.uppercase }} just failed. _(Build #${{ github.run_number }})_"
                   }
                 },
                 {

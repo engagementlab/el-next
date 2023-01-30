@@ -17,7 +17,7 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   const repoName = req.body.repo;
-  const appName = req.body.app;
+  const appName = req.body.appName;
   const storageAccount = req.body.storageAccount;
   const apexUrl = req.body.apexUrl;
   const event = req.body.event;

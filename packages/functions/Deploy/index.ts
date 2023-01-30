@@ -20,6 +20,7 @@ const httpTrigger: AzureFunction = async function (
   const appName = req.body.appName;
   const storageAccount = req.body.storageAccount;
   const apexUrl = req.body.apexUrl;
+  const userName = req.body.userName;
   const event = req.body.event;
 
   const workflowError = `
@@ -50,6 +51,14 @@ const httpTrigger: AzureFunction = async function (
     };
     return;
   }
+  if (!userName) {
+    context.res = {
+      status: 400,
+      err: true,
+      body: 'Missing User name',
+    };
+    return;
+  }
   const requestWithAuth = request.defaults({
     headers: {
       authorization: `token ${process.env.GITHUB_TOKEN}`,
@@ -67,6 +76,7 @@ const httpTrigger: AzureFunction = async function (
           appName: appName || 'tngvi',
           storageAccount,
           apexUrl,
+          userName,
         },
       }
     );

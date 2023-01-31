@@ -21,7 +21,7 @@ env:
   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 jobs:
   with-note:
-    if: ${{ inputs.note != undefined }}
+    if: ${{ inputs.note != null }}
     runs-on: ubuntu-latest
     strategy:
       matrix:

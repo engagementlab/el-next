@@ -117,8 +117,8 @@ jobs:
     name: "Send Slack notification"
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
-      appName: $ {{  github.event.client_payload.appName }}
-      apexUrl: $ {{ github.event.client_payload.apexUrl }}
-      note: $ {{ github.event.client_payload.note }}
-      success: $ {{ success() }}
-      userName: $ {{ github.event.client_payload.userName }}
+      appName: ${{  github.event.client_payload.appName }}
+      apexUrl: ${{ github.event.client_payload.apexUrl }}
+      note: ${{ github.event.client_payload.note }}
+      success: ${{ success() }}
+      userName: ${{ github.event.client_payload.userName }}

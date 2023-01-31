@@ -111,6 +111,7 @@ jobs:
   slack:
     name: "Send Slack notification"
     if: ${{ success() }}
+    needs: [initial-setup, run-cms, production-publish]
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
       apexUrl: ${{ github.event.client_payload.apexUrl }}
@@ -121,6 +122,7 @@ jobs:
   slack-fail:
     name: "Send Slack notification"
     if: ${{ failure() }}
+    needs: [initial-setup, run-cms, production-publish]
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
       apexUrl: ${{ github.event.client_payload.apexUrl }}

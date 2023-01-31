@@ -16,12 +16,13 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  const repoName = req.body.repo;
-  const appName = req.body.appName;
-  const storageAccount = req.body.storageAccount;
   const apexUrl = req.body.apexUrl;
-  const userName = req.body.userName;
+  const appName = req.body.appName;
   const event = req.body.event;
+  const note = req.body.note;
+  const repoName = req.body.repo;
+  const storageAccount = req.body.storageAccount;
+  const userName = req.body.userName;
 
   const workflowError = `
     We were unable to get the status of this deployment, however you should be able to find its status here: https://github.com/engagementlab/${repoName}/actions
@@ -73,9 +74,10 @@ const httpTrigger: AzureFunction = async function (
         repo: repoName,
         event_type: event || 'deploy-prod',
         client_payload: {
-          appName: appName || 'tngvi',
-          storageAccount,
           apexUrl,
+          appName: appName || 'tngvi',
+          note,
+          storageAccount,
           userName,
         },
       }

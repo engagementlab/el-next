@@ -40,3 +40,9 @@ jobs:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
           retention-days: 1
           path: ./
+
+      - name: Generate list using Markdown
+        run: |
+          echo "This is the lead in sentence for the list" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "- Lets add a bullet point" >> $GITHUB_STEP_SUMMARY

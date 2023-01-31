@@ -27,6 +27,11 @@ jobs:
       matrix:
         node-version: [16.13.1]
     steps:
+      - id: string-app-name
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.event.client_payload.appName }}
+
       # Build succeeded
       - name: Send Slack message on success
         id: slack
@@ -40,7 +45,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: The latest build of ${{ inputs.appName }} has successfully been published to <${{ format('https://{0}', inputs.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
+                    "text": ":white_check_mark: The latest build of ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to <${{ format('https://{0}', inputs.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
                   }
                 },
                 {
@@ -75,7 +80,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: The latest build of ${{ inputs.appName }} just failed. _(Build #${{ github.run_number }})_"
+                    "text": ":x: The latest build of ${{ steps.string-app-name.outputs.uppercase }} just failed. _(Build #${{ github.run_number }})_"
                   }
                 },
                 {

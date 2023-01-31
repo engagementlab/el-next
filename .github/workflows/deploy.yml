@@ -79,11 +79,6 @@ jobs:
         with:
           name: ${{ format('artifact-build-{0}', github.run_id) }}
 
-      - id: string-app-name
-        uses: ASzc/change-string-case-action@v5
-        with:
-          string: ${{ github.event.client_payload.appName }}
-
       - name: Install packages
         run: npm i -g pa11y-ci http-server pm2 && npm i
           
@@ -118,7 +113,6 @@ jobs:
     if: ${{ success() }}
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
-      appName: ${{ steps.string-app-name.outputs.uppercase }}
       apexUrl: ${{ github.event.client_payload.apexUrl }}
       note: ${{ github.event.client_payload.note }}
       userName: ${{ github.event.client_payload.userName }}
@@ -129,7 +123,6 @@ jobs:
     if: ${{ failure() }}
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
-      appName: ${{ steps.string-app-name.outputs.uppercase }}
       apexUrl: ${{ github.event.client_payload.apexUrl }}
       note: ${{ github.event.client_payload.note }}
       userName: ${{ github.event.client_payload.userName }}

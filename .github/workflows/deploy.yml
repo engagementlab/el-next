@@ -115,10 +115,22 @@ jobs:
 
   slack:
     name: "Send Slack notification"
+    if: ${{ success() }}
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
-      appName: ${{  github.event.client_payload.appName }}
+      appName: ${{ steps.string-app-name.outputs.uppercase }}
       apexUrl: ${{ github.event.client_payload.apexUrl }}
       note: ${{ github.event.client_payload.note }}
-      success: ${{ success() }}
       userName: ${{ github.event.client_payload.userName }}
+      success: true
+
+  slack-fail:
+    name: "Send Slack notification"
+    if: ${{ failure() }}
+    uses: engagementlab/el-next/.github/workflows/slack.yml@main
+    with:
+      appName: ${{ steps.string-app-name.outputs.uppercase }}
+      apexUrl: ${{ github.event.client_payload.apexUrl }}
+      note: ${{ github.event.client_payload.note }}
+      userName: ${{ github.event.client_payload.userName }}
+      success: false

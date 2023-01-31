@@ -110,33 +110,33 @@ jobs:
 
   notify-and-commit:
     needs: [initial-setup, run-cms, production-publish]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.13.1]
-    steps:
+    name: Send Slack notification on success
+    if: ${{ success() }}
+    uses: engagementlab/el-next/.github/workflows/slack.yml@main
+    with:
+      apexUrl: ${{ github.event.client_payload.apexUrl }}
+      note: ${{ github.event.client_payload.note }}
+      userName: ${{ github.event.client_payload.userName }}
+      success: true
+    secrets: inherit
+    
+    # runs-on: ubuntu-latest
+    # strategy:
+    #   matrix:
+    #     node-version: [16.13.1]
+    # steps:
       # - name: Generate list using Markdown
       #   run: |
       #     echo "This is the lead in sentence for the list" >> $GITHUB_STEP_SUMMARY
       #     echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
       #     echo "- Lets add a bullet point" >> $GITHUB_STEP_SUMMARY
 
-      - name: Send Slack notification on success
-        if: ${{ success() }}
-        uses: engagementlab/el-next/.github/workflows/slack.yml@main
-        with:
-          apexUrl: ${{ github.event.client_payload.apexUrl }}
-          note: ${{ github.event.client_payload.note }}
-          userName: ${{ github.event.client_payload.userName }}
-          success: true
-        secrets: inherit
-
-      - name: Send Slack notification on failure
-        if: ${{ failure() }}
-        uses: engagementlab/el-next/.github/workflows/slack.yml@main
-        with:
-          apexUrl: ${{ github.event.client_payload.apexUrl }}
-          note: ${{ github.event.client_payload.note }}
-          userName: ${{ github.event.client_payload.userName }}
-          success: false
-        secrets: inherit
+      # - name: Send Slack notification on failure
+      #   if: ${{ failure() }}
+      #   uses: engagementlab/el-next/.github/workflows/slack.yml@main
+      #   with:
+      #     apexUrl: ${{ github.event.client_payload.apexUrl }}
+      #     note: ${{ github.event.client_payload.note }}
+      #     userName: ${{ github.event.client_payload.userName }}
+      #     success: false
+      #   secrets: inherit

@@ -423,7 +423,7 @@ let ksConfig = (lists: any) => {
           });
         }
 
-        app.get('/cms/prod-deploy', async (req, res, next) => {
+        app.get('/cms/prod-deploy/:note?', async (req, res, next) => {
           try {
             const response = await axios.post(
               process.env.DEPLOY_API_PATH as string,
@@ -433,11 +433,12 @@ let ksConfig = (lists: any) => {
                 storageAccount: appConfigMap[appName].storageAccount,
                 apexUrl: appConfigMap[appName].apexUrl,
                 userName: req.session.passport?.user.name,
+                note: req.query.note,
               }
             );
-            console.log(appName);
+
             res.status(200).send(response.data);
-            // res.status(200).send('response.data');
+            // console.log(req.query.note);
           } catch (err: any) {
             res.status(500).send(err.message);
           }

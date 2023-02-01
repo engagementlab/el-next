@@ -108,7 +108,17 @@ jobs:
           chmod 777 ./scripts/upload.sh && ./scripts/upload.sh
         # chmod 777 ./scripts/commit.sh && ./scripts/commit.sh
 
-  notify-and-commit:
+  make-notes-and-commit:
+    runs-on: ubuntu-latest
+    needs: [initial-setup, run-cms, production-publish]
+    steps:
+      - name: Generate build notes and summary from user
+        if: ${{ github.event.client_payload.note != null }}
+        run: |
+          echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
+          echo ${{ github.event.client_payload.note }} >> $GITHUB_STEP_SUMMARY
+
+  notify-success:
     needs: [initial-setup, run-cms, production-publish]
     name: Send Slack notification on success
     if: ${{ success() }}
@@ -119,24 +129,14 @@ jobs:
       userName: ${{ github.event.client_payload.userName }}
       success: true
     secrets: inherit
-    
-    # runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     node-version: [16.13.1]
-    # steps:
-      # - name: Generate list using Markdown
-      #   run: |
-      #     echo "This is the lead in sentence for the list" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-      #     echo "- Lets add a bullet point" >> $GITHUB_STEP_SUMMARY
 
-      # - name: Send Slack notification on failure
-      #   if: ${{ failure() }}
-      #   uses: engagementlab/el-next/.github/workflows/slack.yml@main
-      #   with:
-      #     apexUrl: ${{ github.event.client_payload.apexUrl }}
-      #     note: ${{ github.event.client_payload.note }}
-      #     userName: ${{ github.event.client_payload.userName }}
-      #     success: false
-      #   secrets: inherit
+  notify-failure:
+    name: Send Slack notification on failure
+    if: ${{ failure() }}
+    uses: engagementlab/el-next/.github/workflows/slack.yml@main
+    with:
+      apexUrl: ${{ github.event.client_payload.apexUrl }}
+      note: ${{ github.event.client_payload.note }}
+      userName: ${{ github.event.client_payload.userName }}
+      success: false
+    secrets: inherit

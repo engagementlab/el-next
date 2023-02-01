@@ -18,19 +18,19 @@ jobs:
         node-version: [16.13.1]
     steps:
       - name: Checkout code on HEAD
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         if: ${{ github.event_name != 'pull_request' }}
 
       # Do this only for PR to production, since we need to work on main during later commit, and PR's work off of merge ref
       - name: Checkout code of PR HEAD
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       
       - name: Setup node.js ${{ matrix.node-version }}
       
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -40,9 +40,3 @@ jobs:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
           retention-days: 1
           path: ./
-
-      - name: Generate list using Markdown
-        run: |
-          echo "This is the lead in sentence for the list" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "- Lets add a bullet point" >> $GITHUB_STEP_SUMMARY

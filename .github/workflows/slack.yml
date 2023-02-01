@@ -31,10 +31,10 @@ jobs:
           string: ${{ github.event.client_payload.appName }}
 
       # Build succeeded
-      - name: Send Slack message on success
+      - name: Send Slack message with user note on success
         id: slack
         uses: slackapi/slack-github-action@v1.18.0
-        if: ${{ inputs.success }}
+        if: ${{ inputs.success && inputs.note != null }}
         with:
           payload: |
             {
@@ -50,7 +50,34 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":scroll: \"${{ inputs.note }}\""
+                    "text": "> :scroll: ${{ inputs.userName }} says: \"${{ inputs.note }}\""
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${{ inputs.userName }} pushed this build."
+                    }
+                  ]
+                }
+              ]
+            }
+
+      - name: Send Slack message on success
+        id: slack
+        uses: slackapi/slack-github-action@v1.18.0
+        if: ${{ inputs.success && inputs.note == null }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: The latest build of ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to <${{ format('https://{0}', inputs.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
                   }
                 },
                 {

@@ -113,7 +113,7 @@ jobs:
           add: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
           author_name: ELDevBot
           author_email: engagementlab@emerson.edu
-          message: "Automated generated static production app (GH action #${{ GITHUB_RUN_ID }}) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
+          message: "Automated generated static production app (GH action #${{ env.GITHUB_RUN_ID }}) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
 
       - name: Generate build notes and summary from user
         if: ${{ github.event.client_payload.note != null }}

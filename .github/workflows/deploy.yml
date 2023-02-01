@@ -100,23 +100,27 @@ jobs:
         env:
           APP_NAME: ${{ github.event.client_payload.appName }}
           STORAGE_ACCOUNT: ${{ github.event.client_payload.storageAccount }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GHA_RUNNUM: ${{ github.run_number }}
         # Install azure-cli, run Bash scripts
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
           chmod 777 ./scripts/upload.sh && ./scripts/upload.sh
         # chmod 777 ./scripts/commit.sh && ./scripts/commit.sh
 
-  make-notes-and-commit:
-    runs-on: ubuntu-latest
-    needs: [initial-setup, run-cms, production-publish]
-    steps:
+      - name: Commit build Output
+        uses: EndBug/add-and-commit@v9
+        id: commit
+        with:
+          add: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
+          author_name: ELDevBot
+          author_email: engagementlab@emerson.edu
+          message: "Automated generated static production app (GH action #${{ GITHUB_RUN_ID }}) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
+
       - name: Generate build notes and summary from user
         if: ${{ github.event.client_payload.note != null }}
         run: |
           echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
-          echo ${{ github.event.client_payload.note }} >> $GITHUB_STEP_SUMMARY
+          echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
+          echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY
 
   notify-success:
     needs: [initial-setup, run-cms, production-publish]

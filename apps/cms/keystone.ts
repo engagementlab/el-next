@@ -432,7 +432,7 @@ let ksConfig = (lists: any) => {
                 appName,
                 storageAccount: appConfigMap[appName].storageAccount,
                 apexUrl: appConfigMap[appName].apexUrl,
-                userName: req.session.passport?.user.name,
+                userName: req.session.passport?.user.name.split(' ')[0],
                 note: req.query.note,
               }
             );

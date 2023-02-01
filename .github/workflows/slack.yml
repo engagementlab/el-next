@@ -32,7 +32,7 @@ jobs:
 
       # Build succeeded
       - name: Send Slack message with user note on success
-        id: slack
+        id: slack-with-user-note
         uses: slackapi/slack-github-action@v1.18.0
         if: ${{ inputs.success && inputs.note != null }}
         with:

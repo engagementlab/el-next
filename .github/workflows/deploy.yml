@@ -53,6 +53,22 @@ jobs:
           yarn add typescript @types/node
           yarn
           yarn build
+
+      - name: Commit build Output
+        uses: EndBug/add-and-commit@v9
+        id: commit
+        with:
+          add: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
+          author_name: ELDevBot
+          author_email: engagementlab@emerson.edu
+          message: "Automated generated static production app (GH action #${{ env.GITHUB_RUN_ID }}) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
+
+      - name: Generate build notes and summary from user
+        if: ${{ github.event.client_payload.note != null }}
+        run: |
+          echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
+          echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
+          echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY
            
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
@@ -106,25 +122,9 @@ jobs:
           chmod 777 ./scripts/upload.sh && ./scripts/upload.sh
         # chmod 777 ./scripts/commit.sh && ./scripts/commit.sh
 
-      - name: Commit build Output
-        uses: EndBug/add-and-commit@v9
-        id: commit
-        with:
-          add: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
-          author_name: ELDevBot
-          author_email: engagementlab@emerson.edu
-          message: "Automated generated static production app (GH action #${{ env.GITHUB_RUN_ID }}) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
-
-      - name: Generate build notes and summary from user
-        if: ${{ github.event.client_payload.note != null }}
-        run: |
-          echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
-          echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
-          echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY
-
   notify-success:
+    name: Send success Slack notification
     needs: [initial-setup, run-cms, production-publish]
-    name: Send Slack notification on success
     if: ${{ success() }}
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:
@@ -135,7 +135,8 @@ jobs:
     secrets: inherit
 
   notify-failure:
-    name: Send Slack notification on failure
+    name: Send failure Slack notification 
+    needs: [initial-setup, run-cms, production-publish]
     if: ${{ failure() }}
     uses: engagementlab/el-next/.github/workflows/slack.yml@main
     with:

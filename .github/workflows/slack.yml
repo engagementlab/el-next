@@ -50,7 +50,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "> :pencil2: ${{ inputs.userName }} says: _\"${{ inputs.note }}\"_"
+                    "text": "> :pencil2: ${{ inputs.userName }} says: _${{ inputs.note }}_"
                   }
                 },
               ]

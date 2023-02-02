@@ -74,6 +74,7 @@ jobs:
           git remote set-url origin ${{ format('https://{0}@github.com/engagementlab/el-next', secrets.GH_TOKEN) }}
           git add ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
           git commit --message "Automated generated static production app (GH action #$GHA_RUNNUM) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
+          git push
 
       - name: Generate build notes and summary from user
         if: ${{ github.event.client_payload.note != null }}

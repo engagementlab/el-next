@@ -55,7 +55,7 @@ jobs:
           yarn build
 
       - name: Set git remote URL w/ token
-        run: git remote set-url origin https://$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+        run: git remote set-url origin ${{ format('https://{0}@github.com/{1}, $GH_TOKEN, $GITHUB_REPOSITORY) }}
 
       - name: Commit build Output
         uses: EndBug/add-and-commit@v9

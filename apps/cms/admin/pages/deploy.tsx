@@ -93,28 +93,10 @@ export default function Deploy() {
         <p>
           The build to production is now being deployed via Github. This can
           take up to 10 minutes. We are not able to monitor the progress of this
-          here but you can view the status <a href={actionsLink}>here</a>.
-          <p>
-            If you see this icon when the build is finished, something is wrong.
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              version="1.1"
-              aria-hidden="true"
-              style={{
-                fill: 'rgb(207, 34, 46)',
-                display: 'block',
-                margin: '1rem',
-              }}
-            >
-              <path
-                fillRule="evenodd"
-                d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm8.036-4.024a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z"
-              ></path>
-            </svg>
-            Please find your friendly neighborhood developer.
-          </p>
+          here but you can view progress <a href={actionsLink}>here</a>. The
+          status will also show up in{' '}
+          <a href="https://engagelab.slack.com/archives/C03G64ZUNTY">#builds</a>
+          .
         </p>
       ) : (
         <>

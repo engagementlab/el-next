@@ -54,27 +54,15 @@ jobs:
           yarn
           yarn build
 
-      # - name: Set git remote URL w/ token
-      #   run: git remote set-url origin ${{ format('https://{0}@github.com/engagementlab/el-next', secrets.GH_TOKEN) }}
+      # - name: Commit build
+      #   run: |
+      #     git config --global user.name "ELDevBot"
+      #     git config --global user.email engagementlab@emerson.edu
 
-      # - name: 
-      #   uses: EndBug/add-and-commit@v9
-      #   id: commit
-      #   with:
-      #     add: ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
-      #     author_name: ELDevBot
-      #     author_email: engagementlab@emerson.edu
-      #     message: "Automated generated static production app (GH action #${{ env.GITHUB_RUN_ID }}) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
-           
-      - name: Commit build
-        run: |
-          git config --global user.name "ELDevBot"
-          git config --global user.email engagementlab@emerson.edu
-
-          git remote set-url origin ${{ format('https://{0}@github.com/engagementlab/el-next', secrets.GH_TOKEN) }}
-          git add ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
-          git commit --message "Automated generated static production app (GH action #$GHA_RUNNUM) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
-          git push
+      #     git remote set-url origin ${{ format('https://ELDevBot:{0}@github.com/engagementlab/el-next', secrets.GH_TOKEN) }}
+      #     git add ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
+      #     git commit --message "Automated generated static production app (GH action #$GHA_RUNNUM) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
+      #     git push
 
       - name: Generate build notes and summary from user
         if: ${{ github.event.client_payload.note != null }}

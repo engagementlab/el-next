@@ -21,18 +21,25 @@ COPY ./apps/cms/package.json .
 COPY ./apps/cms/yarn.lock .
 
 RUN yarn install --pure-lockfile --non-interactive
-RUN yarn export
 
 # //////////////////
 
 FROM node:16 AS runner
+
+ARG PORT=3000
+ARG APP_NAME=sjm
+
+WORKDIR /usr/src/repo
+
+COPY --from=builder /usr/src/repo/ .
+
+# COPY --from=builder /usr/src/repo/apps/cms/export/lib/start.js ./
+
+# RUN yarn add @babel/runtime yargs express @keystone-6/core 
+
 WORKDIR /usr/src/repo/apps/cms
-
-COPY --from=builder /usr/src/repo/apps/cms/.keystone/ ./
-COPY --from=builder /usr/src/repo/apps/cms/export/lib/start.js ./
-
 EXPOSE 3000
 
-# RUN yarn global add pm2
-# RUN pm2 list
-RUN node start.js --app sjm
+CMD yarn keystone postinstall --fix --app $APP_NAME && \
+    yarn build --app $APP_NAME && \
+    yarn start --app $APP_NAME

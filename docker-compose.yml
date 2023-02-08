@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+  cms:
+    image: el-next
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - APP_NAME=tngvi
+      - PORT=3000
+    labels:
+      - "traefik.http.routers.cms.rule=Host(`sjm.localhost`)"
+      # ports:
+      # The HTTP port
+      # - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      # - "3000:3000"

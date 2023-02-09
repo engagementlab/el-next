@@ -65,7 +65,7 @@ jobs:
       #     git push
 
       - name: Generate build notes and summary from user
-        if: ${{ github.event.client_payload.note != null }}
+        if: ${{ github.event.client_payload.note != 'null' }}
         run: |
           echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
           echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY

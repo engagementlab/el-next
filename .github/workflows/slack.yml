@@ -18,8 +18,7 @@ env:
   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   
 jobs:
-  with-note:
-    # if: ${{ inputs.note != null }}
+  notify:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,7 +33,7 @@ jobs:
       - name: Send Slack message with user note on success
         id: slack-with-user-note
         uses: slackapi/slack-github-action@v1.23.0
-        if: ${{ inputs.success && inputs.note != null }}
+        if: ${{ inputs.success && inputs.note != 'null' }}
         with:
           payload: |
             {
@@ -52,7 +51,7 @@ jobs:
                     "type": "mrkdwn",
                     "text": "> :pencil2: ${{ inputs.userName }} says: _${{ inputs.note }}_"
                   }
-                },
+                }
               ]
             }
 

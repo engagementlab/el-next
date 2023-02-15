@@ -18,9 +18,10 @@ services:
       - web
     labels:
       - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      #- "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.service=api@internal"
     restart: always
+
   db:
     image: mysql:8.0
     command: mysqld --default-authentication-plugin=mysql_native_password
@@ -41,16 +42,10 @@ services:
     command: tcp db:3306 -t 30s -i 250ms
     networks:
       - db
-  
-  # whoami:
-  #   image: containous/whoami
-  #   labels:
-  #     - "traefik.http.routers.whoami.rule=Host(``)"
-  #     - "traefik.http.routers.whoami.entrypoints=websecure"
-  #     - "traefik.http.routers.whoami.tls=true"
-
+      
   codesign:
     image: ghost
+    container_name: codesign
     restart: always
     ports:
       - 2368:2368
@@ -68,9 +63,10 @@ services:
       - "traefik.enable=true"
       - "traefik.port=2368"
       - "traefik.docker.network=web"
-      - "traefik.http.routers.ghost.entrypoints=websecure"
-      - "traefik.http.routers.ghost.tls=true"
+      # - "traefik.http.routers.ghost.entrypoints=websecure"
+      - "traefik.http.routers.codesign.tls=true"
       - "traefik.http.routers.codesign.rule=Host(`codesign.elab.emerson.edu`)"
+      - "traefik.http.routers.codesign.service=codesign"
     networks:
       - web
       - db

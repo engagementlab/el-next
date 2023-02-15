@@ -38,7 +38,12 @@ const Event: Lists.Event = list({
       },
       label: 'Agenda Background Image',
     }),
-    agenda: document(BaseDocConfig([[1, 2]])),
+    agenda: document(
+      BaseDocConfig([
+        [1, 2],
+        [1, 1],
+      ])
+    ),
     awards: document(BaseDocConfig()),
     bgImage2: cloudinaryImage({
       cloudinary: {

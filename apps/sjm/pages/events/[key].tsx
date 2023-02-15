@@ -69,6 +69,16 @@ const agendaRendererOverrides = {
           ))}
         </div>
       );
+    } else if (layout[0] === 1 && layout[1] === 1) {
+      return (
+        <div className={`${flexClass} gap-x-5`}>
+          {children.map((element: any, i: number) => (
+            <div key={i} className="w-full xl:w-1/2">
+              {element}
+            </div>
+          ))}
+        </div>
+      );
     }
   },
 };

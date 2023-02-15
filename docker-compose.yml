@@ -4,27 +4,91 @@ services:
   reverse-proxy:
     # The official v2 Traefik docker image
     image: traefik:v2.9
-    # Enables the web UI and tells Traefik to listen to docker
-    command: --api.insecure=true --providers.docker
     ports:
-      # The HTTP port
-      - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      - 443:443
+      - 80:80
+      - 8080:8080
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-  cms:
-    image: el-next
-    env_file:
-      - ./apps/cms/.env
-    environment:
-      - APP_NAME=tngvi
-      - PORT=3000
+      - ./traefik.yml:/traefik.yml
+      - ./certs.yml:/certs.yml
+      - /etc/nginx/ssl:/certs
+    networks:
+      - web
     labels:
-      - "traefik.http.routers.cms.rule=Host(`sjm.localhost`)"
-      # ports:
-      # The HTTP port
-      # - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
-      # - "3000:3000"
+      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      #- "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.service=api@internal"
+    restart: always
+  db:
+    image: mysql:8.0
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: X@cjM9pfGk3iCn!dfySH
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - db
+       
+  wait-for-db:
+    image: atkrad/wait4x
+    depends_on:
+      - db
+    command: tcp db:3306 -t 30s -i 250ms
+    networks:
+      - db
+  
+  # whoami:
+  #   image: containous/whoami
+  #   labels:
+  #     - "traefik.http.routers.whoami.rule=Host(``)"
+  #     - "traefik.http.routers.whoami.entrypoints=websecure"
+  #     - "traefik.http.routers.whoami.tls=true"
+
+  codesign:
+    image: ghost
+    restart: always
+    ports:
+      - 2368:2368
+    # depends_on:
+    #   wait-for-db:
+    #     condition: service_completed_successfully
+    environment:
+      # url: https://www.yourdomain.com
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: root
+      database__connection__password: X@cjM9pfGk3iCn!dfySH
+      database__connection__database: ghost_codesign
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=2368"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.ghost.entrypoints=websecure"
+      - "traefik.http.routers.ghost.tls=true"
+      - "traefik.http.routers.codesign.rule=Host(`codesign.elab.emerson.edu`)"
+    networks:
+      - web
+      - db
+
+  # cms:
+  #   image: el-next
+  #   env_file:
+  #     - ./apps/cms/.env
+  #   environment:
+  #     - APP_NAME=tngvi
+  #     - PORT=3000
+  #   labels:
+  #     - "traefik.http.routers.cms.rule=Host(`sjm.localhost`)"
+
+volumes:
+  db:
+
+networks:
+  db:
+  web:
+    external: true

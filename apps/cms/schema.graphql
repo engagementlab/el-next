@@ -231,8 +231,8 @@ type Event {
   name: String
   key: String
   intro: Event_intro_Document
-  agenda: Event_agenda_Document
   bgImage1: CloudinaryImage_File
+  agenda: Event_agenda_Document
   awards: Event_awards_Document
   bgImage2: CloudinaryImage_File
   location: Event_location_Document
@@ -288,8 +288,8 @@ input EventUpdateInput {
   name: String
   key: String
   intro: JSON
-  agenda: JSON
   bgImage1: Upload
+  agenda: JSON
   awards: JSON
   bgImage2: Upload
   location: JSON
@@ -312,8 +312,8 @@ input EventCreateInput {
   name: String
   key: String
   intro: JSON
-  agenda: JSON
   bgImage1: Upload
+  agenda: JSON
   awards: JSON
   bgImage2: Upload
   location: JSON

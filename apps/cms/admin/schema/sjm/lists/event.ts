@@ -29,7 +29,6 @@ const Event: Lists.Event = list({
       },
     }),
     intro: document(BaseDocConfig()),
-    agenda: document(BaseDocConfig([[1, 2]])),
     bgImage1: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -39,6 +38,12 @@ const Event: Lists.Event = list({
       },
       label: 'Agenda Background Image',
     }),
+    agenda: document(
+      BaseDocConfig([
+        [1, 2],
+        [1, 1],
+      ])
+    ),
     awards: document(BaseDocConfig()),
     bgImage2: cloudinaryImage({
       cloudinary: {

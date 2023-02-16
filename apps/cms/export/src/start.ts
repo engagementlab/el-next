@@ -15,7 +15,6 @@ import {
   createAdminUIMiddleware,
   initConfig,
 } from '@keystone-6/core/system/dist/keystone-6-core-system.cjs.js';
-import { requirePrismaClient } from '@keystone-6/core/artifacts/dist/keystone-6-core-artifacts.cjs.js';
 
 const argv: any = yargs(process.argv.slice(2)).options({
   app: { type: 'string', demandOption: true },
@@ -23,21 +22,22 @@ const argv: any = yargs(process.argv.slice(2)).options({
 }).argv;
 
 export default (async () => {
-  const apiFile = path.join(
-    process.cwd(),
-    `.keystone/${argv.app}/.next/server/pages/api/__keystone_api_build.js`
-  );
+  const apiFile = path.join(process.cwd(), `.keystone/${argv.app}/config.js`);
+
+
   if (!fs.existsSync(apiFile)) {
     console.log('🚨 keystone build must be run before running keystone start');
-    throw new Error('run build');
+    throw new Error('run build' + apiFile);
   }
   // webpack will make modules that import Node ESM externals(which must be loaded with dynamic import)
   // export a promise that resolves to the actual export so yeah, we need to await a require call
-  // console.log(require(apiFile));
-  const config = initConfig((await require(apiFile)).config);
+  const config = initConfig((await require(apiFile)).default);
   const { getKeystone, graphQLSchema } = createSystem(config);
 
-  const prismaClient = requirePrismaClient(process.cwd());
+  const prismaClient = require(path.join(
+    process.cwd(),
+    `.keystone/${argv.app}/.prisma/client`
+  ));
 
   const keystone = getKeystone(prismaClient);
 
@@ -58,12 +58,12 @@ export default (async () => {
       config,
       keystone.createContext,
       false,
-      path.join(process.cwd(), `.keystone/${argv.app}`)
+      path.join(process.cwd(), `.keystone/${argv.app}/admin`)
     );
     expressServer.use(
       '/_next/static/',
       express.static(
-        path.join(process.cwd(), `.keystone/${argv.app}/.next/static`)
+        path.join(process.cwd(), `.keystone/${argv.app}/admin/.next/static`)
       )
     );
     expressServer.use((req, res) => middleware(req, res));

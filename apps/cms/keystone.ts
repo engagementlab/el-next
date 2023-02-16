@@ -1,4 +1,8 @@
-import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
+import {
+  BaseKeystoneTypeInfo,
+  DatabaseConfig,
+  KeystoneConfig,
+} from '@keystone-6/core/types';
 import axios from 'axios';
 
 import yargs from 'yargs/yargs';
@@ -9,13 +13,19 @@ import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { elab, tngvi, sjm } from './admin/schema';
+import { tngvi, sjm, elab } from './admin/schema';
 import { getNews } from './routes/news';
 import _ from 'lodash';
+import cors from 'cors';
 
-type schemaIndexType = {
-  [key: string]: object;
+type appConfigType = {
+  [key: string]: {
+    schema: object;
+    storageAccount: string;
+    apexUrl: string;
+  };
 };
+
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
     type: 'string',
@@ -24,10 +34,19 @@ const argv: any = yargs(process.argv.slice(2)).options({
     type: 'number',
   },
 }).argv;
-const schemaMap: schemaIndexType = {
-  elab: elab,
-  tngvi: tngvi,
-  sjm: sjm,
+
+const appConfigMap: appConfigType = {
+  tngvi: {
+    schema: tngvi,
+    storageAccount: 'tngvi',
+    apexUrl: 'transformnarratives.org',
+  },
+  sjm: {
+    schema: sjm,
+    storageAccount: 'sjmsymposium',
+    apexUrl: 'sjmsymposium.org',
+  },
+  elab: { schema: elab, storageAccount: 'elabhome', apexUrl: '' },
 };
 
 const multer = require('multer');
@@ -37,15 +56,6 @@ const upload = multer({
   },
 });
 const port = argv.port || 3000;
-const allowedHosts = [
-  'localhost:8080',
-  'localhost:8081',
-  `localhost:${port}`,
-  'qa.transformnarratives.org',
-  'cms.qa.transformnarratives.org',
-  'https://qa.transformnarratives.org',
-  'https://cms.qa.transformnarratives.org',
-];
 
 cloudinary.config({
   cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -54,13 +64,19 @@ cloudinary.config({
   secure: true,
 });
 
-const bodyParser = require('body-parser');
 const passport = require('passport');
 const AuthStrategy = require('passport-google-oauth20').Strategy;
 const MongoStore = require('connect-mongo')(session);
 const DB = require('./db');
 
-const appName: string = argv.app || 'tngvi';
+let appName: string = argv.app;
+if (process.env.APP) {
+  appName = process.env.APP;
+}
+if (appName === undefined || appName.length === 0)
+  throw new Error('--app argument must be specified');
+
+console.log('Found app name: ' + appName);
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -80,7 +96,7 @@ declare module 'express-session' {
     };
   }
 }
-// const ciMode = process.env.NODE_ENV === 'ci';
+const devMode = process.env.NODE_ENV === 'development';
 
 // Fallback
 let dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = {
@@ -90,16 +106,23 @@ let dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = {
 if (process.env.DB_URI) {
   dbConfig = {
     provider: 'postgresql',
-    url: `${process.env.DB_URI}/${appName}`,
+    url: `${process.env.DB_URI}/${appName}${
+      !devMode ? '?sslmode=require' : ''
+    }`,
   };
 }
 
 const Passport = () => {
+  let callbackURL = `http://localhost:${port}/cms/callback`;
+  // If app env defined, use callback url defined in map (production)
+  if (process.env.APP)
+    callbackURL = `https://qa.${appConfigMap[appName].apexUrl}/cms/callback`;
+
   const strategy = new AuthStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.AUTH_CALLBACK_URL,
+      callbackURL,
     },
     (
       request: any,
@@ -127,7 +150,6 @@ const Passport = () => {
               );
               return done(err);
             }
-            // console.log(err, user);
             return done(err, user);
           }
         );
@@ -145,7 +167,6 @@ const Passport = () => {
   });
   passport.deserializeUser(
     (user: any, done: (arg0: null, arg1: any) => void) => {
-      // console.log('de', user);
       done(null, user);
     }
   );
@@ -162,11 +183,15 @@ let ksConfig = (lists: any) => {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
+
     lists,
     server: {
       port,
       maxFileSize: 1024 * 1024 * 50,
       extendExpressApp: (app: e.Express, createContext: any) => {
+        app.use(cors({ credentials: true }));
+        app.enable('trust proxy');
+
         app.all('/*', (req, res, next) => {
           res.header('Access-Control-Allow-Origin', '*');
           // res.header('Access-Control-Allow-Credentials', true)
@@ -184,25 +209,14 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        app.use('/rest', async (req, res, next) => {
+        app.use('/cms/rest', async (req, res, next) => {
           (req as any).context = await createContext(req, res);
           next();
         });
 
-        app.get('/rest/news/:key?', getNews);
+        app.get('/cms/rest/news/:key?', getNews);
 
-        app.get('/prod-deploy', async (req, res, next) => {
-          try {
-            const response = await axios.get(
-              `${process.env.DEPLOY_API_PATH}&name=transform-narratives`
-            );
-            res.status(200).send(response.data);
-          } catch (err: any) {
-            res.status(500).send(err.message);
-          }
-        });
-
-        app.get('/media/videos', async (req, res, next) => {
+        app.get('/cms/media/videos', async (req, res, next) => {
           try {
             let videoData: {
               label: any;
@@ -251,7 +265,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.get('/media/get/:type', async (req, res) => {
+        app.get('/cms/media/get/:type', async (req, res) => {
           try {
             cloudinary.api.sub_folders(
               appName || 'tngvi',
@@ -294,7 +308,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.get('/media/delete', async (req, res) => {
+        app.get('/cms/media/delete', async (req, res) => {
           try {
             cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
               res.status(200).send(response)
@@ -304,7 +318,7 @@ let ksConfig = (lists: any) => {
           }
         });
 
-        app.post('/media/upload', upload.none(), async (req, res) => {
+        app.post('/cms/media/upload', upload.none(), async (req, res) => {
           try {
             const response = await cloudinary.uploader.upload(req.body.img, {
               folder: appName || 'tngvi',
@@ -347,6 +361,7 @@ let ksConfig = (lists: any) => {
             '/cms/login',
             p.authenticate('google', {
               scope: ['openid', 'email'],
+              session: true,
             })
           );
 
@@ -407,11 +422,53 @@ let ksConfig = (lists: any) => {
               next();
           });
         }
+
+        app.get('/cms/prod-deploy/:note?', async (req, res, next) => {
+          try {
+            const response = await axios.post(
+              process.env.DEPLOY_API_PATH as string,
+              {
+                repo: 'el-next',
+                appName,
+                storageAccount: appConfigMap[appName].storageAccount,
+                apexUrl: appConfigMap[appName].apexUrl,
+                userName: req.session.passport?.user.name.split(' ')[0],
+                note: req.query.note,
+              }
+            );
+
+            res.status(200).send(response.data);
+            // console.log(req.query.note);
+          } catch (err: any) {
+            res.status(500).send(err.message);
+          }
+        });
       },
+    },
+    ui: {
+      getAdditionalFiles: [
+        async (config: KeystoneConfig) => [
+          {
+            mode: 'write',
+            src: `
+            const keystoneConfig =
+              require("@keystone-6/core/___internal-do-not-use-will-break-in-patch/admin-ui/next-config").config;
+
+            const config = {
+              ...keystoneConfig,
+              basePath: "/cms",
+            };
+
+            module.exports = config;
+            `,
+            outputPath: 'next.config.js',
+          },
+        ],
+      ],
     },
   };
 };
 
 export default (() => {
-  return ksConfig(schemaMap[appName]);
+  return ksConfig(appConfigMap[appName].schema);
 })();

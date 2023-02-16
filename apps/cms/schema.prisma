@@ -35,8 +35,8 @@ model Event {
   name          String         @unique @default("Event Name")
   key           String         @unique @default("")
   intro         Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   bgImage1      Json?
+  agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   awards        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   bgImage2      Json?
   location      Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

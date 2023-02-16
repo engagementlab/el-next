@@ -9,7 +9,7 @@ var jsxRuntime = require('react/jsx-runtime');
 
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022
+ * Developed by Engagement Lab, 2022-2023
  *
  * @author Johnny Richardson
  * KeystoneJS document field renderers
@@ -29,9 +29,9 @@ var DocRenderers = function DocRenderers(styles) {
           var children = _ref2.children,
               href = _ref2.href;
           var label = children.at(0).props.node.text;
-          var fixedHref = ''; // Is href missing scheme?
+          var fixedHref = ''; // Is href missing scheme and is not mailto?
 
-          var hrefNoScheme = href.search(/https:\/\/|http:\/\//gm) === -1;
+          var hrefNoScheme = href.indexOf('mailto:') === -1 && href.search(/https:\/\/|http:\/\//gm) === -1;
           fixedHref = hrefNoScheme ? "https://".concat(href) : href;
           if (process.env.NODE_ENV === 'production') fixedHref = fixedHref.replace('qa.', ''); // text-purple border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)]
 

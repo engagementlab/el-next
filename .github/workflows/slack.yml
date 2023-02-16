@@ -1,0 +1,120 @@
+name: Send Slack notification
+on:
+  workflow_call:
+    inputs:
+      apexUrl:
+        required: true
+        type: string
+      note:
+        type: string
+      success:
+        required: true
+        type: boolean
+      userName:
+        required: true
+        type: string
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+  
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+      - id: string-app-name
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.event.client_payload.appName }}
+
+      # Build succeeded
+      - name: Send Slack message with user note on success
+        id: slack-with-user-note
+        uses: slackapi/slack-github-action@v1.23.0
+        if: ${{ inputs.success && inputs.note != 'null' }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: The latest build of ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to <${{ format('https://{0}', inputs.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "> :pencil2: ${{ inputs.userName }} says: _${{ inputs.note }}_"
+                  }
+                }
+              ]
+            }
+
+      - name: Send Slack message on success
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        if: ${{ inputs.success && inputs.note == null }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: The latest build of ${{ steps.string-app-name.outputs.uppercase }} has successfully been published to <${{ format('https://{0}', inputs.apexUrl) }}|production>. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${{ inputs.userName }} pushed this build."
+                    }
+                  ]
+                }
+              ]
+            }
+
+      # Build failed
+      - name: Send Slack message on failure
+        id: slack-failure
+        uses: slackapi/slack-github-action@v1.23.0
+        if: ${{ !inputs.success }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":x: The latest build of ${{ steps.string-app-name.outputs.uppercase }} just failed. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "${{ inputs.userName }} pushed this build."
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "<@U044WFR24> please look at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|build logs>."
+                    }
+                  ]
+                }
+              ]
+            }

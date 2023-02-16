@@ -8,13 +8,20 @@ yarn;
 
 cd apps/cms;
 yarn;
-yarn build;
+yarn export;
 
-pm2 restart 'el-cms-new'; 
+# pm2 restart 'cms-tngvi'; 
+# pm2 restart 'cms-sjm'; 
 
 cd ../tngvi;
 nvm use;
 yarn;
 yarn build;
 
-pm2 restart 'transform-narratives'; 
+cd ../sjm;
+nvm use;
+yarn;
+yarn build;
+
+pm2 restart 'app-tngvi'; 
+pm2 restart 'app-sjm'; 

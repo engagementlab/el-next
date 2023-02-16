@@ -57,7 +57,9 @@ const Person: Lists.Person = list({
     }),
   },
   ui: {
-    isHidden: true,
+    listView: {
+      initialColumns: ['name', 'title', 'image'],
+    },
   },
   hooks: {
     resolveInput: async ({

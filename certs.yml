@@ -1,5 +1,4 @@
 tls:
-  # entryPoint: websecure
   certificates:
     - certFile: /certs/codesign_elab_emerson_cert.cer
       keyFile: /certs/codesign_elab_emerson_cert.key

@@ -7,12 +7,12 @@ accessLog: {}
 entryPoints:
   web:
    address: ":80"
-  #  http:
-    #  redirections:
-    #    entryPoint:
-    #      to: websecure
-    #      scheme: https
-    #      permanent: true
+   http:
+     redirections:
+       entryPoint:
+         to: websecure
+         scheme: https
+         permanent: true
   websecure:
    address: ":443"
 api:
@@ -20,6 +20,7 @@ api:
   insecure: true
 providers:
   docker: 
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
     watch: false
     # exposedByDefault: false
     # swarmMode:

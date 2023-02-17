@@ -1,11 +1,11 @@
 tls:
   certificates:
-    - certFile: /certs/codesign_elab_emerson_cert.cer
-      keyFile: /certs/codesign_elab_emerson_cert.key
+    - certFile: /etc/ssl/certs/cms_elab_emerson_edu_cert.cer
+      keyFile: /etc/ssl/certs/cms.elab.key
       stores:
         - default
   stores:
     default:
       defaultCertificate:
-        certFile: /certs/codesign_elab_emerson_cert.cer
-        keyFile: /certs/codesign_elab_emerson_cert.key
+        certFile: /etc/ssl/certs/cms_elab_emerson_edu_cert.cer
+        keyFile: /etc/ssl/certs/cms.elab.key

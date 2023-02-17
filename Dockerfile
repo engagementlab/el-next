@@ -33,10 +33,6 @@ WORKDIR /usr/src/repo
 
 COPY --from=builder /usr/src/repo/ .
 
-# COPY --from=builder /usr/src/repo/apps/cms/export/lib/start.js ./
-
-# RUN yarn add @babel/runtime yargs express @keystone-6/core 
-
 WORKDIR /usr/src/repo/apps/cms
 EXPOSE 3000
 

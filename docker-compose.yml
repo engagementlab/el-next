@@ -12,8 +12,6 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/traefik.yml
-      - ./certs.yml:/certs.yml
-      - /etc/nginx/ssl:/certs
     networks:
       - web
     labels:
@@ -21,8 +19,6 @@ services:
       # - "traefik.http.routers.dashboard.tls=true"
       # - "traefik.http.routers.dashboard.service=api@internal"
     restart: always
-    extra_hosts:
-      - host.docker.internal:172.17.0.1
 
   cms-tngvi:
     # network_mode: host
@@ -37,9 +33,8 @@ services:
     ports:
       - 3000:3000
     labels:
-      - "traefik.http.routers.cms-tngvi.rule=Host(`tngvi.localhost`)"
-      # - "traefik.http.services.cms-tngvi.loadbalancer.server.port=12345"
-      # - "traefik.http.services.cms-tngvi.loadbalancer.server.ip=10.10.10.10"
+      - traefik.http.routers.cms-tngvi.rule=Host(`tngvi.localhost`)
+      # - traefik.http.routers.cms-tngvi.tls.certresolver=cmsCertResolver
       # cms-sjm:
       #   image: el-next
       #   env_file:

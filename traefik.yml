@@ -26,3 +26,12 @@ providers:
     # swarmMode:
   file:
     filename: certs.yml
+   
+# certificatesResolvers:
+#   cmsCertResolver:
+#     acme:
+#       email: john_richardson@emerson.edu
+#       storage: acme.json
+#       httpChallenge:
+#         # used during the challenge
+#         entryPoint: web

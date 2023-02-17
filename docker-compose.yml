@@ -11,12 +11,14 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yml:/traefik.yml
+      - ./proxy/traefik.yml:/traefik.yml
+      - ./proxy/certs.yml:/certs.yml
+      - /etc/ssl/certs:/certs
     networks:
       - web
     labels:
       - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      # - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls=true"
       # - "traefik.http.routers.dashboard.service=api@internal"
     restart: always
 
@@ -34,7 +36,6 @@ services:
       - 3000:3000
     labels:
       - traefik.http.routers.cms-tngvi.rule=Host(`tngvi.localhost`)
-      # - traefik.http.routers.cms-tngvi.tls.certresolver=cmsCertResolver
       # cms-sjm:
       #   image: el-next
       #   env_file:

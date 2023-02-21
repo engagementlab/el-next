@@ -24,7 +24,6 @@ services:
     restart: always
 
   cms-tngvi:
-    # network_mode: host
     image: el-next
     env_file:
       - ./apps/cms/.env
@@ -40,15 +39,23 @@ services:
       - "traefik.http.routers.cms-tngvi.tls=true"
       - "traefik.http.routers.cms-tngvi.entrypoints=websecure"
       - "traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next"
-      # cms-sjm:
-      #   image: el-next
-      #   env_file:
-      #     - ./apps/cms/.env
-      #   environment:
-      #     - APP_NAME=sjm
-      #     - PORT=3001
-      #   labels:
-      #     - "traefik.http.routers.cms.rule=Host(`sjm.localhost`)"
+
+  cms-sjm:
+    image: el-next
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - APP_NAME=sjm
+      - PORT=3001
+    networks:
+      - web
+    ports:
+      - 3001:3001
+    labels:
+      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
+      - "traefik.http.routers.cms-sjm.tls=true"
+      - "traefik.http.routers.cms-sjm.entrypoints=websecure"
+      - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
 
 networks:
   web:

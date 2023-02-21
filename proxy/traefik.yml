@@ -20,18 +20,6 @@ api:
   insecure: true
 providers:
   docker: 
-    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
     watch: false
-    # exposedByDefault: false
-    # swarmMode:
   file:
     filename: certs.yml
-   
-# certificatesResolvers:
-#   cmsCertResolver:
-#     acme:
-#       email: john_richardson@emerson.edu
-#       storage: acme.json
-#       httpChallenge:
-#         # used during the challenge
-#         entryPoint: web

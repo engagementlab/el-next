@@ -1,7 +1,19 @@
-
 import type { NavigationProps } from '@keystone-6/core/admin-ui/components';
-import { NavigationContainer, NavItem } from '@keystone-6/core/admin-ui/components';
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Drawer, Button } from '@mui/material';
+import {
+  NavigationContainer,
+  NavItem,
+} from '@keystone-6/core/admin-ui/components';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Drawer,
+  Button,
+} from '@mui/material';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 import React from 'react';
 import create from 'zustand';
@@ -10,11 +22,18 @@ import create from 'zustand';
 
 const apps = [
   {
-    key: 'tngvi', 
-    name: 'TNGVI', 
-    logo: () => { return <svg viewBox="88.575 264.575 25 49.225" width="25" height="49.225">
-            <g transform="matrix(0.015693, 0, 0, -0.015693, 74.675285, 313.988312)" fill="#000000" stroke="none">
-              <path d="M1004 3136 c-71 -31 -115 -134 -118 -273 -2 -120 8 -196 38 -289 32
+    key: 'tngvi',
+    name: 'TNGVI',
+    logo: () => {
+      return (
+        <svg viewBox="88.575 264.575 25 49.225" width="25" height="49.225">
+          <g
+            transform="matrix(0.015693, 0, 0, -0.015693, 74.675285, 313.988312)"
+            fill="#000000"
+            stroke="none"
+          >
+            <path
+              d="M1004 3136 c-71 -31 -115 -134 -118 -273 -2 -120 8 -196 38 -289 32
                           -99 76 -248 81 -271 5 -26 28 -111 72 -263 22 -74 50 -183 63 -242 l24 -107
                           -23 -83 c-22 -82 -38 -119 -122 -273 -23 -44 -57 -123 -75 -175 -34 -100 -33
                           -95 -19 -305 7 -107 100 -313 250 -552 102 -163 139 -204 220 -244 75 -37 137
@@ -48,26 +67,59 @@ const apps = [
                           -14 -56 -112 -325 -31 -85 -70 -211 -86 -280 -17 -69 -40 -164 -52 -211 -57
                           -237 -137 -307 -358 -314 -132 -4 -253 10 -303 36 -22 11 -56 37 -76 58 -47
                           50 -153 220 -204 328 -21 47 -52 105 -68 130 -52 82 -78 202 -57 262 13 39 46
-                          67 185 159 178 117 341 210 413 233 14 5 38 -31 40 -57z" style={{fill: 'rgb(141, 51, 210)'}}></path>
-            </g>
-          </svg>}
+                          67 185 159 178 117 341 210 413 233 14 5 38 -31 40 -57z"
+              style={{ fill: 'rgb(141, 51, 210)' }}
+            ></path>
+          </g>
+        </svg>
+      );
+    },
   },
   {
     key: 'elab',
-    name: 'ELab Home', 
-    logo: () => { return <svg viewBox="0 0 25 25" width="25" height="25">
-            <path fill="#000" fill-rule="evenodd" d="M 25 12.5 C 25 19.404 19.404 25 12.5 25 C 5.596 25 0 19.404 0 12.5 C 0 5.596 5.596 0 12.5 0 C 19.404 0 25 5.596 25 12.5 Z" clip-rule="evenodd"></path>
-            <path fill="#F6A536" fill-rule="evenodd" d="M 10.027 6.426 L 10.033 16.495 L 17.263 16.495 L 17.263 18.574 L 7.746 18.574 L 7.746 6.448 L 10.027 6.426 L 10.027 6.426 Z" clip-rule="evenodd"></path>
-            <path fill="#00AB9E" fill-rule="evenodd" d="M 10.027 11.493 L 10.027 13.589 L 17.263 13.589 L 17.263 11.51 L 10.027 11.493 L 10.027 11.493 Z" clip-rule="evenodd"></path>
-            <path fill="#F72923" fill-rule="evenodd" d="M 10.027 6.426 L 10.027 8.521 L 17.263 8.521 L 17.263 6.443 L 10.027 6.426 L 10.027 6.426 Z" clip-rule="evenodd"></path>
-          </svg>
-    }
+    name: 'ELab Home',
+    logo: () => {
+      return (
+        <svg viewBox="0 0 25 25" width="25" height="25">
+          <path
+            fill="#000"
+            fill-rule="evenodd"
+            d="M 25 12.5 C 25 19.404 19.404 25 12.5 25 C 5.596 25 0 19.404 0 12.5 C 0 5.596 5.596 0 12.5 0 C 19.404 0 25 5.596 25 12.5 Z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill="#F6A536"
+            fill-rule="evenodd"
+            d="M 10.027 6.426 L 10.033 16.495 L 17.263 16.495 L 17.263 18.574 L 7.746 18.574 L 7.746 6.448 L 10.027 6.426 L 10.027 6.426 Z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill="#00AB9E"
+            fill-rule="evenodd"
+            d="M 10.027 11.493 L 10.027 13.589 L 17.263 13.589 L 17.263 11.51 L 10.027 11.493 L 10.027 11.493 Z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill="#F72923"
+            fill-rule="evenodd"
+            d="M 10.027 6.426 L 10.027 8.521 L 17.263 8.521 L 17.263 6.443 L 10.027 6.426 L 10.027 6.426 Z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      );
+    },
   },
   {
     key: 'sjm',
-    name: 'SJ+M', 
-    logo: () => { return <img src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,w_25/v1667943163/sjm/icon.png" alt="SJM logo" />
-    }
+    name: 'SJ+M',
+    logo: () => {
+      return (
+        <img
+          src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,w_25/v1667943163/sjm/icon.png"
+          alt="SJM logo"
+        />
+      );
+    },
   },
 ];
 
@@ -79,78 +131,136 @@ const listMapping = new Map<string, string>([
 ]);
 
 type DrawerState = {
-    drawerOpen: boolean;
-    toggleDrawer: (open: boolean) => void
-}
+  drawerOpen: boolean;
+  toggleDrawer: (open: boolean) => void;
+};
 // Create store with Zustand
-const useStore = create < DrawerState > (set => ({
-    drawerOpen: false,
-    toggleDrawer: (open: boolean) => set({
-        drawerOpen: open
-    })
+const useStore = create<DrawerState>((set) => ({
+  drawerOpen: false,
+  toggleDrawer: (open: boolean) =>
+    set({
+      drawerOpen: open,
+    }),
 }));
 
-export function CustomNavigation({ authenticatedItem, lists }: NavigationProps) {
-    
-    const toggleDrawer = useStore(state => state.toggleDrawer);
-    const isOpen = useStore(state => state.drawerOpen);
+export function CustomNavigation({
+  authenticatedItem,
+  lists,
+}: NavigationProps) {
+  const toggleDrawer = useStore((state) => state.toggleDrawer);
+  const isOpen = useStore((state) => state.drawerOpen);
   const list = () => (
     <Box
-      sx={{width:250}}
+      sx={{ width: 250 }}
       role="presentation"
       // onClick={toggleDrawer(false) as unknown as MouseEventHandler<HTMLDivElement>}
       // onKeyDown={toggleDrawer(anchor, false)}
     >
       <Divider />
       <List>
-        {apps.map((value: {key: string, name: string, logo: () => JSX.Element}) => {
-          return (
-          <ListItem key={value.key} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <value.logo />
-              </ListItemIcon>
-              <ListItemText primary={value.name} />
-            </ListItemButton>
-          </ListItem>
-          );
-        })}
+        {apps.map(
+          (value: { key: string; name: string; logo: () => JSX.Element }) => {
+            return (
+              <ListItem key={value.key} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <value.logo />
+                  </ListItemIcon>
+                  <ListItemText primary={value.name} />
+                </ListItemButton>
+              </ListItem>
+            );
+          }
+        )}
       </List>
     </Box>
   );
 
   return (
     <NavigationContainer authenticatedItem={authenticatedItem}>
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-       {/* <Button variant="outlined" style={{color: '#00a497', borderColor: '#00a497'}} onClick={() => { toggleDrawer(true); }}><CompareArrowsOutlinedIcon />&nbsp;TNGVI</Button> */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '2rem',
+        }}
+      >
+        <Button
+          variant="outlined"
+          style={{ color: '#00a497', borderColor: '#00a497' }}
+          onClick={() => {
+            toggleDrawer(true);
+          }}
+        >
+          <CompareArrowsOutlinedIcon />
+          &nbsp;TNGVI
+        </Button>
       </div>
       <Drawer
-        anchor='left'
+        anchor="left"
         open={isOpen}
-        onClose={() => { toggleDrawer(false); }}
+        onClose={() => {
+          toggleDrawer(false);
+        }}
       >
-          {/* <div style={{width: '80px'}}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="none" viewBox="0 0 70 70">
-                <path fill="#000" fillRule="evenodd" d="M70 35c0 19.33-15.67 35-35 35S0 54.33 0 35 15.67 0 35 0s35 15.67 35 35z" clipRule="evenodd"/>
-                <path fill="#F6A536" fillRule="evenodd" d="M28.075 17.992l.018 28.195h20.244v5.82H21.69V18.053l6.385-.06z" clipRule="evenodd"/>
-                <path fill="#00AB9E" fillRule="evenodd" d="M28.075 32.18v5.869h20.262v-5.821l-20.262-.048z" clipRule="evenodd"/>
-                <path fill="#F72923" fillRule="evenodd" d="M28.075 17.992v5.868h20.262v-5.82l-20.262-.048z" clipRule="evenodd"/>
-            </svg>
-          </div>
-          <h1 style={{fontSize: 'large'}}>Engagement Lab <br />Content Management</h1> */}
+        <div style={{ width: '80px' }}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="70"
+            height="70"
+            fill="none"
+            viewBox="0 0 70 70"
+          >
+            <path
+              fill="#000"
+              fillRule="evenodd"
+              d="M70 35c0 19.33-15.67 35-35 35S0 54.33 0 35 15.67 0 35 0s35 15.67 35 35z"
+              clipRule="evenodd"
+            />
+            <path
+              fill="#F6A536"
+              fillRule="evenodd"
+              d="M28.075 17.992l.018 28.195h20.244v5.82H21.69V18.053l6.385-.06z"
+              clipRule="evenodd"
+            />
+            <path
+              fill="#00AB9E"
+              fillRule="evenodd"
+              d="M28.075 32.18v5.869h20.262v-5.821l-20.262-.048z"
+              clipRule="evenodd"
+            />
+            <path
+              fill="#F72923"
+              fillRule="evenodd"
+              d="M28.075 17.992v5.868h20.262v-5.82l-20.262-.048z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+        <h1 style={{ fontSize: 'large' }}>
+          Engagement Lab <br />
+          Content Management
+        </h1>
         {list()}
       </Drawer>
       <NavItem href="/">Dashboard</NavItem>
 
       {lists.map((list, i) => {
         return (
-          <NavItem key={i} href={`/${list.path}`}>{listMapping.get(list.label) ? listMapping.get(list.label) : list.label}</NavItem>
-          )
-        }
-        )}
-      <hr style={{width: '85%', borderWidth: '1px', borderColor: 'grey'}} />
-      <NavItem href="/media"><span>Media Library</span></NavItem>
-      <NavItem href="/deploy"><span style={{color: '#f6a536'}}>Deploy</span></NavItem>
+          <NavItem key={i} href={`/${list.path}`}>
+            {listMapping.get(list.label)
+              ? listMapping.get(list.label)
+              : list.label}
+          </NavItem>
+        );
+      })}
+      <hr style={{ width: '85%', borderWidth: '1px', borderColor: 'grey' }} />
+      <NavItem href="/media">
+        <span>Media Library</span>
+      </NavItem>
+      <NavItem href="/deploy">
+        <span style={{ color: '#f6a536' }}>Deploy</span>
+      </NavItem>
     </NavigationContainer>
-  )
+  );
 }

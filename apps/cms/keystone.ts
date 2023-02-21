@@ -179,12 +179,14 @@ const Passport = () => {
 let ksConfig = (lists: any) => {
   return {
     db: dbConfig,
+
     experimental: {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
 
     lists,
+
     server: {
       port,
       maxFileSize: 1024 * 1024 * 50,
@@ -445,7 +447,20 @@ let ksConfig = (lists: any) => {
         });
       },
     },
-    ui: {
+    ui: {},
+    graphql: {
+      path: `/${
+        process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
+      }api/graphql`,
+    },
+  };
+};
+
+export default (() => {
+  let config = ksConfig(appConfigMap[appName].schema);
+
+  if (process.env.PRODUCTION_MODE === 'true')
+    config.ui = {
       getAdditionalFiles: [
         async (config: KeystoneConfig) => [
           {
@@ -456,7 +471,7 @@ let ksConfig = (lists: any) => {
 
             const config = {
               ...keystoneConfig,
-              basePath: "/cms",
+              basePath: "/${appName}",
             };
 
             module.exports = config;
@@ -465,10 +480,7 @@ let ksConfig = (lists: any) => {
           },
         ],
       ],
-    },
-  };
-};
+    };
 
-export default (() => {
-  return ksConfig(appConfigMap[appName].schema);
+  return config;
 })();

@@ -34,7 +34,7 @@ WORKDIR /usr/src/repo
 COPY --from=builder /usr/src/repo/ .
 
 WORKDIR /usr/src/repo/apps/cms
-EXPOSE 3000
+EXPOSE $PORT
 
 CMD yarn keystone postinstall --fix --app $APP_NAME && \
     yarn build --app $APP_NAME && \

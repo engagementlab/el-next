@@ -56,6 +56,7 @@ services:
       - "traefik.http.routers.cms-sjm.tls=true"
       - "traefik.http.routers.cms-sjm.entrypoints=websecure"
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
+      - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
 
 networks:
   web:

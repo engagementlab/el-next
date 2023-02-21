@@ -15,7 +15,7 @@ import {
   Button,
 } from '@mui/material';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import create from 'zustand';
 
 // import app from '../../currentApp';
@@ -75,40 +75,40 @@ const apps = [
       );
     },
   },
-  {
-    key: 'elab',
-    name: 'ELab Home',
-    logo: () => {
-      return (
-        <svg viewBox="0 0 25 25" width="25" height="25">
-          <path
-            fill="#000"
-            fill-rule="evenodd"
-            d="M 25 12.5 C 25 19.404 19.404 25 12.5 25 C 5.596 25 0 19.404 0 12.5 C 0 5.596 5.596 0 12.5 0 C 19.404 0 25 5.596 25 12.5 Z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill="#F6A536"
-            fill-rule="evenodd"
-            d="M 10.027 6.426 L 10.033 16.495 L 17.263 16.495 L 17.263 18.574 L 7.746 18.574 L 7.746 6.448 L 10.027 6.426 L 10.027 6.426 Z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill="#00AB9E"
-            fill-rule="evenodd"
-            d="M 10.027 11.493 L 10.027 13.589 L 17.263 13.589 L 17.263 11.51 L 10.027 11.493 L 10.027 11.493 Z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill="#F72923"
-            fill-rule="evenodd"
-            d="M 10.027 6.426 L 10.027 8.521 L 17.263 8.521 L 17.263 6.443 L 10.027 6.426 L 10.027 6.426 Z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      );
-    },
-  },
+  // {
+  //   key: 'elab',
+  //   name: 'ELab Home',
+  //   logo: () => {
+  //     return (
+  //       <svg viewBox="0 0 25 25" width="25" height="25">
+  //         <path
+  //           fill="#000"
+  //           fill-rule="evenodd"
+  //           d="M 25 12.5 C 25 19.404 19.404 25 12.5 25 C 5.596 25 0 19.404 0 12.5 C 0 5.596 5.596 0 12.5 0 C 19.404 0 25 5.596 25 12.5 Z"
+  //           clip-rule="evenodd"
+  //         ></path>
+  //         <path
+  //           fill="#F6A536"
+  //           fill-rule="evenodd"
+  //           d="M 10.027 6.426 L 10.033 16.495 L 17.263 16.495 L 17.263 18.574 L 7.746 18.574 L 7.746 6.448 L 10.027 6.426 L 10.027 6.426 Z"
+  //           clip-rule="evenodd"
+  //         ></path>
+  //         <path
+  //           fill="#00AB9E"
+  //           fill-rule="evenodd"
+  //           d="M 10.027 11.493 L 10.027 13.589 L 17.263 13.589 L 17.263 11.51 L 10.027 11.493 L 10.027 11.493 Z"
+  //           clip-rule="evenodd"
+  //         ></path>
+  //         <path
+  //           fill="#F72923"
+  //           fill-rule="evenodd"
+  //           d="M 10.027 6.426 L 10.027 8.521 L 17.263 8.521 L 17.263 6.443 L 10.027 6.426 L 10.027 6.426 Z"
+  //           clip-rule="evenodd"
+  //         ></path>
+  //       </svg>
+  //     );
+  //   },
+  // },
   {
     key: 'sjm',
     name: 'SJ+M',
@@ -147,6 +147,12 @@ export function CustomNavigation({
   authenticatedItem,
   lists,
 }: NavigationProps) {
+  const [appPath, setAppPath] = useState('');
+
+  useEffect(() => {
+    setAppPath(window.location.pathname.replace('/', ''));
+  }, []);
+
   const toggleDrawer = useStore((state) => state.toggleDrawer);
   const isOpen = useStore((state) => state.drawerOpen);
   const list = () => (
@@ -161,7 +167,12 @@ export function CustomNavigation({
         {apps.map(
           (value: { key: string; name: string; logo: () => JSX.Element }) => {
             return (
-              <ListItem key={value.key} disablePadding>
+              <ListItem
+                key={value.key}
+                disablePadding
+                component="a"
+                href={`/${value.key}`}
+              >
                 <ListItemButton>
                   <ListItemIcon>
                     <value.logo />
@@ -185,16 +196,18 @@ export function CustomNavigation({
           marginBottom: '2rem',
         }}
       >
-        <Button
-          variant="outlined"
-          style={{ color: '#00a497', borderColor: '#00a497' }}
-          onClick={() => {
-            toggleDrawer(true);
-          }}
-        >
-          <CompareArrowsOutlinedIcon />
-          &nbsp;TNGVI
-        </Button>
+        {appPath && (
+          <Button
+            variant="outlined"
+            style={{ color: '#00a497', borderColor: '#00a497' }}
+            onClick={() => {
+              toggleDrawer(true);
+            }}
+          >
+            <CompareArrowsOutlinedIcon />
+            &nbsp;{apps.filter((app) => app.key === appPath)[0]['name']}
+          </Button>
+        )}
       </div>
       <Drawer
         anchor="left"
@@ -203,7 +216,7 @@ export function CustomNavigation({
           toggleDrawer(false);
         }}
       >
-        <div style={{ width: '80px' }}>
+        {/* <div style={{ width: '80px' }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="70"
@@ -240,7 +253,7 @@ export function CustomNavigation({
         <h1 style={{ fontSize: 'large' }}>
           Engagement Lab <br />
           Content Management
-        </h1>
+        </h1> */}
         {list()}
       </Drawer>
       <NavItem href="/">Dashboard</NavItem>

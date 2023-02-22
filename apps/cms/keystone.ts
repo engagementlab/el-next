@@ -360,14 +360,14 @@ let ksConfig = (lists: any) => {
             );
           }
           app.get(
-            '/login',
+            `/${appName}/login`,
             p.authenticate('google', {
               scope: ['openid', 'email'],
               session: true,
             })
           );
 
-          app.get('/callback', (req, res, next) => {
+          app.get(`/${appName}/callback`, (req, res, next) => {
             try {
               p.authenticate(
                 'google',
@@ -405,8 +405,8 @@ let ksConfig = (lists: any) => {
           app.use((req, res, next) => {
             // Ignore API paths
             if (
-              req.path.indexOf('/api') === 0 ||
-              req.path.indexOf('/_next') === 0
+              req.path.indexOf('/api') !== -1 ||
+              req.path.indexOf('/_next') !== -1
             )
               next();
             else if (!req.session.passport || !req.session.passport.user) {
@@ -415,7 +415,7 @@ let ksConfig = (lists: any) => {
               req.session.redirectTo = req.originalUrl;
               // if (req.session.redirectTo) res.redirect(req.session.redirectTo);
               // else {
-              res.redirect('/login');
+              res.redirect(`/${appName}/login`);
               // }
             } else if (
               req.session.passport &&

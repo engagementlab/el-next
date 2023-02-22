@@ -23,6 +23,20 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
     restart: always
 
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:2
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - PROVIDERS_GOOGLE_CLIENT_ID="$${GOOGLE_CLIENT_ID}"
+      - PROVIDERS_GOOGLE_CLIENT_SECRET="$${GOOGLE_CLIENT_SECRET}"
+      - SECRET="$${SESSION_COOKIE}"
+      # - INSECURE_COOKIE=true # Example assumes no https, do not use in production
+    labels:
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
+
   cms-tngvi:
     image: el-next
     env_file:
@@ -39,6 +53,7 @@ services:
       - "traefik.http.routers.cms-tngvi.tls=true"
       - "traefik.http.routers.cms-tngvi.entrypoints=websecure"
       - "traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next"
+      - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth"
 
   cms-sjm:
     image: el-next

@@ -1,27 +1,30 @@
 #!/bin/bash
 
+cd /srv/apps/el-next/;
+git pull;
+docker build -t el-next . --network=host --no-cache;
+docker compose up -d;
+
 # Source/load nvm
-[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh;
+# [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh;
 
-nvm use;
-yarn;
+# nvm use;
+# yarn;
 
-cd apps/cms;
-yarn;
-yarn export;
+# # cd apps/cms;
+# # yarn;
+# # yarn export;
 
-# pm2 restart 'cms-tngvi'; 
-# pm2 restart 'cms-sjm'; 
+# # cd ../tngvi;
+# # nvm use;
+# # yarn;
+# # yarn build;
 
-cd ../tngvi;
-nvm use;
-yarn;
-yarn build;
+# # cd ../sjm;
+# # nvm use;
+# # yarn;
+# # yarn build;
 
-cd ../sjm;
-nvm use;
-yarn;
-yarn build;
+# pm2 restart 'app-tngvi'; 
+# pm2 restart 'app-sjm'; 
 
-pm2 restart 'app-tngvi'; 
-pm2 restart 'app-sjm'; 

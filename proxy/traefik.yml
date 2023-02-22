@@ -1,9 +1,9 @@
 ## Static configuration
-log:
+# log:
   # level: WARN
   # level: INFO
-  level: DEBUG
-accessLog: {}
+  # level: DEBUG
+# accessLog: {}
 entryPoints:
   web:
    address: ":80"

@@ -114,9 +114,9 @@ if (process.env.DB_URI) {
 
 const Passport = () => {
   let callbackURL = `http://localhost:${port}/cms/callback`;
-  // If app env defined, use callback url defined in map (production)
-  if (process.env.APP)
-    callbackURL = `https://qa.${appConfigMap[appName].apexUrl}/cms/callback`;
+
+  if (process.env.PRODUCTION_MODE === 'true')
+    callbackURL = `https://cms.elab.emerson.edu/${appName}/callback`;
 
   const strategy = new AuthStrategy(
     {
@@ -360,14 +360,14 @@ let ksConfig = (lists: any) => {
             );
           }
           app.get(
-            '/cms/login',
+            '/login',
             p.authenticate('google', {
               scope: ['openid', 'email'],
               session: true,
             })
           );
 
-          app.get('/cms/callback', (req, res, next) => {
+          app.get('/callback', (req, res, next) => {
             try {
               p.authenticate(
                 'google',
@@ -415,7 +415,7 @@ let ksConfig = (lists: any) => {
               req.session.redirectTo = req.originalUrl;
               // if (req.session.redirectTo) res.redirect(req.session.redirectTo);
               // else {
-              res.redirect('/cms/login');
+              res.redirect('/login');
               // }
             } else if (
               req.session.passport &&
@@ -425,7 +425,7 @@ let ksConfig = (lists: any) => {
           });
         }
 
-        app.get('/cms/prod-deploy/:note?', async (req, res, next) => {
+        app.get('/prod-deploy/:note?', async (req, res, next) => {
           try {
             const response = await axios.post(
               process.env.DEPLOY_API_PATH as string,
@@ -440,7 +440,6 @@ let ksConfig = (lists: any) => {
             );
 
             res.status(200).send(response.data);
-            // console.log(req.query.note);
           } catch (err: any) {
             res.status(500).send(err.message);
           }

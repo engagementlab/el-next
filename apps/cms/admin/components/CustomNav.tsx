@@ -14,7 +14,10 @@ import {
   Drawer,
   Button,
 } from '@mui/material';
-import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
+
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import WebOutlinedIcon from '@mui/icons-material/WebOutlined';
+
 import React, { useEffect, useState } from 'react';
 import create from 'zustand';
 
@@ -24,6 +27,7 @@ const apps = [
   {
     key: 'tngvi',
     name: 'TNGVI',
+    apexUrl: 'transformnarratives.org',
     logo: () => {
       return (
         <svg viewBox="88.575 264.575 25 49.225" width="25" height="49.225">
@@ -112,6 +116,7 @@ const apps = [
   {
     key: 'sjm',
     name: 'SJ+M',
+    apexUrl: 'sjmsymposium.org',
     logo: () => {
       return (
         <img
@@ -150,7 +155,7 @@ export function CustomNavigation({
   const [appPath, setAppPath] = useState('');
 
   useEffect(() => {
-    setAppPath(window.location.pathname.replace('/', ''));
+    setAppPath(window.location.pathname.replace('/', '') || 'tngvi');
   }, []);
 
   const toggleDrawer = useStore((state) => state.toggleDrawer);
@@ -187,28 +192,74 @@ export function CustomNavigation({
     </Box>
   );
 
+  const app = apps.filter((app) => app.key === appPath)[0];
+
   return (
     <NavigationContainer authenticatedItem={authenticatedItem}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: '2rem',
-        }}
-      >
-        {appPath && (
-          <Button
-            variant="outlined"
-            style={{ color: '#00a497', borderColor: '#00a497' }}
-            onClick={() => {
-              toggleDrawer(true);
+      {app && (
+        <>
+          {' '}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              marginBottom: '1rem',
             }}
           >
-            <CompareArrowsOutlinedIcon />
-            &nbsp;{apps.filter((app) => app.key === appPath)[0]['name']}
-          </Button>
-        )}
-      </div>
+            <Button
+              variant="outlined"
+              style={{
+                color: '#00a497',
+                borderColor: '#00a497',
+                maxHeight: '40px',
+              }}
+              onClick={() => {
+                toggleDrawer(true);
+              }}
+            >
+              <MenuOutlinedIcon />
+            </Button>
+            {appPath && (
+              <h3
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                }}
+              >
+                <app.logo />
+                <span style={{ paddingLeft: '1rem' }}>
+                  {apps.filter((app) => app.key === appPath)[0]['name']}
+                </span>
+              </h3>
+            )}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '1rem',
+            }}
+          >
+            <Button
+              component="a"
+              href={`https://qa.${app.apexUrl}`}
+              target="_blank"
+              style={{
+                color: '#3b82f6',
+                maxHeight: '40px',
+              }}
+            >
+              <WebOutlinedIcon style={{ paddingRight: '.5rem' }} />
+              View QA
+            </Button>
+          </div>
+        </>
+      )}
+      <hr style={{ width: '85%', borderWidth: '1px', borderColor: 'grey' }} />
       <Drawer
         anchor="left"
         open={isOpen}

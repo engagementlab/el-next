@@ -1,8 +1,7 @@
 version: '3'
 
 services:
-  reverse-proxy:
-    # The official v2 Traefik docker image
+  traefik:
     image: traefik:v2.9
     ports:
       - 443:443
@@ -14,28 +13,11 @@ services:
       - ./proxy/traefik.yml:/traefik.yml
       - ./proxy/certs.yml:/certs.yml
       - /etc/ssl/certs:/certs
-    networks:
-      - web
     labels:
       - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=api@internal"
-    restart: always
-
-  traefik-forward-auth:
-    image: thomseddon/traefik-forward-auth:2
-    env_file:
-      - ./apps/cms/.env
-    environment:
-      - PROVIDERS_GOOGLE_CLIENT_ID="$${GOOGLE_CLIENT_ID}"
-      - PROVIDERS_GOOGLE_CLIENT_SECRET="$${GOOGLE_CLIENT_SECRET}"
-      - SECRET="$${SESSION_COOKIE}"
-      # - INSECURE_COOKIE=true # Example assumes no https, do not use in production
-    labels:
-      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
-      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
-      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
 
   cms-tngvi:
     image: el-next
@@ -44,10 +26,6 @@ services:
     environment:
       - APP_NAME=tngvi
       - PORT=3000
-    networks:
-      - web
-    ports:
-      - 3000:3000
     labels:
       - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
       - "traefik.http.routers.cms-tngvi.tls=true"
@@ -62,19 +40,21 @@ services:
     environment:
       - APP_NAME=sjm
       - PORT=3001
-    networks:
-      - web
-    ports:
-      - 3001:3001
     labels:
       - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
       - "traefik.http.routers.cms-sjm.tls=true"
       - "traefik.http.routers.cms-sjm.entrypoints=websecure"
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
       - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
+      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth"
 
-networks:
-  web:
-    driver: bridge
-    ipam:
-      driver: default
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:latest
+    env_file: ./apps/cms/.auth.env
+    labels:
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
+      - "traefik.http.routers.traefik-forward-auth.rule=PathPrefix(`/_oauth`)"
+      - "traefik.http.routers.traefik-forward-auth.tls=true"
+      - "traefik.http.routers.traefik-forward-auth.entrypoints=websecure"

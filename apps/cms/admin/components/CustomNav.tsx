@@ -155,7 +155,9 @@ export function CustomNavigation({
   const [appPath, setAppPath] = useState('');
 
   useEffect(() => {
-    setAppPath(window.location.pathname.replace('/', '') || 'tngvi');
+    setAppPath(
+      window.location.pathname.split('/')[0].replace('/', '') || 'tngvi'
+    );
   }, []);
 
   const toggleDrawer = useStore((state) => state.toggleDrawer);

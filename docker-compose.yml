@@ -7,7 +7,6 @@ services:
       - 443:443
       - 80:80
       - 8080:8080
-      - 5000:5000
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -22,12 +21,13 @@ services:
 
   cms-landing:
     image: ghcr.io/patrickdappollonio/docker-http-server:v2
+    command: --path /html --title "ELab CMS Directory"
     volumes:
-      - ./_site/index.html:/index.html
+      - ./_site/index.html:/html/index.html
     labels:
       traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
-      traefik.http.routers.cms-tngvi.tls: true
-      traefik.http.routers.cms-tngvi.entrypoints: websecure
+      traefik.http.routers.cms-landing.tls: true
+      traefik.http.routers.cms-landing.entrypoints: websecure
 
   cms-tngvi:
     image: el-next

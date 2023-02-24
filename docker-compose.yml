@@ -7,6 +7,7 @@ services:
       - 443:443
       - 80:80
       - 8080:8080
+      - 5000:5000
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -18,6 +19,15 @@ services:
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=api@internal"
+
+  cms-landing:
+    image: ghcr.io/patrickdappollonio/docker-http-server:v2
+    volumes:
+      - ./_site/index.html:/index.html
+    labels:
+      traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
+      traefik.http.routers.cms-tngvi.tls: true
+      traefik.http.routers.cms-tngvi.entrypoints: websecure
 
   cms-tngvi:
     image: el-next

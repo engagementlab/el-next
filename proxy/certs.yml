@@ -1,0 +1,11 @@
+tls:
+  certificates:
+    - certFile: /certs/cms_elab_emerson_edu_cert.cer
+      keyFile: /certs/cms.elab.key
+      stores:
+        - default
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/cms_elab_emerson_edu_cert.cer
+        keyFile: /certs/cms.elab.key

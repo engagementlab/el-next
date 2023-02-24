@@ -1,18 +1,18 @@
 ## Static configuration
-log:
+# log:
   # level: WARN
   # level: INFO
-  level: DEBUG
-accessLog: {}
+  # level: DEBUG
+# accessLog: {}
 entryPoints:
   web:
    address: ":80"
-  #  http:
-    #  redirections:
-    #    entryPoint:
-    #      to: websecure
-    #      scheme: https
-    #      permanent: true
+   http:
+     redirections:
+       entryPoint:
+         to: websecure
+         scheme: https
+         permanent: true
   websecure:
    address: ":443"
 api:
@@ -21,7 +21,5 @@ api:
 providers:
   docker: 
     watch: false
-    # exposedByDefault: false
-    # swarmMode:
   file:
     filename: certs.yml

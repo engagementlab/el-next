@@ -20,7 +20,12 @@ jobs:
     strategy:
       matrix:
         node-version: [16.13.1]
-    steps:
+    steps:      
+      - name: Setup node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
       - name: Download artifacts from initial-setup job
         uses: actions/download-artifact@v3
         with:

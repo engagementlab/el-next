@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "build": "preconstruct build",
+    "deploy": "ssh apps@cms.elab.emerson.edu 'bash -s' < ./scripts/deploy.sh",
+    "docker": "docker build -t el-next . --network=host",
     "fix": "preconstruct fix",
     "postinstall": "preconstruct build",
     "watch": "preconstruct watch"

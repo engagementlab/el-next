@@ -114,9 +114,9 @@ if (process.env.DB_URI) {
 
 const Passport = () => {
   let callbackURL = `http://localhost:${port}/cms/callback`;
-  // If app env defined, use callback url defined in map (production)
-  if (process.env.APP)
-    callbackURL = `https://qa.${appConfigMap[appName].apexUrl}/cms/callback`;
+
+  if (process.env.PRODUCTION_MODE === 'true')
+    callbackURL = `https://cms.elab.emerson.edu/${appName}/callback`;
 
   const strategy = new AuthStrategy(
     {
@@ -179,12 +179,14 @@ const Passport = () => {
 let ksConfig = (lists: any) => {
   return {
     db: dbConfig,
+
     experimental: {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
 
     lists,
+
     server: {
       port,
       maxFileSize: 1024 * 1024 * 50,
@@ -358,14 +360,14 @@ let ksConfig = (lists: any) => {
             );
           }
           app.get(
-            '/cms/login',
+            `/${appName}/login`,
             p.authenticate('google', {
               scope: ['openid', 'email'],
               session: true,
             })
           );
 
-          app.get('/cms/callback', (req, res, next) => {
+          app.get(`/${appName}/callback`, (req, res, next) => {
             try {
               p.authenticate(
                 'google',
@@ -403,8 +405,8 @@ let ksConfig = (lists: any) => {
           app.use((req, res, next) => {
             // Ignore API paths
             if (
-              req.path.indexOf('/api') === 0 ||
-              req.path.indexOf('/_next') === 0
+              req.path.indexOf('/api') !== -1 ||
+              req.path.indexOf('/_next') !== -1
             )
               next();
             else if (!req.session.passport || !req.session.passport.user) {
@@ -413,7 +415,7 @@ let ksConfig = (lists: any) => {
               req.session.redirectTo = req.originalUrl;
               // if (req.session.redirectTo) res.redirect(req.session.redirectTo);
               // else {
-              res.redirect('/cms/login');
+              res.redirect(`/${appName}/login`);
               // }
             } else if (
               req.session.passport &&
@@ -423,7 +425,7 @@ let ksConfig = (lists: any) => {
           });
         }
 
-        app.get('/cms/prod-deploy/:note?', async (req, res, next) => {
+        app.get('/prod-deploy/:note?', async (req, res, next) => {
           try {
             const response = await axios.post(
               process.env.DEPLOY_API_PATH as string,
@@ -438,14 +440,26 @@ let ksConfig = (lists: any) => {
             );
 
             res.status(200).send(response.data);
-            // console.log(req.query.note);
           } catch (err: any) {
             res.status(500).send(err.message);
           }
         });
       },
     },
-    ui: {
+    ui: {},
+    graphql: {
+      path: `/${
+        process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
+      }api/graphql`,
+    },
+  };
+};
+
+export default (() => {
+  let config = ksConfig(appConfigMap[appName].schema);
+
+  if (process.env.PRODUCTION_MODE === 'true')
+    config.ui = {
       getAdditionalFiles: [
         async (config: KeystoneConfig) => [
           {
@@ -456,7 +470,7 @@ let ksConfig = (lists: any) => {
 
             const config = {
               ...keystoneConfig,
-              basePath: "/cms",
+              basePath: "/${appName}",
             };
 
             module.exports = config;
@@ -465,10 +479,7 @@ let ksConfig = (lists: any) => {
           },
         ],
       ],
-    },
-  };
-};
+    };
 
-export default (() => {
-  return ksConfig(appConfigMap[appName].schema);
+  return config;
 })();

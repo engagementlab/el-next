@@ -14,7 +14,10 @@
         },
         "debug.internalConsoleOptions": "neverOpen",
         "yaml.schemas": {
-            "https://json.schemastore.org/github-workflow.json": "file:///Users/john_richardson/Documents/Projects/transform-narratives/.github/workflows/build.yml",
+            "https://json.schemastore.org/github-workflow.json": [
+                "file:///Users/john_richardson/Documents/Projects/transform-narratives/.github/workflows/build.yml",
+                "file:///Users/john_richardson/Documents/Projects/transform-narratives/.github/workflows/test.yml"
+            ],
             "https://json.schemastore.org/codecov.json": "file:///Users/john_richardson/Documents/Projects/transform-narratives/packages/functions/UserOrchestrator/dump.pm2"
         },
         "typescript.tsdk": "node_modules/typescript/lib",

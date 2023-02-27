@@ -133,7 +133,7 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --content-paths  "/*" --profile-name web-apps --name ${{ github.event.client_payload.storageAccount }}
+            az cdn endpoint purge --content-paths "/*" --profile-name web-apps -n ${{ github.event.client_payload.storageAccount }} -g web
 
     # Azure logout
       - name: logout

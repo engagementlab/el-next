@@ -2,7 +2,7 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 
 const apollo = new ApolloClient({
   uri:
-    process.env.APOLLO_CLIENT_GRAPHQL_URI ||
+    `https://cms.elab.emerson.edu/${process.env.GRAPHQL_APP}/api/graphql` ||
     'http://localhost:3000/api/graphql',
   cache: new InMemoryCache(),
   defaultOptions: {

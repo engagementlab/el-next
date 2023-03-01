@@ -3,10 +3,13 @@
   "private": true,
   "scripts": {
     "build": "preconstruct build",
+    "cleanup": "docker system prune --all --force",
     "deploy": "ssh apps@cms.elab.emerson.edu 'bash -s' < ./scripts/deploy.sh",
     "docker": "docker build -t el-next . --network=host",
+    "down": "docker compose down",
     "fix": "preconstruct fix",
     "postinstall": "preconstruct build",
+    "up": "docker compose up",
     "watch": "preconstruct watch"
   },
   "dependencies": {

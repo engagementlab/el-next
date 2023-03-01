@@ -19,5 +19,5 @@ docker images | awk '/ago/  { print $3}' | xargs --no-run-if-empty docker rmi
 docker volume ls -qf dangling=true | xargs --no-run-if-empty docker volume rm
 
 # Build image and daemonize services
-yarn docker;
+DOCKER_BUILDKIT=1 docker build -t el-next .
 docker compose up -d

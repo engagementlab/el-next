@@ -29,9 +29,9 @@ RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
 # Create CMS Runner target
 
 FROM node:${NODE_VERSION}-slim AS cms-runner
-ENV NODE_ENV=production
-ENV NEXTJS_IGNORE_ESLINT=1
-ENV NEXTJS_IGNORE_TYPECHECK=0
+ENV NODE_ENV production
+ENV NEXTJS_IGNORE_ESLINT 1
+ENV NEXTJS_IGNORE_TYPECHECK 0
 
 ARG PORT=3000
 ARG APP_NAME=sjm
@@ -52,6 +52,22 @@ EXPOSE $PORT
 CMD yarn keystone postinstall --fix --app $APP_NAME && \
     yarn build --app $APP_NAME && \
     yarn start --app $APP_NAME
+
+
+# Create API target
+
+FROM node:18-slim AS api
+RUN apt update && apt upgrade && apt-get -y install rsync
+
+ENV NODE_ENV production
+
+WORKDIR /repo/apps/api
+
+COPY ./apps/api ./
+
+RUN ls && yarn build
+
+CMD yarn start
 
 # # FROM node:16 AS qa-tngvi
 

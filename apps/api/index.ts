@@ -1,13 +1,29 @@
 import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import multer from 'multer';
 import _ from 'lodash';
 
 dotenv.config();
 
+cloudinary.config({
+  cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+  api_key: `${process.env.CLOUDINARY_KEY}`,
+  api_secret: `${process.env.CLOUDINARY_SECRET}`,
+  secure: true,
+});
+
 const app: Express = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
+
+const upload = multer({
+  limits: {
+    fieldSize: 1024 * 1024 * 50,
+  },
+});
+
 app.use(cors({ credentials: true }));
 app.enable('trust proxy');
 
@@ -78,55 +94,50 @@ app.get('/media/videos', async (req, res, next) => {
   }
 });
 
-/* app.get(
-  `/${
-    process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
-  }media/get/:type`,
-  async (req, res) => {
-    try {
-      cloudinary.api.sub_folders(
-        appName || 'tngvi',
-        { max_results: 100 },
-        (e, foldersResponse) => {
-          cloudinary.api.resources(
-            {
-              prefix: appName || 'tngvi',
-              resource_type: 'image',
-              type: req.params.type,
-              max_results: 500,
-            },
-            (e, response) => {
-              const sorted = response.resources.sort(
-                (
-                  a: {
-                    created_at: number;
-                  },
-                  b: {
-                    created_at: number;
-                  }
-                ) => {
-                  return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-                  );
+app.get(`/media/get/:app/:type`, async (req, res) => {
+  const appName = req.params.app;
+  try {
+    cloudinary.api.sub_folders(
+      appName || 'tngvi',
+      { max_results: 100 },
+      (e, foldersResponse) => {
+        cloudinary.api.resources(
+          {
+            prefix: appName || 'tngvi',
+            resource_type: 'image',
+            type: req.params.type,
+            max_results: 500,
+          },
+          (e, response) => {
+            const sorted = response.resources.sort(
+              (
+                a: {
+                  created_at: number;
+                },
+                b: {
+                  created_at: number;
                 }
-              );
+              ) => {
+                return (
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+                );
+              }
+            );
 
-              res.status(200).send({
-                folders: foldersResponse.folders,
-                imgs: sorted,
-              });
-            }
-          );
-        }
-      );
-    } catch (err: any) {
-      res.status(500).send(err);
-    }
+            res.status(200).send({
+              folders: foldersResponse.folders,
+              imgs: sorted,
+            });
+          }
+        );
+      }
+    );
+  } catch (err: any) {
+    res.status(500).send(err);
   }
-);
-
-app.get('media/delete', async (req, res) => {
+});
+app.get('/media/delete', async (req, res) => {
   try {
     cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
       res.status(200).send(response)
@@ -139,7 +150,7 @@ app.get('media/delete', async (req, res) => {
 app.post('media/upload', upload.none(), async (req, res) => {
   try {
     const response = await cloudinary.uploader.upload(req.body.img, {
-      folder: appName || 'tngvi',
+      folder: req.body.app || 'tngvi',
     });
     res.status(200).send(response);
   } catch (err: any) {
@@ -167,7 +178,8 @@ app.get('/prod-deploy/:note?', async (req, res, next) => {
     res.status(500).send(err.message);
   }
 });
- */
+
+/* */
 app.listen(port, () => {
   console.log(`⚡️[api]: API is running at :${port}`);
 });

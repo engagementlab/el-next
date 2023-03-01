@@ -3,6 +3,9 @@
 cd /srv/apps/el-next/
 git pull
 
+# Pull swarm down
+docker compose down
+
 # Remove exited containers
 docker ps -a -q -f status=exited | xargs --no-run-if-empty docker rm -v
 

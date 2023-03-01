@@ -15,6 +15,7 @@ COPY yarn.lock ./
 RUN --mount=type=bind,target=/docker-context \
     rsync -amv --delete \
     --exclude='node_modules' \
+    --exclude='scripts' \
     --exclude='*/node_modules' \
     --include='package.json' \
     --include='*/' --exclude='apps/*' \

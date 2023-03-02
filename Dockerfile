@@ -47,6 +47,7 @@ RUN apt-get update && apt-get install -y openssl libssl-dev
 RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
     YARN_CACHE_FOLDER=/root/.yarn3-cache \
     yarn install --immutable --inline-builds --ignore-scripts
+
 EXPOSE $PORT
 
 CMD yarn keystone postinstall --fix --app $APP_NAME && \
@@ -66,6 +67,8 @@ ENV NODE_ENV ci
 WORKDIR /repo/apps/api
 
 COPY ./apps/api ./
+
+EXPOSE $PORT
 
 RUN yarn && yarn build
 

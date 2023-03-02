@@ -159,7 +159,7 @@ app.post('media/upload', upload.none(), async (req, res) => {
   }
 });
 
-app.get('/prod-deploy/:note?', async (req, res, next) => {
+app.get('/prod-deploy/:app/:note?', async (req, res, next) => {
   try {
     // const response = await axios.post(
     //   process.env.DEPLOY_API_PATH as string,

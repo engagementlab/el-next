@@ -77,7 +77,9 @@ export default function Deploy() {
   const deployFetch = async () => {
     toggleWaiting();
     const response = await axios.get(
-      `/api/prod-deploy/app=${process.env.APP_NAME}&?note=${noteContent}`,
+      `/api/prod-deploy?app=${
+        window.location.pathname.replace('/', '').split('/')[0]
+      }&note=${noteContent}`,
       {
         withCredentials: true,
       }

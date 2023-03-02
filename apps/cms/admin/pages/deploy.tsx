@@ -77,9 +77,9 @@ export default function Deploy() {
   const deployFetch = async () => {
     toggleWaiting();
     const response = await axios.get(
-      `/api/prod-deploy?app=${
+      `/api/prod-deploy/${
         window.location.pathname.replace('/', '').split('/')[0]
-      }&note=${noteContent}`,
+      }/${noteContent}`,
       {
         withCredentials: true,
       }

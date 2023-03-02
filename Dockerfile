@@ -65,7 +65,7 @@ WORKDIR /repo/apps/api
 
 COPY ./apps/api ./
 
-RUN ls && yarn build
+RUN yarn && yarn build
 
 CMD yarn start
 

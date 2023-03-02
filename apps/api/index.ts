@@ -173,7 +173,7 @@ app.get('/prod-deploy/:app/:note?', async (req, res, next) => {
     //   }
     // );
 
-    res.status(200).send(req);
+    res.status(200).send(JSON.stringify(req));
   } catch (err: any) {
     res.status(500).send(err.message);
   }

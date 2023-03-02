@@ -76,9 +76,12 @@ export default function Deploy() {
 
   const deployFetch = async () => {
     toggleWaiting();
-    const response = await axios.get(`/cms/prod-deploy/?note=${noteContent}`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `/api/prod-deploy/app=${process.env.APP_NAME}&?note=${noteContent}`,
+      {
+        withCredentials: true,
+      }
+    );
     setActionsLink(
       `https://github.com/engagementlab/${response.data.repo}/actions/runs/${response.data.id}?check_suite_focus=true`
     );

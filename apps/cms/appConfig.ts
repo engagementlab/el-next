@@ -1,4 +1,4 @@
-import { tngvi, sjm, elab } from './cms/admin/schema';
+import { tngvi, sjm, elab } from './admin/schema';
 
 type appConfigType = {
   [key: string]: {

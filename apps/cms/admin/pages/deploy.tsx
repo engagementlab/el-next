@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import create from 'zustand';
 import React from 'react';
-import appConfigMap from '../../../appConfig';
+import appConfigMap from '../../appConfig';
 
 type PageState = {
   confirmed: boolean;

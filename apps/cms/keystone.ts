@@ -13,7 +13,7 @@ import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import appConfigMap from '../appConfig';
+import appConfigMap from './appConfig';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 import cors from 'cors';

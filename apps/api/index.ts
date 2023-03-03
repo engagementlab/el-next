@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
 import cors from 'cors';
@@ -159,21 +159,22 @@ app.post('media/upload', upload.none(), async (req, res) => {
   }
 });
 
-app.get('/prod-deploy/:app/:note?', async (req, res, next) => {
+app.post('/prod-deploy', async (req, res, next) => {
   try {
-    // const response = await axios.post(
-    //   process.env.DEPLOY_API_PATH as string,
-    //   {
-    //     repo: 'el-next',
-    //     appName,
-    //     storageAccount: appConfigMap[appName].storageAccount,
-    //     apexUrl: appConfigMap[appName].apexUrl,
-    //     userName: req.session.passport?.user.name.split(' ')[0],
-    //     note: req.query.note,
-    //   }
-    // );
+    // Get user's emerson.edu email address from forwardauth cookie
+    const userEmail = req.headers.cookie?.match(
+      /([a-zA-Z0-9._-]+@emerson.edu)/gi
+    );
+    const response = await axios.post(process.env.DEPLOY_API_PATH as string, {
+      repo: 'el-next',
+      appName: req.body.app,
+      storageAccount: req.body.storageAccount,
+      apexUrl: req.body.apexUrl,
+      userEmail: userEmail && userEmail?.length !== -1 ? userEmail[0] : null,
+      note: req.query.note,
+    });
 
-    res.status(200).send(JSON.stringify(req));
+    res.status(200).send(response);
   } catch (err: any) {
     res.status(500).send(err.message);
   }

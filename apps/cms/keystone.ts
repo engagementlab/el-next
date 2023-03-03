@@ -9,14 +9,23 @@ import yargs from 'yargs/yargs';
 
 import 'dotenv/config';
 import e from 'express';
-import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import appConfigMap from './appConfig';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 import cors from 'cors';
+
+import { tngvi, sjm, elab } from './admin/schema';
+
+type schemaIndexType = {
+  [key: string]: object;
+};
+const schemaMap: schemaIndexType = {
+  elab: elab,
+  tngvi: tngvi,
+  sjm: sjm,
+};
 
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
@@ -59,18 +68,6 @@ declare module 'express-serve-static-core' {
   }
 }
 
-declare module 'express-session' {
-  export interface SessionData {
-    redirectTo: string;
-    save: any;
-    passport: {
-      redirectTo: string;
-      user: {
-        [key: string]: any;
-      };
-    };
-  }
-}
 const devMode = process.env.NODE_ENV === 'development';
 
 // Fallback
@@ -261,8 +258,7 @@ let ksConfig = (lists: any) => {
             //     note: req.query.note,
             //   }
             // );
-
-            res.status(200).send(req.session);
+            // res.status(200).send(req.session);
           } catch (err: any) {
             res.status(500).send(err.message);
           }
@@ -279,7 +275,7 @@ let ksConfig = (lists: any) => {
 };
 
 export default (() => {
-  let config = ksConfig(appConfigMap[appName].schema);
+  let config = ksConfig(schemaMap[appName]);
 
   if (process.env.PRODUCTION_MODE === 'true')
     config.ui = {

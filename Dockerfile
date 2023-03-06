@@ -59,10 +59,11 @@ CMD yarn keystone postinstall --fix --app $APP_NAME && \
 
 FROM node:18-slim AS api
 ARG PORT=8000
+ARG ENV=ci
 
 RUN apt update && apt upgrade && apt-get -y install rsync
 
-ENV NODE_ENV ci
+ENV NODE_ENV $ENV
 
 WORKDIR /repo/apps/api
 

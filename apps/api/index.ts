@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import multer from 'multer';
@@ -16,6 +17,13 @@ cloudinary.config({
 });
 
 const app: Express = express();
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+
 const port = process.env.PORT || 3000;
 
 const upload = multer({
@@ -161,6 +169,10 @@ app.post('media/upload', upload.none(), async (req, res) => {
 
 app.post('/prod-deploy', async (req, res, next) => {
   try {
+    if (!req.body) {
+      res.status(500).send('No body provided in payload.');
+      return;
+    }
     // Get user's emerson.edu email address from forwardauth cookie
     const userEmail = req.headers.cookie?.match(
       /([a-zA-Z0-9._-]+@emerson.edu)/gi

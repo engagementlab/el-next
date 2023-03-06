@@ -32,12 +32,16 @@ const upload = multer({
   },
 });
 
+const devMode = process.env.NODE_ENV === 'development';
+
 app.use(cors({ credentials: true }));
 app.enable('trust proxy');
 
 app.all('/*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  // res.header('Access-Control-Allow-Credentials', true)
+  res.header(
+    'Access-Control-Allow-Origin',
+    `${devMode ? 'http://localhost:3000' : '*'}`
+  );
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, HEAD, PUT');
   res.header('Access-Control-Expose-Headers', 'Content-Length');
   res.header(
@@ -155,7 +159,7 @@ app.get('/media/delete', async (req, res) => {
   }
 });
 
-app.post('media/upload', upload.none(), async (req, res) => {
+app.post('/media/upload', upload.none(), async (req, res) => {
   try {
     const response = await cloudinary.uploader.upload(req.body.img, {
       folder: req.body.app || 'tngvi',
@@ -182,11 +186,14 @@ app.post('/prod-deploy', async (req, res, next) => {
       appName: req.body.app,
       storageAccount: req.body.storageAccount,
       apexUrl: req.body.apexUrl,
-      userEmail: userEmail && userEmail?.length !== -1 ? userEmail[0] : null,
+      userName:
+        userEmail && userEmail?.length !== -1
+          ? userEmail[0]
+          : 'engagementlab@emerson.edu',
       note: req.query.note,
     });
 
-    res.status(200).send(response);
+    res.status(200).send(response.data);
   } catch (err: any) {
     res.status(500).send(err.message);
   }

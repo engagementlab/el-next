@@ -51,9 +51,13 @@ cloudinary.config({
   secure: true,
 });
 
-let appName: string = argv.app;
-if (process.env.APP) appName = process.env.APP;
-else if (process.env.APP_NAME) appName = process.env.APP_NAME;
+let appName: string = '';
+// --app takes precedence over environment variables
+if (argv.app) appName = argv.app;
+else {
+  if (process.env.APP_NAME) appName = process.env.APP_NAME;
+  else if (process.env.APP) appName = process.env.APP;
+}
 
 if (appName === undefined || appName.length === 0)
   throw new Error(

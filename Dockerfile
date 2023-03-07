@@ -54,14 +54,11 @@ CMD yarn keystone postinstall --fix --app $APP_NAME && \
     yarn build --app $APP_NAME && \
     yarn start --app $APP_NAME
 
-
 # Create API target
 
 FROM node:18-slim AS api
 ARG PORT=8000
 ARG ENV=ci
-
-RUN apt update && apt upgrade && apt-get -y install rsync
 
 ENV NODE_ENV $ENV
 
@@ -75,19 +72,28 @@ RUN yarn && yarn build
 
 CMD yarn start
 
-# # FROM node:16 AS qa-tngvi
+# 
+FROM node:16 AS qa-tngvi
 
-# # ARG PORT=8000
+ARG PORT=8081
+ARG GRAPHQL_APP=tngvi
+WORKDIR /repo
 
-# # RUN mkdir -p ./apps/tngvi
+COPY --from=deps /workspace-install ./
+# COPY --from=deps /workspace-install/packages/components/* ./packages/components
 
-# # COPY apps/tngvi ./apps/tngvi
+# RUN ls  ./packages/components
+# RUN yarn
 
-# ENV GRAPHQL_APP=tngvi
-# ENV NODE_ENV production
+WORKDIR /repo/apps/tngvi
 
-# WORKDIR /usr/src/repo/apps/tngvi
+COPY ./apps/tngvi ./
 
-# EXPOSE $PORT
+ENV GRAPHQL_APP ${GRAPHQL_APP}
+ENV NODE_ENV production
+ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
-# CMD yarn build
+EXPOSE $PORT
+
+RUN yarn build
+CMD yarn start

@@ -32,3 +32,20 @@ services:
       - "traefik.http.routers.devapi.entrypoints=web"
       - "traefik.http.routers.devapi.service=api-el-next"
       - "traefik.http.services.api-el-next.loadbalancer.server.port=8000"
+
+  qa-tngvi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: qa-tngvi
+    # env_file:
+    #   - ./apps/api/.env
+    # environment:
+    #   - 
+    #   - ENV=development
+    labels:
+      - "traefik.http.routers.qa-tngvi.rule=Host(`qa.localhost`)"
+      - "traefik.http.routers.qa-tngvi.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.qa-tngvi.entrypoints=web"
+      - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
+      - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"

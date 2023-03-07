@@ -40,7 +40,11 @@ services:
       - APP_NAME=tngvi
       - PORT=3000
     labels:
-      - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
+      - "traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi/api/graphql`)"
+      - "traefik.http.routers.api-tngvi.tls=true"
+      - "traefik.http.routers.api-tngvi.entrypoints=websecure"
+      - "traefik.http.routers.api-tngvi.service=cms-tngvi-el-next"
+      - "traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi`)"
       - "traefik.http.routers.cms-tngvi.tls=true"
       - "traefik.http.routers.cms-tngvi.entrypoints=websecure"
       - "traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next"
@@ -61,8 +65,8 @@ services:
       - "traefik.http.routers.cms-sjm.tls=true"
       - "traefik.http.routers.cms-sjm.entrypoints=websecure"
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
-      - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
       - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth"
+      - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
 
   api:
     build:

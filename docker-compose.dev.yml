@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.9
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./proxy/traefik.dev.yml:/traefik.yml
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`dev.localhost`)"
+      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+      - "traefik.http.routers.dashboard.service=api@internal"
+
+  devapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    env_file:
+      - ./apps/api/.env
+    environment:
+      - PORT=8000
+      - ENV=development
+    labels:
+      - "traefik.http.routers.devapi.rule=Host(`api.localhost`)"
+      - "traefik.http.routers.devapi.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.devapi.entrypoints=web"
+      - "traefik.http.routers.devapi.service=api-el-next"
+      - "traefik.http.services.api-el-next.loadbalancer.server.port=8000"

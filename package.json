@@ -1,12 +1,12 @@
 {
   "name": "root",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "preconstruct build",
     "cleanup": "docker system prune --all --force",
     "deploy": "ssh apps@cms.elab.emerson.edu 'bash -s' < ./scripts/deploy.sh",
     "docker": "docker build -t el-next . --network=host",
-    "docker:dev": "docker compose -f docker-compose.dev.yml up",
+    "docker:dev": "BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 && docker compose -f docker-compose.dev.yml up",
     "down": "docker compose down",
     "fix": "preconstruct fix",
     "postinstall": "preconstruct build",

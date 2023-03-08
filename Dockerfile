@@ -42,7 +42,7 @@ COPY --from=deps /workspace-install ./
 
 WORKDIR /repo/apps/cms
 
-RUN apt-get update && apt-get install -y openssl libssl-dev
+RUN apt-get update && apt-get install -y openssl libssl-dev curl
 
 RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
     YARN_CACHE_FOLDER=/root/.yarn3-cache \
@@ -89,6 +89,7 @@ WORKDIR /repo/apps/tngvi
 
 COPY ./apps/tngvi ./
 
+ENV PORT ${PORT}
 ENV GRAPHQL_APP ${GRAPHQL_APP}
 ENV NODE_ENV production
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0

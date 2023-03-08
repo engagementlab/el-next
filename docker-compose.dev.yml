@@ -10,8 +10,12 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
       - ./proxy/traefik.dev.yml:/traefik.yml
+    depends_on:
+      cms-tngvi:
+        condition: service_healthy
+    links:
+      - cms-tngvi
     labels:
-      - "traefik.http.routers.dashboard.rule=Host(`dev.localhost`)"
       - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.dashboard.service=api@internal"
@@ -27,25 +31,46 @@ services:
       - PORT=8000
       - ENV=development
     labels:
-      - "traefik.http.routers.devapi.rule=Host(`api.localhost`)"
-      - "traefik.http.routers.devapi.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.devapi.rule=PathPrefix(`/devapi`)"
       - "traefik.http.routers.devapi.entrypoints=web"
       - "traefik.http.routers.devapi.service=api-el-next"
       - "traefik.http.services.api-el-next.loadbalancer.server.port=8000"
+      - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/devapi"
+      - "traefik.http.routers.devapi.middlewares=api-stripprefix"
+
+  cms-tngvi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cms-runner
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - APP_NAME=tngvi
+      - PORT=3000
+    healthcheck:
+      test: curl -f http://localhost:3000
+      interval: 10s
+      timeout: 5s
+      start_period: 1m
+      retries: 4
+    labels:
+      - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
+      - "traefik.http.routers.cms-tngvi.entrypoints=web"
+      - "traefik.http.routers.cms-tngvi.service=cms-tngvi-transform-narratives"
 
   qa-tngvi:
     build:
       context: .
       dockerfile: Dockerfile
       target: qa-tngvi
-    # env_file:
-    #   - ./apps/api/.env
-    # environment:
-    #   - 
-    #   - ENV=development
+    depends_on:
+      cms-tngvi:
+        condition: service_healthy
+    links:
+      - cms-tngvi
     labels:
-      - "traefik.http.routers.qa-tngvi.rule=Host(`qa.localhost`)"
-      - "traefik.http.routers.qa-tngvi.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.qa-tngvi.rule=PathPrefix(`/qa`)"
       - "traefik.http.routers.qa-tngvi.entrypoints=web"
-      - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
-      - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"
+      - "traefik.http.routers.qa-tngvi.service=qa-tngvi-transform-narratives"
+      - "traefik.http.services.qa-tngvi-transform-narratives.loadbalancer.server.port=8081"

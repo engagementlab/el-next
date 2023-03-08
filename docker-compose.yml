@@ -13,6 +13,11 @@ services:
       - ./proxy/traefik.yml:/traefik.yml
       - ./proxy/certs.yml:/certs.yml
       - /etc/ssl/certs:/certs
+    depends_on:
+      cms-tngvi:
+        condition: service_healthy
+    links:
+      - cms-tngvi
     # labels:
     #   - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
     #   - "traefik.http.routers.dashboard.tls=true"
@@ -39,6 +44,12 @@ services:
     environment:
       - APP_NAME=tngvi
       - PORT=3000
+    healthcheck:
+      test: curl -f http://localhost:3000
+      interval: 30s
+      timeout: 5s
+      start_period: 3m
+      retries: 4
     labels:
       - "traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi/api/graphql`)"
       - "traefik.http.routers.api-tngvi.tls=true"
@@ -67,6 +78,22 @@ services:
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
       - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth"
       - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
+
+  qa-tngvi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: qa-tngvi
+    depends_on:
+      cms-tngvi:
+        condition: service_healthy
+    links:
+      - cms-tngvi
+    labels:
+      - "traefik.http.routers.qa-tngvi.rule=PathPrefix(`/qa`)"
+      - "traefik.http.routers.qa-tngvi.entrypoints=web"
+      - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
+      - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"
 
   api:
     build:

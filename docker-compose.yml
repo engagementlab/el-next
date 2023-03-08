@@ -45,7 +45,7 @@ services:
       - APP_NAME=tngvi
       - PORT=3000
     healthcheck:
-      test: curl -f http://localhost:3000
+      test: curl -f http://localhost:3000/tngvi
       interval: 30s
       timeout: 5s
       start_period: 3m

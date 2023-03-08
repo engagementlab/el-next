@@ -80,12 +80,10 @@ ARG GRAPHQL_APP=tngvi
 WORKDIR /repo
 
 COPY --from=deps /workspace-install ./
-# COPY --from=deps /workspace-install/packages/components/* ./packages/components
-
-# RUN ls  ./packages/components
-# RUN yarn
 
 WORKDIR /repo/apps/tngvi
+
+RUN npm i -g yarn
 
 COPY ./apps/tngvi ./
 
@@ -96,5 +94,6 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
 
-RUN yarn build
-CMD yarn start
+CMD yarn install --immutable --inline-builds --ignore-scripts && \
+    yarn build && \
+    yarn start

@@ -23,3 +23,10 @@ providers:
     watch: false
   file:
     filename: certs.yml
+certificatesResolvers:
+  letsencrypt:
+    # Enable ACME (Let's Encrypt): automatic SSL.
+    acme:
+      email: "engagementlab@emerson.edu"
+      storage: "acme.json"
+      tlsChallenge:

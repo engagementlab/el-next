@@ -83,7 +83,9 @@ COPY --from=deps /workspace-install ./
 
 WORKDIR /repo/apps/tngvi
 
-RUN npm i -g yarn
+## Add the wait script to the image
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+RUN chmod +x /wait
 
 COPY ./apps/tngvi ./
 
@@ -94,6 +96,7 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
 
-CMD yarn install --immutable --inline-builds --ignore-scripts && \
+CMD wait && \
+    yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \
     yarn start

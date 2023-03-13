@@ -86,9 +86,9 @@ services:
       WAIT_HOSTS: cms-tngvi:3000
     labels:
       - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
-      - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa2.transformnarratives.org`)"
+      - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa.transformnarratives.org`)"
       - "traefik.http.routers.qa-tngvi.entrypoints=websecure"
-      - "traefik.http.routers.qa-tngvi.rule=Host(`qa2.transformnarratives.org`)"
+      - "traefik.http.routers.qa-tngvi.rule=Host(`qa.transformnarratives.org`)"
       - "traefik.http.routers.qa-tngvi.tls=true"
       - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
       - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"

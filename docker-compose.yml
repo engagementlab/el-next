@@ -35,6 +35,9 @@ services:
       traefik.http.routers.cms-landing.entrypoints: websecure
 
   cms-tngvi:
+    hostname: cms-tngvi
+    ports:
+      - "3000:3000"
     build:
       context: .
       dockerfile: Dockerfile
@@ -79,6 +82,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: qa-tngvi
+    environment:
+      WAIT_HOSTS: cms-tngvi:3000
     labels:
       - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
       - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa2.transformnarratives.org`)"

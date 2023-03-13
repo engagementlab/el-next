@@ -215,7 +215,7 @@ function videoSelect({
       useEffect(() => {
         if (data && data.length > 1) return;
         // Get Vimeo data
-        axios.get('/cms/media/videos').then((response: { data: any[] }) => {
+        axios.get('/api/media/videos').then((response: { data: any[] }) => {
           setData(response.data);
           toggleWaiting();
         });
@@ -437,7 +437,7 @@ function imageSelect({
       useEffect(() => {
         if (data && data.length > 1) return;
         // Get CDN data
-        axios.get('/cms/media/get/upload').then((response: { data: any }) => {
+        axios.get('/api/media/get/upload').then((response: { data: any }) => {
           let data = response.data.imgs;
           // If image pre-selected, move it to the front of array
           if (currentId.length > 0) {

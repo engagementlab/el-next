@@ -14,15 +14,15 @@ services:
       - ./proxy/certs.yml:/certs.yml
       - /etc/ssl/certs:/certs
       - ./proxy/acme.json:/acme.json
-    # labels:
-    #   - "certificatesresolvers.letsencrypt.acme.email="
-    #   - "certificatesresolvers.letsencrypt.acme.storage=/acme.json"
-    #   - "certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-    #   - "certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-    # #   - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-    #   - "traefik.http.routers.dashboard.tls=true"
-    #   - "traefik.http.routers.dashboard.entrypoints=websecure"
-    #   - "traefik.http.routers.dashboard.service=api@internal"
+    environment:
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
+    labels:
+      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 
   cms-landing:
     image: ghcr.io/patrickdappollonio/docker-http-server:v2
@@ -56,41 +56,35 @@ services:
       - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth"
       - "traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000"
 
-  # cms-sjm:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     target: cms-runner
-  #   env_file:
-  #     - ./apps/cms/.env
-  #   environment:
-  #     - APP_NAME=sjm
-  #     - PORT=3001
-  #   labels:
-  #     - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
-  #     - "traefik.http.routers.cms-sjm.tls=true"
-  #     - "traefik.http.routers.cms-sjm.entrypoints=websecure"
-  #     - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
-  #     - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth"
-  #     - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
+  cms-sjm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cms-runner
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - APP_NAME=sjm
+      - PORT=3001
+    labels:
+      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
+      - "traefik.http.routers.cms-sjm.tls=true"
+      - "traefik.http.routers.cms-sjm.entrypoints=websecure"
+      - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
+      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth"
+      - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
 
   qa-tngvi:
     build:
       context: .
       dockerfile: Dockerfile
       target: qa-tngvi
-    depends_on:
-      cms-tngvi:
-        condition: service_healthy
-      # traefik:
-      #   condition: service_healthy
-    links:
-      - cms-tngvi
-      - traefik
     labels:
+      - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
+      - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa2.transformnarratives.org`)"
+      - "traefik.http.routers.qa-tngvi.entrypoints=websecure"
       - "traefik.http.routers.qa-tngvi.rule=Host(`qa2.transformnarratives.org`)"
       - "traefik.http.routers.qa-tngvi.tls=true"
-      - "traefik.http.routers.qa-tngvi.entrypoints=websecure"
       - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
       - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"
       - "traefik.http.routers.qa-tngvi.tls.certresolver=letsencrypt"

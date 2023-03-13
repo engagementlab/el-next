@@ -108,6 +108,13 @@ const styles = {
 const actionsStyle = { position: 'absolute', bottom: 0, right: 0 };
 
 export default function Media() {
+  // app name is derived from first pathname string
+  const app =
+    process.env.PRODUCTION_MODE === 'true'
+      ? window.location.pathname.replace('/', '').split('/')[0]
+      : 'tngvi';
+  const endpointPrefix =
+    process.env.PRODUCTION_MODE === 'true' ? '/api' : 'http://localhost:8000';
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({
       accept: {
@@ -119,8 +126,6 @@ export default function Media() {
   const acceptedFileItems = acceptedFiles.map((file) => (
     <li key={file.name}>{file.name}</li>
   ));
-  // app name is derived from first pathname string
-  const app = window.location.pathname.replace('/', '').split('/')[0];
   // Create store with Zustand
   const [useStore] = useState(() =>
     create<NavState>((set) => ({
@@ -169,10 +174,11 @@ export default function Media() {
           const folder = _.find(state.folders, {
             path: event.target.value[0],
           }) as { name: string; path: string };
-          console.log(folder.name, state.folders);
+          //   console.log(folder.name, state.folders);
           const updatedFolders = state.selectedFolders.includes(folder)
             ? state.selectedFolders.filter((i) => i !== folder) // remove item
             : [...state.selectedFolders, folder]; // add item
+          console.log(updatedFolders);
           return {
             ...state,
             selectedFolders: updatedFolders,
@@ -237,7 +243,7 @@ export default function Media() {
     (item) =>
       selectedFolders.length === 0 ||
       // ...otherwise, item's filters must match ALL selected filters
-      selectedFolders.indexOf(item) > 0
+      selectedFolders.indexOf(item.folder) > 0
   );
 
   const beginIndex = pgIndex * 30;
@@ -312,7 +318,7 @@ export default function Media() {
 
   useEffect(() => {
     if (data && data.length > 1) return;
-    axios.get('/api/media/get/upload').then((response) => {
+    axios.get(`${endpointPrefix}/media/get/${app}/upload`).then((response) => {
       setData(response.data.imgs, response.data.folders);
       toggleWaiting();
     });
@@ -419,37 +425,40 @@ export default function Media() {
           </Fab>
           <hr />
           {/* <FormControl sx={{ m: 1, width: 600 }}>
-                    <InputLabel id="demo-multiple-chip-label">Filter by Folder</InputLabel>
-                    <Select
-                    labelId="demo-multiple-chip-label"
-                    id="demo-multiple-chip"
-                    multiple
-                    value={selectedFolders}
-                    onChange={(val) => { setSelecedFolders(val); }}
-                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                    renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
+            <InputLabel id="demo-multiple-chip-label">
+              Filter by Folder
+            </InputLabel>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              value={selectedFolders}
+              onChange={(val) => {
+                setSelecedFolders(val);
+              }}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
                     <>
-                        {typeof value}
-                    <Chip key={value.path} label={value} />
+                      <Chip key={value.path} label={value.name} />
                     </>
-                        ))}
-                        </Box>
-                    )}
-                    MenuProps={MenuProps}
-                    >
-                    {folders.map((folder) => (
-                        <MenuItem
-                        key={folder.path}
-                        value={folder.path}
-                        // style={getStyles(folder, personName, theme)}
-                        >
-                        {folder.name.toLocaleUpperCase()}
-                        </MenuItem>
-                    ))}
-                    </Select>
-                </FormControl> */}
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {folders.map((folder) => (
+                <MenuItem
+                  key={folder.path}
+                  value={folder.path}
+                  // style={getStyles(folder, personName, theme)}
+                >
+                  {folder.name.toLocaleUpperCase()}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl> */}
 
           <Pagination
             count={Math.floor(data.length / 30) + 1}

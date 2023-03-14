@@ -18,6 +18,8 @@ docker images | awk '/ago/  { print $3}' | xargs --no-run-if-empty docker rmi
 # Remove dangling volumes
 docker volume ls -qf dangling=true | xargs --no-run-if-empty docker volume rm
 
+# Traefik will complain about permissions on this otherwise...
+chmod 600 proxy/acme.json
+
 # Build image and daemonize services
-DOCKER_BUILDKIT=1 docker build -t el-next .
-docker compose up -d
+DOCKER_BUILDKIT=1 docker compose up -d

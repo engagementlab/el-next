@@ -84,7 +84,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: qa-tngvi
+      target: qa-image
     environment:
       WAIT_HOSTS: cms-tngvi:3000
     labels:
@@ -101,9 +101,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: qa-sjm
+      target: qa-image
     environment:
       WAIT_HOSTS: cms-sjm:3001
+      APP: sjm
       PORT: 8082
     labels:
       - "traefik.http.routers.qa-sjm-http.entrypoints=web"

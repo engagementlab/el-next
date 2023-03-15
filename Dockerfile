@@ -73,24 +73,24 @@ RUN yarn && yarn build
 CMD yarn start
 
 # 
-FROM node:16 AS qa-tngvi
+FROM node:16 AS qa-image
 
 ARG PORT=8081
-ARG GRAPHQL_APP=tngvi
+ARG APP=tngvi
 WORKDIR /repo
 
 COPY --from=deps /workspace-install ./
 
-WORKDIR /repo/apps/tngvi
+WORKDIR /repo/apps/${APP}
 
 ## Add the wait script to the image
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
 RUN chmod +x /wait
 
-COPY ./apps/tngvi ./
+COPY ./apps/${APP} ./
 
 ENV PORT ${PORT}
-ENV GRAPHQL_APP ${GRAPHQL_APP}
+ENV APP ${APP}
 ENV NODE_ENV production
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 

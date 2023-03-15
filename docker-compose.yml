@@ -60,6 +60,9 @@ services:
       - "traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000"
 
   cms-sjm:
+    hostname: cms-sjm
+    ports:
+      - "3001:3001"
     build:
       context: .
       dockerfile: Dockerfile
@@ -93,6 +96,24 @@ services:
       - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
       - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"
       - "traefik.http.routers.qa-tngvi.tls.certresolver=letsencrypt"
+
+  qa-sjm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: qa-sjm
+    environment:
+      WAIT_HOSTS: cms-sjm:3001
+      PORT: 8082
+    labels:
+      - "traefik.http.routers.qa-sjm-http.entrypoints=web"
+      - "traefik.http.routers.qa-sjm-http.rule=Host(`qa2.sjmsymposium.org`)"
+      - "traefik.http.routers.qa-sjm.entrypoints=websecure"
+      - "traefik.http.routers.qa-sjm.rule=Host(`qa2.sjmsymposium.org`)"
+      - "traefik.http.routers.qa-sjm.tls=true"
+      - "traefik.http.routers.qa-sjm.service=qa-sjm-el-next"
+      - "traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082"
+      - "traefik.http.routers.qa-sjm.tls.certresolver=letsencrypt"
 
   api:
     build:

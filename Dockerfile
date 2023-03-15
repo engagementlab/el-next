@@ -76,7 +76,7 @@ CMD yarn start
 FROM node:16 AS qa-image
 
 ARG PORT=8081
-ARG APP=tngvi
+ARG APP
 WORKDIR /repo
 
 COPY --from=deps /workspace-install ./

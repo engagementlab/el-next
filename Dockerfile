@@ -76,7 +76,7 @@ CMD yarn start
 FROM node:16 AS qa-image
 
 ARG PORT=8081
-ARG APP
+ARG APP=elab
 WORKDIR /repo
 
 COPY --from=deps /workspace-install ./

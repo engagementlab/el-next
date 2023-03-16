@@ -85,9 +85,10 @@ services:
       context: .
       dockerfile: Dockerfile
       target: qa-image
+      args:
+        APP: tngvi
     environment:
       WAIT_HOSTS: cms-tngvi:3000
-      APP: tngvi
     labels:
       - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
       - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa.transformnarratives.org`)"
@@ -103,10 +104,11 @@ services:
       context: .
       dockerfile: Dockerfile
       target: qa-image
+      args:
+        APP: sjm
+        PORT: 8082
     environment:
       WAIT_HOSTS: cms-sjm:3001
-      APP: sjm
-      PORT: 8082
     labels:
       - "traefik.http.routers.qa-sjm-http.entrypoints=web"
       - "traefik.http.routers.qa-sjm-http.rule=Host(`qa2.sjmsymposium.org`)"

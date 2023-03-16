@@ -73,7 +73,11 @@ services:
       - APP_NAME=sjm
       - PORT=3001
     labels:
-      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm/api/graphql`)"
+      - "traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)"
+      - "traefik.http.routers.api-sjm.tls=true"
+      - "traefik.http.routers.api-sjm.entrypoints=websecure"
+      - "traefik.http.routers.api-sjm.service=cms-sjm-el-next"
+      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
       - "traefik.http.routers.cms-sjm.tls=true"
       - "traefik.http.routers.cms-sjm.entrypoints=websecure"
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"

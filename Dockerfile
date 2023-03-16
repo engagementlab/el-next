@@ -76,6 +76,7 @@ CMD yarn start
 FROM node:16 AS qa-image
 
 ARG PORT=8081
+ARG CMS_PORT=3000
 ARG APP=elab
 WORKDIR /repo
 
@@ -84,8 +85,7 @@ COPY --from=deps /workspace-install ./
 WORKDIR /repo/apps/${APP}
 
 ## Add the wait script to the image
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
-RUN chmod +x /wait
+RUN yarn add global wait-port
 
 COPY ./apps/${APP} ./
 
@@ -97,7 +97,7 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
 
-CMD wait && \
+CMD wait-port localhost:${CMS_PORT} && \
     yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \
     yarn start

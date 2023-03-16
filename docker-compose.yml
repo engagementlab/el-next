@@ -111,6 +111,7 @@ services:
       args:
         APP: sjm
         PORT: 8082
+        CMS_PORT: 3000
     environment:
       WAIT_HOSTS: cms-sjm:3001
     labels:

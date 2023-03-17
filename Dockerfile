@@ -97,7 +97,7 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
 
-CMD wait-port localhost:${CMS_PORT} && \
+CMD wait-port localhost:${CMS_PORT} \
     yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \
     yarn start

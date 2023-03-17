@@ -35,13 +35,12 @@ services:
       traefik.http.routers.cms-landing.entrypoints: websecure
 
   cms-tngvi:
-    hostname: cms-tngvi
-    ports:
-      - "3000:3000"
     build:
       context: .
       dockerfile: Dockerfile
       target: cms-runner
+    ports: 
+      - "3000:3000"
     env_file:
       - ./apps/cms/.env
     environment:
@@ -60,9 +59,6 @@ services:
       - "traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000"
 
   cms-sjm:
-    hostname: cms-sjm
-    ports:
-      - "3001:3001"
     build:
       context: .
       dockerfile: Dockerfile
@@ -91,8 +87,7 @@ services:
       target: qa-image
       args:
         APP: tngvi
-    environment:
-      WAIT_HOSTS: cms-tngvi:3000
+        CMS_ENDPOINT: cms-tngvi:3000
     labels:
       - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
       - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa.transformnarratives.org`)"
@@ -111,9 +106,7 @@ services:
       args:
         APP: sjm
         PORT: 8082
-        CMS_PORT: 3000
-    environment:
-      WAIT_HOSTS: cms-sjm:3001
+        CMS_ENDPOINT: cms-sjm:3001
     labels:
       - "traefik.http.routers.qa-sjm-http.entrypoints=web"
       - "traefik.http.routers.qa-sjm-http.rule=Host(`qa2.sjmsymposium.org`)"

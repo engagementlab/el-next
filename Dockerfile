@@ -76,7 +76,7 @@ CMD yarn start
 FROM node:16 AS qa-image
 
 ARG PORT=8081
-ARG CMS_PORT=3000
+ARG CMS_ENDPOINT=cms-elab:3000
 ARG APP=elab
 WORKDIR /repo
 
@@ -85,19 +85,19 @@ COPY --from=deps /workspace-install ./
 WORKDIR /repo/apps/${APP}
 
 ## Add the wait script to the image
-RUN yarn add global wait-port
 
 COPY ./apps/${APP} ./
 
 ENV PORT ${PORT}
 ENV APP ${APP}
 ENV GRAPHQL_APP ${APP}
+ENV CMS_ENDPOINT ${CMS_ENDPOINT}
 ENV NODE_ENV production
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
 
-CMD wait-port localhost:${CMS_PORT} \
+CMD node ../../node_modules/wait-port/bin/wait-port ${CMS_ENDPOINT}; \
     yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \
     yarn start

@@ -39,7 +39,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: cms-runner
-    ports: 
+    ports:
       - "3000:3000"
     env_file:
       - ./apps/cms/.env
@@ -109,9 +109,9 @@ services:
         CMS_ENDPOINT: cms-sjm:3001
     labels:
       - "traefik.http.routers.qa-sjm-http.entrypoints=web"
-      - "traefik.http.routers.qa-sjm-http.rule=Host(`qa2.sjmsymposium.org`)"
+      - "traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)"
       - "traefik.http.routers.qa-sjm.entrypoints=websecure"
-      - "traefik.http.routers.qa-sjm.rule=Host(`qa2.sjmsymposium.org`)"
+      - "traefik.http.routers.qa-sjm.rule=Host(`qa.sjmsymposium.org`)"
       - "traefik.http.routers.qa-sjm.tls=true"
       - "traefik.http.routers.qa-sjm.service=qa-sjm-el-next"
       - "traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082"

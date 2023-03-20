@@ -123,12 +123,20 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        app.use('rest', async (req, res, next) => {
-          (req as any).context = await createContext(req, res);
-          next();
-        });
+        app.use(
+          `/${process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''}rest`,
+          async (req, res, next) => {
+            (req as any).context = await createContext(req, res);
+            next();
+          }
+        );
 
-        app.get('rest/news/:key?', getNews);
+        app.get(
+          `/${
+            process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
+          }rest/news/:key?`,
+          getNews
+        );
       },
     },
     ui: {},

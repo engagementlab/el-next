@@ -84,8 +84,6 @@ COPY --from=deps /workspace-install ./
 
 WORKDIR /repo/apps/${APP}
 
-## Add the wait script to the image
-
 COPY ./apps/${APP} ./
 
 ENV PORT ${PORT}
@@ -97,6 +95,7 @@ ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
 
+## Wait for CMS endpoint to respond
 CMD node ../../node_modules/wait-port/bin/wait-port ${CMS_ENDPOINT}; \
     yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \

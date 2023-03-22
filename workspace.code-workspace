@@ -35,6 +35,10 @@
             "path": "./packages/functions"
         },
         {
+            "name": "elab.works",
+            "path": "./packages/functions/elab.works"
+        },
+        {
             "name": "Packages",
             "path": "./packages"
         },

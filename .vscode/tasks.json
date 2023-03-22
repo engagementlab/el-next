@@ -3,12 +3,13 @@
   "tasks": [
     {
       "type": "func",
+      "label": "func: host start",
       "command": "host start",
       "problemMatcher": "$func-node-watch",
       "isBackground": true,
       "dependsOn": "npm build (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions"
+        "cwd": "${workspaceFolder}/packages/functions/elab.works"
       }
     },
     {
@@ -18,7 +19,7 @@
       "dependsOn": "npm install (functions)",
       "problemMatcher": "$tsc",
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions"
+        "cwd": "${workspaceFolder}/packages/functions/elab.works"
       }
     },
     {
@@ -26,7 +27,7 @@
       "label": "npm install (functions)",
       "command": "npm install",
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions"
+        "cwd": "${workspaceFolder}/packages/functions/elab.works"
       }
     },
     {
@@ -36,7 +37,7 @@
       "dependsOn": "npm build (functions)",
       "problemMatcher": [],
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions"
+        "cwd": "${workspaceFolder}/packages/functions/elab.works"
       }
     }
   ]

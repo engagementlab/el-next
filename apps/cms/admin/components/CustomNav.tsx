@@ -156,7 +156,7 @@ export function CustomNavigation({
 
   useEffect(() => {
     setAppPath(
-      window.location.pathname.split('/')[0].replace('/', '') || 'tngvi'
+      window.location.pathname.replace('/', '').split('/')[0] || 'tngvi'
     );
   }, []);
 

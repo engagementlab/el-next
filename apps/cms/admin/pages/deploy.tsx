@@ -9,6 +9,7 @@ import axios from 'axios';
 
 import create from 'zustand';
 import React from 'react';
+import appConfigMap from '../../appConfig';
 
 type PageState = {
   confirmed: boolean;
@@ -67,18 +68,30 @@ export default function Deploy() {
   const toggleDone = useStore((state) => state.toggleDone);
   const setActionsLink = useStore((state) => state.setActionsLink);
   const setNote = useStore((state) => state.setNote);
+
   const confirmed = useStore((state) => state.confirmed);
   const waiting = useStore((state) => state.waiting);
   const done = useStore((state) => state.done);
   const actionsLink = useStore((state) => state.actionsLink);
-  const noteContent = useStore((state) => state.noteContent);
+  const note = useStore((state) => state.noteContent);
   const noteCount = useStore((state) => state.noteCount);
 
   const deployFetch = async () => {
     toggleWaiting();
-    const response = await axios.get(`/cms/prod-deploy/?note=${noteContent}`, {
-      withCredentials: true,
-    });
+    // app name is derived from first pathname string
+    const app = window.location.pathname.replace('/', '').split('/')[0];
+    const response = await axios.post(
+      '/api/prod-deploy',
+      {
+        app,
+        storageAccount: appConfigMap[app].storageAccount,
+        apexUrl: appConfigMap[app].apexUrl,
+        note,
+      },
+      {
+        withCredentials: true,
+      }
+    );
     setActionsLink(
       `https://github.com/engagementlab/${response.data.repo}/actions/runs/${response.data.id}?check_suite_focus=true`
     );

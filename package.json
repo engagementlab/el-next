@@ -3,10 +3,14 @@
   "private": true,
   "scripts": {
     "build": "preconstruct build",
+    "cleanup": "docker system prune --all --force",
     "deploy": "ssh apps@cms.elab.emerson.edu 'bash -s' < ./scripts/deploy.sh",
     "docker": "docker build -t el-next . --network=host",
+    "docker:dev": "BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 && docker compose -f docker-compose.dev.yml up --force-recreate",
+    "down": "docker compose down",
     "fix": "preconstruct fix",
     "postinstall": "preconstruct build",
+    "up": "docker compose up",
     "watch": "preconstruct watch"
   },
   "dependencies": {
@@ -21,7 +25,8 @@
     "react": "^18.2.0",
     "recursive-readdir-files": "^2.3.0",
     "typescript": "^4.7.4",
-    "yargs": "^17.6.2"
+    "yargs": "^17.6.2",
+    "wait-port": "^1.0.4"
   },
   "workspaces": [
     "packages/components"

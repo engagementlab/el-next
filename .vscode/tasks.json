@@ -27,7 +27,7 @@
       "label": "npm install (functions)",
       "command": "npm install",
       "options": {
-        "cwd": "${workspaceFolder}/elab.works"
+        "cwd": "${workspaceFolder}/packages/functions"
       }
     },
     {

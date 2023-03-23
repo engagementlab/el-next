@@ -9,7 +9,7 @@
       "isBackground": true,
       "dependsOn": "npm build (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions/elab.works"
+        "cwd": "${workspaceFolder}/elab.works"
       }
     },
     {
@@ -19,7 +19,7 @@
       "dependsOn": "npm install (functions)",
       "problemMatcher": "$tsc",
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions/elab.works"
+        "cwd": "${workspaceFolder}/elab.works"
       }
     },
     {
@@ -27,7 +27,7 @@
       "label": "npm install (functions)",
       "command": "npm install",
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions/elab.works"
+        "cwd": "${workspaceFolder}/elab.works"
       }
     },
     {
@@ -37,7 +37,7 @@
       "dependsOn": "npm build (functions)",
       "problemMatcher": [],
       "options": {
-        "cwd": "${workspaceFolder}/packages/functions/elab.works"
+        "cwd": "${workspaceFolder}/packages/functions"
       }
     }
   ]

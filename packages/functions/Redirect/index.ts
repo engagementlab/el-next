@@ -12,8 +12,8 @@ import path = require('path');
 import { Analytics } from 'analytics';
 const googleAnalytics = require('@analytics/google-analytics').default;
 
-const connection = require('./db')();
-const Link = require('./Link')(connection);
+const connection = require('../_shared/db')();
+const Link = require('../_shared/Link')(connection);
 /**
  * Analytics
  */
@@ -47,13 +47,12 @@ const httpTrigger: AzureFunction = async function (
   ).exec();
 
   // Track click in GA
-  // analytics.track('Shortener Click', {
-  //   label: data.label,
-  //   url: data.originalUrl,
-  // });
+  analytics.track('Shortener Click', {
+    label: data.label,
+    url: data.originalUrl,
+  });
 
   // Send user to URL
-
   context.res = {
     status: 302,
     headers: { location: data.originalUrl },

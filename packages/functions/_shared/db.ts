@@ -9,10 +9,7 @@
 import mongoose from 'mongoose';
 mongoose.Promise = global.Promise;
 
-const dbAddress =
-  process.env.NODE_ENV !== 'production'
-    ? process.env.MONGO_ADMIN_URI
-    : process.env.MONGO_CLOUD_ADMIN_URI;
+const dbAddress = process.env.MONGO_CLOUD_ADMIN_URI;
 
 /**
  * Create DB connection for admin database, which contains links collection.

@@ -199,6 +199,42 @@ app.post('/prod-deploy', async (req, res, next) => {
   }
 });
 
+app.get('/links/list', async (req, res) => {
+  try {
+    const response = await axios.post(process.env.LINKS_API_PATH as string, {
+      action: 'list',
+    });
+    res.status(200).send(response.data);
+  } catch (err: any) {
+    console.log(err);
+    console.log(process.env.LINKS_API_PATH);
+    res.status(500).send(err);
+  }
+});
+
+app.post('/link/create', async (req, res, next) => {
+  try {
+    if (!req.body) {
+      res.status(500).send('No body provided in payload.');
+      return;
+    }
+    // Get user's emerson.edu email address from forwardauth cookie
+    const userEmail = req.headers.cookie?.match(
+      /([a-zA-Z0-9._-]+@emerson.edu)/gi
+    );
+    const response = await axios.post(process.env.LINKS_API_PATH as string, {
+      userName:
+        userEmail && userEmail?.length !== -1
+          ? userEmail[0]
+          : 'engagementlab@emerson.edu',
+    });
+
+    res.status(200).send(response.data);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+});
+
 /* */
 app.listen(port, () => {
   console.log(`⚡️[api]: API is running at :${port}`);

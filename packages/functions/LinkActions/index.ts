@@ -1,8 +1,14 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { parse, ParsedQs } from 'qs';
+const { WebClient } = require('@slack/web-api');
 
 const connection = require('../_shared/db')();
 const Link = require('../_shared/Link')(connection);
+
+// Read a token from the environment variables
+const token = process.env.SLACK_API_TOKEN;
+// Initialize
+const slack = new WebClient(token);
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -20,15 +26,32 @@ const httpTrigger: AzureFunction = async function (
           status: 200,
           body: data,
         };
+        break;
       case 'create':
         const missingKeys = ['originalUrl', 'shortUrl', 'label'].filter(
           (x) => Object.keys(parsedData).indexOf(x) === -1
         );
+        let userName;
         if (missingKeys.length > 0) {
           context.res = {
             status: 400,
             err: true,
             body: `Missing keys: ${missingKeys.join(', ')}`,
+          };
+          return;
+        }
+        // Get person's slack username via email address in cookie
+        try {
+          const result = await slack.users.lookupByEmail({
+            email: parsedData.userEmail,
+          });
+
+          userName = result.user.real_name;
+        } catch (error) {
+          context.res = {
+            status: 500,
+            err: true,
+            body: `Slack error: ${error}`,
           };
           return;
         }
@@ -38,6 +61,7 @@ const httpTrigger: AzureFunction = async function (
           shortUrl: parsedData.shortUrl,
           label: parsedData.label,
           date: new Date().toISOString(),
+          user: userName,
         });
         try {
           data = await link.save();

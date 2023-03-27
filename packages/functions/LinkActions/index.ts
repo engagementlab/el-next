@@ -15,7 +15,7 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   if (req.rawBody) {
-    const parsedData: ParsedQs = parse(req.rawBody);
+    let parsedData = req.body || parse(req.rawBody);
 
     const action = parsedData.action;
     let data;

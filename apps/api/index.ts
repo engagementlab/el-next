@@ -206,8 +206,6 @@ app.get('/links/list', async (req, res) => {
     });
     res.status(200).send(response.data);
   } catch (err: any) {
-    console.log(err);
-    console.log(process.env.LINKS_API_PATH);
     res.status(500).send(err);
   }
 });
@@ -223,15 +221,19 @@ app.post('/link/create', async (req, res, next) => {
       /([a-zA-Z0-9._-]+@emerson.edu)/gi
     );
     const response = await axios.post(process.env.LINKS_API_PATH as string, {
-      userName:
+      action: 'create',
+      userEmail:
         userEmail && userEmail?.length !== -1
           ? userEmail[0]
           : 'engagementlab@emerson.edu',
+      ...req.body,
     });
-
     res.status(200).send(response.data);
   } catch (err: any) {
-    res.status(500).send(err.message);
+    console.log(err);
+    res
+      .status(500)
+      .send({ status: err.response.status, info: err.response.data });
   }
 });
 

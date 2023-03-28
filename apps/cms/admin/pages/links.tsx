@@ -539,7 +539,10 @@ export default function URLShortener(this: any) {
                                   link.user || '??'
                                 }`}
                                 <br />
-                                <i> {`${link.clicks} clicks`}</i>
+                                <i>
+                                  {' '}
+                                  {`${link.clicks ? link.clicks : '0'} clicks`}
+                                </i>
                               </Typography>
                             </>
                           }

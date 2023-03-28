@@ -102,7 +102,7 @@ const styles = {
 
 export default function URLShortener(this: any) {
   const endpointPrefix =
-    process.env.PRODUCTION_MODE === 'true' ? '/api' : 'http://localhost:8000';
+    window.location.protocol === 'https' ? '/api' : 'http://localhost:8000';
 
   const isMac = navigator.userAgent.indexOf('Mac') !== -1;
   const shortUrlMax = 10;

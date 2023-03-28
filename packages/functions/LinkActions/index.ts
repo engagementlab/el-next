@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
-import { parse, ParsedQs } from 'qs';
+import { parse } from 'qs';
 const { WebClient } = require('@slack/web-api');
 
 const connection = require('../_shared/db')();
@@ -21,16 +21,19 @@ const httpTrigger: AzureFunction = async function (
     let data;
     switch (action) {
       case 'list':
-        data = await Link.find({});
+        data = await Link.find({}).sort({ date: -1 });
         context.res = {
           status: 200,
           body: data,
         };
         break;
       case 'create':
-        const missingKeys = ['originalUrl', 'shortUrl', 'label'].filter(
-          (x) => Object.keys(parsedData).indexOf(x) === -1
-        );
+        const missingKeys = [
+          'originalUrl',
+          'shortUrl',
+          'label',
+          'userEmail',
+        ].filter((x) => Object.keys(parsedData).indexOf(x) === -1);
         let userName;
         if (missingKeys.length > 0) {
           context.res = {
@@ -48,12 +51,16 @@ const httpTrigger: AzureFunction = async function (
 
           userName = result.user.real_name;
         } catch (error) {
-          context.res = {
-            status: 500,
-            err: true,
-            body: `Slack error: ${error}`,
-          };
-          return;
+          if (error.data.error === 'users_not_found') {
+            userName = 'Unknown User';
+          } else {
+            context.res = {
+              status: 500,
+              err: true,
+              body: `Slack error: ${error}`,
+            };
+            return;
+          }
         }
         // Create new link
         const link = new Link({
@@ -70,6 +77,7 @@ const httpTrigger: AzureFunction = async function (
             status: 500,
             err: true,
             body: {
+              code: err.code,
               msg: err.message,
               key: err.keyPattern,
             },

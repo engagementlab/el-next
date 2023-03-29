@@ -21,8 +21,5 @@ docker volume ls -qf dangling=true | xargs --no-run-if-empty docker volume rm
 # Traefik will complain about permissions on this otherwise...
 chmod 600 proxy/acme.json
 
-# Compile API app
-npx --package typescript tsc --project ./apps/api
-
 # Build image and daemonize services
 DOCKER_BUILDKIT=1 docker compose up -d

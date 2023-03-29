@@ -28,6 +28,8 @@ import {
   CircularProgress,
   TablePagination,
   Button,
+  LinearProgress,
+  AlertTitle,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -38,6 +40,7 @@ type PageState = {
   copied: boolean;
   done: boolean;
   error: boolean;
+  dataError: boolean;
   isValid: boolean;
   labelError: boolean;
   labelEntered: boolean;
@@ -45,7 +48,7 @@ type PageState = {
   success: boolean;
   waiting: boolean;
 
-  data: any[];
+  data: any;
 
   errorHelper: null | string;
   labelHelper: null | string;
@@ -109,10 +112,11 @@ export default function URLShortener(this: any) {
   // Create store with Zustand
   const [useStore] = useState(() =>
     create<PageState>((set) => ({
-      data: [],
+      data: null,
 
       confirmed: false,
       copied: false,
+      dataError: false,
       done: false,
       error: false,
       isValid: false,
@@ -169,6 +173,7 @@ export default function URLShortener(this: any) {
     setRowsPerPage,
     toggleWaiting,
     copied,
+    dataError,
     error,
     errorHelper,
     isValid,
@@ -363,9 +368,16 @@ export default function URLShortener(this: any) {
   useEffect(() => {
     if (data && data.length > 1) return;
 
-    axios.get(`${endpointPrefix}/links/list`).then((response) => {
-      setData(response.data);
-    });
+    axios
+      .get(`${endpointPrefix}/links/list`)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => {
+        useStore.setState({
+          dataError: true,
+        });
+      });
   });
 
   return (
@@ -481,11 +493,11 @@ export default function URLShortener(this: any) {
           <Alert severity="success">Link added!</Alert>
         </Snackbar>
       </Paper>
-      <Divider style={{ marginTop: '2rem' }}>
-        <Chip label="Link History" />
-      </Divider>
-      {data && (
+      {data ? (
         <>
+          <Divider style={{ marginTop: '2rem' }}>
+            <Chip label="Link History" />
+          </Divider>
           <TableContainer>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
@@ -498,62 +510,76 @@ export default function URLShortener(this: any) {
               <TableBody>
                 {data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((link) => (
-                    <TableRow
-                      key={link._id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {link.label}
-                      </TableCell>
-                      <TableCell component="th" scope="row">
-                        <Button
-                          disableElevation
-                          size="small"
-                          aria-label="copy url"
-                          onClick={() => {
-                            copyUrl(`https://elab.works/${link.shortUrl}`);
-                          }}
-                          startIcon={<ContentCopyIcon />}
-                        >
-                          {link.shortUrl}
-                        </Button>
-                      </TableCell>
-                      <TableCell component="th" scope="row">
-                        <a
-                          href={link.originalUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {trimUrl(link.originalUrl)}
-                        </a>
-                      </TableCell>
-                      <TableCell component="th" scope="row">
-                        <Tooltip
-                          title={
-                            <>
-                              <Typography variant="caption" color="inherit">
-                                {`Added on ${new Date(
-                                  link.date
-                                ).toLocaleDateString()} by ${
-                                  link.user || '??'
-                                }`}
-                                <br />
-                                <i>
-                                  {' '}
-                                  {`${link.clicks ? link.clicks : '0'} clicks`}
-                                </i>
-                              </Typography>
-                            </>
-                          }
-                        >
-                          <IconButton aria-haspopup="true">
-                            <InfoIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  .map(
+                    (link: {
+                      _id: React.Key | null | undefined;
+                      label: string | undefined;
+                      shortUrl: string | undefined;
+                      originalUrl: string | undefined;
+                      date: string | number | Date;
+                      user: any;
+                      clicks: any;
+                    }) => (
+                      <TableRow
+                        key={link._id}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {link.label}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <Button
+                            disableElevation
+                            size="small"
+                            aria-label="copy url"
+                            onClick={() => {
+                              copyUrl(`https://elab.works/${link.shortUrl}`);
+                            }}
+                            startIcon={<ContentCopyIcon />}
+                          >
+                            {link.shortUrl}
+                          </Button>
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <a
+                            href={link.originalUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {trimUrl(link.originalUrl as string)}
+                          </a>
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <Tooltip
+                            title={
+                              <>
+                                <Typography variant="caption" color="inherit">
+                                  {`Added on ${new Date(
+                                    link.date
+                                  ).toLocaleDateString()} by ${
+                                    link.user || '??'
+                                  }`}
+                                  <br />
+                                  <i>
+                                    {' '}
+                                    {`${
+                                      link.clicks ? link.clicks : '0'
+                                    } clicks`}
+                                  </i>
+                                </Typography>
+                              </>
+                            }
+                          >
+                            <IconButton aria-haspopup="true">
+                              <InfoIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -567,6 +593,15 @@ export default function URLShortener(this: any) {
             onRowsPerPageChange={setRowsPerPage}
           />
         </>
+      ) : dataError ? (
+        <>
+          <Alert severity="error">
+            <AlertTitle>Data Error</AlertTitle>
+            Unable to retrieve data from API!
+          </Alert>{' '}
+        </>
+      ) : (
+        <LinearProgress />
       )}
     </PageContainer>
   );

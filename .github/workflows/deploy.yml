@@ -47,13 +47,14 @@ jobs:
           yarn add typescript @types/node yargs
           yarn
           yarn postinstall-ci --app ${{ github.event.client_payload.appName }}
-          yarn build --app ${{ github.event.client_payload.appName }}
           pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+          yarn build --app ${{ github.event.client_payload.appName }}
 
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
         env:
-          APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}
+          # APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}''
+          GRAPHQL_APP: ${{ github.event.client_payload.appName }}
         run: |
           yarn add typescript @types/node
           yarn

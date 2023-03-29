@@ -206,7 +206,7 @@ app.get('/links/list', async (req, res) => {
     });
     res.status(200).send(response.data);
   } catch (err: any) {
-    res.status(500).send(err);
+    res.status(500).send(err.message);
   }
 });
 
@@ -230,7 +230,6 @@ app.post('/link/create', async (req, res, next) => {
     });
     res.status(200).send(response.data);
   } catch (err: any) {
-    console.log(err);
     res
       .status(500)
       .send({ status: err.response.status, info: err.response.data });

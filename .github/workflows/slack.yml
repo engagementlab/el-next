@@ -110,7 +110,7 @@ jobs:
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "${{ inputs.userName }} pushed this build."
+                      "text": "<@${{ steps.find-slack-user.outputs.member-id }}> pushed this build."
                     }
                   ]
                 },

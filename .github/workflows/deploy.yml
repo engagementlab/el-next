@@ -55,6 +55,7 @@ jobs:
         env:
           # APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}''
           GRAPHQL_APP: ${{ github.event.client_payload.appName }}
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
         run: |
           yarn add typescript @types/node
           yarn

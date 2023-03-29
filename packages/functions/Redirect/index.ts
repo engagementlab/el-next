@@ -1,14 +1,4 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
-
-import { GraphQLScalarType } from 'graphql';
-const { ApolloServer, gql } = require('apollo-server-azure-functions');
-const {
-  ApolloServerPluginLandingPageLocalDefault,
-} = require('apollo-server-core');
-
-import path = require('path');
-// import RandExp = require('randexp');
-
 import { Analytics } from 'analytics';
 const googleAnalytics = require('@analytics/google-analytics').default;
 
@@ -31,33 +21,40 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-  // Find original of by short url and increment clicks
-  const data = await Link.findOneAndUpdate(
-    {
-      shortUrl: req.query.key,
-    },
-    {
-      $inc: {
-        clicks: 1,
+  try {
+    // Find original of by short url and increment clicks
+    const data = await Link.findOneAndUpdate(
+      {
+        shortUrl: req.query.key,
       },
-    },
-    {
-      fields: 'originalUrl label',
-    }
-  ).exec();
+      {
+        $inc: {
+          clicks: 1,
+        },
+      },
+      {
+        fields: 'originalUrl label',
+      }
+    ).exec();
 
-  // Track click in GA
-  analytics.track('Shortener Click', {
-    label: data.label,
-    url: data.originalUrl,
-  });
+    // Track click in GA
+    analytics.track('Shortener Click', {
+      label: data.label,
+      url: data.originalUrl,
+    });
 
-  // Send user to URL
-  context.res = {
-    status: 302,
-    headers: { location: data.originalUrl },
-    body: null,
-  };
+    // Send user to URL
+    context.res = {
+      status: 302,
+      headers: { location: data.originalUrl },
+      body: null,
+    };
+  } catch (e) {
+    context.res = {
+      status: 404,
+      body: `Something went wrong redirecting you. It appears there is no redirect for "elab.works/${req.query.key}" :(. Sorry!`,
+    };
+  }
 };
 
 export default httpTrigger;

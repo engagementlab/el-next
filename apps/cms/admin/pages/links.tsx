@@ -329,6 +329,7 @@ export default function URLShortener(this: any) {
       axios.get(`${endpointPrefix}/links/list`).then((response) => {
         setData(response.data);
         useStore.setState({
+          isValid: false,
           success: true,
           labelInput: '',
           labelHelper: '0 / 30',
@@ -338,10 +339,10 @@ export default function URLShortener(this: any) {
         });
       });
     } catch (err: any) {
+      let errorHelper = 'Something went wrong. :(';
       if (err.response.data.info.code === 11000) {
         // Dupe index errors; try keypattern
         const msg = Object.keys(err.response.data.info.key);
-        let errorHelper = 'Something went wrong. :(';
 
         if (msg.includes('label') || msg.includes('label_1'))
           errorHelper = 'A link with this label already exists.';
@@ -350,12 +351,11 @@ export default function URLShortener(this: any) {
             'This link has already been shortened. Please locate it in link history.';
         else if (msg.includes('shortUrl') || msg.includes('shortUrl_1'))
           errorHelper = 'This shortened URL is already in use.';
-
-        useStore.setState({
-          error: true,
-          errorHelper,
-        });
       }
+      useStore.setState({
+        error: true,
+        errorHelper,
+      });
     }
     toggleWaiting();
   };

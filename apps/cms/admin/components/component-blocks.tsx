@@ -14,6 +14,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 
 import create from 'zustand';
+import VideoSelector, { RelatedVideoField } from './video/selector';
 const axios = require('axios').default;
 const _ = require('underscore');
 
@@ -51,15 +52,6 @@ export interface RelatedImage {
   [key: string]: {
     publicId: null | string;
     alt?: null | string;
-  }
-}
-
-export interface RelatedVideo {
-  [key: string]: { 
-    label: string;
-    value: string;
-    thumbSm: string;
-    caption?: string;
   }
 }
 
@@ -120,14 +112,16 @@ function videoSelect({
     'video': {
       label: '',
       value: '',
+      thumb: '',
       thumbSm: '',
+      caption: '',
     }
   }
 }: {
   label: string;
-  current ? : RelatedVideo;
-  defaultValue: RelatedVideo;
-}): FormField < RelatedVideo, undefined > {
+  current ? : RelatedVideoField;
+  defaultValue: RelatedVideoField;
+}): FormField < RelatedVideoField, undefined > {
   
     return {
       kind: 'form',
@@ -142,7 +136,6 @@ function videoSelect({
                 waiting: true,
                 videoUrl: (value?.value as unknown) as string || '',
                 toggleWaiting: () => set((state) => { 
-                  console.log(state.waiting)
                     return { waiting: !state.waiting }; 
                 }),
                 setPageIndex: (index: number) => set((state) => {
@@ -157,12 +150,12 @@ function videoSelect({
                         data: vidData,
                     }
                 }),
-                setVideoUrl: (url: string) => set((state) => {
+                  setVideoUrl: (url: string) => set((state) => {
                     return {
                         ...state,
                         videoUrl: url,
                     }
-                }),
+                  }),
                 setGridOpen: (open: boolean) => set((state) => {
                     return {
                         ...state,
@@ -200,72 +193,24 @@ function videoSelect({
           return (
             <FieldContainer>
               Click <em>Done</em> for video preview.
-              <Modal
-                  open={gridOpen}
-                  onClose={() => {setGridOpen(false); }}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                  >  
-                <Box sx={styles.imagesModal}>
-                {!waiting ? 
-                  <>
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                      <IconButton aria-label="go to last page" disabled={pgIndex === 0} onClick={((val) => { setPageIndex(pgIndex-1) })}>
-                        <ArrowCircleLeftOutlinedIcon fontSize='large' />
-                      </IconButton>
-                        <MUISelect
-                          value={pgIndex}
-                          label="Page"
-                          onChange={((val) => { setPageIndex(!val ? 0 : val.target.value as number) })}
-                          >
-                          {[...new Array(dataLength)].map((v, i) => (
-                            <MenuItem value={i}>{i+1}</MenuItem>
-                          ))}
-                      </MUISelect>
-                      <IconButton aria-label="go to right page" disabled={pgIndex === dataLength-1} onClick={((val) => { setPageIndex(pgIndex+1) })}>
-                        <ArrowCircleRightOutlinedIcon fontSize='large' />
-                      </IconButton>
-                    </div>
-                    
-                    <hr style={{borderTopWidth: '2px', borderColor: '#f6a536'}} />
-
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Grid container spacing={2}>
-                        {data.slice(beginIndex, endIndex).map((item: any, i: number) => (
-                          <Grid item xs={3}>
-                            <a style={{ position: 'relative', cursor: 'pointer'}}
-                              onClick={(e) => {
-                                onChange({ 
+              <VideoSelector  videos={[defaultValue['video']]} data={data} open={gridOpen} 
+            selectionChanged={(item: RelatedVideoField) => {
+              // setVideo(item);
+              // setTimeout(() => {
+                
+              //   if(onChange) onChange(JSON.stringify(currentVideos));
+              //   console.log(_.map(currentVideos, 'label'))
+              // }, 1000);
+                                              onChange({ 
                                   label: item.label,
                                   value: item.value, 
                                   thumb: item.thumb, 
                                   thumbSm: item.thumbSm, 
                                 });
-                                setVideoUrl(item.value);
-                              }}>
-                              <div style={{position: 'absolute', top: 0, left: 0}}>
-                                {videoUrl === item.value && <CheckCircleOutlineIcon fontSize='large' htmlColor='#f6a536' />}
-                              </div>
-                              <img
-                                src={item.thumbSm}
-                                style={{opacity: videoUrl === item.value ? .5 : 1}}
-                              />
-                              <p>{item.label}</p>
-                            </a>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Box>
+                                setVideoUrl(item.value.value);
 
-                    <br />
-                    <IconButton aria-label="done" disabled={videoUrl === ''} onClick={(() => { setGridOpen(false); })}>
-                      <CheckTwoToneIcon fontSize='large' color='success' />
-                    </IconButton>
-                  </>
-                : 
-                  <CircularProgress color='success' />}
-                </Box> 
-              </Modal>
+            }}
+            done={() => setGridOpen(false)} />
             </FieldContainer>
           )
       },
@@ -520,6 +465,7 @@ export const componentBlocks = {
             label: 'Click "Edit" and select.',
             value: '',
             thumbSm: '',
+            thumb: '',
           }
         },
        })

@@ -32,7 +32,16 @@ export interface RelatedVideo {
   value: string;
   thumb: string;
   thumbSm: string;
-  caption: string;
+  caption?: string;
+}
+export interface RelatedVideoField {
+  [key: string]: {   
+    label: string;
+    value: string;
+    thumb: string;
+    thumbSm: string;
+    caption?: string;
+  }
 }
 
 type VideoSelectorProps = {
@@ -155,7 +164,6 @@ const VideoSelector =  ({videos, data, open, selectionChanged, done}: VideoSelec
   const endIndex = beginIndex + 12;
   const dataLength = Math.floor(data.length / 12)+1;   
     return (
-
            <Modal
               open={open}
               onClose={() => {setGridOpen(false); }}

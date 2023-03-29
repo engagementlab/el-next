@@ -21,6 +21,7 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
+  const errorMsg = `Something went wrong redirecting you. It appears there is no redirect for "elab.works/${req.query.key}" :(. Sorry!`;
   try {
     // Find original of by short url and increment clicks
     const data = await Link.findOneAndUpdate(
@@ -37,6 +38,14 @@ const httpTrigger: AzureFunction = async function (
       }
     ).exec();
 
+    if (!data) {
+      context.res = {
+        status: 404,
+        body: errorMsg,
+      };
+      return;
+    }
+
     // Track click in GA
     analytics.track('Shortener Click', {
       label: data.label,
@@ -51,8 +60,8 @@ const httpTrigger: AzureFunction = async function (
     };
   } catch (e) {
     context.res = {
-      status: 404,
-      body: `Something went wrong redirecting you. It appears there is no redirect for "elab.works/${req.query.key}" :(. Sorry!`,
+      status: 500,
+      body: errorMsg,
     };
   }
 };

@@ -53,14 +53,6 @@ app.all('/*', (req, res, next) => {
   else next();
 });
 
-/* 
-app.use('rest', async (req, res, next) => {
-  (req as any).context = await createContext(req, res);
-  next();
-});
-
-app.get('rest/news/:key?', getNews); */
-
 app.get('/media/videos', async (req, res, next) => {
   try {
     let videoData: {

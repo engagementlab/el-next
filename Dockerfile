@@ -90,7 +90,6 @@ ENV PORT ${PORT}
 ENV APP ${APP}
 ENV GRAPHQL_APP ${APP}
 ENV CMS_ENDPOINT ${CMS_ENDPOINT}
-ENV NODE_ENV production
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0
 
 EXPOSE $PORT
@@ -99,4 +98,4 @@ EXPOSE $PORT
 CMD node ../../node_modules/wait-port/bin/wait-port ${CMS_ENDPOINT}; \
     yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \
-    yarn start
+    yarn dev

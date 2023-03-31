@@ -9,11 +9,9 @@
  */
 
 import React, { useState } from "react";
+import Script from 'next/script';
 import _ from "lodash";
 import create from "zustand";
-import {
-  css as emCss
-} from '@emotion/css';
 
 import { Box, LinearProgress, Grid, IconButton, MenuItem, Modal, Select as MUISelect } from '@mui/material';
 
@@ -21,7 +19,6 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-
 /**
  * 
  * @function
@@ -67,50 +64,6 @@ type VideoGridState = {
   setVideoSingle: (value: RelatedVideoField) => void
   setGridOpen: (open: boolean) => void
 }
-
-
-const styles = {
-  form: {
-    field: emCss`
-      align-items: center;
-      width: 100%;
-      margin: 1rem 0 0 0;
-    `,
-    label: emCss`
-      width: 10%;
-    `,
-    input: emCss`
-      width: 90%;
-    `,
-    button: emCss`
-      margin: .4rem;
-    `,
-    select: emCss`
-      position: relative;
-      z-index: 100;
-      min-width: 100%;
-    `,
-    option: emCss`
-      display: flex!important;
-      flex-direction: row;
-      padding: 1rem;
-      cursor: pointer;
-      p {
-        width: 50%;
-      }`
-  },
-  imagesModal: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 1200,
-      bgcolor: 'background.paper',
-      border: '2px solid #000',
-      boxShadow: 24,
-      p: 4
-  },
-};
 
 const VideoSelector =  ({videos, video, data, open, singleSelection, selectionChanged, done}: VideoSelectorProps) => {
 
@@ -177,6 +130,8 @@ currentVideo}
   const endIndex = beginIndex + 12;
   const dataLength = Math.floor(data.length / 12)+1;   
     return (
+      <>
+          <Script src="https://cdn.tailwindcss.com/3.3.0" />
            <Modal
               open={open}
               onClose={() => {setGridOpen(false); }}
@@ -184,9 +139,9 @@ currentVideo}
               aria-describedby="modal-modal-description"
               >
                 {data.length > 0 ?  
-                  <Box sx={styles.imagesModal}>
+                  <Box className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 border-2 bg-white p-4 shadow-xl">
                       <>
-                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                                    <div className="flex flex-row">
                           <IconButton aria-label="go to last page" disabled={pgIndex === 0} onClick={((val) => { setPageIndex(pgIndex-1) })}>
                             <ArrowCircleLeftOutlinedIcon fontSize='large' />
                           </IconButton>
@@ -204,9 +159,9 @@ currentVideo}
                           </IconButton>
                         </div>
                         
-                        <hr style={{borderTopWidth: '2px', borderColor: '#f6a536'}} />
+                        <hr className=" border-t-2 border-[#f6a536] my-3" />
 
-                        <Box sx={{ flexGrow: 1 }}>
+                        <Box className="flex-grow-1">
                           <Grid container spacing={2}>
                             {data.slice(beginIndex, endIndex).map((item: RelatedVideo) => {
 
@@ -214,7 +169,7 @@ currentVideo}
                               console.log(selected, currentVideo)
                               return (
                                 <Grid item xs={3} key={item.value}>
-                                  <a style={{ position: 'relative', cursor: 'pointer'}}
+                                  <a className="relative cursor-pointer"
                                     onClick={() => { 
                                       if(singleSelection) setVideoSingle(item as any);
                                       else setVideo(item);
@@ -222,7 +177,7 @@ currentVideo}
                                         selectionChanged(item as RelatedVideo);
                                     }}>
                                       {selected &&
-                                        <div style={{position: 'absolute', top: 0, left: 0}}>
+                                        <div className="absolute top-0 left-0">
                                           <CheckCircleOutlineIcon fontSize='large' htmlColor='#f6a536' />
                                         </div>
                                       }
@@ -249,6 +204,7 @@ currentVideo}
                   </Box>
                 }
           </Modal>
+          </>
     );
 };
 export default VideoSelector;

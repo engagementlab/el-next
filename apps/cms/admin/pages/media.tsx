@@ -26,6 +26,7 @@ import {
     ImageList,
     ImageListItem,
     InputLabel,
+    LinearProgress,
     MenuItem,
     Modal,
     OutlinedInput,
@@ -407,7 +408,7 @@ export default function Media() {
                 <Pagination count={Math.floor(data.length / 30)+1} page={pgIndex+1} onChange={((e, pg) => { setIndex(pg-1) })} />
                 
                 <Box sx={{ flexGrow: 1 }}>
-                    <ImageList variant="masonry" cols={4} gap={8}>
+                    <ImageList variant="woven" cols={4} gap={8}>
                         {filteredData.slice(beginIndex, endIndex).map(d => {
                             return (
                                 <ImageListItem key={d.public_id} sx={styles.item} onMouseEnter={()=> {setId(d.public_id)}}
@@ -426,9 +427,12 @@ export default function Media() {
                         })}
                     </ImageList>
                 </Box>
+
             </div>
             :
-            <></>
+            <> 
+                    <LinearProgress />
+            </>
             }
         </PageContainer>
     )

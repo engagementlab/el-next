@@ -14,13 +14,13 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 
 import create from 'zustand';
-import VideoSelector, { RelatedVideoField } from './video/selector';
+import VideoSelector, { RelatedVideo, RelatedVideoField } from './video/selector';
 const axios = require('axios').default;
 const _ = require('underscore');
 
 type VideoGridState = {
   pgIndex: number;
-  videoUrl: string;
+  selectedVideo: RelatedVideoField;
   gridOpen: boolean;
   waiting: boolean;
   data: any[];
@@ -28,7 +28,7 @@ type VideoGridState = {
   toggleWaiting: () => void
   setData: (vidData: any[]) => void
   setPageIndex: (pgIndex: number) => void
-  setVideoUrl: (videoUrl: string) => void
+  setSelectedVideo: (selectedVideo: RelatedVideoField) => void
   setGridOpen: (open: boolean) => void
 }
 
@@ -134,7 +134,15 @@ function videoSelect({
                 pgIndex: 0,
                 data: [],
                 waiting: true,
-                videoUrl: (value?.value as unknown) as string || '',
+                selectedVideo: {
+                  'video': {
+                    label: '',
+                    value: '',
+                    thumb: '',
+                    thumbSm: '',
+                    caption: '',
+                  }
+                },
                 toggleWaiting: () => set((state) => { 
                     return { waiting: !state.waiting }; 
                 }),
@@ -150,10 +158,10 @@ function videoSelect({
                         data: vidData,
                     }
                 }),
-                  setVideoUrl: (url: string) => set((state) => {
+                  setSelectedVideo: (video: RelatedVideoField) => set((state) => {
                     return {
                         ...state,
-                        videoUrl: url,
+                        selectedVideo: video,
                     }
                   }),
                 setGridOpen: (open: boolean) => set((state) => {
@@ -166,7 +174,7 @@ function videoSelect({
           ));
     
           const setPageIndex = useStore(state => state.setPageIndex);
-          const setVideoUrl = useStore(state => state.setVideoUrl);
+          const setSelectedVideo = useStore(state => state.setSelectedVideo);
           const setGridOpen = useStore(state => state.setGridOpen);
           const toggleWaiting = useStore(state => state.toggleWaiting);
           const setData = useStore(state => state.setData);
@@ -175,7 +183,7 @@ function videoSelect({
           const waiting = useStore(state => state.waiting);
           const gridOpen = useStore(state => state.gridOpen);
           const pgIndex = useStore(state => state.pgIndex);
-          const videoUrl = useStore(state => state.videoUrl);
+          const selectedVideo = useStore(state => state.selectedVideo);
 
           const beginIndex = pgIndex * 8;
           const endIndex = beginIndex + 8;
@@ -189,26 +197,25 @@ function videoSelect({
               toggleWaiting();
             }); 
           })
+          // console.log('val',selectedVideo)
+            let videoField: RelatedVideoField = {};
+          if(value) videoField = value;
+          else videoField =defaultValue;
 
           return (
             <FieldContainer>
               Click <em>Done</em> for video preview.
-              <VideoSelector  videos={[defaultValue['video']]} data={data} open={gridOpen} 
+              <VideoSelector video={videoField} data={data} open={gridOpen} singleSelection={true} 
             selectionChanged={(item: RelatedVideoField) => {
-              // setVideo(item);
-              // setTimeout(() => {
-                
-              //   if(onChange) onChange(JSON.stringify(currentVideos));
-              //   console.log(_.map(currentVideos, 'label'))
-              // }, 1000);
-                                              onChange({ 
-                                  label: item.label,
-                                  value: item.value, 
-                                  thumb: item.thumb, 
-                                  thumbSm: item.thumbSm, 
-                                });
-                                setVideoUrl(item.value.value);
-
+                onChange({ 
+                  label: item.label,
+                  value: item.value, 
+                  thumb: item.thumb, 
+                  thumbSm: item.thumbSm, 
+                });
+                // setSelectedVideo({'video':item});
+                // setData(item.value);
+              
             }}
             done={() => setGridOpen(false)} />
             </FieldContainer>

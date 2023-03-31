@@ -45,8 +45,10 @@ export interface RelatedVideoField {
 }
 
 type VideoSelectorProps = {
-    videos: RelatedVideo[];
+    video?: RelatedVideoField | null | undefined;
+    videos?: RelatedVideo[];
     open: boolean;
+    singleSelection?: boolean;
     data: any[];
     selectionChanged: any;
     done: any;
@@ -55,12 +57,14 @@ type VideoSelectorProps = {
 type VideoGridState = {
   pgIndex: number;
   currentVideos: RelatedVideo[];
+  currentVideo: RelatedVideoField | null | undefined;
   waiting: boolean;
 
   toggleWaiting: () => void
   setData: (vidData: any[]) => void
   setPageIndex: (pgIndex: number) => void
   setVideo: (value: RelatedVideo) => void
+  setVideoSingle: (value: RelatedVideoField) => void
   setGridOpen: (open: boolean) => void
 }
 
@@ -108,7 +112,7 @@ const styles = {
   },
 };
 
-const VideoSelector =  ({videos, data, open, selectionChanged, done}: VideoSelectorProps) => {
+const VideoSelector =  ({videos, video, data, open, singleSelection, selectionChanged, done}: VideoSelectorProps) => {
 
   // Create store with Zustand
   const [useStore] = useState(() => 
@@ -118,6 +122,7 @@ const VideoSelector =  ({videos, data, open, selectionChanged, done}: VideoSelec
         data: [],
         waiting: true,
 
+        currentVideo: video || null,
         currentVideos: videos || [],
         toggleWaiting: () => set((state) => { 
             return { waiting: !state.waiting }; 
@@ -144,6 +149,12 @@ const VideoSelector =  ({videos, data, open, selectionChanged, done}: VideoSelec
                     currentVideos: [...state.currentVideos, video]
                 }
         }),
+        setVideoSingle: (video: RelatedVideoField) => set((state) => {
+          return {
+                    ...state,
+                    currentVideo: video
+                }
+        }),
         setGridOpen: (open: boolean) => set((state) => {
             return {
                 ...state,
@@ -152,13 +163,15 @@ const VideoSelector =  ({videos, data, open, selectionChanged, done}: VideoSelec
         }),
       })
   ));
-
-  const setVideo = useStore((state: { setVideo: any; }) => state.setVideo);
-  const setPageIndex = useStore((state: { setPageIndex: any; }) => state.setPageIndex);
-  const setGridOpen = useStore((state: { setGridOpen: any; }) => state.setGridOpen);
-
-  const pgIndex = useStore((state: { pgIndex: any; }) => state.pgIndex);
-  const currentVideos: any = useStore((state: { currentVideos: any; }) => state.currentVideos);
+const{
+setVideo,  
+setVideoSingle,  
+setPageIndex, 
+setGridOpen,  
+pgIndex,  
+currentVideos,
+currentVideo} 
+= useStore((state => state))
 
   const beginIndex = pgIndex * 12;
   const endIndex = beginIndex + 12;
@@ -197,12 +210,15 @@ const VideoSelector =  ({videos, data, open, selectionChanged, done}: VideoSelec
                           <Grid container spacing={2}>
                             {data.slice(beginIndex, endIndex).map((item: RelatedVideo) => {
 
-                              const selected = _.map(currentVideos, 'value').includes((item as RelatedVideo).value);
+                              const selected = singleSelection ? (currentVideo as any).value === (item as RelatedVideo).value : _.map(currentVideos, 'value').includes((item as RelatedVideo).value);
+                              console.log(selected, currentVideo)
                               return (
                                 <Grid item xs={3} key={item.value}>
                                   <a style={{ position: 'relative', cursor: 'pointer'}}
                                     onClick={() => { 
-                                        setVideo(item);
+                                      if(singleSelection) setVideoSingle(item as any);
+                                      else setVideo(item);
+                                        // Are we allowing only one video to be selected?
                                         selectionChanged(item as RelatedVideo);
                                     }}>
                                       {selected &&

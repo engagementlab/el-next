@@ -182,7 +182,7 @@ app.post('/prod-deploy', async (req, res, next) => {
         userEmail && userEmail?.length !== -1
           ? userEmail[0]
           : 'engagementlab@emerson.edu',
-      note: req.query.note,
+      note: req.body.note,
     });
 
     res.status(200).send(response.data);

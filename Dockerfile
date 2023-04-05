@@ -48,6 +48,9 @@ RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
     YARN_CACHE_FOLDER=/root/.yarn3-cache \
     yarn install --immutable --inline-builds --ignore-scripts
 
+# Copy our favicon to the keystone module
+RUN cp favicon.ico ./node_modules/@keystone-6/core/favicon.ico
+
 EXPOSE $PORT
 
 CMD yarn keystone postinstall --fix --app $APP_NAME && \

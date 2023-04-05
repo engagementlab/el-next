@@ -594,12 +594,10 @@ export default function URLShortener(this: any) {
           />
         </>
       ) : dataError ? (
-        <>
-          <Alert severity="error">
-            <AlertTitle>Data Error</AlertTitle>
-            Unable to retrieve data from API!
-          </Alert>{' '}
-        </>
+        <Alert severity="error">
+          <AlertTitle>Data Error</AlertTitle>
+          Unable to retrieve data from API!
+        </Alert>
       ) : (
         <LinearProgress />
       )}

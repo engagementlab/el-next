@@ -17,9 +17,11 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
+  LinearProgress,
   MenuItem,
   Modal,
   Select as MUISelect,
+  Snackbar,
   TextField,
 } from '@mui/material';
 
@@ -30,6 +32,7 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 
 import create from 'zustand';
 import VideoSelector, { RelatedVideoField } from './video/selector';
+import Script from 'next/script';
 
 const axios = require('axios').default;
 const _ = require('underscore');
@@ -54,6 +57,7 @@ type ImageGridState = {
   alt: string;
   data: any[];
   index: number;
+  dataError: boolean;
   waiting: boolean;
   gridOpen: boolean;
 
@@ -72,56 +76,6 @@ export interface RelatedImage {
   };
 }
 
-const styles = {
-  form: {
-    field: emCss`
-      align-items: center;
-      width: 100%;
-      margin: 1rem 0 0 0;
-    `,
-    label: emCss`
-      width: 10%;
-    `,
-    input: emCss`
-      width: 90%;
-    `,
-    button: emCss`
-      margin: .4rem;
-    `,
-    select: emCss`
-      position: relative;
-      z-index: 100;
-      min-width: 100%;
-    `,
-    option: emCss`
-      display: flex!important;
-      flex-direction: row;
-      padding: 1rem;
-      cursor: pointer;
-      p {
-        width: 50%;
-      }
-      img {
-        border: 2px solid white;
-      }
-      &:hover {
-        background: #2D3130;
-        color: white;
-      }
-    `,
-  },
-  imagesModal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 900,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  },
-};
 function videoSelect({
   label,
   current,
@@ -296,6 +250,7 @@ function imageSelect({
         create<ImageGridState>((set) => ({
           waiting: true,
           gridOpen: true,
+          dataError: false,
           data: [],
           index: 0,
           id:
@@ -352,35 +307,57 @@ function imageSelect({
       const setIndex = useStore((state) => state.setIndex);
       const setGridOpen = useStore((state) => state.setGridOpen);
 
-      const currentId = useStore((state) => state.id);
-      const currentAlt = useStore((state) => state.alt);
-      const gridOpen = useStore((state) => state.gridOpen);
-      const data = useStore((state) => state.data);
-      const index = useStore((state) => state.index);
+      const snackbarClose = () => {
+        useStore.setState({
+          dataError: false,
+        });
+      };
+      const { id, alt, gridOpen, data, dataError, index, waiting } = useStore(
+        (state) => state
+      );
       const beginIndex = index * 15;
       const endIndex = beginIndex + 15;
       const dataLength = Math.floor(data.length / 15) + 1;
 
       useEffect(() => {
+        // app name is derived from first pathname string
+        const app =
+          process.env.PRODUCTION_MODE === 'true'
+            ? window.location.pathname.replace('/', '').split('/')[0]
+            : 'tngvi';
+        const endpointPrefix =
+          window.location.protocol === 'https:'
+            ? '/api'
+            : 'http://localhost:8000';
         if (data && data.length > 1) return;
         // Get CDN data
-        axios.get('/cms/media/get/upload').then((response: { data: any }) => {
-          let data = response.data.imgs;
-          // If image pre-selected, move it to the front of array
-          if (currentId.length > 0) {
-            const itemIndex = data.findIndex(
-              (item: { public_id: string }) => item.public_id === currentId
-            );
-            data.splice(0, 0, data.splice(itemIndex, 1)[0]);
-          }
-          setData(data);
-          toggleWaiting();
-        });
+        axios
+          .get(`${endpointPrefix}/media/get/${app}/upload`)
+          .then((response: { data: any }) => {
+            let data = response.data.imgs;
+            // If image pre-selected, move it to the front of array
+            if (id.length > 0) {
+              const itemIndex = data.findIndex(
+                (item: { public_id: string }) => item.public_id === id
+              );
+              data.splice(0, 0, data.splice(itemIndex, 1)[0]);
+            }
+            setData(data);
+            toggleWaiting();
+          })
+          .catch((error: any) => {
+            useStore.setState({
+              dataError: true,
+            });
+            setGridOpen(false);
+            toggleWaiting();
+          });
       });
 
       return (
         <FieldContainer>
           Click <em>Done</em> for image preview.
+          <Script src="https://cdn.tailwindcss.com/3.3.0" />
           <Modal
             open={gridOpen}
             onClose={() => {
@@ -389,102 +366,116 @@ function imageSelect({
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={styles.imagesModal}>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <IconButton
-                  aria-label="go to last page"
-                  disabled={index === 0}
-                  onClick={(val) => {
-                    setIndex(index - 1);
-                  }}
-                >
-                  <ArrowCircleLeftOutlinedIcon fontSize="large" />
-                </IconButton>
-                <MUISelect
-                  value={index}
-                  label="Page"
-                  onChange={(val) => {
-                    setIndex(!val ? 0 : (val.target.value as number));
-                  }}
-                >
-                  {[...new Array(dataLength)].map((v, i) => (
-                    <MenuItem value={i} key={i}>
-                      {i + 1}
-                    </MenuItem>
-                  ))}
-                </MUISelect>
-                <IconButton
-                  aria-label="go to right page"
-                  disabled={index === dataLength - 1}
-                  onClick={(val) => {
-                    setIndex(index + 1);
-                  }}
-                >
-                  <ArrowCircleRightOutlinedIcon fontSize="large" />
-                </IconButton>
-              </div>
+            {!waiting ? (
+              <Box className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 border-2 bg-white p-4 shadow-xl">
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <IconButton
+                    aria-label="go to last page"
+                    disabled={index === 0}
+                    onClick={(val) => {
+                      setIndex(index - 1);
+                    }}
+                  >
+                    <ArrowCircleLeftOutlinedIcon fontSize="large" />
+                  </IconButton>
+                  <MUISelect
+                    value={index}
+                    label="Page"
+                    onChange={(val) => {
+                      setIndex(!val ? 0 : (val.target.value as number));
+                    }}
+                  >
+                    {[...new Array(dataLength)].map((v, i) => (
+                      <MenuItem value={i} key={i}>
+                        {i + 1}
+                      </MenuItem>
+                    ))}
+                  </MUISelect>
+                  <IconButton
+                    aria-label="go to right page"
+                    disabled={index === dataLength - 1}
+                    onClick={(val) => {
+                      setIndex(index + 1);
+                    }}
+                  >
+                    <ArrowCircleRightOutlinedIcon fontSize="large" />
+                  </IconButton>
+                </div>
 
-              <hr style={{ borderTopWidth: '2px', borderColor: '#f6a536' }} />
-
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                  {data.slice(beginIndex, endIndex).map((item) => (
-                    <Grid item xs={3} key={item.public_id}>
-                      <a
-                        style={{ position: 'relative' }}
-                        onClick={(e) => {
-                          setId(item.public_id);
-                          onChange({ publicId: item.public_id });
-                        }}
-                      >
-                        <div style={{ position: 'absolute', top: 0, left: 0 }}>
-                          {item.public_id === currentId && (
-                            <CheckCircleOutlineIcon
-                              fontSize="large"
-                              htmlColor="#f6a536"
-                            />
-                          )}
-                        </div>
-                        <img
-                          src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_100/v${item.version}/${item.public_id}`}
-                          style={{
-                            opacity: item.public_id === currentId ? 0.5 : 1,
+                <hr style={{ borderTopWidth: '2px', borderColor: '#f6a536' }} />
+                <Box sx={{ flexGrow: 1 }}>
+                  <Grid container spacing={2}>
+                    {data.slice(beginIndex, endIndex).map((item) => (
+                      <Grid item xs={3} key={item.public_id}>
+                        <a
+                          style={{ position: 'relative' }}
+                          onClick={(e) => {
+                            setId(item.public_id);
+                            onChange({ publicId: item.public_id });
                           }}
-                        />
-                      </a>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
+                        >
+                          <div
+                            style={{ position: 'absolute', top: 0, left: 0 }}
+                          >
+                            {item.public_id === id && (
+                              <CheckCircleOutlineIcon
+                                fontSize="large"
+                                htmlColor="#f6a536"
+                              />
+                            )}
+                          </div>
+                          <img
+                            src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_100/v${item.version}/${item.public_id}`}
+                            style={{
+                              opacity: item.public_id === id ? 0.5 : 1,
+                            }}
+                          />
+                        </a>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
 
-              <TextField
-                id="alt-field"
-                multiline
-                fullWidth
-                rows={4}
-                label="Alt Text"
-                variant="standard"
-                value={currentAlt}
-                onChange={(e) => {
-                  setAlt(e.target.value);
-                  onChange({
-                    publicId: currentId as any,
-                    alt: e.target.value as any,
-                  });
-                }}
-              />
-              <br />
-              <IconButton
-                aria-label="done"
-                disabled={currentId === ''}
-                onClick={() => {
-                  setGridOpen(false);
-                }}
-              >
-                <CheckTwoToneIcon fontSize="large" color="success" />
-              </IconButton>
-            </Box>
+                <TextField
+                  id="alt-field"
+                  multiline
+                  fullWidth
+                  rows={4}
+                  label="Alt Text"
+                  variant="standard"
+                  value={alt}
+                  onChange={(e) => {
+                    setAlt(e.target.value);
+                    onChange({
+                      publicId: id as any,
+                      alt: e.target.value as any,
+                    });
+                  }}
+                />
+                <br />
+                <IconButton
+                  aria-label="done"
+                  disabled={id === ''}
+                  onClick={() => {
+                    setGridOpen(false);
+                  }}
+                >
+                  <CheckTwoToneIcon fontSize="large" color="success" />
+                </IconButton>
+              </Box>
+            ) : (
+              <Box>
+                <LinearProgress />
+              </Box>
+            )}
           </Modal>
+          <Snackbar
+            open={dataError}
+            autoHideDuration={3000}
+            onClose={snackbarClose}
+          >
+            <Alert severity="error">Unable to retrieve data.</Alert>
+          </Snackbar>
         </FieldContainer>
       );
     },

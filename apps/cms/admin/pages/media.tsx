@@ -22,13 +22,13 @@ import {
   ImageList,
   ImageListItem,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Modal,
   OutlinedInput,
   Pagination,
   Select,
   SelectChangeEvent,
-  Snackbar,
   Theme,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -318,27 +318,18 @@ export default function Media() {
 
   useEffect(() => {
     if (data && data.length > 1) return;
-    axios.get(`${endpointPrefix}/media/get/${app}/upload`).then((response) => {
-      setData(response.data.imgs, response.data.folders);
-      toggleWaiting();
-    });
+    axios
+      .get(`${endpointPrefix}/media/get/${app}/upload`)
+      .then((response) => {
+        setData(response.data.imgs, response.data.folders);
+        toggleWaiting();
+      })
+      .catch((error) => {
+        setErrorOpen(true);
+      });
   });
   return (
     <PageContainer header="Media Library">
-      <Snackbar
-        open={errorOpen}
-        autoHideDuration={6000}
-        onClose={() => setErrorOpen(false)}
-      >
-        <Alert
-          onClose={() => setErrorOpen(false)}
-          severity="error"
-          sx={{ width: '100%' }}
-        >
-          Something went wrong.
-        </Alert>
-      </Snackbar>
-
       <Modal
         open={uploadOpen}
         onClose={() => {
@@ -469,7 +460,7 @@ export default function Media() {
           />
 
           <Box sx={{ flexGrow: 1 }}>
-            <ImageList variant="masonry" cols={4} gap={8}>
+            <ImageList variant="masonry" cols={3} gap={8}>
               {filteredData.slice(beginIndex, endIndex).map((d) => {
                 return (
                   <ImageListItem
@@ -515,8 +506,10 @@ export default function Media() {
             </ImageList>
           </Box>
         </div>
+      ) : errorOpen ? (
+        <Alert severity="error">Something went wrong!</Alert>
       ) : (
-        <></>
+        <LinearProgress />
       )}
     </PageContainer>
   );

@@ -34,6 +34,21 @@ services:
       traefik.http.routers.cms-landing.tls: true
       traefik.http.routers.cms-landing.entrypoints: websecure
 
+  error-pages:
+    image: ghcr.io/patrickdappollonio/docker-http-server:v2
+    command: --path /html
+    volumes:
+      - ./_site:/html
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.error-pages-el-next.loadbalancer.server.port: 5000
+      traefik.http.routers.error-pages.entrypoints: websecure
+      traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.cms.elab.emerson.edu`)
+      traefik.http.routers.error-pages.priority: 2
+      traefik.http.middlewares.error-pages.errors.status: 500-599
+      traefik.http.middlewares.error-pages.errors.service: error-pages
+      traefik.http.middlewares.error-pages.errors.query: /error.html
+
   cms-tngvi:
     build:
       context: .
@@ -59,7 +74,7 @@ services:
       - "traefik.http.routers.cms-tngvi.tls=true"
       - "traefik.http.routers.cms-tngvi.entrypoints=websecure"
       - "traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next"
-      - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages"
       - "traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000"
 
   cms-sjm:
@@ -81,7 +96,7 @@ services:
       - "traefik.http.routers.cms-sjm.tls=true"
       - "traefik.http.routers.cms-sjm.entrypoints=websecure"
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
-      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages"
       - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
 
   qa-tngvi:

@@ -74,7 +74,7 @@ services:
       - "traefik.http.routers.cms-tngvi.tls=true"
       - "traefik.http.routers.cms-tngvi.entrypoints=websecure"
       - "traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next"
-      - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages-el-next"
+      - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages"
       - "traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000"
 
   cms-sjm:
@@ -96,7 +96,7 @@ services:
       - "traefik.http.routers.cms-sjm.tls=true"
       - "traefik.http.routers.cms-sjm.entrypoints=websecure"
       - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
-      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages-el-next"
+      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages"
       - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
 
   qa-tngvi:

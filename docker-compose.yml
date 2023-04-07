@@ -17,10 +17,10 @@ services:
     environment:
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
     labels:
-      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      - "traefik.http.routers.dashboard.tls=true"
-      - "traefik.http.routers.dashboard.entrypoints=websecure"
-      - "traefik.http.routers.dashboard.service=api@internal"
+      # - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      # - "traefik.http.routers.dashboard.tls=true"
+      # - "traefik.http.routers.dashboard.entrypoints=websecure"
+      # - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
       - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 
@@ -33,21 +33,6 @@ services:
       traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
       traefik.http.routers.cms-landing.tls: true
       traefik.http.routers.cms-landing.entrypoints: websecure
-
-  error-pages:
-    image: ghcr.io/patrickdappollonio/docker-http-server:v2
-    command: --path /html --port 5001
-    volumes:
-      - ./_site:/html
-    labels:
-      traefik.enable: "true"
-      traefik.http.services.error-pages-el-next.loadbalancer.server.port: 5001
-      traefik.http.routers.error-pages.entrypoints: websecure
-      traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.cms.elab.emerson.edu`)
-      traefik.http.routers.error-pages.priority: 1
-      traefik.http.middlewares.error-pages.errors.status: 400-599
-      traefik.http.middlewares.error-pages.errors.service: error-pages-el-next
-      traefik.http.middlewares.error-pages.errors.query: /error.html
 
   cms-tngvi:
     build:
@@ -164,3 +149,18 @@ services:
       - "traefik.http.routers.traefik-forward-auth.rule=PathPrefix(`/_oauth`)"
       - "traefik.http.routers.traefik-forward-auth.tls=true"
       - "traefik.http.routers.traefik-forward-auth.entrypoints=websecure"
+
+  error-pages:
+    image: ghcr.io/patrickdappollonio/docker-http-server:v2
+    command: --path /html --port 5001
+    volumes:
+      - ./_site:/html
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.error-pages-el-next.loadbalancer.server.port: 5001
+      traefik.http.routers.error-pages.entrypoints: websecure
+      traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.cms.elab.emerson.edu`)
+      traefik.http.routers.error-pages.priority: 1
+      traefik.http.middlewares.error-pages.errors.status: 400-599
+      traefik.http.middlewares.error-pages.errors.service: error-pages-el-next
+      traefik.http.middlewares.error-pages.errors.query: /error.html

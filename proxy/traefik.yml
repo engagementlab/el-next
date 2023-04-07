@@ -16,9 +16,9 @@ entryPoints:
          permanent: true
   websecure:
    address: ":443"
-# api:
-#   dashboard: true
-#   insecure: true
+api:
+  dashboard: true
+  insecure: true
 providers:
   docker: 
     watch: false

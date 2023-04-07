@@ -46,7 +46,7 @@ services:
       traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.cms.elab.emerson.edu`)
       traefik.http.routers.error-pages.priority: 1
       traefik.http.middlewares.error-pages.errors.status: 400-599
-      traefik.http.middlewares.error-pages.errors.service: error-pages
+      traefik.http.middlewares.error-pages.errors.service: error-pages-el-next
       traefik.http.middlewares.error-pages.errors.query: /error.html
 
   cms-tngvi:

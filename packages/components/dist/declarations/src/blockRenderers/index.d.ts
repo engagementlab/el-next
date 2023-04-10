@@ -19,5 +19,6 @@ export declare const BlockRenderers: (styles?: {
     image: (props: any) => JSX.Element;
     video: (props: any) => JSX.Element;
     button: (props: any) => JSX.Element;
+    pageAnchor: (props: any) => JSX.Element;
     associatedPeople: (props: any) => JSX.Element;
 };

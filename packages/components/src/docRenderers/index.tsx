@@ -39,20 +39,23 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
         link: ({ children, href }) => {
           const label = (children as any).at(0).props.node.text;
           let fixedHref = '';
-          // Is href missing scheme and is not mailto?
+          // Is href missing scheme and is not mailto or jumping anchor link?
           const hrefNoScheme =
             href.indexOf('mailto:') === -1 &&
+            href.indexOf('#') === -1 &&
             href.search(/https:\/\/|http:\/\//gm) === -1;
           fixedHref = hrefNoScheme ? `https://${href}` : href;
+
+          // Ensure that QA links don't show in production
           if (process.env.NODE_ENV === 'production')
             fixedHref = fixedHref.replace('qa.', '');
-          // text-purple border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)]
+
           return renderOverrides?.link ? (
             renderOverrides.link(children, fixedHref)
           ) : (
             <a
               href={fixedHref}
-              target="_blank"
+              target={href.indexOf('#') === 0 ? '_self' : '_blank'}
               className={`no-underline border-b-2 transition-all ${
                 styles && styles.linkClass
               }`}

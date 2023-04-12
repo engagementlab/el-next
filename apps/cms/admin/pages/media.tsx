@@ -21,6 +21,7 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
+  ImageListItemBar,
   InputLabel,
   LinearProgress,
   MenuItem,
@@ -35,6 +36,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
+import FolderIcon from '@mui/icons-material/Folder';
 import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
 
 import Image from '@el-next/components/image';
@@ -62,10 +64,12 @@ function getStyles(
   };
 }
 
+type Folder = { name: string; path: string };
+
 type NavState = {
   data: any[];
-  folders: { name: string; path: string }[];
-  selectedFolders: { name: string; path: string }[];
+  folders: Folder[];
+  selectedFolders: string[];
   deleteConfirmOpen: boolean;
   errorOpen: boolean;
   imgIdToDelete: string;
@@ -78,9 +82,7 @@ type NavState = {
   setData: (imgData: any[], folders: { name: string; path: string }[]) => void;
   setId: (id: string) => void;
   setImageIdToDelete: (id: string) => void;
-  setSelecedFolders: (
-    event: SelectChangeEvent<{ name: string; path: string }[]>
-  ) => void;
+  setSelecedFolders: (event: SelectChangeEvent<string[]>) => void;
   setIndex: (imgIndex: number) => void;
   setErrorOpen: (open: boolean) => void;
   setUploadOpen: (open: boolean) => void;
@@ -90,7 +92,8 @@ type NavState = {
 const styles = {
   item: {
     position: 'relative',
-    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
   },
   modal: {
     position: 'absolute',
@@ -167,21 +170,11 @@ export default function Media() {
             imgIdToDelete: id,
           };
         }),
-      setSelecedFolders: (
-        event: SelectChangeEvent<{ name: string; path: string }[]>
-      ) =>
+      setSelecedFolders: (event: SelectChangeEvent<string[]>) =>
         set((state: NavState) => {
-          const folder = _.find(state.folders, {
-            path: event.target.value[0],
-          }) as { name: string; path: string };
-          //   console.log(folder.name, state.folders);
-          const updatedFolders = state.selectedFolders.includes(folder)
-            ? state.selectedFolders.filter((i) => i !== folder) // remove item
-            : [...state.selectedFolders, folder]; // add item
-          console.log(updatedFolders);
           return {
             ...state,
-            selectedFolders: updatedFolders,
+            selectedFolders: event.target.value as string[],
           };
         }),
       setIndex: (imgIndex: number) =>
@@ -243,7 +236,7 @@ export default function Media() {
     (item) =>
       selectedFolders.length === 0 ||
       // ...otherwise, item's filters must match ALL selected filters
-      selectedFolders.indexOf(item.folder) > 0
+      selectedFolders.indexOf(item.folder) > -1
   );
 
   const beginIndex = pgIndex * 30;
@@ -415,13 +408,11 @@ export default function Media() {
             <AddIcon />
           </Fab>
           <hr />
-          {/* <FormControl sx={{ m: 1, width: 600 }}>
-            <InputLabel id="demo-multiple-chip-label">
-              Filter by Folder
-            </InputLabel>
+          <FormControl sx={{ m: 1, width: 600 }}>
+            <InputLabel id="folders-chip-label">Filter by Folder</InputLabel>
             <Select
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
+              labelId="folders-chip-label"
+              id="folders-chip"
               multiple
               value={selectedFolders}
               onChange={(val) => {
@@ -431,9 +422,12 @@ export default function Media() {
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => (
-                    <>
-                      <Chip key={value.path} label={value.name} />
-                    </>
+                    <Chip
+                      key={value}
+                      label={value
+                        .substring(value.indexOf('/') + 1)
+                        .replaceAll('-', ' ')}
+                    />
                   ))}
                 </Box>
               )}
@@ -445,14 +439,19 @@ export default function Media() {
                   value={folder.path}
                   // style={getStyles(folder, personName, theme)}
                 >
-                  {folder.name.toLocaleUpperCase()}
+                  {/* Format folder name */}
+                  {folder.name
+                    .replaceAll('-', ' ')
+                    .split(' ')
+                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .join(' ')}
                 </MenuItem>
               ))}
             </Select>
-          </FormControl> */}
+          </FormControl>
 
           <Pagination
-            count={Math.floor(data.length / 30) + 1}
+            count={Math.floor(filteredData.length / 30) + 1}
             page={pgIndex + 1}
             onChange={(e, pg) => {
               setIndex(pg - 1);
@@ -478,14 +477,42 @@ export default function Media() {
                       alt={`Image with public ID ${d.public_id}`}
                       imgId={d.public_id}
                       width={300}
-                      transforms="f_auto,dpr_auto,c_crop,g_center,q_50"
+                      transforms="f_auto,dpr_auto,c_crop,g_center,q_10"
                       lazy={false}
                       aspectDefault={true}
-                      className={
-                        d.public_id === currentId ? `${styles.imgHover}` : ''
+                    />
+                    <ImageListItemBar
+                      subtitle={
+                        <>
+                          <FolderIcon htmlColor="#fff" fontSize="small" />{' '}
+                          &nbsp;
+                          {d.folder
+                            .substring(d.folder.indexOf('/') + 1)
+                            .replaceAll('-', ' ')
+                            .split(' ')
+                            .map(
+                              (s: string) =>
+                                s.charAt(0).toUpperCase() + s.substring(1)
+                            )
+                            .join(' ')}
+                        </>
+                      }
+                      actionIcon={
+                        <IconButton
+                          color="warning"
+                          size="large"
+                          sx={actionsStyle}
+                          aria-label="delete image"
+                          onClick={() => {
+                            setDeleteConfirm(true);
+                            setImageIdToDelete(d.public_id);
+                          }}
+                        >
+                          <DeleteForeverTwoToneIcon fontSize="large" />
+                        </IconButton>
                       }
                     />
-                    {d.public_id === currentId && (
+                    {/* {d.public_id === currentId && (
                       <IconButton
                         color="warning"
                         size="large"
@@ -496,10 +523,18 @@ export default function Media() {
                           setImageIdToDelete(d.public_id);
                         }}
                       >
-                        {/* {d.folder} */}
                         <DeleteForeverTwoToneIcon fontSize="large" />
                       </IconButton>
-                    )}
+                    )} */}
+                    {d.folder
+                      .substring(d.folder.indexOf('/') + 1)
+                      .replaceAll('-', ' ')
+                      .split(' ')
+                      .map(
+                        (s: string) =>
+                          s.charAt(0).toUpperCase() + s.substring(1)
+                      )
+                      .join(' ')}
                   </ImageListItem>
                 );
               })}

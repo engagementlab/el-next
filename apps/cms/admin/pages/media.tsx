@@ -70,6 +70,7 @@ type NavState = {
   data: any[];
   folders: Folder[];
   selectedFolders: string[];
+  selectedTargetFolder: string | undefined;
   deleteConfirmOpen: boolean;
   errorOpen: boolean;
   imgIdToDelete: string;
@@ -83,6 +84,7 @@ type NavState = {
   setId: (id: string) => void;
   setImageIdToDelete: (id: string) => void;
   setSelecedFolders: (event: SelectChangeEvent<string[]>) => void;
+  setSelectedTargetFolder: (event: string) => void;
   setIndex: (imgIndex: number) => void;
   setErrorOpen: (open: boolean) => void;
   setUploadOpen: (open: boolean) => void;
@@ -138,6 +140,7 @@ export default function Media() {
       imgIdToDelete: '',
       selectedImgId: '',
       selectedFolders: [],
+      selectedTargetFolder: undefined,
       uploadOpen: false,
       deleteConfirmOpen: false,
       waiting: true,
@@ -177,6 +180,13 @@ export default function Media() {
             selectedFolders: event.target.value as string[],
           };
         }),
+      setSelectedTargetFolder: (event: string) =>
+        set((state: NavState) => {
+          return {
+            ...state,
+            selectedTargetFolder: event,
+          };
+        }),
       setIndex: (imgIndex: number) =>
         set((state) => {
           return {
@@ -210,26 +220,29 @@ export default function Media() {
     }))
   );
 
-  const toggleWaiting = useStore((state) => state.toggleWaiting);
-  const setData = useStore((state) => state.setData);
-  const setDeleteConfirm = useStore((state) => state.setConfirmOpen);
-  const setErrorOpen = useStore((state) => state.setErrorOpen);
-  const setId = useStore((state) => state.setId);
-  const setImageIdToDelete = useStore((state) => state.setImageIdToDelete);
-  const setSelecedFolders = useStore((state) => state.setSelecedFolders);
-  const setIndex = useStore((state) => state.setIndex);
-  const setUploadOpen = useStore((state) => state.setUploadOpen);
+  const {
+    deleteConfirmOpen,
+    errorOpen,
+    imgIdToDelete,
+    selectedFolders,
+    selectedTargetFolder,
+    folders,
+    data,
+    waiting,
+    pgIndex,
+    uploadOpen,
 
-  const confirmOpen = useStore((state) => state.deleteConfirmOpen);
-  const currentId = useStore((state) => state.selectedImgId);
-  const errorOpen = useStore((state) => state.errorOpen);
-  const imgIdToDelete = useStore((state) => state.imgIdToDelete);
-  const selectedFolders = useStore((state) => state.selectedFolders);
-  const folders = useStore((state) => state.folders);
-  const data = useStore((state) => state.data);
-  const waiting = useStore((state) => state.waiting);
-  const pgIndex = useStore((state) => state.pgIndex);
-  const uploadOpen = useStore((state) => state.uploadOpen);
+    toggleWaiting,
+    setData,
+    setConfirmOpen,
+    setErrorOpen,
+    setId,
+    setImageIdToDelete,
+    setSelecedFolders,
+    setSelectedTargetFolder,
+    setIndex,
+    setUploadOpen,
+  } = useStore((state) => state);
 
   const filteredData = data.filter(
     // If selected filters empty, show all...
@@ -241,6 +254,13 @@ export default function Media() {
 
   const beginIndex = pgIndex * 30;
   const endIndex = beginIndex + 30;
+
+  const refreshMedia = () => {
+    axios.get(`${endpointPrefix}/media/get/${app}/upload`).then((response) => {
+      setData(response.data.imgs, response.data.folders);
+      toggleWaiting();
+    });
+  };
 
   const upload = () => {
     try {
@@ -257,16 +277,14 @@ export default function Media() {
           var formData = new FormData();
           formData.append('img', reader.result as string);
           formData.append('app', app);
+          formData.append('folder', selectedTargetFolder as string);
 
           var xhr = new XMLHttpRequest();
-          xhr.open('POST', '/api/media/upload', true);
+          xhr.open('POST', `${endpointPrefix}/media/upload`, true);
           xhr.onprogress = (e) => {
             if (e.loaded !== e.total) return;
             setUploadOpen(false);
-            axios.get(`/api/media/get/${app}/upload`).then((response) => {
-              setData(response.data.imgs, response.data.folders);
-              toggleWaiting();
-            });
+            refreshMedia();
           };
           xhr.onabort = () => {
             setErrorOpen(true);
@@ -287,16 +305,13 @@ export default function Media() {
   const deleteImg = () => {
     try {
       axios
-        .get(`/api/media/delete?id=${imgIdToDelete}`)
+        .get(`${endpointPrefix}/media/delete?id=${imgIdToDelete}`)
         .then((response) => {
           if (response.data.result === 'ok') {
-            setDeleteConfirm(false);
+            setConfirmOpen(false);
 
             toggleWaiting();
-            axios.get(`/api/media/get/${app}/upload`).then((response) => {
-              setData(response.data.imgs, response.data.folders);
-              toggleWaiting();
-            });
+            refreshMedia();
             return;
           }
           setErrorOpen(true);
@@ -311,15 +326,7 @@ export default function Media() {
 
   useEffect(() => {
     if (data && data.length > 1) return;
-    axios
-      .get(`${endpointPrefix}/media/get/${app}/upload`)
-      .then((response) => {
-        setData(response.data.imgs, response.data.folders);
-        toggleWaiting();
-      })
-      .catch((error) => {
-        setErrorOpen(true);
-      });
+    refreshMedia();
   });
   return (
     <PageContainer header="Media Library">
@@ -333,6 +340,36 @@ export default function Media() {
       >
         <Box sx={styles.modal}>
           <section className="container">
+            <FormControl sx={{ m: 1, width: 250 }}>
+              <InputLabel id="folders-sel-label">
+                Assign to Folder (optional):
+              </InputLabel>
+              <Select
+                labelId="folders-sel-label"
+                id="folders-sel"
+                value={selectedTargetFolder}
+                onChange={(val) => {
+                  setSelectedTargetFolder(val.target.value);
+                }}
+                input={<OutlinedInput id="select-fld" label="Chip" />}
+                MenuProps={MenuProps}
+              >
+                {folders.map((folder) => (
+                  <MenuItem
+                    key={folder.path}
+                    value={folder.path}
+                    // style={getStyles(folder, personName, theme)}
+                  >
+                    {/* Format folder name */}
+                    {folder.name
+                      .replaceAll('-', ' ')
+                      .split(' ')
+                      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                      .join(' ')}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <div {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
               <p>Drag and drop an image here, or click to select one.</p>
@@ -357,16 +394,16 @@ export default function Media() {
                   Done
                 </LoadingButton>
               </aside>
-            )}
+            )}{' '}
           </section>
         </Box>
       </Modal>
       {!waiting ? (
         <div>
           <Dialog
-            open={confirmOpen}
+            open={deleteConfirmOpen}
             onClose={() => {
-              setDeleteConfirm(false);
+              setConfirmOpen(false);
             }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
@@ -381,7 +418,7 @@ export default function Media() {
             <DialogActions>
               <Button
                 onClick={() => {
-                  setDeleteConfirm(false);
+                  setConfirmOpen(false);
                 }}
                 autoFocus
               >
@@ -504,7 +541,7 @@ export default function Media() {
                           sx={actionsStyle}
                           aria-label="delete image"
                           onClick={() => {
-                            setDeleteConfirm(true);
+                            setConfirmOpen(true);
                             setImageIdToDelete(d.public_id);
                           }}
                         >

@@ -154,7 +154,7 @@ app.get('/media/delete', async (req, res) => {
 app.post('/media/upload', upload.none(), async (req, res) => {
   try {
     const response = await cloudinary.uploader.upload(req.body.img, {
-      folder: req.body.app || 'tngvi',
+      folder: req.body.folder || req.body.app || 'tngvi',
     });
     res.status(200).send(response);
   } catch (err: any) {

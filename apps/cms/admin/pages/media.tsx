@@ -115,11 +115,13 @@ const actionsStyle = { position: 'absolute', bottom: 0, right: 0 };
 export default function Media() {
   // app name is derived from first pathname string
   const app =
-    process.env.PRODUCTION_MODE === 'true'
+    window.location.protocol === 'https:'
       ? window.location.pathname.replace('/', '').split('/')[0]
       : 'tngvi';
+
   const endpointPrefix =
-    process.env.PRODUCTION_MODE === 'true' ? '/api' : 'http://localhost:8000';
+    window.location.protocol === 'https:' ? '/api' : 'http://localhost:8000';
+
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({
       accept: {

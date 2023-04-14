@@ -32,6 +32,7 @@ var cld = new urlGen.Cloudinary({
  * @prop {string} [className] - The image element's optional class
  * @prop {string} [transforms] - The image's optional cloud transformations
  * @prop {number} [width] - The image's optional width
+ * @prop {number} [maxWidth] - The largest optional width for responsive steps
  * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
  * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
  */
@@ -40,7 +41,7 @@ var cld = new urlGen.Cloudinary({
  * Return a Cloudinary AdvancedImage component
  * @component
  * @returns {React.ReactElement} The image component
- * 
+ *
  * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
@@ -52,15 +53,20 @@ var Image = function Image(_ref) {
       imgId = _ref.imgId,
       transforms = _ref.transforms,
       width = _ref.width,
+      maxWidth = _ref.maxWidth,
       lazy = _ref.lazy,
       aspectDefault = _ref.aspectDefault;
-  // Instantiate a CloudinaryImage object for the image with public ID;
-  var cloudImage = cld.image("".concat(imgId));
-  var plugins = [react.responsive({
-    steps: [800, 1000, 1400, 1800, 2200]
-  })]; // Create image transforms
+  // Instantiate a CloudinaryImage object for the image with public ID
+  var cloudImage = cld.image("".concat(imgId)); // If maxWidth is defined, ensure that the image steps don't exceed it
 
-  cloudImage.addTransformation(transforms || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3')); // If lazyload not set to false, enable
+  var plugins = [react.responsive({
+    steps: [800, 1000, 1400, 1800, 2200].filter(function (step) {
+      return maxWidth ? step <= maxWidth : step;
+    })
+  })]; // Create image transforms;
+  // if maxWidth defined, ensure initial width is used
+
+  cloudImage.addTransformation(transforms || "f_auto,dpr_auto".concat(aspectDefault ? '' : ',ar_4:3').concat(maxWidth ? ",w_".concat(maxWidth) : ',c_crop,g_center')); // If lazyload not set to false, enable
 
   if (lazy === undefined) plugins.push(react.lazyload(), react.placeholder({
     mode: 'blur'
@@ -79,7 +85,7 @@ var Image = function Image(_ref) {
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL
- * 
+ *
  * @typedef {object} ImageUrlProps
  *
  * @extends {Component<Props>}

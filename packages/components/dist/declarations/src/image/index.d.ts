@@ -7,6 +7,7 @@
  * @prop {string} [className] - The image element's optional class
  * @prop {string} [transforms] - The image's optional cloud transformations
  * @prop {number} [width] - The image's optional width
+ * @prop {number} [maxWidth] - The largest optional width for responsive steps
  * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
  * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
  */
@@ -17,6 +18,7 @@ declare type ImageProps = {
     className?: string;
     transforms?: string;
     width?: number;
+    maxWidth?: number;
     lazy?: boolean;
     aspectDefault?: boolean;
 };
@@ -42,7 +44,7 @@ declare type ImageUrlProps = {
  *
  * @extends {Component<Props>}
  */
-declare const Image: ({ alt, className, id, imgId, transforms, width, lazy, aspectDefault }: ImageProps) => JSX.Element;
+declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, lazy, aspectDefault, }: ImageProps) => JSX.Element;
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL
@@ -51,5 +53,5 @@ declare const Image: ({ alt, className, id, imgId, transforms, width, lazy, aspe
  *
  * @extends {Component<Props>}
  */
-declare const ImageUrl: ({ imgId, width, transforms, aspectDefault }: ImageUrlProps) => string;
+declare const ImageUrl: ({ imgId, width, transforms, aspectDefault, }: ImageUrlProps) => string;
 export { Image as default, ImageUrl };

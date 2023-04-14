@@ -37,23 +37,25 @@ jobs:
       - name: Install local monorepo packages and run preconstruct
         run: yarn
 
-      - name: Run CMS
-        working-directory: apps/cms  
-        env:
-          AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
-          AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
-          DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
-        run: |
-          yarn add typescript @types/node yargs
-          yarn
-          yarn postinstall-ci --app ${{ github.event.client_payload.appName }}
-          yarn build --app ${{ github.event.client_payload.appName }}
-          pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+      # - name: Run CMS
+      #   working-directory: apps/cms  
+      #   env:
+      #     AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
+      #     AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
+      #     DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
+      #   run: |
+      #     yarn add typescript @types/node yargs
+      #     yarn
+      #     yarn postinstall-ci --app ${{ github.event.client_payload.appName }}
+      #     pm2 start yarn --name "el-cms" -- dev --port 8000 --app ${{ github.event.client_payload.appName }}
+      #     yarn build --app ${{ github.event.client_payload.appName }}
 
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
         env:
-          APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}
+          # APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}''
+          GRAPHQL_APP: ${{ github.event.client_payload.appName }}
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
         run: |
           yarn add typescript @types/node
           yarn
@@ -111,6 +113,7 @@ jobs:
       - name: Serve build 
         working-directory: ./
         run: pm2 start `which http-server` --name server
+
       - name: Output all build paths to .pa11yci config and run pa11y
         run: |
           node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
@@ -123,14 +126,22 @@ jobs:
 
       # Deploy static build to Azure storage if succeeded
       - name: Deploy static build
-        env:
-          APP_NAME: ${{ github.event.client_payload.appName }}
-          STORAGE_ACCOUNT: ${{ github.event.client_payload.storageAccount }}
-        # Install azure-cli, run Bash scripts
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-          chmod 777 ./scripts/upload.sh && ./scripts/upload.sh
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload-batch --overwrite true --account-name ${{ github.event.client_payload.storageAccount }} --auth-mode key -d '$web' -s ./apps/${{ github.event.client_payload.appName }}/out
+      
+      - name: Purge CDN endpoint
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az cdn endpoint purge --content-paths "/*" --profile-name web-apps -n ${{ github.event.client_payload.storageAccount }} -g web
 
+    # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
 
   notify-success:
     name: Send success Slack notification

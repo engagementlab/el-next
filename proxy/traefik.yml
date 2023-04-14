@@ -1,9 +1,10 @@
 ## Static configuration
-# log:
+log:
   # level: WARN
   # level: INFO
-  # level: DEBUG
-# accessLog: {}
+  level: DEBUG
+accessLog: {}
+
 entryPoints:
   web:
    address: ":80"
@@ -15,11 +16,19 @@ entryPoints:
          permanent: true
   websecure:
    address: ":443"
-api:
-  dashboard: true
-  insecure: true
+# api:
+#   dashboard: true
+#   insecure: true
 providers:
   docker: 
     watch: false
   file:
     filename: certs.yml
+certificatesResolvers:
+  letsencrypt:
+    # Enable ACME (Let's Encrypt) automatic SSL, used for our QA domains
+    acme:
+      email: "engagementlab@emerson.edu"
+      storage: "acme.json"
+      dnsChallenge:
+        provider: cloudflare

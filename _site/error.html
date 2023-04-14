@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--
+    Error {{ code }}: {{ message }}
+    Description: {{ description }}
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>ELab CMS Error</title>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.bunny.net" />
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet" />
+    <script
+      type="text/javascript"
+      src="https://cdn.tailwindcss.com/3.3.0"
+    ></script>
+    <script>
+      setTimeout(() => {
+        location.reload();
+      }, 1000 * 10);
+    </script>
+    <style>
+      html,
+      body {
+        background-color: #222526;
+        color: #fff;
+        font-family: 'Nunito', sans-serif;
+      }
+      .code {
+        border-right: 2px solid;
+        font-size: 26px;
+        padding: 0 10px 0 15px;
+        text-align: center;
+      }
+      .message {
+        font-size: 18px;
+      }
+      /* {{ if show_details }} */
+      .details {
+        color: #999;
+        font-family: 'Lucida Console', 'Courier New', monospace;
+      }
+      /* {{ end }} */
+    </style>
+  </head>
+  <body class="my-14 flex flex-col items-center">
+    <div class="relative">
+      <svg viewBox="0 0 100 100" width="100" height="100" class="absolute">
+        <defs>
+          <style>
+            .cls-1 {
+              fill: #fff;
+            }
+          </style>
+        </defs>
+        <g
+          id="Layer_2"
+          data-name="Layer 2"
+          transform="matrix(0.440529, 0, 0, 0.440529, 0, 0)"
+        >
+          <g id="Layer_1-2" data-name="Layer 1">
+            <circle
+              cx="113.5"
+              cy="113.5"
+              r="113.5"
+              style="fill: rgb(153, 153, 153)"
+            ></circle>
+            <polygon
+              class="cls-1"
+              points="91.04 58.35 70.34 58.54 70.34 168.65 156.75 168.65 156.75 149.78 91.1 149.78 91.04 58.35"
+            ></polygon>
+            <polygon
+              class="cls-1"
+              points="99.08 123.39 156.75 123.39 156.75 104.51 99.07 104.37 99.08 123.39"
+            ></polygon>
+            <polygon
+              class="cls-1"
+              points="99.06 77.38 156.75 77.38 156.75 58.5 99.04 58.37 99.06 77.38"
+            ></polygon>
+          </g>
+        </g></svg
+      ><svg
+        version="1.1"
+        id="L2"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 100 100"
+        width="100"
+        height="100"
+        enable-background="new 0 0 100 100"
+        xml:space="preserve"
+        class="absolute"
+      >
+        <!-- <circle
+          fill="none"
+          stroke="#fff"
+          stroke-width="4"
+          stroke-miterlimit="10"
+          cx="50"
+          cy="50"
+          r="48"
+        ></circle> -->
+        <line
+          fill="none"
+          stroke-linecap="round"
+          stroke="#fff"
+          stroke-width="4"
+          stroke-miterlimit="10"
+          x1="50"
+          y1="50"
+          x2="85"
+          y2="50.5"
+        >
+          <animateTransform
+            attributeName="transform"
+            dur="10s"
+            type="rotate"
+            from="0 50 50"
+            to="360 50 50"
+            repeatCount="indefinite"
+          ></animateTransform>
+        </line>
+        <line
+          fill="none"
+          stroke-linecap="round"
+          stroke="#fff"
+          stroke-width="4"
+          stroke-miterlimit="10"
+          x1="50"
+          y1="50"
+          x2="49.5"
+          y2="74"
+        >
+          <animateTransform
+            attributeName="transform"
+            dur="15s"
+            type="rotate"
+            from="0 50 50"
+            to="360 50 50"
+            repeatCount="indefinite"
+          ></animateTransform>
+        </line>
+      </svg>
+    </div>
+    <div class="my-40">
+      <div class="flex flow-row">
+        <p class="code">CMS is unavailable.</p>
+        <div class="align-middle pt-2 ml-3">
+          It is most likely that an update is currently being applied.
+        </div>
+      </div>
+      <div class="details w-full text-sm text-center mt-8">
+        <p>This page will refresh when the service returns.</p>
+      </div>
+    </div>
+  </body>
+</html>

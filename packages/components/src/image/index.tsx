@@ -8,27 +8,23 @@
  */
 import React from 'react';
 
+import { Cloudinary } from '@cloudinary/url-gen';
 import {
-    Cloudinary
-} from "@cloudinary/url-gen";
-import {
-    AdvancedImage,
-    lazyload,
-    placeholder,
-    responsive,
+  AdvancedImage,
+  lazyload,
+  placeholder,
+  responsive,
 } from '@cloudinary/react';
-import {
-    Plugins
-} from '@cloudinary/html';
+import { Plugins } from '@cloudinary/html';
 
 // Cloudinary instance
 const cld = new Cloudinary({
-    cloud: {
-        cloudName: `engagement-lab-home`,
-    },
-    url: {
-        secure: true,
-    },
+  cloud: {
+    cloudName: `engagement-lab-home`,
+  },
+  url: {
+    secure: true,
+  },
 });
 
 /**
@@ -39,18 +35,20 @@ const cld = new Cloudinary({
  * @prop {string} [className] - The image element's optional class
  * @prop {string} [transforms] - The image's optional cloud transformations
  * @prop {number} [width] - The image's optional width
+ * @prop {number} [maxWidth] - The largest optional width for responsive steps
  * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
  * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
  */
 type ImageProps = {
-    alt: string,
-    id: string,
-    imgId: string,
-    className ? : string,
-    transforms ? : string,
-    width ? : number,
-    lazy ? : boolean,
-    aspectDefault ? : boolean,
+  alt: string;
+  id: string;
+  imgId: string;
+  className?: string;
+  transforms?: string;
+  width?: number;
+  maxWidth?: number;
+  lazy?: boolean;
+  aspectDefault?: boolean;
 };
 
 /**
@@ -61,83 +59,99 @@ type ImageProps = {
  * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
  */
 type ImageUrlProps = {
-    imgId: string,
-    width: number,
-    transforms ? : string,
-    aspectDefault ? : boolean,
+  imgId: string;
+  width: number;
+  transforms?: string;
+  aspectDefault?: boolean;
 };
 
 /**
  * Return a Cloudinary AdvancedImage component
  * @component
  * @returns {React.ReactElement} The image component
- * 
+ *
  * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
 const Image = ({
-        alt,
-        className,
-        id,
-        imgId,
-        transforms,
-        width,
-        lazy,
-        aspectDefault
-    }: ImageProps) => {
-        // Instantiate a CloudinaryImage object for the image with public ID;
-        const cloudImage = cld.image(`${imgId}`);
-        let plugins: Plugins = [responsive({
-            steps: [800, 1000, 1400, 1800, 2200]
-        })];
+  alt,
+  className,
+  id,
+  imgId,
+  transforms,
+  width,
+  maxWidth,
+  lazy,
+  aspectDefault,
+}: ImageProps) => {
+  // Instantiate a CloudinaryImage object for the image with public ID
+  const cloudImage = cld.image(`${imgId}`);
+  // If maxWidth is defined, ensure that the image steps don't exceed it
+  let plugins: Plugins = [
+    responsive({
+      steps: [800, 1000, 1400, 1800, 2200].filter((step) => {
+        return maxWidth ? step <= maxWidth : step;
+      }),
+    }),
+  ];
 
-        // Create image transforms
-        cloudImage.addTransformation(transforms || `f_auto,dpr_auto,c_crop,g_center${aspectDefault ? '' : ',ar_4:3'}`);
+  // Create image transforms;
+  // if maxWidth defined, ensure initial width is used
+  cloudImage.addTransformation(
+    transforms ||
+      `f_auto,dpr_auto${aspectDefault ? '' : ',ar_4:3'}${
+        maxWidth ? `,w_${maxWidth}` : ',c_crop,g_center'
+      }`
+  );
 
-        // If lazyload not set to false, enable
-        if (lazy === undefined)
-            plugins.push(
-                lazyload(),
-                placeholder({
-                    mode: 'blur'
-                })
-            );
+  // If lazyload not set to false, enable
+  if (lazy === undefined)
+    plugins.push(
+      lazyload(),
+      placeholder({
+        mode: 'blur',
+      })
+    );
 
-        return <AdvancedImage
-                id={id}
-                className={className}
-                cldImg={cloudImage}
-                alt={alt}
-                plugins={plugins}
-                style={{ maxWidth: width + `px` }}
-            />;
-}
+  return (
+    <AdvancedImage
+      id={id}
+      className={className}
+      cldImg={cloudImage}
+      alt={alt}
+      plugins={plugins}
+      style={{ maxWidth: width + `px` }}
+    />
+  );
+};
 
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL
- * 
+ *
  * @typedef {object} ImageUrlProps
  *
  * @extends {Component<Props>}
  */
 const ImageUrl = ({
-    imgId,
-    width,
-    transforms,
-    aspectDefault
+  imgId,
+  width,
+  transforms,
+  aspectDefault,
 }: ImageUrlProps) => {
-    // Instantiate a CloudinaryImage object for the image with public ID;
-    const cloudImage = cld.image(`${imgId}`);
+  // Instantiate a CloudinaryImage object for the image with public ID;
+  const cloudImage = cld.image(`${imgId}`);
 
-    // Create image transforms
-    cloudImage.addTransformation(transforms || `f_auto,dpr_auto,c_crop,g_center${aspectDefault ? '' : ',ar_4:3'},w_${width}`);
+  // Create image transforms
+  cloudImage.addTransformation(
+    transforms ||
+      `f_auto,dpr_auto,c_crop,g_center${
+        aspectDefault ? '' : ',ar_4:3'
+      },w_${width}`
+  );
 
-    return cloudImage.toURL();
-}
-
-export {
-    Image as
-    default, ImageUrl
+  return cloudImage.toURL();
 };
+
+export { Image as default, ImageUrl };

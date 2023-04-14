@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PageContainer } from '@keystone-6/core/admin-ui/components';
 
-import { Button, TextField, Switch } from '@mui/material';
+import { Button, TextField, Switch, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 
@@ -9,9 +9,11 @@ import axios from 'axios';
 
 import create from 'zustand';
 import React from 'react';
+import appConfigMap from '../../appConfig';
 
 type PageState = {
   confirmed: boolean;
+  dataError: boolean;
   waiting: boolean;
   done: boolean;
   actionsLink: string;
@@ -24,10 +26,14 @@ type PageState = {
   setNote: (content: string) => void;
 };
 export default function Deploy() {
+  const endpointPrefix =
+    window.location.protocol === 'https:' ? '/api' : 'http://localhost:8000';
+
   // Create store with Zustand
   const [useStore] = useState(() =>
     create<PageState>((set) => ({
       confirmed: false,
+      dataError: false,
       waiting: false,
       done: false,
       actionsLink: '',
@@ -67,22 +73,47 @@ export default function Deploy() {
   const toggleDone = useStore((state) => state.toggleDone);
   const setActionsLink = useStore((state) => state.setActionsLink);
   const setNote = useStore((state) => state.setNote);
-  const confirmed = useStore((state) => state.confirmed);
-  const waiting = useStore((state) => state.waiting);
-  const done = useStore((state) => state.done);
-  const actionsLink = useStore((state) => state.actionsLink);
-  const noteContent = useStore((state) => state.noteContent);
-  const noteCount = useStore((state) => state.noteCount);
 
+  const {
+    confirmed,
+    dataError,
+    waiting,
+    done,
+    actionsLink,
+    noteContent,
+    noteCount,
+  } = useStore((state) => state);
   const deployFetch = async () => {
     toggleWaiting();
-    const response = await axios.get(`/cms/prod-deploy/?note=${noteContent}`, {
-      withCredentials: true,
-    });
-    setActionsLink(
-      `https://github.com/engagementlab/${response.data.repo}/actions/runs/${response.data.id}?check_suite_focus=true`
-    );
-    toggleDone();
+    // app name is derived from first pathname string
+    const app =
+      window.location.protocol === 'https:'
+        ? window.location.pathname.replace('/', '').split('/')[0]
+        : 'sjm';
+    try {
+      const response = await axios.post(
+        `${endpointPrefix}/prod-deploy`,
+        {
+          app,
+          storageAccount: appConfigMap[app].storageAccount,
+          apexUrl: appConfigMap[app].apexUrl,
+          note: noteContent,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setActionsLink(
+        `https://github.com/engagementlab/${response.data.repo}/actions/runs/${response.data.id}?check_suite_focus=true`
+      );
+      toggleDone();
+    } catch (err) {
+      useStore.setState({
+        dataError: true,
+      });
+      toggleConfirm();
+      toggleWaiting();
+    }
   };
 
   return (
@@ -120,6 +151,7 @@ export default function Deploy() {
           </p>
           <Switch
             defaultChecked={false}
+            value={confirmed}
             onClick={() => {
               toggleConfirm();
             }}
@@ -174,6 +206,11 @@ export default function Deploy() {
             >
               Deploy
             </LoadingButton>
+          )}
+          {dataError && (
+            <Alert severity="error">
+              Something went wrong. Please refresh this page and try again.
+            </Alert>
           )}
         </>
       )}

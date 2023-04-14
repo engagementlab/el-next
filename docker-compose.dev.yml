@@ -1,0 +1,133 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.9
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./proxy/traefik.dev.yml:/traefik.yml
+    labels:
+      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+      - "traefik.http.routers.dashboard.service=api@internal"
+
+  cms-landing:
+    image: ghcr.io/patrickdappollonio/docker-http-server:v2
+    command: --path /html --title "ELab CMS Directory"
+    volumes:
+      - ./_site/index.html:/html/index.html
+    labels:
+      traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
+      traefik.http.routers.cms-landing.entrypoints: web
+
+  # devapi:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: api
+  #   env_file:
+  #     - ./apps/api/.env
+  #   environment:
+  #     - PORT=8000
+  #     - ENV=development
+  #   labels:
+  #     - "traefik.http.routers.devapi.rule=PathPrefix(`/devapi`)"
+  #     - "traefik.http.routers.devapi.entrypoints=web"
+  #     - "traefik.http.routers.devapi.service=api-el-next"
+  #     - "traefik.http.services.api-el-next.loadbalancer.server.port=8000"
+  #     - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/devapi"
+  #     - "traefik.http.routers.devapi.middlewares=api-stripprefix"
+
+  # catch-all:
+  #   image: ghcr.io/patrickdappollonio/docker-http-server:v2
+  #   command: --path /html --title "ELab CMS Directory"
+  #   volumes:
+  #     - ./_site:/html
+  #   labels:
+  #     traefik.http.services.catch-all.loadbalancer.server.port: 80
+  #     traefik.http.routers.error-router.rule: HostRegexp(`{host:.+}`)
+  #     traefik.http.routers.error-router.priority: 1
+  #     traefik.http.routers.error-router.entrypoints: web
+  #     # traefik.http.routers.error-router.middlewares: catch-all-middleware
+  #     # traefik.http.middlewares.catch-all-middleware.errors.status: 400-599
+  #     # traefik.http.middlewares.catch-all-middleware.errors.service: catch-all
+  #     # traefik.http.middlewares.catch-all-middleware.errors.query: /500.html
+
+  error-pages:
+    image: ghcr.io/patrickdappollonio/docker-http-server:v2
+    command: --path /html
+    volumes:
+      - ./_site:/html
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.error-pages.loadbalancer.server.port: 5000
+      traefik.http.routers.error-pages.entrypoints: web
+      traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.dev.local`)
+      traefik.http.routers.error-pages.priority: 1
+      traefik.http.middlewares.error-pages.errors.status: 500-599
+      traefik.http.middlewares.error-pages.errors.service: error-pages
+      traefik.http.middlewares.error-pages.errors.query: /error.html
+
+  cms-tngvi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cms-runner
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - APP_NAME=tngvi
+      - PORT=3000
+    labels:
+      - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
+      - "traefik.http.routers.cms-tngvi.entrypoints=web"
+      - "traefik.http.routers.cms-tngvi.service=cms-tngvi-transform-narratives"
+      - "traefik.http.routers.cms-tngvi.middlewares=error-pages"
+      # cms-sjm:
+      #   hostname: cms-sjm
+      #   ports:
+      #     - "3001:3001"
+      #   build:
+      #     context: .
+      #     dockerfile: Dockerfile
+      #     target: cms-runner
+      #   env_file:
+      #     - ./apps/cms/.env
+      #   environment:
+      #     - APP_NAME=sjm
+      #     - PORT=3001
+      #   labels:
+      #     - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
+      #     - "traefik.http.routers.cms-sjm.entrypoints=web"
+      #     - "traefik.http.routers.cms-sjm.service=cms-sjm-transform-narratives"
+
+      # qa-tngvi:
+      #   build:
+      #     context: .
+      #     dockerfile: Dockerfile
+      #     target: qa-image
+      #     args:
+      #       APP: tngvi
+      #       CMS_ENDPOINT: cms-tngvi:3000
+      #   labels:
+      #     - "traefik.http.routers.qa-tngvi.entrypoints=web"
+      #     - "traefik.http.routers.qa-tngvi.service=qa-tngvi-transform-narratives"
+      #     - "traefik.http.services.qa-tngvi-transform-narratives.loadbalancer.server.port=8081"
+      # qa-sjm:
+      #   build:
+      #     context: .
+      #     dockerfile: Dockerfile
+      #     target: qa-image
+      #     args:
+      #       APP: sjm
+      #       PORT: 8082
+      #   environment:
+      #     WAIT_HOSTS: cms-sjm:3001
+      #   labels:
+      #     - "traefik.http.routers.qa-sjm.entrypoints=web"
+      #     - "traefik.http.routers.qa-sjm.service=qa-sjm-transform-narratives"
+      #     - "traefik.http.services.qa-sjm-transform-narratives.loadbalancer.server.port=8082"

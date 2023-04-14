@@ -1,27 +1,25 @@
 #!/bin/bash
 
-# Source/load nvm
-[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh;
+cd /srv/apps/el-next/
+git pull
 
-nvm use;
-yarn;
+# Pull swarm down
+docker compose down
 
-cd apps/cms;
-yarn;
-yarn export;
+# Remove exited containers
+docker ps -a -q -f status=exited | xargs --no-run-if-empty docker rm -v
 
-# pm2 restart 'cms-tngvi'; 
-# pm2 restart 'cms-sjm'; 
+# Remove dangling images
+docker images -f "dangling=true" -q | xargs --no-run-if-empty docker rmi
 
-cd ../tngvi;
-nvm use;
-yarn;
-yarn build;
+# Remove unused images
+docker images | awk '/ago/  { print $3}' | xargs --no-run-if-empty docker rmi
 
-cd ../sjm;
-nvm use;
-yarn;
-yarn build;
+# Remove dangling volumes
+docker volume ls -qf dangling=true | xargs --no-run-if-empty docker volume rm
 
-pm2 restart 'app-tngvi'; 
-pm2 restart 'app-sjm'; 
+# Traefik will complain about permissions on this otherwise...
+chmod 600 proxy/acme.json
+
+# Build image and daemonize services
+DOCKER_BUILDKIT=1 docker compose up -d

@@ -9,21 +9,22 @@ import yargs from 'yargs/yargs';
 
 import 'dotenv/config';
 import e from 'express';
-import session from 'express-session';
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { tngvi, sjm, elab } from './admin/schema';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 import cors from 'cors';
 
-type appConfigType = {
-  [key: string]: {
-    schema: object;
-    storageAccount: string;
-    apexUrl: string;
-  };
+import { tngvi, sjm, elab } from './admin/schema';
+
+type schemaIndexType = {
+  [key: string]: object;
+};
+const schemaMap: schemaIndexType = {
+  elab: elab,
+  tngvi: tngvi,
+  sjm: sjm,
 };
 
 const argv: any = yargs(process.argv.slice(2)).options({
@@ -34,20 +35,6 @@ const argv: any = yargs(process.argv.slice(2)).options({
     type: 'number',
   },
 }).argv;
-
-const appConfigMap: appConfigType = {
-  tngvi: {
-    schema: tngvi,
-    storageAccount: 'tngvi',
-    apexUrl: 'transformnarratives.org',
-  },
-  sjm: {
-    schema: sjm,
-    storageAccount: 'sjmsymposium',
-    apexUrl: 'sjmsymposium.org',
-  },
-  elab: { schema: elab, storageAccount: 'elabhome', apexUrl: '' },
-};
 
 const multer = require('multer');
 const upload = multer({
@@ -64,17 +51,18 @@ cloudinary.config({
   secure: true,
 });
 
-const passport = require('passport');
-const AuthStrategy = require('passport-google-oauth20').Strategy;
-const MongoStore = require('connect-mongo')(session);
-const DB = require('./db');
-
-let appName: string = argv.app;
-if (process.env.APP) {
-  appName = process.env.APP;
+let appName: string = '';
+// --app takes precedence over environment variables
+if (argv.app) appName = argv.app;
+else {
+  if (process.env.APP_NAME) appName = process.env.APP_NAME;
+  else if (process.env.APP) appName = process.env.APP;
 }
+
 if (appName === undefined || appName.length === 0)
-  throw new Error('--app argument must be specified');
+  throw new Error(
+    '--app argument or "APP" / "APP_NAME" env var must be specified'
+  );
 
 console.log('Found app name: ' + appName);
 
@@ -84,18 +72,6 @@ declare module 'express-serve-static-core' {
   }
 }
 
-declare module 'express-session' {
-  export interface SessionData {
-    redirectTo: string;
-    save: any;
-    passport: {
-      redirectTo: string;
-      user: {
-        [key: string]: any;
-      };
-    };
-  }
-}
 const devMode = process.env.NODE_ENV === 'development';
 
 // Fallback
@@ -111,70 +87,6 @@ if (process.env.DB_URI) {
     }`,
   };
 }
-
-const Passport = () => {
-  let callbackURL = `http://localhost:${port}/cms/callback`;
-
-  if (process.env.PRODUCTION_MODE === 'true')
-    callbackURL = `https://cms.elab.emerson.edu/${appName}/callback`;
-
-  const strategy = new AuthStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL,
-    },
-    (
-      request: any,
-      _accessToken: any,
-      refreshToken: any,
-      profile: any,
-      done: any
-    ) => {
-      // Verify user allowed
-      const email = profile.emails[0].value;
-
-      try {
-        DB().userModel.findOne(
-          {
-            email,
-          },
-          (err: any, user: any) => {
-            if (err) {
-              console.error(`Login error: ${err}`);
-              return done(err);
-            }
-            if (!user) {
-              console.error(
-                `Login error: user not found for email ${profile.emails[0].value}`
-              );
-              return done(err);
-            }
-            return done(err, user);
-          }
-        );
-      } catch (err) {
-        throw new Error(err as string);
-      }
-    }
-  );
-  /**
-   * Google oauth2/passport config
-   */
-  passport.serializeUser((user: any, done: (arg0: null, arg1: any) => void) => {
-    // console.log('user', user);
-    done(null, user);
-  });
-  passport.deserializeUser(
-    (user: any, done: (arg0: null, arg1: any) => void) => {
-      done(null, user);
-    }
-  );
-
-  passport.use(strategy);
-
-  return passport;
-};
 
 let ksConfig = (lists: any) => {
   return {
@@ -211,239 +123,20 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        app.use('/cms/rest', async (req, res, next) => {
-          (req as any).context = await createContext(req, res);
-          next();
-        });
-
-        app.get('/cms/rest/news/:key?', getNews);
-
-        app.get('/cms/media/videos', async (req, res, next) => {
-          try {
-            let videoData: {
-              label: any;
-              value: any;
-              thumb: any;
-              thumbSm: any;
-            }[] = [];
-            const getData = async (
-              apiPath: string = '/channels/1773240/videos?per_page=100'
-            ) => {
-              const response = await axios.get(
-                `https://api.vimeo.com${apiPath}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
-                  },
-                }
-              );
-              const resData = response.data;
-              let m = _.map(
-                resData.data,
-                (val: {
-                  name: any;
-                  player_embed_url: any;
-                  pictures: { sizes: string | any[] };
-                }) => {
-                  return {
-                    label: val.name,
-                    value: val.player_embed_url,
-                    thumb:
-                      val.pictures.sizes[val.pictures.sizes.length - 1].link,
-                    thumbSm: val.pictures.sizes[1].link,
-                  };
-                }
-              );
-              videoData = videoData.concat(videoData, m);
-
-              if (resData.paging.next) getData(resData.paging.next);
-              else {
-                res.status(200).send(videoData);
-              }
-            };
-            getData();
-          } catch (err: any) {
-            res.status(500).send(err.message);
+        app.use(
+          `/${process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''}rest`,
+          async (req, res, next) => {
+            (req as any).context = await createContext(req, res);
+            next();
           }
-        });
+        );
 
-        app.get('/cms/media/get/:type', async (req, res) => {
-          try {
-            cloudinary.api.sub_folders(
-              appName || 'tngvi',
-              { max_results: 100 },
-              (e, foldersResponse) => {
-                cloudinary.api.resources(
-                  {
-                    prefix: appName || 'tngvi',
-                    resource_type: 'image',
-                    type: req.params.type,
-                    max_results: 500,
-                  },
-                  (e, response) => {
-                    const sorted = response.resources.sort(
-                      (
-                        a: {
-                          created_at: number;
-                        },
-                        b: {
-                          created_at: number;
-                        }
-                      ) => {
-                        return (
-                          new Date(b.created_at).getTime() -
-                          new Date(a.created_at).getTime()
-                        );
-                      }
-                    );
-
-                    res.status(200).send({
-                      folders: foldersResponse.folders,
-                      imgs: sorted,
-                    });
-                  }
-                );
-              }
-            );
-          } catch (err: any) {
-            res.status(500).send(err);
-          }
-        });
-
-        app.get('/cms/media/delete', async (req, res) => {
-          try {
-            cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
-              res.status(200).send(response)
-            );
-          } catch (err: any) {
-            res.status(500).send(err);
-          }
-        });
-
-        app.post('/cms/media/upload', upload.none(), async (req, res) => {
-          try {
-            const response = await cloudinary.uploader.upload(req.body.img, {
-              folder: appName || 'tngvi',
-            });
-            res.status(200).send(response);
-          } catch (err: any) {
-            console.error(err);
-            res.status(500).send(err);
-          }
-        });
-
-        if (process.env.ENABLE_AUTH === 'true') {
-          let p = Passport();
-          // Session store (mongostore for prod)
-          if (process.env.NODE_ENV === 'development') {
-            app.use(
-              session({
-                secret: process.env.SESSION_COOKIE || 'just-dev',
-                resave: true,
-                saveUninitialized: true,
-              })
-            );
-          } else {
-            const mongooseConnection = DB().connection;
-            if (!process.env.SESSION_COOKIE) {
-              throw new Error('Need SESSION_COOKIE in .env!');
-            }
-            app.use(
-              session({
-                saveUninitialized: false,
-                resave: false,
-                secret: process.env.SESSION_COOKIE,
-                store: new MongoStore({
-                  mongooseConnection,
-                }),
-              })
-            );
-          }
-          app.get(
-            `/${appName}/login`,
-            p.authenticate('google', {
-              scope: ['openid', 'email'],
-              session: true,
-            })
-          );
-
-          app.get(`/${appName}/callback`, (req, res, next) => {
-            try {
-              p.authenticate(
-                'google',
-                (
-                  error: any,
-                  user: {
-                    permissions: any;
-                  },
-                  info: any
-                ) => {
-                  if (!user) return;
-
-                  // Log user in
-                  req.logIn(user, (logInErr: any) => {
-                    if (logInErr) {
-                      res.status(500).send(logInErr);
-                      return logInErr;
-                    }
-
-                    // Explicitly save the session before redirecting!
-                    req.session.save(() => {
-                      res.redirect(req.session.redirectTo || '/');
-                    });
-                    return null;
-                  });
-                }
-              )(req, res);
-            } catch (e: any) {
-              if (e) throw new Error(e);
-            }
-          });
-
-          app.use(p.initialize());
-          app.use(p.session());
-          app.use((req, res, next) => {
-            // Ignore API paths
-            if (
-              req.path.indexOf('/api') !== -1 ||
-              req.path.indexOf('/_next') !== -1
-            )
-              next();
-            else if (!req.session.passport || !req.session.passport.user) {
-              // console.log(req.session.redirectTo);
-              // Cache URL to bring user to after auth
-              req.session.redirectTo = req.originalUrl;
-              // if (req.session.redirectTo) res.redirect(req.session.redirectTo);
-              // else {
-              res.redirect(`/${appName}/login`);
-              // }
-            } else if (
-              req.session.passport &&
-              req.session.passport.user.isAdmin
-            )
-              next();
-          });
-        }
-
-        app.get('/prod-deploy/:note?', async (req, res, next) => {
-          try {
-            const response = await axios.post(
-              process.env.DEPLOY_API_PATH as string,
-              {
-                repo: 'el-next',
-                appName,
-                storageAccount: appConfigMap[appName].storageAccount,
-                apexUrl: appConfigMap[appName].apexUrl,
-                userName: req.session.passport?.user.name.split(' ')[0],
-                note: req.query.note,
-              }
-            );
-
-            res.status(200).send(response.data);
-          } catch (err: any) {
-            res.status(500).send(err.message);
-          }
-        });
+        app.get(
+          `/${
+            process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
+          }rest/news/:key?`,
+          getNews
+        );
       },
     },
     ui: {},
@@ -456,7 +149,7 @@ let ksConfig = (lists: any) => {
 };
 
 export default (() => {
-  let config = ksConfig(appConfigMap[appName].schema);
+  let config = ksConfig(schemaMap[appName]);
 
   if (process.env.PRODUCTION_MODE === 'true')
     config.ui = {

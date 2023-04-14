@@ -29,15 +29,15 @@ var DocRenderers = function DocRenderers(styles) {
           var children = _ref2.children,
               href = _ref2.href;
           var label = children.at(0).props.node.text;
-          var fixedHref = ''; // Is href missing scheme and is not mailto?
+          var fixedHref = ''; // Is href missing scheme and is not mailto or jumping anchor link?
 
-          var hrefNoScheme = href.indexOf('mailto:') === -1 && href.search(/https:\/\/|http:\/\//gm) === -1;
-          fixedHref = hrefNoScheme ? "https://".concat(href) : href;
-          fixedHref = fixedHref.replace('qa.', ''); // text-purple border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)]
+          var hrefNoScheme = href.indexOf('mailto:') === -1 && href.indexOf('#') === -1 && href.search(/https:\/\/|http:\/\//gm) === -1;
+          fixedHref = hrefNoScheme ? "https://".concat(href) : href; // Ensure that QA links don't show in production
 
+          fixedHref = fixedHref.replace('qa.', '');
           return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.link ? renderOverrides.link(children, fixedHref) : /*#__PURE__*/jsxRuntime.jsx("a", {
             href: fixedHref,
-            target: "_blank",
+            target: href.indexOf('#') === 0 ? '_self' : '_blank',
             className: "no-underline border-b-2 transition-all ".concat(styles && styles.linkClass),
             children: label
           });

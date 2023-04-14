@@ -63,6 +63,11 @@ var BlockRenderers = function BlockRenderers(styles) {
           })
         });
       },
+      pageAnchor: function pageAnchor(props) {
+        return /*#__PURE__*/jsxRuntime.jsx("span", {
+          id: props.anchorId.props.node.children[0].text
+        });
+      },
       associatedPeople: function associatedPeople(props) {
         return peopleOveride ? peopleOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
           style: {

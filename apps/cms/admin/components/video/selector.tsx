@@ -72,6 +72,24 @@ type VideoGridState = {
   setGridOpen: (open: boolean) => void;
 };
 
+const TailwindCdnScript = () => {
+  return (
+    <>
+      <Script src="https://cdn.tailwindcss.com/3.3.0" />
+      <Script>
+        {`
+              if(tailwind) {
+                tailwind.config = {
+                  corePlugins: {
+                    preflight: false,
+                  },        
+                }
+              }`}
+      </Script>
+    </>
+  );
+};
+
 const VideoSelector = ({
   videos,
   video,
@@ -154,17 +172,7 @@ const VideoSelector = ({
   const dataLength = Math.floor(data.length / 12) + 1;
   return (
     <>
-      <Script src="https://cdn.tailwindcss.com/3.3.0" />
-      <Script>
-        {`
-        if(tailwind) {
-          tailwind.config = {
-              corePlugins: {
-                preflight: false,
-              },        
-          }
-        }`}
-      </Script>
+      <TailwindCdnScript />
       <Modal
         open={open}
         onClose={() => {

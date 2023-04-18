@@ -1,6 +1,6 @@
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022
+ * Developed by Engagement Lab, 2022-2023
  *
  * @author Johnny Richardson
  * KeystoneJS document field block renderers
@@ -14,12 +14,18 @@ import Image from '../image';
 import { Video } from '../video';
 
 /**
- * Create function that returns custom block rendrers used by Keystone
+ * Create function that returns custom block renderers used by Keystone
  * @function
- * @param {object} [styles] - optional app-globalized style classes to all blocks
+ * @param {string} [styles] - optional app-globalized tailwindcss classes to all blocks
  * @returns {function}
+ * @see https://keystonejs.com/docs/guides/document-fields#component-blocks
  */
 export const BlockRenderers = (styles?: { buttonClass?: string }) => {
+  /**
+   * @function
+   * @param {JSX.Element} [imageOveride] - optional app-globalized tailwindcss classes to all blocks
+   * @returns {function}
+   */
   return (
     imageOveride?: { (props: any): JSX.Element },
     peopleOveride?: { (peopleProps: any): JSX.Element }

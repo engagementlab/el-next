@@ -1,46 +1,69 @@
 /// <reference types="react" />
-/**
- * @typedef ImageProps
- * @prop {string} alt - The image's alt text
- * @prop {string} id - The image's ID attribute
- * @prop {string} imgId - The image's cloud public id attribute
- * @prop {string} [className] - The image element's optional class
- * @prop {string} [transforms] - The image's optional cloud transformations
- * @prop {number} [width] - The image's optional width
- * @prop {number} [maxWidth] - The largest optional width for responsive steps
- * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
- * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
- */
-declare type ImageProps = {
+interface ImageProps {
+    /**
+     * The image's ID attribute
+     */
     alt: string;
+    /**
+     * The image's alt text
+     */
     id: string;
+    /**
+     * The image's cloud public id attribute
+     */
     imgId: string;
+    /**
+     * The image element's optional class
+     */
     className?: string;
+    /**
+     * The image's optional cloud transformations
+     * @defaultValue "f_auto,dpr_auto,ar_4:3,c_crop,g_center"
+     * - 'c_crop,g_center' are omitted if maxWidth defined
+     */
     transforms?: string;
+    /**
+     * The image's optional width
+     */
     width?: number;
+    /**
+     *  The largest optional width for responsive steps
+     */
     maxWidth?: number;
+    /**
+     * @defaultValue true
+     *  - If set to false, the image will not be lazily-loaded
+     */
     lazy?: boolean;
+    /**
+     * @defaultValue true
+     * - If set to false, the image will not use a 4:3 aspect ratio
+     */
     aspectDefault?: boolean;
-};
-/**
- * @typedef ImageUrlProps
- * @prop {string} imgId - The image's cloud public id attribute
- * @prop {number} width - The image's width
- * @prop {string} [transforms] - The image's optional cloud transformations
- * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
- */
-declare type ImageUrlProps = {
+}
+interface ImageUrlProps {
+    /**
+     * The image's cloud public id attribute
+     */
     imgId: string;
+    /**
+     * The image's width
+     */
     width: number;
+    /**
+     * The image's optional cloud transformations
+     * @defaultValue "f_auto,dpr_auto,c_crop,g_center,ar_4:3"
+     */
     transforms?: string;
+    /**
+     * @defaultValue true
+     * - If set to false, the image will not use a 4:3 aspect ratio
+     */
     aspectDefault?: boolean;
-};
+}
 /**
  * Return a Cloudinary AdvancedImage component
- * @component
  * @returns {React.ReactElement} The image component
- *
- * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
@@ -50,6 +73,7 @@ declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, 
  * @returns {string} The image URL
  *
  * @typedef {object} ImageUrlProps
+ * @
  *
  * @extends {Component<Props>}
  */

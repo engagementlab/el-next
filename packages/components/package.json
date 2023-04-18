@@ -11,8 +11,10 @@
     "@cloudinary/react": "^1.1.0",
     "@cloudinary/url-gen": "^1.6.0",
     "@keystone-6/fields-document": "^3.0.0",
+    "@types/node": "18.15.11",
     "framer-motion": "^7.2.0",
     "next": "^12.1.6",
+    "typedoc-plugin-missing-exports": "^2.0.0",
     "zustand": "3.7.1"
   },
   "peerDependencies": {
@@ -38,5 +40,8 @@
       "layout/index.tsx",
       "video/index.tsx"
     ]
+  },
+  "devDependencies": {
+    "typedoc": "^0.24.1"
   }
 }

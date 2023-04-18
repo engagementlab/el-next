@@ -11,8 +11,7 @@ import React from 'react';
 
 import { DocumentRendererProps } from '@keystone-6/document-renderer';
 
-import { FlexLayout } from '@el-next/components/flexLayout';
-import { HeadingStyle } from '@el-next/components/headingStyle';
+import { FlexLayout, HeadingStyle } from '@el-next/components';
 
 /**
  * Create function that return doc rendrers used by Keystone
@@ -21,6 +20,9 @@ import { HeadingStyle } from '@el-next/components/headingStyle';
  * @returns {function}
  */
 export const DocRenderers = (styles?: { linkClass?: string }) => {
+  /**
+   * @see https://keystonejs.com/docs/guides/document-fields#overriding-the-default-renderers
+   */
   return (renderOverrides?: {
     heading?: Function;
     layout?: Function;

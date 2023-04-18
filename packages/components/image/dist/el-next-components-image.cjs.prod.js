@@ -24,25 +24,10 @@ var cld = new urlGen.Cloudinary({
     secure: true
   }
 });
-/**
- * @typedef ImageProps
- * @prop {string} alt - The image's alt text
- * @prop {string} id - The image's ID attribute
- * @prop {string} imgId - The image's cloud public id attribute
- * @prop {string} [className] - The image element's optional class
- * @prop {string} [transforms] - The image's optional cloud transformations
- * @prop {number} [width] - The image's optional width
- * @prop {number} [maxWidth] - The largest optional width for responsive steps
- * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
- * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
- */
 
 /**
  * Return a Cloudinary AdvancedImage component
- * @component
  * @returns {React.ReactElement} The image component
- *
- * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
@@ -87,6 +72,7 @@ var Image = function Image(_ref) {
  * @returns {string} The image URL
  *
  * @typedef {object} ImageUrlProps
+ * @
  *
  * @extends {Component<Props>}
  */

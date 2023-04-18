@@ -19,13 +19,18 @@ var Link__default = /*#__PURE__*/_interopDefault(Link);
 
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022
+ * Developed by Engagement Lab, 2022-2023
  *
  * @author Johnny Richardson
  * KeystoneJS document field block renderers
  * ==========
  */
 var BlockRenderers = function BlockRenderers(styles) {
+  /**
+   * @function
+   * @param {JSX.Element} [imageOveride] - optional app-globalized tailwindcss classes to all blocks
+   * @returns {function}
+   */
   return function (imageOveride, peopleOveride) {
     var blocks = {
       image: function image(props) {

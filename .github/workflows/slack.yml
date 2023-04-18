@@ -40,7 +40,7 @@ jobs:
       - name: Send Slack message with user note on success
         id: slack-with-user-note
         uses: slackapi/slack-github-action@v1.23.0
-        if: ${{ inputs.success && inputs.note != 'null' }}
+        if: ${{ inputs.success && inputs.note != 'null' && inputs.note != '__' }}
         with:
           payload: |
             {

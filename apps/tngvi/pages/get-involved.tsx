@@ -160,10 +160,14 @@ export default function GetInvolved() {
                             aria-hidden="true"
                             className="hidden"
                           />
-                          <button type="submit" aria-label="Subscribe">
+                          <button
+                            type="submit"
+                            aria-label="Subscribe"
+                            className="group"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
+                              className="h-6 w-6 group-hover:translate-x-1 transition-transform"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="#026670"

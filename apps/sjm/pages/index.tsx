@@ -20,7 +20,7 @@ const rendererOverrides = {
     const customRenderers = {
       3: 'text-4xl font-medium tracking-wider my-4',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
   layout: (layout: any, children: any) => {
     const flexClass = 'flex gap-y-5 flex-col xl:flex-row justify-between';

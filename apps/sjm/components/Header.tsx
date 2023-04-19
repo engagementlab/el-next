@@ -5,7 +5,7 @@ import _ from 'lodash';
 import create from 'zustand';
 import { useEffect } from 'react';
 
-import Image from '@el-next/components/image';
+import { Image } from '@el-next/components';
 
 interface NavLink {
   label: string;

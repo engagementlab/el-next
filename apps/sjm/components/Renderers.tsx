@@ -1,7 +1,7 @@
 import { BlockRenderers } from '@el-next/components/blockRenderers';
 import { DocRenderers } from '@el-next/components/docRenderers';
 
-import Image from '@el-next/components/image';
+import { Image } from '@el-next/components';
 
 const Blocks: any = BlockRenderers({
   buttonClass:
@@ -12,7 +12,7 @@ const Doc: any = DocRenderers({
   linkClass: 'border-b-white hover:border-b-4',
 });
 
-const ImageOverride: any = (width: number) => { 
+const ImageOverride: any = (width: number) => {
   return (props: any) => {
     return (
       <Image
@@ -23,7 +23,7 @@ const ImageOverride: any = (width: number) => {
         className={`max-w-[${width}px] mb-5 md:mb-0`}
       />
     );
-  }
+  };
 };
 
-export { Blocks, Doc, ImageOverride, };
+export { Blocks, Doc, ImageOverride };

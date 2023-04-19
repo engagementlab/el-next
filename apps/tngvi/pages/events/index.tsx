@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import query from '../../../../apollo-client';
 
-import Image from '@el-next/components/image';
+import { Image } from '@el-next/components';
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 

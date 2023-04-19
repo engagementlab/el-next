@@ -39,7 +39,7 @@ import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import FolderIcon from '@mui/icons-material/Folder';
 import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
 
-import Image from '@el-next/components/image';
+import { Image } from '@el-next/components';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

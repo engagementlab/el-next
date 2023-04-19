@@ -14,7 +14,8 @@ var video_dist_elNextComponentsVideo = require('../video/dist/el-next-components
 require('react');
 require('next/link');
 require('react/jsx-runtime');
-require('@el-next/components');
+require('@el-next/components/flexLayout');
+require('@el-next/components/headingStyle');
 require('./unsupportedIterableToArray-7cc9ff15.cjs.dev.js');
 require('zustand');
 require('zustand/middleware');

@@ -3,7 +3,8 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 require('react');
-var components = require('@el-next/components');
+var flexLayout = require('@el-next/components/flexLayout');
+var headingStyle = require('@el-next/components/headingStyle');
 var jsxRuntime = require('react/jsx-runtime');
 
 /**
@@ -50,12 +51,15 @@ var DocRenderers = function DocRenderers(styles) {
           var level = _ref3.level,
               children = _ref3.children,
               textAlign = _ref3.textAlign;
-          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.heading ? renderOverrides.heading(level, children, textAlign) : components.HeadingStyle(level, children, textAlign);
+          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.heading ? renderOverrides.heading(level, children, textAlign) : headingStyle.HeadingStyle(level, children, textAlign);
         },
         layout: function layout(_ref4) {
           var _layout = _ref4.layout,
               children = _ref4.children;
-          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.layout ? renderOverrides.layout(_layout, children) : components.FlexLayout(_layout, children);
+          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.layout ? renderOverrides.layout(_layout, children) : flexLayout.FlexLayout({
+            layout: _layout,
+            children: children
+          });
         }
       }
     };

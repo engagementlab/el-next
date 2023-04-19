@@ -1,6 +1,8 @@
 export { BlockRenderers } from './blockRenderers';
 export { Button } from './button';
+export { DateFormat } from './dateFormat';
 export { DocRenderers } from './docRenderers';
+export { ExternalLink } from './externalLink';
 export { Favicon } from './favicon';
 export { default as Filtering } from './filtering';
 export { FlexLayout } from './flexLayout';

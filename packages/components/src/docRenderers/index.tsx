@@ -11,7 +11,8 @@ import React from 'react';
 
 import { DocumentRendererProps } from '@keystone-6/document-renderer';
 
-import { FlexLayout, HeadingStyle } from '@el-next/components';
+import { FlexLayout } from '@el-next/components/flexLayout';
+import { HeadingStyle } from '@el-next/components/headingStyle';
 
 /**
  * Create function that return doc rendrers used by Keystone
@@ -71,12 +72,12 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
         heading: ({ level, children, textAlign }) => {
           return renderOverrides?.heading
             ? renderOverrides.heading(level, children, textAlign)
-            : HeadingStyle(level, children, textAlign);
+            : HeadingStyle({ level, children, textAlign });
         },
         layout: ({ layout, children }) => {
           return renderOverrides?.layout
             ? renderOverrides.layout(layout, children)
-            : FlexLayout(layout, children);
+            : FlexLayout({ layout, children });
         },
       },
     };

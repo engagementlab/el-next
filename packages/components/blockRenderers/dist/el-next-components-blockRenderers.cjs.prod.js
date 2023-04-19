@@ -20,7 +20,7 @@ var Link__default = /*#__PURE__*/_interopDefault(Link);
 /**
  * Engagement Lab 'Next' shared component library
  * Developed by Engagement Lab, 2022-2023
- *
+ * @packageDocumentation
  * @author Johnny Richardson
  * KeystoneJS document field block renderers
  * ==========

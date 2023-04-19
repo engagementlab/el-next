@@ -1,7 +1,8 @@
 /// <reference types="react" />
-declare type Props = {
+interface ExternalLinkProps {
     href: string;
     label: string;
-};
-export declare const ExternalLink: ({ href, label }: Props) => JSX.Element;
+    customClass?: string;
+}
+export declare const ExternalLink: ({ href, label, customClass, }: ExternalLinkProps) => JSX.Element;
 export {};

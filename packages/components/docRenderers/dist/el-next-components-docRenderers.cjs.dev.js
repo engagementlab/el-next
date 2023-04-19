@@ -51,7 +51,11 @@ var DocRenderers = function DocRenderers(styles) {
           var level = _ref3.level,
               children = _ref3.children,
               textAlign = _ref3.textAlign;
-          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.heading ? renderOverrides.heading(level, children, textAlign) : headingStyle.HeadingStyle(level, children, textAlign);
+          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.heading ? renderOverrides.heading(level, children, textAlign) : headingStyle.HeadingStyle({
+            level: level,
+            children: children,
+            textAlign: textAlign
+          });
         },
         layout: function layout(_ref4) {
           var _layout = _ref4.layout,

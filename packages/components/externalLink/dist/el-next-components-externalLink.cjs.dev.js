@@ -14,6 +14,11 @@ var jsxRuntime = require('react/jsx-runtime');
  * External link renderer
  * ==========
  */
+
+/**
+ * Return a link with "external" SVG icon
+ * @returns {JSX.Element} Element
+ */
 var ExternalLink = function ExternalLink(_ref) {
   var href = _ref.href,
       label = _ref.label,

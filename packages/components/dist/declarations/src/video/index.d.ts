@@ -1,8 +1,8 @@
 /// <reference types="react" />
-declare type VideoProps = {
+interface VideoProps {
     thumbUrl: string;
     videoUrl: string;
     videoLabel: string;
-};
-export declare const Video: ({ thumbUrl, videoUrl, videoLabel, }: VideoProps) => JSX.Element;
+}
+export declare const Video: ({ thumbUrl, videoUrl, videoLabel }: VideoProps) => JSX.Element;
 export {};

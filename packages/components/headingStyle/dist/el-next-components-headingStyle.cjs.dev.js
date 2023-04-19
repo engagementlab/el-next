@@ -21,6 +21,11 @@ var jsxRuntime = require('react/jsx-runtime');
  * @see https://keystonejs.com/docs/guides/document-fields#overriding-the-default-renderers
  * @remarks
  * This is a renderer component that overrides Keystone's default document header styles with our default one, and further optional ones per heading level.
+ * @example
+ * const customRenderers = {
+ *  3: 'text-4xl font-medium tracking-wider my-4',
+ * };
+ * return HeadingStyle({ level, children, textAlign, customRenderers });
  */
 var HeadingStyle = function HeadingStyle(_ref) {
   var level = _ref.level,

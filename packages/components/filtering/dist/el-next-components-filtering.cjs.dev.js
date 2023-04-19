@@ -97,7 +97,61 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+/**
+ * Creates an instance of Filtered items and a filtering UI
+ * @example
+ * type I = {
+ *  title: string;
+ *  key: string;
+ * };
+ *
+ * // Group filters by type
+ * const filtersGrouped = filters.reduce((filterMemo, { type, key, name }) => {
+ *   (filterMemo[type] = filterMemo[type] || []).push({
+ *     key,
+ *     name,
+ *   });
+ *   return filterMemo;
+ * }, {});
+ *
+ * const mediaItems = [some, some, some, some];
+ *
+ * const renderItem = (props: {
+ *   item: I;
+ *   toggleFilter: (filter: string) => void;
+ * }) => {
+ *   return (
+ *     <h3>
+ *     {props.title}
+ *     </h3>
+ *     ...
+ *   );
+ * };
+ *
+ * const filtering = new Filtering<Item>(
+ *  filtersGrouped,
+ *  [],
+ *  mediaItems,
+ *  renderItem,
+ * 'media'
+ * );
+ * ...
+ * <filtering.FilteredItems />
+ *
+ */
 var Filtering = /*#__PURE__*/function () {
+  /**
+   * Zustand store
+   * @see https://github.com/pmndrs/zustand
+   */
+
+  /**
+   * @prop filtersGrouped Filters with a key and named grouped by type
+   * @prop preSelectedFilters Array of pre selected filters, for e.g. from `router.query`, or empty array
+   * @prop items Array of all possible data to render
+   * @prop ItemRenderer Function to render filtered items with props conforming to <ItemRendererProps<T>>
+   * @prop mode? Optional string of 'media' to change the count label
+   */
   function Filtering(filtersGrouped, preSelectedFilters, items, ItemRenderer, mode) {
     var _this = this;
 
@@ -313,7 +367,7 @@ var Filtering = /*#__PURE__*/function () {
                   children: /*#__PURE__*/jsxRuntime.jsx("polygon", {
                     points: "0,0 14,0 7.0,9.0",
                     style: {
-                      'fill': '#8D33D2'
+                      fill: '#8D33D2'
                     }
                   })
                 }), /*#__PURE__*/jsxRuntime.jsx("span", {

@@ -5,6 +5,15 @@ Object.defineProperty(exports, '__esModule', { value: true });
 require('react');
 var jsxRuntime = require('react/jsx-runtime');
 
+/**
+ * @packageDocumentation
+ * Engagement Lab 'Next' shared component library
+ * Developed by Engagement Lab, 2022-2023
+ *
+ * @author Johnny Richardson
+ * Favicon renderer
+ * ==========
+ */
 var Favicon = function Favicon() {
   return /*#__PURE__*/jsxRuntime.jsxs(jsxRuntime.Fragment, {
     children: [/*#__PURE__*/jsxRuntime.jsx("link", {

@@ -90,6 +90,7 @@ var Video = function Video(_ref2) {
         toggleOpen(true);
         e.preventDefault();
       },
+      className: "group",
       children: [/*#__PURE__*/jsxRuntime.jsx(Image__default["default"], {
         alt: "Thumbnail image for video with title \"".concat(videoLabel, "\""),
         src: thumbUrl,
@@ -107,6 +108,7 @@ var Video = function Video(_ref2) {
           viewBox: "0 0 151 151",
           width: "151",
           height: "151",
+          className: "transition-all group-hover:scale-110",
           children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
             style: {
               strokeWidth: '0.8px',

@@ -2,13 +2,18 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function DateFormat(_ref) {
+/**
+ * Date formatter
+ * @alpha
+ *
+ */
+var DateFormat = function DateFormat(_ref) {
   var date = _ref.date;
   return {
     weekday: new Date(date).toLocaleDateString('en-US', {
       weekday: 'long'
     })
   };
-}
+};
 
-exports["default"] = DateFormat;
+exports.DateFormat = DateFormat;

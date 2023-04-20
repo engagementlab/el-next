@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import { NextSeo } from 'next-seo';
+import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { Favicon } from '../favicon';
 
 type Props = {
   children: ReactNode;
@@ -20,11 +21,17 @@ export const Layout = ({
   description,
 }: Props): JSX.Element => (
   <div>
-    <NextSeo
-      title={title}
-      description={description}
-      openGraph={{ title, description }}
-    />
+    <Head>
+      <title>{title}</title>
+      {/* Block indexing on non-prod */}
+      {process.env.NODE_ENV !== 'production' && (
+        <meta name="robots" content="noindex" />
+      )}
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <meta name="description" content={description} />
+      <Favicon />
+    </Head>
+
     <motion.main
       initial="hidden"
       animate="enter"

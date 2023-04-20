@@ -24,7 +24,7 @@ require('zustand');
 require('zustand/middleware');
 require('lodash');
 require('framer-motion');
-require('next-seo');
+require('next/head');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
 require('next/image');

@@ -1,32 +1,22 @@
-import React, { ReactNode } from 'react'
-// import { NextSeo } from 'next-seo'
-import { motion } from 'framer-motion'
+import React, { ReactNode } from 'react';
+import { Layout as SuperLayout } from '@el-next/components';
 
 type Props = {
-    children: ReactNode
-    // title: string
-    // description: string
-}
+  children: ReactNode;
+  description?: string;
+  title?: string;
+};
 
-const variants = {
-    hidden: { opacity: 0, },
-    enter: { opacity: 1, },
-    exit: { opacity: 0, },
-}
+const appName = 'Transforming Narratives of Gun Violence';
+const defaultDescription = `${appName} is a multi-year initiative at Emerson in collaboration with the MGH Center for Gun Violence Prevention and the Louis D. Brown Peace Institute.`;
 
-const Layout = ({ children }: Props): JSX.Element => (
-    <div>
-        {/* <NextSeo title={title} description={description} openGraph={{ title, description }} /> */}
-        <motion.main
-            initial="hidden"
-            animate="enter"
-            exit="exit"
-            variants={variants}
-            transition={{ type: 'linear' }}
-        >
-            {children}
-        </motion.main>
-    </div>
-)
+const Layout = ({ children, title, description }: Props): JSX.Element => (
+  <SuperLayout
+    title={title ? `${appName} - ${title}` : appName}
+    description={description ? description : defaultDescription}
+  >
+    {children}
+  </SuperLayout>
+);
 
-export default Layout
+export default Layout;

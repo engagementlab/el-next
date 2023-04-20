@@ -1,7 +1,6 @@
 import { InferGetStaticPropsType } from 'next';
 import { SlideshowProps } from 'react-slideshow-image';
-import { Button, Video } from '@el-next/components';
-import { Image } from '@el-next/components';
+import { Button, Image, Video } from '@el-next/components';
 
 import query from '../../../apollo-client';
 
@@ -34,7 +33,7 @@ export default function Home({
       .join(' ');
 
   return (
-    <Layout>
+    <Layout title="Home">
       <div className="flex flex-col">
         <div className="relative w-full mt-20 lg:max-h-screen overflow-clip">
           <div className="flex flex-col items-center">

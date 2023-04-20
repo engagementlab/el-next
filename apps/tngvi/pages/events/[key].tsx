@@ -29,7 +29,7 @@ const rendererOverrides = {
     const customRenderers = {
       4: 'font-semibold text-[18px] text-coated',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
 };
 

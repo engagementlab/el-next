@@ -32,7 +32,7 @@ const rendererOverrides = {
     const customRenderers = {
       3: 'text-2xl font-semibold text-bluegreen',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
   layout: (layout: any, children: any) => {
     const flexClass = 'flex gap-x-5 flex-col md:flex-row justify-between';

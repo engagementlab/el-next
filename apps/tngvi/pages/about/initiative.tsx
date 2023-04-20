@@ -35,7 +35,7 @@ const valuesRendererOverrides = {
       4: 'text-xl font-semibold text-coated my-8',
       5: 'text-lg font-extrabold text-purple',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
 };
 

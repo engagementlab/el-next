@@ -53,7 +53,7 @@ const rendererOverrides = {
       2: 'text-3xl font-bold tracking-wide my-4',
       3: 'text-2xl font-medium tracking-wide my-4',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
 };
 const agendaRendererOverrides = {

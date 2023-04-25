@@ -14,7 +14,6 @@ var jsxRuntime = require('react/jsx-runtime');
  * Heading renderer
  * ==========
  */
-
 /**
  * Return a styled heading document fields
  * @returns {JSX.Element} Element
@@ -27,11 +26,12 @@ var jsxRuntime = require('react/jsx-runtime');
  * };
  * return HeadingStyle({ level, children, textAlign, customRenderers });
  */
+
 var HeadingStyle = function HeadingStyle(_ref) {
   var level = _ref.level,
-      children = _ref.children,
-      textAlign = _ref.textAlign,
-      customRenderers = _ref.customRenderers;
+    children = _ref.children,
+    textAlign = _ref.textAlign,
+    customRenderers = _ref.customRenderers;
   var defaultClass = "".concat(level === 3 && 'h3 text-2xl text-coated leading-none', " ").concat(level === 4 && 'text-md text-coated mt-8 lg:mt-12 mb-2', " font-semibold");
   var customClass = customRenderers && customRenderers[level];
   return /*#__PURE__*/jsxRuntime.jsx("p", {

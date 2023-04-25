@@ -16,10 +16,10 @@ var Link__default = /*#__PURE__*/_interopDefault(Link);
  */
 var Button = function Button(_ref) {
   var className = _ref.className,
-      hoverColor = _ref.hoverColor,
-      link = _ref.link,
-      label = _ref.label,
-      margin = _ref.margin;
+    hoverColor = _ref.hoverColor,
+    link = _ref.link,
+    label = _ref.label,
+    margin = _ref.margin;
   var classStr = "".concat(margin ? margin : "my-10", " hover:bg-[").concat(hoverColor ? hoverColor : '#ab45f8', "] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ").concat(className);
   return /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
     href: link,

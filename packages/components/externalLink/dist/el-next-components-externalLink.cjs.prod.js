@@ -14,15 +14,14 @@ var jsxRuntime = require('react/jsx-runtime');
  * External link renderer
  * ==========
  */
-
 /**
  * Return a link with "external" SVG icon
  * @returns {JSX.Element} Element
  */
 var ExternalLink = function ExternalLink(_ref) {
   var href = _ref.href,
-      label = _ref.label,
-      customClass = _ref.customClass;
+    label = _ref.label,
+    customClass = _ref.customClass;
   return /*#__PURE__*/jsxRuntime.jsxs("a", {
     href: href,
     className: "".concat(customClass || 'text-bluegreen', " group"),

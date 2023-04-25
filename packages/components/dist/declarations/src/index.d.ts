@@ -11,3 +11,4 @@ export { Layout } from './layout';
 export { default as Image } from './image';
 export { ImageUrl } from './image';
 export { Video } from './video';
+export { Query } from './query';

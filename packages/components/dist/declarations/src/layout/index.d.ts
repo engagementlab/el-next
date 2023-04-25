@@ -1,8 +1,11 @@
 import { ReactNode } from 'react';
-declare type Props = {
+type Props = {
     children: ReactNode;
     title: string;
     description: string;
+    error?: {
+        message: string;
+    };
 };
-export declare const Layout: ({ children, title, description, }: Props) => JSX.Element;
+export declare const Layout: ({ children, title, description, error, }: Props) => JSX.Element;
 export {};

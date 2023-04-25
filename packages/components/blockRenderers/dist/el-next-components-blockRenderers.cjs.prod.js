@@ -9,7 +9,7 @@ var video_dist_elNextComponentsVideo = require('../../video/dist/el-next-compone
 var jsxRuntime = require('react/jsx-runtime');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
-require('../../dist/unsupportedIterableToArray-cb273b94.cjs.prod.js');
+require('../../dist/unsupportedIterableToArray-42309462.cjs.prod.js');
 require('next/image');
 require('zustand');
 
@@ -35,7 +35,6 @@ var BlockRenderers = function BlockRenderers(styles) {
     var blocks = {
       image: function image(props) {
         var _props$image$image;
-
         var publicId = props.image.publicId || props.image.image.publicId;
         var alt = props.image.alt || ((_props$image$image = props.image.image) === null || _props$image$image === void 0 ? void 0 : _props$image$image.alt);
         return imageOveride ? imageOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {

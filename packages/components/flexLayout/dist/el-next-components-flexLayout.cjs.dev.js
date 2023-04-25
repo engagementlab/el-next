@@ -14,7 +14,6 @@ var jsxRuntime = require('react/jsx-runtime');
  * Flex layout renderer
  * ==========
  */
-
 /**
  * Return a flex layout for document fields
  * @returns {JSX.Element} Element
@@ -24,9 +23,9 @@ var jsxRuntime = require('react/jsx-runtime');
  */
 var FlexLayout = function FlexLayout(_ref) {
   var layout = _ref.layout,
-      children = _ref.children;
-  var flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row'; // [  ][ ]
-
+    children = _ref.children;
+  var flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row';
+  // [  ][ ]
   if (layout[0] === 2 && layout[1] === 1) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
       className: flexClass,
@@ -37,7 +36,8 @@ var FlexLayout = function FlexLayout(_ref) {
         }, i);
       })
     });
-  } // [ ][  ]
+  }
+  // [ ][  ]
   else if (layout[0] === 1 && layout[1] === 2) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
       className: flexClass,
@@ -48,7 +48,8 @@ var FlexLayout = function FlexLayout(_ref) {
         }, i);
       })
     });
-  } // [ ][ ][ ]
+  }
+  // [ ][ ][ ]
   else if (layout[0] === 1 && layout[1] === 1 && layout[2] === 1) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
       className: flexClass,
@@ -59,7 +60,8 @@ var FlexLayout = function FlexLayout(_ref) {
         }, i);
       })
     });
-  } // [ ][ ]
+  }
+  // [ ][ ]
   else if (layout[0] === 1 && layout[1] === 1) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
       className: flexClass,

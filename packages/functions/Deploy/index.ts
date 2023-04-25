@@ -98,6 +98,9 @@ const httpTrigger: AzureFunction = async function (
               );
 
               if (workflowResponse.status === 200) {
+                context.log(
+                  `${userName} deployed successfully to ${storageAccount} with note: "${note}".`
+                );
                 context.res = {
                   status: 200,
                   body: {

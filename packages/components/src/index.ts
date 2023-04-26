@@ -1,3 +1,12 @@
+export const enum ErrorClass {
+  client,
+  empty,
+  network,
+  noconnection,
+  query,
+  syntax,
+}
+
 export { BlockRenderers } from './blockRenderers';
 export { Button } from './button';
 export { DateFormat } from './dateFormat';
@@ -11,4 +20,5 @@ export { Layout } from './layout';
 export { default as Image } from './image';
 export { ImageUrl } from './image';
 export { Video } from './video';
-export { Query } from './query';
+export * from './query';
+export type { TError } from './query';

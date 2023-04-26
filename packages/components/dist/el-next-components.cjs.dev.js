@@ -11,26 +11,113 @@ var favicon_dist_elNextComponentsFavicon = require('../favicon/dist/el-next-comp
 var filtering_dist_elNextComponentsFiltering = require('../filtering/dist/el-next-components-filtering.cjs.dev.js');
 var flexLayout_dist_elNextComponentsFlexLayout = require('../flexLayout/dist/el-next-components-flexLayout.cjs.dev.js');
 var headingStyle_dist_elNextComponentsHeadingStyle = require('../headingStyle/dist/el-next-components-headingStyle.cjs.dev.js');
-var layout_dist_elNextComponentsLayout = require('../layout/dist/el-next-components-layout.cjs.dev.js');
+require('react');
+var Head = require('next/head');
+var framerMotion = require('framer-motion');
 var image_dist_elNextComponentsImage = require('../image/dist/el-next-components-image.cjs.dev.js');
 var video_dist_elNextComponentsVideo = require('../video/dist/el-next-components-video.cjs.dev.js');
 require('cross-fetch/polyfill');
 var client = require('@apollo/client');
 var errors = require('@apollo/client/errors');
-require('react');
+var changeCase = require('change-case');
+var jsxRuntime = require('react/jsx-runtime');
 require('next/link');
-require('react/jsx-runtime');
 require('@el-next/components/flexLayout');
 require('@el-next/components/headingStyle');
 require('./unsupportedIterableToArray-ac28611a.cjs.dev.js');
 require('zustand');
 require('zustand/middleware');
 require('lodash');
-require('framer-motion');
-require('next/head');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
 require('next/image');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+var Head__default = /*#__PURE__*/_interopDefault(Head);
+
+var variants = {
+  hidden: {
+    opacity: 0
+  },
+  enter: {
+    opacity: 1
+  },
+  exit: {
+    opacity: 0
+  }
+};
+var Layout = function Layout(_ref) {
+  var children = _ref.children,
+    title = _ref.title,
+    description = _ref.description,
+    error = _ref.error;
+  var errorHelper = "Sorry, we're unable to retrieve content at this time due to a connection error. ";
+  if (error) {
+    console.log(error);
+    if (error["class"] === ErrorClass.noconnection) errorHelper += 'It is most likely that the CMS is currently unavailable. Please try again.';else if (error["class"] === ErrorClass.syntax) errorHelper = 'It looks like there is a syntax error in the query. This is a bug in code.';else if (error["class"] === ErrorClass.empty) errorHelper = "One or more of the required content fields on this page is missing. \"(".concat(error.message, ")\"");
+  }
+  return /*#__PURE__*/jsxRuntime.jsxs(jsxRuntime.Fragment, {
+    children: [/*#__PURE__*/jsxRuntime.jsxs(Head__default["default"], {
+      children: [/*#__PURE__*/jsxRuntime.jsx("title", {
+        children: title
+      }), process.env.NODE_ENV !== 'production' && /*#__PURE__*/jsxRuntime.jsx("meta", {
+        name: "robots",
+        content: "noindex"
+      }), /*#__PURE__*/jsxRuntime.jsx("meta", {
+        name: "viewport",
+        content: "initial-scale=1.0, width=device-width"
+      }), /*#__PURE__*/jsxRuntime.jsx("meta", {
+        name: "description",
+        content: description
+      }), /*#__PURE__*/jsxRuntime.jsx(favicon_dist_elNextComponentsFavicon.Favicon, {})]
+    }), error ? /*#__PURE__*/jsxRuntime.jsxs("div", {
+      className: "m-40",
+      children: [/*#__PURE__*/jsxRuntime.jsxs("svg", {
+        viewBox: "0 0 50 50",
+        className: "max-w-[105px]",
+        children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
+          style: {
+            fill: '#D75A4A'
+          },
+          cx: "25",
+          cy: "25",
+          r: "25"
+        }), /*#__PURE__*/jsxRuntime.jsx("polyline", {
+          style: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 2,
+            strokeLinecap: 'round',
+            strokeMiterlimit: 10
+          },
+          points: "16,34 25,25 34,16  "
+        }), /*#__PURE__*/jsxRuntime.jsx("polyline", {
+          style: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 2,
+            strokeLinecap: 'round',
+            strokeMiterlimit: 10
+          },
+          points: "16,16 25,25 34,34  "
+        })]
+      }), /*#__PURE__*/jsxRuntime.jsx("h2", {
+        className: "text-4xl font-bold",
+        children: "Content Error"
+      }), errorHelper]
+    }) : /*#__PURE__*/jsxRuntime.jsx(framerMotion.motion.main, {
+      initial: "hidden",
+      animate: "enter",
+      exit: "exit",
+      variants: variants,
+      transition: {
+        type: 'linear'
+      },
+      children: children
+    })]
+  });
+};
 
 function _regeneratorRuntime() {
   _regeneratorRuntime = function () {
@@ -377,13 +464,6 @@ function _asyncToGenerator(fn) {
 }
 
 var _templateObject;
-var ErrorType = /*#__PURE__*/function (ErrorType) {
-  ErrorType[ErrorType["client"] = 0] = "client";
-  ErrorType[ErrorType["empty"] = 1] = "empty";
-  ErrorType[ErrorType["network"] = 2] = "network";
-  ErrorType[ErrorType["query"] = 3] = "query";
-  return ErrorType;
-}(ErrorType || {});
 var apollo = new client.ApolloClient({
   uri: process.env.GRAPHQL_APP ? "https://cms.elab.emerson.edu/".concat(process.env.GRAPHQL_APP, "/api/graphql") : 'http://localhost:3000/api/graphql',
   cache: new client.InMemoryCache(),
@@ -400,7 +480,7 @@ var apollo = new client.ApolloClient({
 });
 var Query = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(name, queryStr) {
-    var result;
+    var result, isEmpty, error, _error, gqlErr;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -411,47 +491,71 @@ var Query = /*#__PURE__*/function () {
           });
         case 3:
           result = _context.sent;
-          console.log(result);
-          if (result.data) {
-            _context.next = 7;
+          // Is entire response empty?
+          isEmpty = Object.values(result.data).every(function (x) {
+            return null === x || x.length === 0;
+          });
+          if (!isEmpty) {
+            _context.next = 8;
             break;
           }
+          error = {
+            "class": ErrorClass.empty,
+            message: Object.keys(result.data).map(function (key) {
+              return changeCase.capitalCase(key);
+            }).join(', ')
+          };
           return _context.abrupt("return", {
-            error: true,
-            type: ErrorType.empty,
-            message: 'nodata'
+            error: error
           });
-        case 7:
+        case 8:
           return _context.abrupt("return", result.data[name]);
-        case 10:
-          _context.prev = 10;
+        case 11:
+          _context.prev = 11;
           _context.t0 = _context["catch"](0);
           console.log('1', _context.t0);
-          if (!(_context.t0 instanceof errors.ApolloError)) {
-            _context.next = 15;
-            break;
+          if (_context.t0 instanceof errors.ApolloError) {
+            _error = {
+              "class": _context.t0.message.indexOf('ECONNREFUSED') > -1 ? ErrorClass.network : ErrorClass.noconnection,
+              message: _context.t0.message
+            };
+          } else {
+            gqlErr = _context.t0;
+            _error = {
+              "class": gqlErr.message.toLowerCase().indexOf('syntax') > -1 ? ErrorClass.syntax : ErrorClass.client,
+              message: gqlErr.message
+            };
           }
+          // else if (err instanceof GraphQLError) {
+          //   return {
+          //     error: true,
+          //     // type:
+          //     message: err.message,
+          //   };
+          // }
           return _context.abrupt("return", {
-            error: true,
-            // type:
-            message: _context.t0.message
-          });
-        case 15:
-          return _context.abrupt("return", {
-            error: true,
-            // type:
-            message: _context.t0.message
+            error: _error
           });
         case 16:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 10]]);
+    }, _callee, null, [[0, 11]]);
   }));
   return function Query(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
+
+var ErrorClass = /*#__PURE__*/function (ErrorClass) {
+  ErrorClass[ErrorClass["client"] = 0] = "client";
+  ErrorClass[ErrorClass["empty"] = 1] = "empty";
+  ErrorClass[ErrorClass["network"] = 2] = "network";
+  ErrorClass[ErrorClass["noconnection"] = 3] = "noconnection";
+  ErrorClass[ErrorClass["query"] = 4] = "query";
+  ErrorClass[ErrorClass["syntax"] = 5] = "syntax";
+  return ErrorClass;
+}({});
 
 exports.BlockRenderers = blockRenderers_dist_elNextComponentsBlockRenderers.BlockRenderers;
 exports.Button = button_dist_elNextComponentsButton.Button;
@@ -462,8 +566,9 @@ exports.Favicon = favicon_dist_elNextComponentsFavicon.Favicon;
 exports.Filtering = filtering_dist_elNextComponentsFiltering["default"];
 exports.FlexLayout = flexLayout_dist_elNextComponentsFlexLayout.FlexLayout;
 exports.HeadingStyle = headingStyle_dist_elNextComponentsHeadingStyle.HeadingStyle;
-exports.Layout = layout_dist_elNextComponentsLayout.Layout;
 exports.Image = image_dist_elNextComponentsImage["default"];
 exports.ImageUrl = image_dist_elNextComponentsImage.ImageUrl;
 exports.Video = video_dist_elNextComponentsVideo.Video;
+exports.ErrorClass = ErrorClass;
+exports.Layout = Layout;
 exports.Query = Query;

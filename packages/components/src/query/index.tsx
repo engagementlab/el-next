@@ -3,12 +3,13 @@ import 'cross-fetch/polyfill';
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
-enum ErrorType {
-  client,
-  empty,
-  network,
-  query,
-}
+import { ErrorClass } from '..';
+import { camelCase, capitalCase } from 'change-case';
+
+export type TError = {
+  class: ErrorClass;
+  message?: string;
+};
 
 const apollo = new ApolloClient({
   uri: process.env.GRAPHQL_APP
@@ -37,24 +38,43 @@ export const Query = async (name: string, queryStr: string) => {
       `,
     });
 
+    // Is entire response empty?
     const isEmpty = Object.values(result.data).every(
-      (x) => x === null || (x as unknown[]).length === 0
+      (x) => null === x || (x as unknown[]).length === 0
     );
     if (isEmpty) {
+      const error: TError = {
+        class: ErrorClass.empty,
+        message: Object.keys(result.data)
+          .map((key) => {
+            return capitalCase(key);
+          })
+          .join(', '),
+      };
       return {
-        error: true,
-        type: ErrorType.empty,
-        message: 'nodata',
+        error,
       };
     }
     return result.data[name];
   } catch (err: unknown) {
     console.log('1', err);
+    let error: TError;
     if (err instanceof ApolloError) {
-      return {
-        error: true,
-        // type:
+      error = {
+        class:
+          err.message.indexOf('ECONNREFUSED') > -1
+            ? ErrorClass.network
+            : ErrorClass.noconnection,
         message: err.message,
+      };
+    } else {
+      const gqlErr = err as GraphQLError;
+      error = {
+        class:
+          gqlErr.message.toLowerCase().indexOf('syntax') > -1
+            ? ErrorClass.syntax
+            : ErrorClass.client,
+        message: gqlErr.message,
       };
     }
     // else if (err instanceof GraphQLError) {
@@ -65,9 +85,7 @@ export const Query = async (name: string, queryStr: string) => {
     //   };
     // }
     return {
-      error: true,
-      // type:
-      message: (err as GraphQLError).message,
+      error,
     };
   }
 };

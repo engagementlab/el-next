@@ -1,16 +1,15 @@
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import { Modal, Box } from '@mui/material';
 import { Favicon } from '../favicon';
+import { TError } from '../query';
+import { ErrorClass } from '..';
 
 type Props = {
   children: ReactNode;
   title: string;
   description: string;
-  error?: {
-    message: string;
-  };
+  error?: TError;
 };
 
 const variants = {
@@ -27,15 +26,16 @@ export const Layout = ({
 }: Props): JSX.Element => {
   let errorHelper =
     "Sorry, we're unable to retrieve content at this time due to a connection error. ";
-  if (error && error.message) {
-    {
-      if (error.message.indexOf('ECONNREFUSED') > -1)
-        errorHelper +=
-          'It is most likely that the CMS is currently unavailable. Please try again.';
-      else if (error.message.toLowerCase().indexOf('syntax') > -1)
-        errorHelper =
-          'It is looks like there is a syntax error in the query. This is a bug in code.';
-    }
+  if (error) {
+    console.log(error);
+    if (error.class === ErrorClass.noconnection)
+      errorHelper +=
+        'It is most likely that the CMS is currently unavailable. Please try again.';
+    else if (error.class === ErrorClass.syntax)
+      errorHelper =
+        'It looks like there is a syntax error in the query. This is a bug in code.';
+    else if (error.class === ErrorClass.empty)
+      errorHelper = `One or more of the required content fields on this page is missing. "(${error.message})"`;
   }
   return (
     <>

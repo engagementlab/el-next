@@ -5,8 +5,8 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 import query from '../../../../apollo-client';
 
 import { Blocks, Doc } from '../../components/Renderers';
-import { HeadingStyle } from '@el-next/components/headingStyle';
-import { Image } from '@el-next/components';
+
+import { Image, HeadingStyle, Query } from '@el-next/components';
 import Layout from '../../components/Layout';
 
 type BigPicturePage = {
@@ -62,12 +62,13 @@ const rendererOverrides = {
 
 export default function BigPicture({
   page,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout>
+    <Layout error={error}>
       <div className="about-container container mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-10/12 xl:w-9/12">
         <DocumentRenderer
-          document={page.content.document}
+          document={page?.content.document}
           componentBlocks={Blocks(imageOverride)}
           renderers={Doc(rendererOverrides)}
         />
@@ -76,7 +77,7 @@ export default function BigPicture({
   );
 }
 export async function getStaticProps() {
-  const result = await query(
+  const result = await Query(
     'bigPictures',
     `bigPictures(where: { name: { equals: "Big Picture Page" } }) {
       content { 
@@ -84,6 +85,14 @@ export async function getStaticProps() {
       }
     }`
   );
+  if (result.error) {
+    return {
+      props: {
+        error: result.error,
+        page: null,
+      },
+    };
+  }
   const page = result[0] as BigPicturePage;
 
   return {

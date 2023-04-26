@@ -75,7 +75,7 @@ export async function getStaticProps() {
     `homePage(where: { name: { equals: "Home Page" } }) {
       intro {
         document
-      }\
+      }
       slides {
         image {
           publicId
@@ -92,13 +92,12 @@ export async function getStaticProps() {
         homePage: null,
       },
     };
-  } else {
-    const homePage = result[0] as HomePage;
-
-    return {
-      props: {
-        homePage,
-      },
-    };
   }
+  const homePage = result[0] as HomePage;
+
+  return {
+    props: {
+      homePage,
+    },
+  };
 }

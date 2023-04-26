@@ -145,6 +145,16 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        }
       }`
   );
+
+  if (itemResult.error) {
+    return {
+      props: {
+        error: itemResult.error,
+        item: null,
+      },
+    };
+  }
+
   const item = itemResult[0] as Event;
 
   return { props: { item } };

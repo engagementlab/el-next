@@ -4,9 +4,7 @@ import { useRouter } from 'next/router';
 import _ from 'lodash';
 import { motion } from 'framer-motion';
 
-import query from '../../../..//apollo-client';
-
-import { Image, Filtering } from '@el-next/components';
+import { Image, Filtering, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
@@ -60,6 +58,7 @@ const renderItem = (props: {
 export default function MediaArchive({
   filtersGrouped,
   mediaItems,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const preSelectedFilters =
@@ -74,7 +73,7 @@ export default function MediaArchive({
     'media'
   );
   return (
-    <Layout>
+    <Layout error={error}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         <h2 className="text-2xl text-bluegreen font-semibold mb-8">
           Media Archive
@@ -95,7 +94,7 @@ export default function MediaArchive({
 }
 
 export async function getStaticProps() {
-  const filters = (await query(
+  const filters = await Query(
     'filters',
     `filters(where: {
             section: {
@@ -109,18 +108,31 @@ export async function getStaticProps() {
             name
             type
         }`
-  )) as any[];
+  );
+
+  if (filters.error) {
+    return {
+      props: {
+        error: filters.error,
+        mediaItems: null,
+        filtersGrouped: null,
+      },
+    };
+  }
 
   // Group filters by type
-  const filtersGrouped = filters.reduce((filterMemo, { type, key, name }) => {
-    (filterMemo[type] = filterMemo[type] || []).push({
-      key,
-      name,
-    });
-    return filterMemo;
-  }, {});
+  const filtersGrouped = (filters as any[]).reduce(
+    (filterMemo, { type, key, name }) => {
+      (filterMemo[type] = filterMemo[type] || []).push({
+        key,
+        name,
+      });
+      return filterMemo;
+    },
+    {}
+  );
 
-  const mediaItems = (await query(
+  const mediaItems = await Query(
     'mediaItems',
     `mediaItems(
 			where: {
@@ -143,12 +155,22 @@ export async function getStaticProps() {
 				publicId
 			}
 		}`
-  )) as MediaItem[];
+  );
+
+  if (mediaItems.error) {
+    return {
+      props: {
+        error: mediaItems.error,
+        mediaItems: null,
+        filtersGrouped: null,
+      },
+    };
+  }
 
   return {
     props: {
       filtersGrouped,
-      mediaItems,
+      mediaItems: mediaItems as MediaItem[],
     },
   };
 }

@@ -1,5 +1,5 @@
 import { InferGetStaticPropsType } from 'next';
-import { Image } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 
 import create, { Mutate, GetState, SetState, StoreApi } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
@@ -7,7 +7,6 @@ import _ from 'lodash';
 import { AnimatePresence } from 'framer-motion';
 
 import Layout from '../../../components/Layout';
-import query from '../../../../../apollo-client';
 
 import Link from 'next/link';
 
@@ -61,6 +60,7 @@ const useStore = create<
 export default function Community({
   currentPeople,
   previousPeople,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const toggleFilter = useStore((state) => state.toggle);
 
@@ -74,7 +74,7 @@ export default function Community({
   };
   const reset = useStore((state) => state.reset);
 
-  const filteredCurrentPpl = currentPeople.filter(
+  const filteredCurrentPpl = currentPeople?.filter(
     // If selected filters empty, show all...
     (item) =>
       selectedFilters.length === 0 ||
@@ -82,7 +82,7 @@ export default function Community({
       _.some(selectedFilters, (r) => _.map(item.tag).indexOf(r) >= 0)
   );
 
-  const filteredPreviousPpl = previousPeople.filter(
+  const filteredPreviousPpl = previousPeople?.filter(
     // If selected filters empty, show all...
     (item) =>
       selectedFilters.length === 0 ||
@@ -141,15 +141,18 @@ export default function Community({
     return <div>{menu}</div>;
   };
 
-  const RenderPeople = (people: Person[], previous: boolean = false) => {
-    return people.length === 0 ? (
+  const RenderPeople = (
+    people: Person[] | undefined,
+    previous: boolean = false
+  ) => {
+    return people?.length === 0 ? (
       <p className="w-full text-xl my-20 text-center">
         Sorry, no matches found. Please try other filters.
       </p>
     ) : (
       <div className="lg:ml-5 grid gap-6 xl:grid-cols-4 md:grid-cols-2">
         <AnimatePresence key={previous ? 'previous' : 'current'}>
-          {people.map((person, i) => (
+          {people?.map((person, i) => (
             <Link
               href={`/about/community/${person.key}`}
               passHref
@@ -206,27 +209,29 @@ export default function Community({
   };
 
   return (
-    <Layout>
-      <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
-        <h2 className="text-2xl text-bluegreen font-semibold mb-4">
-          Our Community
-        </h2>
-        {RenderFilters(['student', 'faculty', 'partner', 'staff'])}
-        <h3 className="text-lg font-extrabold text-purple mt-5">
-          Current Participants
-        </h3>
-        {RenderPeople(filteredCurrentPpl)}
-        <h3 className="text-lg font-extrabold text-purple mt-5">
-          Previous Participants
-        </h3>
-        {RenderPeople(filteredPreviousPpl, true)}
-      </div>
+    <Layout error={error}>
+      {!error && (
+        <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
+          <h2 className="text-2xl text-bluegreen font-semibold mb-4">
+            Our Community
+          </h2>
+          {RenderFilters(['student', 'faculty', 'partner', 'staff'])}
+          <h3 className="text-lg font-extrabold text-purple mt-5">
+            Current Participants
+          </h3>
+          {RenderPeople(filteredCurrentPpl)}
+          <h3 className="text-lg font-extrabold text-purple mt-5">
+            Previous Participants
+          </h3>
+          {RenderPeople(filteredPreviousPpl, true)}
+        </div>
+      )}
     </Layout>
   );
 }
 
 export async function getStaticProps() {
-  const peopleResult = await query(
+  const result = await Query(
     'people',
     `people(orderBy: {name: asc}, where: { enabled: { equals: true }}) {
       name 
@@ -245,12 +250,18 @@ export async function getStaticProps() {
     }`
   );
 
-  const currentPeople = (peopleResult as Person[]).filter(
-    (p) => p.currentlyActive
-  );
-  const previousPeople = (peopleResult as Person[]).filter(
-    (p) => !p.currentlyActive
-  );
+  if (result.error) {
+    return {
+      props: {
+        error: result.error,
+        currentPeople: null,
+        previousPeople: null,
+      },
+    };
+  }
+
+  const currentPeople = (result as Person[]).filter((p) => p.currentlyActive);
+  const previousPeople = (result as Person[]).filter((p) => !p.currentlyActive);
   // console.log(currentPeople)
   return {
     props: {

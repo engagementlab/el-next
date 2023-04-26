@@ -55,7 +55,7 @@ var Layout = function Layout(_ref) {
   var errorHelper = "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
     console.log(error);
-    if (error["class"] === ErrorClass.noconnection) errorHelper += 'It is most likely that the CMS is currently unavailable. Please try again.';else if (error["class"] === ErrorClass.syntax) errorHelper = 'It looks like there is a syntax error in the query. This is a bug in code.';else if (error["class"] === ErrorClass.empty) errorHelper = "One or more of the required content fields on this page is missing. \"(".concat(error.message, ")\"");
+    if (error["class"] === ErrorClass.noconnection) errorHelper += '🔌 It is most likely that the CMS is currently unavailable. Please try again.';else if (error["class"] === ErrorClass.syntax) errorHelper = 'It looks like there is a syntax error in the query. 🐛 This is a bug in code.';else if (error["class"] === ErrorClass.empty) errorHelper = "One or more of the required content fields on this page is missing. \"(".concat(error.message, ")\"");else if (error["class"] === ErrorClass.client) errorHelper = "There is an error on the client query. \uD83D\uDC1B This is a bug in code. \n\n \uD83D\uDCAC The API says: ".concat(error.message, "\"");else errorHelper += '. Please try again.  🤨 ';
   }
   return /*#__PURE__*/jsxRuntime.jsxs(jsxRuntime.Fragment, {
     children: [/*#__PURE__*/jsxRuntime.jsxs(Head__default["default"], {
@@ -68,8 +68,8 @@ var Layout = function Layout(_ref) {
         name: "description",
         content: description
       }), /*#__PURE__*/jsxRuntime.jsx(favicon_dist_elNextComponentsFavicon.Favicon, {})]
-    }), error ? /*#__PURE__*/jsxRuntime.jsxs("div", {
-      className: "m-40",
+    }), error &&         "production" !== 'production' ? /*#__PURE__*/jsxRuntime.jsxs("div", {
+      className: "m-40 p-10 border-4 border-[#00ab9e]",
       children: [/*#__PURE__*/jsxRuntime.jsxs("svg", {
         viewBox: "0 0 50 50",
         className: "max-w-[105px]",
@@ -102,7 +102,10 @@ var Layout = function Layout(_ref) {
       }), /*#__PURE__*/jsxRuntime.jsx("h2", {
         className: "text-4xl font-bold",
         children: "Content Error"
-      }), errorHelper]
+      }), errorHelper, /*#__PURE__*/jsxRuntime.jsx("hr", {}), /*#__PURE__*/jsxRuntime.jsx("img", {
+        src: "https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1682526632/github/logo-api.png",
+        className: "max-w-[150px]"
+      })]
     }) : /*#__PURE__*/jsxRuntime.jsx(framerMotion.motion.main, {
       initial: "hidden",
       animate: "enter",
@@ -492,8 +495,9 @@ var Query = /*#__PURE__*/function () {
           isEmpty = Object.values(result.data).every(function (x) {
             return null === x || x.length === 0;
           });
+          console.log(result);
           if (!isEmpty) {
-            _context.next = 8;
+            _context.next = 9;
             break;
           }
           error = {
@@ -505,15 +509,22 @@ var Query = /*#__PURE__*/function () {
           return _context.abrupt("return", {
             error: error
           });
-        case 8:
+        case 9:
           return _context.abrupt("return", result.data[name]);
-        case 11:
-          _context.prev = 11;
+        case 12:
+          _context.prev = 12;
           _context.t0 = _context["catch"](0);
-          console.log('1', _context.t0);
           if (_context.t0 instanceof errors.ApolloError) {
-            _error = {
-              "class": _context.t0.message.indexOf('ECONNREFUSED') > -1 ? ErrorClass.network : ErrorClass.noconnection,
+            // console.log('1', (err.networkError as ServerError).result['errors']);
+            if (_context.t0.networkError && _context.t0.networkError.result !== undefined) {
+              _error = {
+                "class": ErrorClass.client,
+                message: _context.t0.networkError.result['errors'].map(function (e) {
+                  return e.message;
+                })
+              };
+            } else _error = {
+              "class": _context.t0.message.indexOf('ECONNREFUSED') > -1 ? ErrorClass.noconnection : ErrorClass.network,
               message: _context.t0.message
             };
           } else {
@@ -537,7 +548,7 @@ var Query = /*#__PURE__*/function () {
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 11]]);
+    }, _callee, null, [[0, 12]]);
   }));
   return function Query(_x, _x2) {
     return _ref.apply(this, arguments);

@@ -1,10 +1,10 @@
 import 'cross-fetch/polyfill';
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache, ServerError } from '@apollo/client';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
 import { ErrorClass } from '..';
-import { camelCase, capitalCase } from 'change-case';
+import { capitalCase } from 'change-case';
 
 export type TError = {
   class: ErrorClass;
@@ -42,6 +42,7 @@ export const Query = async (name: string, queryStr: string) => {
     const isEmpty = Object.values(result.data).every(
       (x) => null === x || (x as unknown[]).length === 0
     );
+    console.log(result);
     if (isEmpty) {
       const error: TError = {
         class: ErrorClass.empty,
@@ -57,16 +58,27 @@ export const Query = async (name: string, queryStr: string) => {
     }
     return result.data[name];
   } catch (err: unknown) {
-    console.log('1', err);
     let error: TError;
     if (err instanceof ApolloError) {
-      error = {
-        class:
-          err.message.indexOf('ECONNREFUSED') > -1
-            ? ErrorClass.network
-            : ErrorClass.noconnection,
-        message: err.message,
-      };
+      // console.log('1', (err.networkError as ServerError).result['errors']);
+      if (
+        err.networkError &&
+        (err.networkError as ServerError).result !== undefined
+      ) {
+        error = {
+          class: ErrorClass.client,
+          message: (err.networkError as ServerError).result['errors'].map(
+            (e) => e.message
+          ),
+        };
+      } else
+        error = {
+          class:
+            err.message.indexOf('ECONNREFUSED') > -1
+              ? ErrorClass.noconnection
+              : ErrorClass.network,
+          message: err.message,
+        };
     } else {
       const gqlErr = err as GraphQLError;
       error = {

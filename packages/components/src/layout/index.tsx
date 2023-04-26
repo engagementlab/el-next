@@ -30,12 +30,15 @@ export const Layout = ({
     console.log(error);
     if (error.class === ErrorClass.noconnection)
       errorHelper +=
-        'It is most likely that the CMS is currently unavailable. Please try again.';
+        '🔌 It is most likely that the CMS is currently unavailable. Please try again.';
     else if (error.class === ErrorClass.syntax)
       errorHelper =
-        'It looks like there is a syntax error in the query. This is a bug in code.';
+        'It looks like there is a syntax error in the query. 🐛 This is a bug in code.';
     else if (error.class === ErrorClass.empty)
       errorHelper = `One or more of the required content fields on this page is missing. "(${error.message})"`;
+    else if (error.class === ErrorClass.client)
+      errorHelper = `There is an error on the client query. 🐛 This is a bug in code. \n\n 💬 The API says: ${error.message}"`;
+    else errorHelper += '. Please try again.  🤨 ';
   }
   return (
     <>
@@ -49,14 +52,8 @@ export const Layout = ({
         <meta name="description" content={description} />
         <Favicon />
       </Head>
-      {error ? (
-        <div className="m-40">
-          {/* <Modal
-          open={true}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box> */}
+      {error && process.env.NODE_ENV !== 'production' ? (
+        <div className="m-40 p-10 border-4 border-[#00ab9e]">
           <svg viewBox="0 0 50 50" className="max-w-[105px]">
             <circle style={{ fill: '#D75A4A' }} cx="25" cy="25" r="25" />
             <polyline
@@ -84,9 +81,12 @@ export const Layout = ({
           </svg>
           <h2 className="text-4xl font-bold">Content Error</h2>
           {errorHelper}
-          {/* </Box>
-        </Modal> */}
-          {/* <Button onClick={resetErrorBoundary}>Reload the Page</Button> */}
+          <hr />
+
+          <img
+            src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1682526632/github/logo-api.png"
+            className="max-w-[150px]"
+          />
         </div>
       ) : (
         <motion.main

@@ -98,7 +98,7 @@ export default class Filtering<T> {
      */
     constructor(filtersGrouped: {
         [x: string]: any[];
-    }, preSelectedFilters: never[], items: any[], ItemRenderer: React.ComponentType<ItemRendererProps<T>>, mode?: string);
+    }, preSelectedFilters: never[], items: any[] | null, ItemRenderer: React.ComponentType<ItemRendererProps<T>>, mode?: string);
     private RenderFilters;
     FilteredItems: () => JSX.Element;
 }

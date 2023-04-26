@@ -126,7 +126,7 @@ export default class Filtering<T> {
       [x: string]: any[];
     },
     preSelectedFilters: never[],
-    items: any[],
+    items: any[] | null,
     ItemRenderer: React.ComponentType<ItemRendererProps<T>>,
     mode?: string
   ) {

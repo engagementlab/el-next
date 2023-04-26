@@ -7,10 +7,20 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { AnimatePresence } from 'framer-motion';
 
+// import { ErrorBoundary } from 'react-error-boundary';
+// import { AppErrorFallback } from '../components/ErrorBoundary';
+// import Error from 'next/error';
+
 function App({ Component, pageProps }: AppProps) {
   return (
     <main className="w-full mb-24 font-sans scroll-smooth">
       <Header />
+      {/* <ErrorBoundary
+        onError={(error, info) => {}}
+        fallbackRender={(fallbackProps) => {
+          return <AppErrorFallback {...fallbackProps} />;
+        }}
+      > */}
       <AnimatePresence
         exitBeforeEnter
         initial={false}
@@ -18,6 +28,7 @@ function App({ Component, pageProps }: AppProps) {
       >
         <Component {...pageProps} />
       </AnimatePresence>
+      {/* </ErrorBoundary> */}
       <Footer />
     </main>
   );

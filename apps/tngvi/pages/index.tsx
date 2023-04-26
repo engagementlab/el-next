@@ -1,8 +1,6 @@
 import { InferGetStaticPropsType } from 'next';
 import { SlideshowProps } from 'react-slideshow-image';
-import { Button, Image, Video } from '@el-next/components';
-
-import query from '../../../apollo-client';
+import { Button, Image, Video, Query } from '@el-next/components';
 
 import Layout from '../components/Layout';
 
@@ -23,6 +21,7 @@ const slidesProps: SlideshowProps = {
 
 export default function Home({
   homePage,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
   const pseudoBlurBg =
     'fixed bg-lynx block -z-10 blur-xl rounded-full w-full h-full md:blur-2xl md:h-20 md:-translate-y-1/4'
@@ -33,7 +32,7 @@ export default function Home({
       .join(' ');
 
   return (
-    <Layout title="Home">
+    <Layout title="Home" error={error}>
       <div className="flex flex-col">
         <div className="relative w-full mt-20 lg:max-h-screen overflow-clip">
           <div className="flex flex-col items-center">
@@ -56,7 +55,7 @@ export default function Home({
       <Video
         videoLabel="Transforming Narratives of Gun Violence"
         videoUrl="https://player.vimeo.com/video/654694654"
-        thumbUrl="https://res.cloudinary.com/engagement-lab-home/image/upload/v1670433897/tngvi/home-video-thumb.png"
+        thumbUrl="https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,q_60/v1670433897/tngvi/home-video-thumb.png"
       />
       <div className="flex flex-col items-center w-full text-center">
         <h3 className="w-4/5 md:w-1/2 lg:w-full text-sm lg:text-2xl my-5 md:my-6 text-purple font-bold">
@@ -71,12 +70,12 @@ export default function Home({
   );
 }
 export async function getStaticProps() {
-  const result = await query(
+  const result = await Query(
     'homePage',
     `homePage(where: { name: { equals: "Home Page" } }) {
       intro {
         document
-      }
+      }\
       slides {
         image {
           publicId
@@ -86,11 +85,20 @@ export async function getStaticProps() {
       }
     }`
   );
-  const homePage = result[0] as HomePage;
+  if (result.error) {
+    return {
+      props: {
+        error: result.error,
+        homePage: null,
+      },
+    };
+  } else {
+    const homePage = result[0] as HomePage;
 
-  return {
-    props: {
-      homePage,
-    },
-  };
+    return {
+      props: {
+        homePage,
+      },
+    };
+  }
 }

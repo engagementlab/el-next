@@ -495,11 +495,11 @@ var Query = /*#__PURE__*/function () {
           isEmpty = Object.values(result.data).every(function (x) {
             return null === x || x.length === 0;
           });
-          console.log(result);
           if (!isEmpty) {
-            _context.next = 9;
+            _context.next = 8;
             break;
           }
+          // Capitalize keys in query string that errored, if any
           error = {
             "class": ErrorClass.empty,
             message: Object.keys(result.data).map(function (key) {
@@ -509,13 +509,12 @@ var Query = /*#__PURE__*/function () {
           return _context.abrupt("return", {
             error: error
           });
-        case 9:
+        case 8:
           return _context.abrupt("return", result.data[name]);
-        case 12:
-          _context.prev = 12;
+        case 11:
+          _context.prev = 11;
           _context.t0 = _context["catch"](0);
           if (_context.t0 instanceof errors.ApolloError) {
-            // console.log('1', (err.networkError as ServerError).result['errors']);
             if (_context.t0.networkError && _context.t0.networkError.result !== undefined) {
               _error = {
                 "class": ErrorClass.client,
@@ -544,11 +543,11 @@ var Query = /*#__PURE__*/function () {
           return _context.abrupt("return", {
             error: _error
           });
-        case 16:
+        case 15:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 12]]);
+    }, _callee, null, [[0, 11]]);
   }));
   return function Query(_x, _x2) {
     return _ref.apply(this, arguments);

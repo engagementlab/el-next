@@ -128,6 +128,10 @@ const Image = ({
       }`
   );
 
+  // For dev mode, degrade image quality and use gray scale to save bandwidth
+  if (process.env.NODE_ENV === 'development')
+    cloudImage.addTransformation('e_grayscale,q_auto:eco');
+
   // If lazyload not set to false, enable
   if (lazy === undefined)
     plugins.push(

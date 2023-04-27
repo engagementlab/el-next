@@ -42,8 +42,8 @@ export const Query = async (name: string, queryStr: string) => {
     const isEmpty = Object.values(result.data).every(
       (x) => null === x || (x as unknown[]).length === 0
     );
-    console.log(result);
     if (isEmpty) {
+      // Capitalize keys in query string that errored, if any
       const error: TError = {
         class: ErrorClass.empty,
         message: Object.keys(result.data)
@@ -60,7 +60,6 @@ export const Query = async (name: string, queryStr: string) => {
   } catch (err: unknown) {
     let error: TError;
     if (err instanceof ApolloError) {
-      // console.log('1', (err.networkError as ServerError).result['errors']);
       if (
         err.networkError &&
         (err.networkError as ServerError).result !== undefined

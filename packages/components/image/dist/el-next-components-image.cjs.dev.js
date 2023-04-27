@@ -53,6 +53,9 @@ var Image = function Image(_ref) {
   // if maxWidth defined, ensure initial width is used
   cloudImage.addTransformation(transforms || "f_auto,dpr_auto".concat(aspectDefault ? '' : ',ar_4:3').concat(maxWidth ? ",w_".concat(maxWidth) : ',c_crop,g_center'));
 
+  // For dev mode, degrade image quality and use gray scale to save bandwidth
+  if (process.env.NODE_ENV === 'development') cloudImage.addTransformation('e_grayscale,q_auto:eco');
+
   // If lazyload not set to false, enable
   if (lazy === undefined) plugins.push(react.lazyload(), react.placeholder({
     mode: 'blur'

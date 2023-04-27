@@ -8,9 +8,7 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 import _ from 'lodash';
 
 import { HeadingStyle } from '@el-next/components';
-import { Image } from '@el-next/components';
-
-import query from '../../../../apollo-client';
+import { Image, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
@@ -35,49 +33,49 @@ const rendererOverrides = {
 
 export default function Event({
   item,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  return !item ? (
-    'Not found!'
-  ) : (
-    <Layout>
-      <div className="mt-14">
-        {item.thumbnail ? (
-          <Image
-            id="header-img"
-            alt={item.thumbAltText}
-            imgId={item.thumbnail.publicId}
-          />
-        ) : (
-          <ImagePlaceholder imageLabel="Header" width={1280} height={350} />
-        )}
-        <div className="px-4 xl:px-8">
-          <h1 className="text-coated text-2xl font-extrabold mt-5">
-            {item.name}
-          </h1>
-          <div className="text-coated font-medium">
-            {new Date(item.eventDate).toLocaleDateString('en-US', {
-              weekday: 'long',
-            })}
-            ,{' '}
-            {new Date(item.eventDate).toLocaleDateString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric',
-            })}
-            ,{' '}
-            {new Date(item.eventDate).toLocaleTimeString('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </div>
+  return (
+    <Layout error={error}>
+      {item && (
+        <div className="mt-14">
+          {item.thumbnail ? (
+            <Image
+              id="header-img"
+              alt={item.thumbAltText}
+              imgId={item.thumbnail.publicId}
+            />
+          ) : (
+            <ImagePlaceholder imageLabel="Header" width={1280} height={350} />
+          )}
+          <div className="px-4 xl:px-8">
+            <h1 className="text-coated text-2xl font-extrabold mt-5">
+              {item.name}
+            </h1>
+            <div className="text-coated font-medium">
+              {new Date(item.eventDate).toLocaleDateString('en-US', {
+                weekday: 'long',
+              })}
+              ,{' '}
+              {new Date(item.eventDate).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+              ,{' '}
+              {new Date(item.eventDate).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </div>
 
-          <DocumentRenderer
-            document={item.content.document}
-            componentBlocks={Blocks()}
-            renderers={Doc(rendererOverrides)}
-          />
+            <DocumentRenderer
+              document={item.content.document}
+              componentBlocks={Blocks()}
+              renderers={Doc(rendererOverrides)}
+            />
 
-          {/*  {relatedItems &&
+            {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
                     <div>
@@ -106,21 +104,29 @@ export default function Event({
                     </div>
                     </div>
                 } */}
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const items = (await query(
+  const items = await Query(
     'events',
     `events {
             key
         }`
-  )) as { key: string }[];
+  );
 
-  const paths = items
+  if (items.error) {
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
+
+  const paths = (items as { key: string }[])
     .filter(({ key }) => !!key)
     .map(({ key }) => `/events/${key}`);
 
@@ -131,11 +137,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
        name
-       eventDate
+       eventate
        content { 
            document 
        }

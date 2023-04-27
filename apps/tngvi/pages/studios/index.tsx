@@ -4,9 +4,7 @@ import Link from 'next/link';
 import _ from 'lodash';
 import { motion } from 'framer-motion';
 
-import query from '../../../../apollo-client';
-
-import { Image, Filtering } from '@el-next/components';
+import { Image, Filtering, Query } from '@el-next/components';
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 
@@ -71,6 +69,7 @@ const renderItem = (props: {
 export default function Studios({
   filtersGrouped,
   studios,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log(Filtering);
   const router = useRouter();
@@ -86,7 +85,7 @@ export default function Studios({
   );
 
   return (
-    <Layout>
+    <Layout error={error}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         <h2 className="text-2xl text-bluegreen font-semibold mb-8">
           Studios at Emerson College
@@ -106,7 +105,7 @@ export default function Studios({
 }
 
 export async function getStaticProps() {
-  const filters = (await query(
+  const filters = await Query(
     'filters',
     `filters(where: {
             section: {
@@ -120,18 +119,29 @@ export async function getStaticProps() {
             name
             type
         }`
-  )) as any[];
+  );
+
+  if (filters.error) {
+    return {
+      props: {
+        error: filters.error,
+        studios: null,
+      },
+    };
+  }
 
   // Group filters by type
-  const filtersGrouped = filters.reduce((filterMemo, { key, type, name }) => {
-    (filterMemo[type] = filterMemo[type] || []).push({
-      key,
-      name,
-    });
-    return filterMemo;
-  }, {});
-
-  const studios = (await query(
+  const filtersGrouped = (filters as any[]).reduce(
+    (filterMemo, { type, key, name }) => {
+      (filterMemo[type] = filterMemo[type] || []).push({
+        key,
+        name,
+      });
+      return filterMemo;
+    },
+    {}
+  );
+  const studios = await Query(
     'studios',
     `studios(
             where: {
@@ -145,12 +155,21 @@ export async function getStaticProps() {
         ) {
             name blurb key filters { key name } thumbnail { publicId }
         }`
-  )) as StudioItem[];
+  );
+
+  if (studios.error) {
+    return {
+      props: {
+        error: studios.error,
+        studios: null,
+      },
+    };
+  }
 
   return {
     props: {
       filtersGrouped,
-      studios,
+      studios: studios as StudioItem[],
     },
   };
 }

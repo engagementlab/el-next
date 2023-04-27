@@ -75,7 +75,7 @@ RUN yarn && yarn build
 
 CMD yarn start
 
-# 
+# QA build image
 FROM node:16 AS qa-image
 
 ARG PORT=8081
@@ -94,6 +94,7 @@ ENV APP ${APP}
 ENV GRAPHQL_APP ${APP}
 ENV CMS_ENDPOINT ${CMS_ENDPOINT}
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0
+ENV NODE_ENV staging
 
 EXPOSE $PORT
 

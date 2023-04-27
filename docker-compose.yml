@@ -46,6 +46,7 @@ services:
     environment:
       - APP_NAME=tngvi
       - PORT=3000
+    restart: on-failure
     labels:
       - "traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi/api/graphql`)"
       - "traefik.http.routers.api-tngvi.tls=true"
@@ -72,6 +73,7 @@ services:
     environment:
       - APP_NAME=sjm
       - PORT=3001
+    restart: on-failure
     labels:
       - "traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)"
       - "traefik.http.routers.api-sjm.tls=true"
@@ -92,6 +94,7 @@ services:
       args:
         APP: tngvi
         CMS_ENDPOINT: cms-tngvi:3000
+    restart: on-failure
     labels:
       - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
       - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa.transformnarratives.org`)"
@@ -111,6 +114,7 @@ services:
         APP: sjm
         PORT: 8082
         CMS_ENDPOINT: cms-sjm:3001
+    restart: on-failure
     labels:
       - "traefik.http.routers.qa-sjm-http.entrypoints=web"
       - "traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)"

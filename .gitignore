@@ -7,3 +7,4 @@ node_modules
 .env
 apps/sjm/.next
 .auth.env
+apps/elab/.next

@@ -7,7 +7,13 @@ import _ from 'lodash';
 import { create } from 'zustand';
 import { useEffect } from 'react';
 
-import { Variants, motion, sync, useCycle } from 'framer-motion';
+import {
+  AnimatePresence,
+  Variants,
+  motion,
+  sync,
+  useCycle,
+} from 'framer-motion';
 import { useDimensions } from './use-dimensions';
 
 import { MenuToggle } from './MenuToggle';
@@ -68,21 +74,43 @@ const customEase =
 const linkClass =
   'text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all';
 const sidebar: Variants = {
-  open: (height = 100) => ({
-    clipPath: `polygon(0 0, 16% 0, 16% ${height * 2 + 200}%, 0 16%)`,
+  open: (height = 1000) => ({
     transition: {
-      type: 'tween',
-      stiffness: 0,
-      restDelta: 2,
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+      duration: 0.3,
     },
   }),
   closed: {
-    clipPath: 'polygon(0 0, 16% 0, 16% 16%, 0 16%)',
+    // clipPath: 'circle(20px at 263px 60px)',
+    width: '50vw',
     transition: {
-      delay: 0.5,
+      when: 'afterChildren',
+      staggerChildren: 0.2,
+      staggerDirection: -1,
       type: 'spring',
       stiffness: 400,
       damping: 40,
+    },
+  },
+};
+const navItemsVariants: Variants = {
+  open: {
+    // display: 'block',/
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 1,
+      y: { stiffness: 1000, velocity: -100 },
+    },
+  },
+  closed: {
+    // display: 'none',
+    y: -50,
+    opacity: 0,
+    transition: {
+      duration: 1,
+      y: { stiffness: 1000 },
     },
   },
 };
@@ -114,83 +142,91 @@ const ActiveLink = (href: string | undefined) => {
   return router.asPath === `${href}/`;
 };
 
-const NavItems = () => {
-  return (
-    <motion.ul
-      className="flex flex-col justify-between w-full list-none text-purple text-2xl xl:text-lg text-right"
-      // variants={variants}
-    >
-      {links.map((link: NavLink) => {
-        if (link.subMenu) {
-          return (
-            <li key={link.label} className="group">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                {link.label}
-                <svg
-                  height="10.0"
-                  width="14"
-                  className="inline ml-2 transition-transform group-hover:rotate-180"
-                >
-                  <polygon
-                    points="0,0 14,0 7.0,9.0"
-                    style={{ fill: '#8D33D2' }}
-                  ></polygon>
-                </svg>
-              </a>
+// const NavItems = (isOpen: boolean) => {
+//   return (
+//     <motion.ul
+//       className="list-none text-purple text-2xl xl:text-lg text-right opacity-0"
+//       // animate={isOpen ? 'open' : 'closed'}
+//       variants={navVariants}
+//     >
+//       {links.map((link: NavLink) => {
+//         // if (link.subMenu) {
+//         //   return (
+//         //     <li key={link.label} className="group">
+//         //       <a
+//         //         href="#"
+//         //         onClick={(e) => {
+//         //           e.preventDefault();
+//         //         }}
+//         //       >
+//         //         {link.label}
+//         //         <svg
+//         //           height="10.0"
+//         //           width="14"
+//         //           className="inline ml-2 transition-transform group-hover:rotate-180"
+//         //         >
+//         //           <polygon
+//         //             points="0,0 14,0 7.0,9.0"
+//         //             style={{ fill: '#8D33D2' }}
+//         //           ></polygon>
+//         //         </svg>
+//         //       </a>
 
-              <ul
-                className={`xl:p-3 xl:border-2 xl:translate-y-3 z-50 text-gray-700 border-purple bg-lynx text-right transition-all group-hover:opacity-100 group-hover:translate-y-0 ${customEase}`}
-              >
-                {link.subMenu.map((subLink: NavLink) => {
-                  return (
-                    <li className="mt-6 xl:mt-2" key={subLink.label}>
-                      {ActiveLink(subLink.url) ? (
-                        <span
-                          onClick={() => {
-                            // toggleNavOpen(false);
-                          }}
-                          className="opacity-40"
-                        >
-                          {subLink.label}
-                        </span>
-                      ) : (
-                        <Link href={subLink.url || ''} passHref>
-                          {subLink.label}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </li>
-          );
-        } else {
-          return (
-            <li className="mt-6 xl:mt-0" key={link.label}>
-              {ActiveLink(link.url) ? (
-                <span className="opacity-40">{link.label}</span>
-              ) : (
-                <Link href={link.url || ''} passHref>
-                  {link.label}
-                </Link>
-              )}
-            </li>
-          );
-        }
-      })}
-    </motion.ul>
-  );
-};
+//         //       <ul
+//         //         className={`xl:p-3 xl:border-2 xl:translate-y-3 z-50 text-gray-700 border-purple bg-lynx text-right transition-all group-hover:opacity-100 group-hover:translate-y-0 ${customEase}`}
+//         //       >
+//         //         {link.subMenu.map((subLink: NavLink) => {
+//         //           return (
+//         //             <li className="mt-6 xl:mt-2" key={subLink.label}>
+//         //               {ActiveLink(subLink.url) ? (
+//         //                 <span
+//         //                   onClick={() => {
+//         //                     // toggleNavOpen(false);
+//         //                   }}
+//         //                   className="opacity-40"
+//         //                 >
+//         //                   {subLink.label}
+//         //                 </span>
+//         //               ) : (
+//         //                 <Link href={subLink.url || ''} passHref>
+//         //                   {subLink.label}
+//         //                 </Link>
+//         //               )}
+//         //             </li>
+//         //           );
+//         //         })}
+//         //       </ul>
+//         //     </li>
+//         //   );
+//         // } else {
+//         return (
+//           <motion.li
+//             // animate={isOpen ? 'open' : 'closed'}
+//             variants={navItemsVariants}
+//             // whileHover={{ scale: 1.1 }}
+//             // whileTap={{ scale: 0.95 }}
+//             className="mt-6 xl:mt-0"
+//             key={link.label}
+//           >
+//             {ActiveLink(link.url) ? (
+//               <span className="opacity-40">{link.label}</span>
+//             ) : (
+//               <Link href={link.url || ''} passHref>
+//                 {link.label}
+//               </Link>
+//             )}
+//           </motion.li>
+//         );
+//         // }
+//       })}
+//     </motion.ul>
+//   );
+// };
 
 const Header = () => {
   const router = useRouter();
-
   const [isOpen, toggleOpen] = useCycle(false, true);
+
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -299,55 +335,69 @@ const Header = () => {
               </g>
             </svg>
           </Link>
-          {/* Mobile/tablet */}
-          <div
-            id="lines"
-            className="block relative z-50 cursor-pointer"
-            onClick={(e) => {
-              //   toggleNavOpen(!navOpen);
-            }}
-          >
-            <span
-              className={`block relative h-[1px] w-12 bg-black opacity-100 origin-center transition-all
-              ${customEase} 
-              `}
-              //   ${navOpen ? 'opacity-0 left-4' : ' left-0'}
-            ></span>
-            <span
-              className={`block relative h-[1px] w-12 bg-black opacity-100 left-0 origin-center transition-all
-              ${customEase}
-              `}
-              //    ${navOpen ? 'rotate-45 top-0' : 'top-4'}
-            ></span>
-            <span
-              className={`block relative h-[1px] w-12 bg-black opacity-100 left-0 origin-center transition-all
-              ${customEase}
-              `}
-              //    ${navOpen ? '-rotate-45 top-0' : 'top-8'}
-            ></span>
-          </div>
         </div>
-        {/* <div
-          className={`block w-full fixed overflow-y-scroll top-0 left-full h-full p-5 pt-20 z-40 bg-lynx
-            transition-all ${customEase}`}
-        > */}
         <motion.nav
           initial={false}
-          animate={isOpen ? 'open' : 'closed'}
+          // animate={isOpen ? 'open' : 'closed'}
           custom={height}
           ref={containerRef}
         >
-          <motion.div
-            className="absolute top-0 left-0 bottom-0 w-80 bg-red-300"
-            variants={sidebar}
-          />
-          {/* {NavItems()} */}
+          {/*  */}
+
+          <AnimatePresence>
+            {isOpen && (
+              <motion.aside
+                className="absolute flex justify-center items-center rounded-full w-[30px] h-[30px] bg-red-300 "
+                animate={{
+                  position: 'absolute',
+                  height: '100vh',
+                  width: '100vw',
+                  borderRadius: 0,
+                  // opacity: 1,
+                  top: 0,
+                  left: 0,
+                }}
+                exit={{
+                  // position: 'absolute',
+                  // width: '30px',
+                  // height: '30px',
+                  // top: '50px',
+                  // // right: '500px',
+                  // left: '100vw',
+                  transition: { delay: 0.7, duration: 5.3 },
+                }}
+              >
+                <motion.ul
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
+                  variants={sidebar}
+                >
+                  {links.map((link: NavLink) => (
+                    <motion.li
+                      variants={navItemsVariants}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="mt-6 xl:mt-0"
+                      key={link.label}
+                    >
+                      {ActiveLink(link.url) ? (
+                        <span className="opacity-40">{link.label}</span>
+                      ) : (
+                        <Link href={link.url || ''} passHref>
+                          {link.label}
+                        </Link>
+                      )}
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              </motion.aside>
+            )}
+          </AnimatePresence>
           <MenuToggle
             toggle={() => toggleOpen()}
             hover={() => toggleMenuHover()}
             isHover={menuButtonHover}
-            // onMouseEnter={toggleMenuHover(true)}
-            // onMouseLeave={toggleMenuHover(false)}
           />
         </motion.nav>
       </nav>

@@ -10,13 +10,17 @@ const Path = (
     fill="transparent"
     strokeWidth="3"
     stroke="#fff"
-    strokeLinecap="round"
+    strokeLinecap="square"
     {...props}
   />
 );
 
-export const MenuToggle = ({ toggle, hover, isHover }: any) => {
-  // console.log(isHover);
+export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
+  const currentState = () => {
+    if (isOpen) return 'open';
+    else if (isHover) return 'hover';
+    else return 'default';
+  };
   return (
     <motion.button
       onClick={toggle}
@@ -26,45 +30,47 @@ export const MenuToggle = ({ toggle, hover, isHover }: any) => {
         scale: 1.2,
         transition: { duration: 0.3 },
       }}
-      className="relative z-50"
+      className="relative z-75"
     >
-      <svg
-        width="50"
-        height="50"
-        viewBox="0 0 50 50"
-        className="border-2 border-violet-700"
-      >
+      <svg width="75" height="75" viewBox="0 0 75 75">
         <motion.circle
-          cx="25"
-          cy="25"
-          r="20"
-          fill="red"
-          animate={isHover ? 'hover' : 'default'}
+          cx="35"
+          cy="35"
+          r="30"
+          fill="#00ab9e"
+          animate={currentState()}
           variants={{
-            default: { fill: 'red' },
-            hover: { fill: 'black' },
+            default: { fill: '#00ab9e' },
+            hover: { fill: '#f6a536', r: 100 },
+            open: { fill: '#000' },
           }}
           transition={{ duration: 0.3 }}
         />
         <Path
+          d="M 25 35 L 45 35"
+          animate={currentState()}
           variants={{
-            closed: { d: 'M 2 2.5 L 20 2.5' },
-            open: { d: 'M 3 16.5 L 17 2.5' },
+            // closed: { d: 'M 2 16.346 L 20 16.346' },
+            open: { d: 'M 3 2.5 L 17 16.346' },
+            hover: { d: 'M 20 35 L 50 35' },
           }}
         />
         <Path
-          d="M 2 9.423 L 20 9.423"
+          d="M 25 45 L 45 45"
           variants={{
-            closed: { opacity: 1 },
-            open: { opacity: 0 },
-          }}
-          transition={{ duration: 0.1 }}
-        />
-        <Path
-          variants={{
-            closed: { d: 'M 2 16.346 L 20 16.346' },
+            // closed: { d: 'M 2 16.346 L 20 16.346' },
             open: { d: 'M 3 2.5 L 17 16.346' },
           }}
+        />
+        <Path
+          d="M 25 25 L 45 25"
+          animate={currentState()}
+          variants={{
+            // closed: { opacity: 1 },
+            open: { d: 'M 20 35 L 50 35' },
+            hover: { d: 'M 25 25 L 55 25' },
+          }}
+          transition={{ duration: 0.1 }}
         />
       </svg>
     </motion.button>

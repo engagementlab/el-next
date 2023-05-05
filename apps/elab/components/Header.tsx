@@ -76,20 +76,20 @@ const linkClass =
 const sidebar: Variants = {
   open: (height = 1000) => ({
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.35,
+      // delayChildren: 0.1,
       duration: 0.3,
     },
   }),
   closed: {
     // clipPath: 'circle(20px at 263px 60px)',
-    width: '50vw',
     transition: {
-      when: 'afterChildren',
-      staggerChildren: 0.2,
-      staggerDirection: -1,
+      delay: 0.1,
+      duration: 0.1,
+      // staggerChildren: 0.2,
+      // staggerDirection: -1,
       type: 'spring',
-      stiffness: 400,
+      // stiffness: 400,
       damping: 40,
     },
   },
@@ -106,11 +106,11 @@ const navItemsVariants: Variants = {
   },
   closed: {
     // display: 'none',
-    y: -50,
+    y: -100,
     opacity: 0,
     transition: {
-      duration: 1,
-      y: { stiffness: 1000 },
+      duration: 0.3,
+      // y: { stiffness: 1000 },
     },
   },
 };
@@ -342,29 +342,30 @@ const Header = () => {
           custom={height}
           ref={containerRef}
         >
-          {/*  */}
-
+          {' '}
           <AnimatePresence>
             {isOpen && (
               <motion.aside
-                className="absolute flex justify-center items-center rounded-full w-[30px] h-[30px] bg-red-300 "
+                className="absolute flex justify-center items-center rounded-[50%] w-[30px] h-[30px] top-[45px] right-[45px] bg-black"
                 animate={{
-                  position: 'absolute',
                   height: '100vh',
-                  width: '100vw',
+                  width: '40vw',
                   borderRadius: 0,
-                  // opacity: 1,
+                  opacity: 1,
                   top: 0,
-                  left: 0,
+                  right: 0,
+                  // transition: { ease: "easeOut" delay: 0.7, duration: 5.3 },
                 }}
                 exit={{
-                  // position: 'absolute',
-                  // width: '30px',
-                  // height: '30px',
-                  // top: '50px',
-                  // // right: '500px',
+                  position: 'absolute',
+                  width: '30px',
+                  height: '30px',
+                  top: '45px',
+                  right: '45px',
+                  borderRadius: '50%',
+                  opacity: 0,
                   // left: '100vw',
-                  transition: { delay: 0.7, duration: 5.3 },
+                  transition: { delay: 0.2, duration: 0.15 },
                 }}
               >
                 <motion.ul
@@ -378,7 +379,7 @@ const Header = () => {
                       variants={navItemsVariants}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
-                      className="mt-6 xl:mt-0"
+                      className="mt-6 xl:mt-0 text-6xl text-white"
                       key={link.label}
                     >
                       {ActiveLink(link.url) ? (
@@ -398,6 +399,7 @@ const Header = () => {
             toggle={() => toggleOpen()}
             hover={() => toggleMenuHover()}
             isHover={menuButtonHover}
+            isOpen={isOpen}
           />
         </motion.nav>
       </nav>

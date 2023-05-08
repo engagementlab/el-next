@@ -323,7 +323,7 @@ function imageSelect({
       useEffect(() => {
         // app name is derived from first pathname string
         const app =
-          process.env.PRODUCTION_MODE === 'true'
+          window.location.protocol === 'https:'
             ? window.location.pathname.replace('/', '').split('/')[0]
             : 'tngvi';
         const endpointPrefix =

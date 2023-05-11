@@ -27,7 +27,7 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
       onHoverStart={hover}
       onHoverEnd={hover}
       whileHover={{
-        scale: 1.2,
+        scale: 1.03,
         transition: { duration: 0.3 },
       }}
       className="relative z-75"
@@ -41,36 +41,38 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
           animate={currentState()}
           variants={{
             default: { fill: '#00ab9e' },
-            hover: { fill: '#f6a536', r: 100 },
-            open: { fill: '#000' },
+            hover: { fill: '#f6a536', r: 75 },
+            open: { fill: '#000', r: 75 },
           }}
-          transition={{ duration: 0.3 }}
-        />
-        <Path
-          d="M 25 35 L 45 35"
-          animate={currentState()}
-          variants={{
-            // closed: { d: 'M 2 16.346 L 20 16.346' },
-            open: { d: 'M 3 2.5 L 17 16.346' },
-            hover: { d: 'M 20 35 L 50 35' },
-          }}
-        />
-        <Path
-          d="M 25 45 L 45 45"
-          variants={{
-            // closed: { d: 'M 2 16.346 L 20 16.346' },
-            open: { d: 'M 3 2.5 L 17 16.346' },
-          }}
+          transition={{ duration: 0.3, type: 'spring' }}
         />
         <Path
           d="M 25 25 L 45 25"
           animate={currentState()}
           variants={{
-            // closed: { opacity: 1 },
-            open: { d: 'M 20 35 L 50 35' },
+            open: { rotate: '-45deg', translateY: '10px' },
             hover: { d: 'M 25 25 L 55 25' },
           }}
           transition={{ duration: 0.1 }}
+        />
+        <Path
+          d="M 25 35 L 45 35"
+          opacity={1}
+          animate={currentState()}
+          variants={{
+            closed: { d: 'M 2 16.346 L 20 16.346', opacity: 1 },
+            open: { d: 'M 0 35 L 0 35', opacity: 0 },
+            hover: { d: 'M 20 35 L 50 35' },
+          }}
+        />
+        <Path
+          d="M 25 45 L 45 45"
+          animate={currentState()}
+          variants={{
+            closed: { d: 'M 2 16.346 L 20 16.346' },
+            open: { rotate: '45deg', translateY: '-10px' },
+            hover: { d: 'M 31 45 L 50 45' },
+          }}
         />
       </svg>
     </motion.button>

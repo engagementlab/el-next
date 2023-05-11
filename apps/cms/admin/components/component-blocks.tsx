@@ -605,6 +605,23 @@ export const componentBlocks = {
               </svg>
             </NotEditable>
             {props.fields.link.element}
+            <NotEditable>
+              <Tooltip
+                title={
+                  <Typography variant="caption" color="inherit">
+                    If link is to a page on this app, use the format
+                    "/this/is/a-link". If it's an external link, you must use
+                    the format "https://www.linkhere.org". If you are pasting
+                    the link, make sure no other characters end up in this field
+                    (e.g. ")").
+                  </Typography>
+                }
+              >
+                <IconButton aria-haspopup="true">
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </NotEditable>
           </div>
         </div>
       );
@@ -615,7 +632,10 @@ export const componentBlocks = {
         kind: 'inline',
         placeholder: 'Label',
       }),
-      link: fields.child({ kind: 'inline', placeholder: '/link/here' }),
+      link: fields.child({
+        kind: 'inline',
+        placeholder: '/link/here',
+      }),
     },
     chromeless: true,
   }),

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
-import { motion } from 'framer-motion';
+import { Transition, Variants, motion } from 'framer-motion';
 import { Favicon } from '../favicon';
 import { TError } from '../query';
 import { ErrorClass } from '..';
@@ -10,9 +10,10 @@ type Props = {
   title: string;
   description: string;
   error?: TError;
+  transitions?: { variants: Variants; transition?: Transition };
 };
 
-const variants = {
+const defaultPgTransitions = {
   hidden: { opacity: 0 },
   enter: { opacity: 1 },
   exit: { opacity: 0 },
@@ -23,6 +24,7 @@ export const Layout = ({
   title,
   description,
   error,
+  transitions,
 }: Props): JSX.Element => {
   let errorHelper =
     "Sorry, we're unable to retrieve content at this time due to a connection error. ";
@@ -93,8 +95,8 @@ export const Layout = ({
           initial="hidden"
           animate="enter"
           exit="exit"
-          variants={variants}
-          transition={{ type: 'linear' }}
+          variants={transitions.variants || defaultPgTransitions}
+          transition={transitions.transition || { type: 'linear' }}
         >
           {children}
         </motion.main>

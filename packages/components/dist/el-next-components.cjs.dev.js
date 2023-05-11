@@ -36,7 +36,7 @@ function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; 
 
 var Head__default = /*#__PURE__*/_interopDefault(Head);
 
-var variants = {
+var defaultPgTransitions = {
   hidden: {
     opacity: 0
   },
@@ -51,7 +51,8 @@ var Layout = function Layout(_ref) {
   var children = _ref.children,
     title = _ref.title,
     description = _ref.description,
-    error = _ref.error;
+    error = _ref.error,
+    transitions = _ref.transitions;
   var errorHelper = "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
     console.log(error);
@@ -113,8 +114,8 @@ var Layout = function Layout(_ref) {
       initial: "hidden",
       animate: "enter",
       exit: "exit",
-      variants: variants,
-      transition: {
+      variants: transitions.variants || defaultPgTransitions,
+      transition: transitions.transition || {
         type: 'linear'
       },
       children: children
@@ -518,7 +519,7 @@ var Query = /*#__PURE__*/function () {
           _context.prev = 11;
           _context.t0 = _context["catch"](0);
           if (_context.t0 instanceof errors.ApolloError) {
-            if (_context.t0.networkError && _context.t0.networkError.result !== undefined) {
+            if (_context.t0.networkError && _context.t0.networkError.result !== undefined && _context.t0.networkError.result['errors']) {
               _error = {
                 "class": ErrorClass.client,
                 message: _context.t0.networkError.result['errors'].map(function (e) {

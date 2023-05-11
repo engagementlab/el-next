@@ -62,7 +62,8 @@ export const Query = async (name: string, queryStr: string) => {
     if (err instanceof ApolloError) {
       if (
         err.networkError &&
-        (err.networkError as ServerError).result !== undefined
+        (err.networkError as ServerError).result !== undefined &&
+        (err.networkError as ServerError).result['errors']
       ) {
         error = {
           class: ErrorClass.client,

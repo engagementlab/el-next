@@ -7,7 +7,7 @@ import { controller } from '@keystone-6/core/fields/types/json/views';
 import { Fragment, useState } from 'react';
 
 import { css as emCss } from '@emotion/css';
-import { create } from 'zustand';
+import create from 'zustand';
 
 import axios from 'axios';
 import _ from 'lodash';

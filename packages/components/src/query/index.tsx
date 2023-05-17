@@ -89,13 +89,9 @@ export const Query = async (name: string, queryStr: string) => {
         message: gqlErr.message,
       };
     }
-    // else if (err instanceof GraphQLError) {
-    //   return {
-    //     error: true,
-    //     // type:
-    //     message: err.message,
-    //   };
-    // }
+
+    // If not dev, we need to throw error so build would fail
+    if (process.env.NODE_ENV !== 'development') throw new Error(error.message);
     return {
       error,
     };

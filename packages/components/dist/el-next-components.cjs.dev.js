@@ -53,6 +53,10 @@ var Layout = function Layout(_ref) {
     description = _ref.description,
     error = _ref.error,
     transitions = _ref.transitions;
+  var variants = transitions && transitions.variants ? transitions.variants : defaultPgTransitions;
+  var transition = transitions && transitions.transition ? transitions.transition : {
+    type: 'linear'
+  };
   var errorHelper = "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
     console.log(error);
@@ -114,10 +118,8 @@ var Layout = function Layout(_ref) {
       initial: "hidden",
       animate: "enter",
       exit: "exit",
-      variants: transitions.variants || defaultPgTransitions,
-      transition: transitions.transition || {
-        type: 'linear'
-      },
+      variants: variants,
+      transition: transition,
       children: children
     })]
   });
@@ -537,17 +539,18 @@ var Query = /*#__PURE__*/function () {
               message: gqlErr.message
             };
           }
-          // else if (err instanceof GraphQLError) {
-          //   return {
-          //     error: true,
-          //     // type:
-          //     message: err.message,
-          //   };
-          // }
+
+          // If not dev, we need to throw error so build would fail
+          if (!(process.env.NODE_ENV !== 'development')) {
+            _context.next = 16;
+            break;
+          }
+          throw new Error(_error.message);
+        case 16:
           return _context.abrupt("return", {
             error: _error
           });
-        case 15:
+        case 17:
         case "end":
           return _context.stop();
       }

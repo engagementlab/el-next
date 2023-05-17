@@ -26,6 +26,14 @@ export const Layout = ({
   error,
   transitions,
 }: Props): JSX.Element => {
+  const variants =
+    transitions && transitions.variants
+      ? transitions.variants
+      : defaultPgTransitions;
+  const transition =
+    transitions && transitions.transition
+      ? transitions.transition
+      : { type: 'linear' };
   let errorHelper =
     "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
@@ -95,8 +103,8 @@ export const Layout = ({
           initial="hidden"
           animate="enter"
           exit="exit"
-          variants={transitions.variants || defaultPgTransitions}
-          transition={transitions.transition || { type: 'linear' }}
+          variants={variants}
+          transition={transition}
         >
           {children}
         </motion.main>

@@ -19,7 +19,8 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import WebOutlinedIcon from '@mui/icons-material/WebOutlined';
 
 import React, { useEffect, useState } from 'react';
-import create from 'zustand';
+import { create } from 'zustand';
+
 
 // import app from '../../currentApp';
 

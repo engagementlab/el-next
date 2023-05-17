@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@keystone-6/core/admin-ui/components';
-import create from 'zustand';
+import { create } from 'zustand';
+
 import { useDropzone } from 'react-dropzone';
 import { css as emCss } from '@emotion/css';
 import axios from 'axios';

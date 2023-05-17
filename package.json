@@ -28,6 +28,9 @@
     "yargs": "^17.6.2",
     "wait-port": "^1.0.4"
   },
+  "resolutions": {
+    "next": "13.3.4"
+  },
   "workspaces": [
     "packages/components"
   ],

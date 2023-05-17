@@ -32,7 +32,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import InfoIcon from '@mui/icons-material/Info';
 
-import create from 'zustand';
+import { create } from 'zustand';
 import VideoSelector, { RelatedVideoField } from './video/selector';
 import Script from 'next/script';
 

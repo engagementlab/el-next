@@ -141,7 +141,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
        name
-       eventate
+       eventDate
        content { 
            document 
        }

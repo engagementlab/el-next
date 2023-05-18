@@ -12,58 +12,159 @@ generator client {
 }
 
 model About {
-  id             String @id @default(cuid())
-  name           String @unique @default("About Moses Shumow")
-  intro          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  books          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  selectWritings Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Award {
-  id             String @id @default(cuid())
-  name           String @unique @default("Award Name")
-  key            String @unique @default("")
-  intro          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  apply          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  bgImage1       Json?
-  pastRecipients Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Event {
-  id            String         @id @default(cuid())
-  name          String         @unique @default("Event Name")
-  key           String         @unique @default("")
-  intro         Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  bgImage1      Json?
-  agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  awards        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  bgImage2      Json?
-  location      Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  gallerySlides GallerySlide[] @relation("Event_gallerySlides")
-}
-
-model GallerySlide {
-  id            String  @id @default(cuid())
-  gallerySlides Event[] @relation("Event_gallerySlides")
-  image         Json?
-  altText       String  @default("")
-  caption       String  @default("")
-}
-
-model Home {
   id      String @id @default(cuid())
-  name    String @unique @default("")
+  name    String @unique @default("About Page")
+  content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  values  Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
+model BigPicture {
+  id      String @id @default(cuid())
+  name    String @unique @default("Big Picture Page")
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model DataTemp {
+  id   String @id @default(cuid())
+  data String @default("")
+}
+
+model Event {
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  thumbnail        Json?
+  thumbAltText     String    @default("")
+  eventDate        DateTime
+  registrationLink String    @default("")
+  address          String    @default("")
+  blurb            String    @default("")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
+model Filter {
+  id                     String             @id @default(cuid())
+  name                   String             @default("")
+  key                    String             @default("")
+  enabled                Boolean            @default(true)
+  type                   FilterTypeType
+  section                FilterSectionType?
+  from_MediaItem_filters MediaItem[]        @relation("MediaItem_filters")
+  from_Studio_filters    Studio[]           @relation("Studio_filters")
+}
+
+model Home {
+  id     String      @id @default(cuid())
+  name   String      @unique @default("Home Page")
+  intro  Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  slides HomeSlide[] @relation("Home_slides")
+}
+
+model HomeSlide {
+  id         String @id @default(cuid())
+  homeSlides Home[] @relation("Home_slides")
+  image      Json?
+  altText    String @default("")
+  quote      String @default("")
+}
+
+model MediaItem {
+  id               String    @id @default(cuid())
+  title            String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  thumbnail        Json?
+  shortDescription String    @default("")
+  filters          Filter[]  @relation("MediaItem_filters")
+  associatedPeople Person[]  @relation("MediaItem_associatedPeople")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  videos           Json?
+  file_filename    String?
+  file_filesize    Int?
+}
+
+model NewsItem {
+  id                  String    @id @default(cuid())
+  title               String    @default("")
+  key                 String    @unique @default("")
+  createdDate         DateTime?
+  enabled             Boolean   @default(true)
+  apps                Json      @default("[]")
+  thumbnail           Json?
+  thumbAltText        String    @default("")
+  publishDate         DateTime
+  linkHelper_html     String    @default("<p>Need HTML!</p>")
+  linkHelper_iconType icon?     @default(help)
+  source              String    @default("")
+  externalLink        String    @default("")
+  blurb               String    @default("")
+  body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
 model Person {
+  id                  String      @id @default(cuid())
+  docsHelper_html     String      @default("<p>Need HTML!</p>")
+  docsHelper_iconType icon?       @default(help)
+  name                String      @default("")
+  key                 String      @default("")
+  title               String      @default("")
+  abbreviatedTitle    String      @default("")
+  createdDate         DateTime?
+  enabled             Boolean     @default(true)
+  currentlyActive     Boolean     @default(true)
+  tag                 Json        @default("[]")
+  image               Json?
+  blurb               String      @default("")
+  remembrance         String      @default("")
+  content             Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  mediaItems          MediaItem[] @relation("MediaItem_associatedPeople")
+  studios             Studio[]    @relation("Person_studios")
+}
+
+model Studio {
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  order            Int?
+  thumbnail        Json?
+  blurb            String    @default("")
+  filters          Filter[]  @relation("Studio_filters")
+  associatedPeople Person[]  @relation("Person_studios")
+  helper_html      String    @default("<p>Need HTML!</p>")
+  helper_iconType  icon?     @default(help)
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
+model User {
   id          String    @id @default(cuid())
   name        String    @default("")
-  key         String    @default("")
-  title       String    @default("")
+  accessToken String    @default("")
   createdDate DateTime?
-  enabled     Boolean   @default(true)
-  image       Json?
-  blurb       String    @default("")
-  content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  bioId       String    @default("")
+}
+
+enum FilterTypeType {
+  Voices
+  Media
+  Departments
+  Year
+  Department
+  Partner
+  Faculty
+  Semester
+}
+
+enum FilterSectionType {
+  media
+  studio
+}
+
+enum icon {
+  help
+  info
 }

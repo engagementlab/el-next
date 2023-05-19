@@ -8,9 +8,26 @@ function CustomLogo() {
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <Global
         styles={css`
-        nav a:hover {
+        nav li a {
+          transition: all .2s;
+              background: transparent;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+            color: rgb(107, 114, 128);
+            display: block;
+            font-weight: 500;
+            margin-bottom: 4px;
+            margin-right: 24px;
+            padding: 8px 24px;
+            position: relative;
+            text-decoration: none;
+        }
+                nav li a:hover {
               background-color: black !important;
               color: white !important;
+    transform-origin: left;
+    translate: 3% 0%;
+}
         }
           [class*='ChromefulComponentBlockElement']{
             button{

@@ -129,6 +129,27 @@ const navItemsVariants: Variants = {
     scale: 1.03,
   },
 };
+const subMenuAnimate = {
+  enter: {
+    opacity: 1,
+    rotateX: 0,
+    y: 0,
+    transition: {
+      duration: 0.2,
+    },
+    display: 'block',
+  },
+  exit: {
+    opacity: 0,
+    y: -100,
+    transition: {
+      duration: 0.15,
+    },
+    transitionEnd: {
+      display: 'none',
+    },
+  },
+};
 type NavState = {
   navOpen: boolean;
   menuButtonHover: boolean;
@@ -160,8 +181,10 @@ const ActiveLink = (href: string | undefined) => {
 const Header = () => {
   const router = useRouter();
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
+  const [isHover, toggleHover] = useCycle(false, true);
+
   const containerRef = useRef(null);
-  const { height } = useDimensions(containerRef);
+  // const { height } = useDimensions(containerRef);
   const [blockScroll, allowScroll] = useScrollBlock();
 
   const { navOpen, toggleNavOpen } = useStore();
@@ -176,7 +199,7 @@ const Header = () => {
   return (
     <div className="flex justify-center xl:px-8">
       <nav className="w-full mt-9 mb-1 flex flex-col md:flex-row">
-        <div className="w-full px-6 xl:px-0 flex justify-between">
+        <div className=" w-8/12 px-6 xl:px-0 flex justify-between">
           <Link href="/" passHref className="w-40 h-min p-4">
             <motion.svg
               id="logo-img"
@@ -232,7 +255,7 @@ const Header = () => {
             </motion.svg>
           </Link>
         </div>
-        <motion.nav
+        {/* <motion.nav
           initial={false}
           // animate={isOpen ? 'open' : 'closed'}
           custom={height}
@@ -298,7 +321,42 @@ const Header = () => {
             isHover={menuButtonHover}
             isOpen={navOpen}
           />
-        </motion.nav>
+        </motion.nav> */}
+        <nav className="flex flex-col flex-grow">
+          <motion.div
+            // className="flex flex-row"
+            onHoverStart={() => toggleHover()}
+            onHoverEnd={() => toggleHover()}
+          >
+            <Link href="/">For Students</Link>
+            <motion.div
+              className="absolute bg-white border-1 border-black"
+              initial="exit"
+              animate={isHover ? 'enter' : 'exit'}
+              variants={subMenuAnimate}
+            >
+              <div className="sub-menu-item">Submenu Item 1</div>
+              <div className="sub-menu-item">Submenu Item 2</div>
+              <div className="sub-menu-item">Submenu Item 3</div>
+            </motion.div>
+          </motion.div>
+          <div className="flex flex-row justify-evenly">
+            <Link href="/" className="group">
+              <span className="group-hover:text-red">Our Approach</span>
+              <hr className="border-2 border-red group-hover:hidden" />
+            </Link>
+            <Link href="/" className="group">
+              <span className="group-hover:text-green-blue">
+                Social Impact Initiatives
+              </span>
+              <hr className="border-2 border-green-blue group-hover:hidden" />
+            </Link>
+            <Link href="/" className="group">
+              <span className="group-hover:text-yellow">News & Events</span>
+              <hr className="border-2 border-yellow group-hover:hidden" />
+            </Link>
+          </div>
+        </nav>
       </nav>
     </div>
   );

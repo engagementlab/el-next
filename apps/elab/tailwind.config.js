@@ -19,6 +19,13 @@ module.exports = {
         large: '38px',
       },
     },
+    colors: {
+      'green-blue': '#5EB89E',
+      purple: '#8D33D2',
+      red: '#FF0001',
+      white: '#FFF',
+      yellow: '#F6A536',
+    },
   },
 
   plugins: [

@@ -30,7 +30,7 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
         scale: 1.03,
         transition: { duration: 0.3 },
       }}
-      className="relative z-75"
+      className="relative z-50"
     >
       <svg width="75" height="75" viewBox="0 0 75 75">
         <motion.circle

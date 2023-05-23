@@ -29,55 +29,24 @@ interface NavLink {
 
 const links: NavLink[] = [
   {
-    url: 'initiatives',
-    label: 'Social Impact Initiatives',
-    enabled: true,
-  },
-  {
-    label: 'Curriculum',
+    label: 'For Students',
     subLinks: [
-      { url: 'curriculum/studios', label: 'Social Impact Studios' },
+      { url: '/', label: 'Social Impact Studios' },
       {
-        url: 'curriculum/undergraduate',
-        label: 'Undergraduate',
+        url: '/',
+        label: 'Link 1',
       },
       {
-        url: 'curriculum/graduate',
-        label: 'Graduate',
-      },
-    ],
-  },
-  {
-    label: 'Research',
-    subLinks: [
-      {
-        url: 'research/projects',
-        label: 'Projects',
+        url: '/',
+        label: 'Link 2',
       },
       {
-        url: 'research/publications',
-        label: 'Publications',
+        url: '/',
+        label: 'Link 3',
       },
     ],
   },
   { url: 'people', label: 'People', enabled: true },
-  { url: 'about', label: 'About', enabled: true },
-  { url: 'resources', label: 'Resources', enabled: true },
-  { url: 'events', label: 'Events Calendar', enabled: true },
-  {
-    url: 'news',
-    label: 'News',
-    enabled: true,
-  },
-  { url: 'partner', label: 'Partner With Us', enabled: true },
-  { url: 'getinvolved', label: 'Get Involved', enabled: true },
-  // TODO: in CMS?
-  {
-    href: 'https://giving.emerson.edu/give-now?fid=h0ZJD8gm3R4%3d&fdesc=i%2bI0v73Km%2bQCb1p7mjPYeYE68k%2f8URMG',
-    label: 'Donate',
-    enabled: true,
-  },
-  { url: 'jobs', label: 'Jobs', enabled: true },
 ];
 
 const customEase =
@@ -88,7 +57,7 @@ const sidebar: Variants = {
   open: (height = 1000) => ({
     transition: {
       staggerChildren: 0.05,
-      // delayChildren: 0.1,
+      delayChildren: 0.1,
       duration: 0.1,
       type: 'spring',
     },
@@ -98,8 +67,8 @@ const sidebar: Variants = {
     transition: {
       delay: 0.1,
       duration: 0.1,
-      // staggerChildren: 0.2,
-      // staggerDirection: -1,
+      staggerChildren: 0.2,
+      staggerDirection: -1,
       type: 'spring',
       // stiffness: 400,
       damping: 40,
@@ -108,20 +77,20 @@ const sidebar: Variants = {
 };
 const navItemsVariants: Variants = {
   open: {
-    // display: 'block',/
+    display: 'block',
     y: 0,
     opacity: 1,
     transition: {
-      duration: 1,
+      duration: 4,
       y: { stiffness: 1000, velocity: -100 },
     },
   },
   closed: {
-    // display: 'none',
+    display: 'none',
     y: -100,
     opacity: 0,
     transition: {
-      duration: 0.3,
+      duration: 3,
       // y: { stiffness: 1000 },
     },
   },
@@ -137,7 +106,7 @@ const subMenuAnimate = {
     transition: {
       duration: 0.2,
     },
-    display: 'block',
+    display: 'flex',
   },
   exit: {
     opacity: 0,
@@ -179,13 +148,15 @@ const ActiveLink = (href: string | undefined) => {
 };
 
 const Header = () => {
+  let isMobile = false;
+
   const router = useRouter();
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
   const [isHover, toggleHover] = useCycle(false, true);
 
   const containerRef = useRef(null);
-  // const { height } = useDimensions(containerRef);
-  const [blockScroll, allowScroll] = useScrollBlock();
+  const { height } = useDimensions(containerRef);
+  // const [blockScroll, allowScroll] = useScrollBlock();
 
   const { navOpen, toggleNavOpen } = useStore();
 
@@ -193,13 +164,14 @@ const Header = () => {
     router.events.on('routeChangeComplete', () => {
       toggleNavOpen(false);
     });
+    // isMobile = /Android|iPhone|iPad|webOS/i.test(navigator.userAgent);
   });
 
   // eslint-disable-next-line class-methods-use-this
   return (
     <div className="flex justify-center xl:px-8">
-      <nav className="w-full mt-9 mb-1 flex flex-col md:flex-row">
-        <div className=" w-8/12 px-6 xl:px-0 flex justify-between">
+      <nav className="w-full mt-9 mb-1 flex flex-row">
+        <div className="w-9/12 px-6 xl:px-0 flex justify-between">
           <Link href="/" passHref className="w-40 h-min p-4">
             <motion.svg
               id="logo-img"
@@ -255,108 +227,143 @@ const Header = () => {
             </motion.svg>
           </Link>
         </div>
-        {/* <motion.nav
-          initial={false}
-          // animate={isOpen ? 'open' : 'closed'}
-          custom={height}
-          ref={containerRef}
-        >
-          <AnimatePresence>
-            {navOpen && (
-              <motion.aside
-                className="absolute flex justify-center items-center w-[30px] h-[30px] top-[45px] right-[45px] bg-black"
-                animate={{
-                  height: '100vh',
-                  width: '100vw',
-                  borderRadius: 0,
-                  opacity: 1,
-                  top: 0,
-                  right: 0,
-                  // transition: { ease: "easeOut" delay: 0.7, duration: 5.3 },
-                }}
-                exit={{
-                  position: 'absolute',
-                  width: '30px',
-                  height: '30px',
-                  top: '45px',
-                  right: '45px',
-                  // borderRadius: '50%',
-                  opacity: 0,
-                  // left: '100vw',
-                  transition: { delay: 0.2, duration: 0.15 },
-                }}
-              >
-                <motion.ul
-                  initial="closed"
-                  animate="open"
-                  exit="closed"
-                  variants={sidebar}
-                >
-                  {links.map((link: NavLink) => (
-                    <motion.li
-                      variants={navItemsVariants}
-                      whileHover="hover"
-                      className="mt-4 text-5xl text-white"
-                      key={link.label}
-                    >
-                      {ActiveLink(link.url) ? (
-                        <span className="opacity-40">{link.label}</span>
-                      ) : (
-                        <Link href={link.url || ''} passHref>
-                          {link.label}
-                        </Link>
-                      )}
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              </motion.aside>
-            )}
-          </AnimatePresence>
-          <MenuToggle
-            toggle={() => {
-              toggleNavOpen(!navOpen);
-              !navOpen ? blockScroll() : allowScroll();
-            }}
-            hover={() => toggleMenuHover()}
-            isHover={menuButtonHover}
-            isOpen={navOpen}
-          />
-        </motion.nav> */}
-        <nav className="flex flex-col flex-grow">
-          <motion.div
-            // className="flex flex-row"
-            onHoverStart={() => toggleHover()}
-            onHoverEnd={() => toggleHover()}
-          >
-            <Link href="/">For Students</Link>
+        <div>
+          {/* Desktop+ */}
+          <div className="hidden xl:block">
             <motion.div
-              className="absolute bg-white border-1 border-black"
-              initial="exit"
-              animate={isHover ? 'enter' : 'exit'}
-              variants={subMenuAnimate}
+              // className="flex flex-row"
+              onHoverStart={() => toggleHover()}
+              onHoverEnd={() => toggleHover()}
             >
-              <div className="sub-menu-item">Submenu Item 1</div>
-              <div className="sub-menu-item">Submenu Item 2</div>
-              <div className="sub-menu-item">Submenu Item 3</div>
+              <Link href="/">For Students</Link>
+              <motion.div
+                className="absolute flex flex-col bg-white border-2 border-black p-3"
+                initial="exit"
+                animate={isHover ? 'enter' : 'exit'}
+                variants={subMenuAnimate}
+              >
+                <Link href="/">Submenu Item 1</Link>
+                <Link href="/">Submenu Item 2</Link>
+                <Link href="/">Submenu Item 3</Link>
+              </motion.div>
             </motion.div>
-          </motion.div>
-          <div className="flex flex-row justify-evenly">
-            <Link href="/" className="group">
-              <span className="group-hover:text-red">Our Approach</span>
-              <hr className="border-2 border-red group-hover:hidden" />
-            </Link>
-            <Link href="/" className="group">
-              <span className="group-hover:text-green-blue">
-                Social Impact Initiatives
-              </span>
-              <hr className="border-2 border-green-blue group-hover:hidden" />
-            </Link>
-            <Link href="/" className="group">
-              <span className="group-hover:text-yellow">News & Events</span>
-              <hr className="border-2 border-yellow group-hover:hidden" />
-            </Link>
+            <div className="flex flex-row justify-evenly">
+              <Link href="/" className="group">
+                <span className="group-hover:text-red">Our Approach</span>
+                <hr className="border-2 border-red group-hover:hidden" />
+              </Link>
+              <Link href="/" className="group">
+                <span className="group-hover:text-green-blue">
+                  Social Impact Initiatives
+                </span>
+                <hr className="border-2 border-green-blue group-hover:hidden" />
+              </Link>
+              <Link href="/" className="group">
+                <span className="group-hover:text-yellow">News & Events</span>
+                <hr className="border-2 border-yellow group-hover:hidden" />
+              </Link>
+            </div>
           </div>
-        </nav>
+          {/* Non-desktop */}
+          <motion.nav
+            // initial={false}
+            // animate={isOpen ? 'open' : 'closed'}
+            custom={height}
+            ref={containerRef}
+          >
+            <MenuToggle
+              toggle={() => {
+                toggleNavOpen(!navOpen);
+                // !navOpen ? blockScroll() : allowScroll();
+              }}
+              hover={() => toggleMenuHover()}
+              isHover={menuButtonHover}
+              isOpen={navOpen}
+            />
+            <AnimatePresence>
+              {navOpen && (
+                <motion.aside
+                  className="absolute flex flex-col justify-center items-center w-full h-full top-0 left-0 bg-white"
+                  animate={{
+                    borderRadius: 0,
+                    // opacity: 1,
+                    // top: 0,
+                    // right: 0,
+                    // transition: { ease: "easeOut" delay: 0.7, duration: 5.3 },
+                  }}
+                  exit={{
+                    // width: '30px',
+                    // height: '30px',
+                    // top: '-100%',
+                    // right: '45px',
+                    // borderRadius: '50%',
+                    // opacity: 0,
+                    // left: '100vw',
+                    transition: { delay: 0.2, duration: 1.15 },
+                  }}
+                >
+                  <div className="">
+                    <Link
+                      href="/"
+                      className="inline-block border-b-4 border-red hover:border-b-0"
+                    >
+                      Our Approach
+                    </Link>
+                    <br />
+                    <Link
+                      href="/"
+                      className="border-b-4 border-green-blue hover:border-b-0"
+                    >
+                      Social Impact Initiatives
+                    </Link>
+                    <br />
+                    <Link
+                      href="/"
+                      className="inline-block border-b-4 border-yellow group-hover:hidden"
+                    >
+                      News & Events
+                    </Link>
+                  </div>
+                  <motion.ul
+                    initial="closed"
+                    animate="open"
+                    exit="closed"
+                    variants={sidebar}
+                  >
+                    {links.map((link: NavLink) => (
+                      <motion.li
+                        variants={navItemsVariants}
+                        whileHover="hover"
+                        className="mt-4 text-2xl"
+                        key={link.label}
+                      >
+                        {ActiveLink(link.url) ? (
+                          <span className="opacity-40">{link.label}</span>
+                        ) : (
+                          <Link href={link.url || ''} passHref>
+                            {link.label}
+                          </Link>
+                        )}
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                </motion.aside>
+              )}
+            </AnimatePresence>
+          </motion.nav>
+          {/* <div className="flex flex-col items-center absolute w-full h-full xl:hidden">
+            <div
+            // className="flex flex-row"
+            >
+              <Link href="/">For Students</Link>
+              <div className="flex flex-col">
+                <Link href="/">Submenu Item 1</Link>
+                <Link href="/">Submenu Item 2</Link>
+                <Link href="/">Submenu Item 3</Link>
+              </div>
+            </div>
+          </div> */}
+        </div>
       </nav>
     </div>
   );

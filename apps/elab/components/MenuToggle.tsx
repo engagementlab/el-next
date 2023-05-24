@@ -50,7 +50,7 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
           stroke="#FF0001"
           animate={currentState()}
           variants={{
-            open: { rotate: '-45deg', translateY: '13px', stroke: '#000' },
+            open: { rotate: '-45deg', translateY: '3px', stroke: '#000' },
             hover: { d: 'M 25 25 L 55 25' },
           }}
           transition={{ duration: 0.1 }}

@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <main className="w-full min-h-screen mb-24 font-sans scroll-smooth">
         <Component {...pageProps} />
       </main>

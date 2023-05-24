@@ -5,6 +5,7 @@ import { HeadingStyle, Query } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
+import { Theme } from '@/types';
 
 type AboutPage = {
   content: any;
@@ -40,7 +41,11 @@ export default function AboutInitiative({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error}>
+    <Layout
+      error={error}
+      theme={Theme.gunviolence}
+      breadcrumbs={[{ href: '/', label: 'Social Impact Studios' }]}
+    >
       <div className=" container mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-10/12 xl:w-9/12">
         <h1 className="">Donec sodales</h1>
         <h3 className="">

@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <Layout>
       <div
-        className={`flex min-h-screen flex-col items-center justify-between p-24`}
+        className={`flex min-h-screen flex-col items-center justify-between`}
       >
         <h1 className="">Donec sodales</h1>
         <h3 className="">

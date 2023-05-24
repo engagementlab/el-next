@@ -8,8 +8,7 @@ const Path = (
 ) => (
   <motion.path
     fill="transparent"
-    strokeWidth="3"
-    stroke="#fff"
+    strokeWidth="4"
     strokeLinecap="square"
     {...props}
   />
@@ -33,7 +32,7 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
       className="relative z-50"
     >
       <svg width="75" height="75" viewBox="0 0 75 75">
-        <motion.circle
+        {/* <motion.circle
           cx="35"
           cy="35"
           r="30"
@@ -45,18 +44,20 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
             open: { fill: '#000', r: 75 },
           }}
           transition={{ duration: 0.3, type: 'spring' }}
-        />
+        /> */}
         <Path
-          d="M 25 25 L 45 25"
+          d="M 25 25 L 60 25"
+          stroke="#FF0001"
           animate={currentState()}
           variants={{
-            open: { rotate: '-45deg', translateY: '10px' },
+            open: { rotate: '-45deg', translateY: '13px', stroke: '#000' },
             hover: { d: 'M 25 25 L 55 25' },
           }}
           transition={{ duration: 0.1 }}
         />
         <Path
-          d="M 25 35 L 45 35"
+          d="M 25 35 L 60 35"
+          stroke="#5EB89E"
           opacity={1}
           animate={currentState()}
           variants={{
@@ -66,11 +67,12 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
           }}
         />
         <Path
-          d="M 25 45 L 45 45"
+          d="M 25 45 L 60 45"
           animate={currentState()}
+          stroke="#F6A536"
           variants={{
             closed: { d: 'M 2 16.346 L 20 16.346' },
-            open: { rotate: '45deg', translateY: '-10px' },
+            open: { rotate: '45deg', translateY: '-17px', stroke: '#000' },
             hover: { d: 'M 31 45 L 50 45' },
           }}
         />

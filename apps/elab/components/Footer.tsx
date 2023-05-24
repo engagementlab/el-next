@@ -61,7 +61,7 @@ export const Footer = () => {
   };
   return (
     <div>
-      <nav className="w-full flex flex-row justify-between px-6 xl:px-12 my-7 mb-24">
+      <nav className="w-full flex flex-col xl:flex-row justify-between px-6 xl:px-12 my-7 mb-24">
         <div className="flex flex-row">
           <svg width="70" height="70" fill="none" viewBox="0 0 70 70">
             <title>Engagement Lab logo</title>

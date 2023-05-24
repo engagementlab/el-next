@@ -81,7 +81,7 @@ const navItemsVariants: Variants = {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 4,
+      duration: 0.35,
       y: { stiffness: 1000, velocity: -100 },
     },
   },
@@ -90,7 +90,7 @@ const navItemsVariants: Variants = {
     y: -100,
     opacity: 0,
     transition: {
-      duration: 3,
+      duration: 0.15,
       // y: { stiffness: 1000 },
     },
   },
@@ -283,7 +283,7 @@ const Header = () => {
             <AnimatePresence>
               {navOpen && (
                 <motion.aside
-                  className="absolute flex flex-col justify-center items-center w-full h-full top-0 left-0 bg-white"
+                  className="absolute flex flex-col items-center w-full h-full top-0 left-0 bottom-0 pt-20 bg-white"
                   animate={{
                     borderRadius: 0,
                     // opacity: 1,
@@ -333,7 +333,7 @@ const Header = () => {
                     {links.map((link: NavLink) => (
                       <motion.li
                         variants={navItemsVariants}
-                        whileHover="hover"
+                        // whileHover="hover"
                         className="mt-4 text-2xl"
                         key={link.label}
                       >

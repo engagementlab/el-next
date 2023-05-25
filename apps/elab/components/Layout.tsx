@@ -37,10 +37,10 @@ const Layout = ({
         exit={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <svg width="100%" height="20" className="absolute">
-          <rect y={10} width="100%" height="2" fill="#cbdce8" />
-          <rect y={15} width="100%" height="2" fill="#cbdce8" />
-          <rect y={17} width="100%" height="2" fill="#cbdce8" />
+        <svg width="100%" height="18" className="absolute">
+          <rect y={6} width="100%" height="2" fill="#cbdce8" />
+          <rect y={11} width="100%" height="2" fill="#cbdce8" />
+          <rect y={16} width="100%" height="2" fill="#cbdce8" />
         </svg>
         <div className="absolute flex justify-center items-center px-4 xl:ml-6 bg-white">
           <svg viewBox="0 0 20 20" width="20" height="20" className="mr-1">

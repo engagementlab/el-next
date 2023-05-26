@@ -50,8 +50,12 @@ var Image = function Image(_ref) {
   })];
 
   // Create image transforms;
+  // For dev mode or low bandwidth, degrade image quality and use grayscale to save bandwidth
+  var lowBandwidth = process.env.LOW_BANDWIDTH === 'true' || typeof window !== 'undefined' && window.location.host.includes('localhost');
+  var defaultTransforms = "f_auto,dpr_auto".concat(aspectDefault ? '' : ',ar_4:3').concat(
   // if maxWidth defined, ensure initial width is used
-  cloudImage.addTransformation(transforms || "f_auto,dpr_auto".concat(aspectDefault ? '' : ',ar_4:3').concat(maxWidth ? ",w_".concat(maxWidth) : ',c_crop,g_center'));
+  maxWidth ? ",w_".concat(maxWidth) : ',c_crop,g_center');
+  cloudImage.addTransformation("".concat(transforms || defaultTransforms).concat(lowBandwidth ? ',e_grayscale,q_auto:eco' : ''));
 
   // If lazyload not set to false, enable
   if (lazy === undefined) plugins.push(react.lazyload(), react.placeholder({

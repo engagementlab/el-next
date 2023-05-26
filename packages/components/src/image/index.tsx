@@ -120,17 +120,21 @@ const Image = ({
   ];
 
   // Create image transforms;
-  // if maxWidth defined, ensure initial width is used
-  cloudImage.addTransformation(
-    transforms ||
-      `f_auto,dpr_auto${aspectDefault ? '' : ',ar_4:3'}${
-        maxWidth ? `,w_${maxWidth}` : ',c_crop,g_center'
-      }`
-  );
+  // For dev mode or low bandwidth, degrade image quality and use grayscale to save bandwidth
+  const lowBandwidth =
+    process.env.LOW_BANDWIDTH === 'true' ||
+    (typeof window !== 'undefined' &&
+      window.location.host.includes('localhost'));
 
-  // For dev mode, degrade image quality and use gray scale to save bandwidth
-  if (process.env.NODE_ENV === 'development')
-    cloudImage.addTransformation('e_grayscale,q_auto:eco');
+  let defaultTransforms = `f_auto,dpr_auto${aspectDefault ? '' : ',ar_4:3'}${
+    // if maxWidth defined, ensure initial width is used
+    maxWidth ? `,w_${maxWidth}` : ',c_crop,g_center'
+  }`;
+  cloudImage.addTransformation(
+    `${transforms || defaultTransforms}${
+      lowBandwidth ? ',e_grayscale,q_auto:eco' : ''
+    }`
+  );
 
   // If lazyload not set to false, enable
   if (lazy === undefined)

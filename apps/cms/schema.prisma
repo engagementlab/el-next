@@ -17,14 +17,80 @@ model About {
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model Filter {
+  id                     String             @id @default(cuid())
+  name                   String             @default("")
+  key                    String             @default("")
+  enabled                Boolean            @default(true)
+  type                   FilterTypeType
+  section                FilterSectionType?
+  from_MediaItem_filters MediaItem[]        @relation("MediaItem_filters")
+  from_Studio_filters    Studio[]           @relation("Studio_filters")
+}
+
+model MediaItem {
+  id               String    @id @default(cuid())
+  title            String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  thumbnail        Json?
+  shortDescription String    @default("")
+  filters          Filter[]  @relation("MediaItem_filters")
+  associatedPeople Person[]  @relation("MediaItem_associatedPeople")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  videos           Json?
+  file_filename    String?
+  file_filesize    Int?
+}
+
 model Person {
-  id          String    @id @default(cuid())
-  name        String    @default("")
-  key         String    @default("")
-  title       String    @default("")
+  id          String      @id @default(cuid())
+  name        String      @default("")
+  key         String      @default("")
+  title       String      @default("")
   createdDate DateTime?
-  enabled     Boolean   @default(true)
+  enabled     Boolean     @default(true)
   image       Json?
-  blurb       String    @default("")
-  content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  blurb       String      @default("")
+  content     Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  mediaItems  MediaItem[] @relation("MediaItem_associatedPeople")
+  studios     Studio[]    @relation("Person_studios")
+}
+
+model Studio {
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  order            Int?
+  thumbnail        Json?
+  blurb            String    @default("")
+  filters          Filter[]  @relation("Studio_filters")
+  associatedPeople Person[]  @relation("Person_studios")
+  helper_html      String    @default("<p>Need HTML!</p>")
+  helper_iconType  icon?     @default(help)
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+}
+
+enum FilterTypeType {
+  Voices
+  Media
+  Departments
+  Year
+  Department
+  Partner
+  Faculty
+  Semester
+}
+
+enum FilterSectionType {
+  media
+  studio
+}
+
+enum icon {
+  help
+  info
 }

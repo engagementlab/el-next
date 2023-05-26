@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { checkbox, text } from '@keystone-6/core/fields';
+import { checkbox, relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { denyAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -41,7 +41,7 @@ const Person: Lists.Person = list({
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
         apiKey: `${process.env.CLOUDINARY_KEY}`,
         apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'sjm/people',
+        folder: 'elab-home-3.x/people',
       },
       label: 'Bio Image',
     }),
@@ -54,6 +54,20 @@ const Person: Lists.Person = list({
     content: document({
       formatting: true,
       label: 'Full Bio/Content',
+    }),
+    mediaItems: relationship({
+      ref: 'MediaItem.associatedPeople',
+      many: true,
+      ui: {
+        hideCreate: true,
+      },
+    }),
+    studios: relationship({
+      ref: 'Studio.associatedPeople',
+      many: true,
+      ui: {
+        hideCreate: true,
+      },
     }),
   },
   ui: {

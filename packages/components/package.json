@@ -20,6 +20,7 @@
     "dotenv": "^16.0.0",
     "framer-motion": "^6.2.8",
     "next": "^12.1.6",
+    "popmotion": "^11.0.5",
     "react-dom": "^18.2.0",
     "typedoc-plugin-missing-exports": "^2.0.0",
     "zustand": "3.7.1"

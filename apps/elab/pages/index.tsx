@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import Layout from '../components/Layout';
 
 export default function Home() {
@@ -6,6 +7,20 @@ export default function Home() {
       <div
         className={`flex min-h-screen flex-col items-center justify-between`}
       >
+        <motion.div
+          className="px-10 p-3 w-48 h-48 
+         text-xl bg-green-blue group relative"
+          whileHover={{
+            scale: 1.1,
+            boxShadow: '2px 2px 100px 2px rgba(0, 0, 0, 0.15)',
+          }}
+          whileTap={{ scale: 0.8 }}
+        >
+          <div className="absolute group-hover:hidden">Hover / Tap</div>
+          <div className="absolute hidden group-hover:block w-full h-full top-0 left-0">
+            <img src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,q_auto:eco,w_250/v1685130208/elab-home-3.x/Peace_in_Process__May_2_2023-high.gif" />
+          </div>
+        </motion.div>
         <h1 className="">Donec sodales</h1>
         <h3 className="">
           Cras ultricies mi eu turpis hendrerit fringilla. Nam quam nunc,

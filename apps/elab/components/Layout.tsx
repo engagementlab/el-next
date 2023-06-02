@@ -26,10 +26,11 @@ const Layout = ({
   theme,
   breadcrumbs,
 }: Props): JSX.Element => {
-  let currentBg = 'bg-gradient-to-b from-yellow to-green-blue';
-  if (theme === Theme.gunviolence) {
+  let currentBg =
+    'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]';
+  if (theme === Theme.gunviolence)
     currentBg = 'bg-gradient-to-b from-purple/[.1] to-purple';
-  }
+
   return (
     <>
       <span

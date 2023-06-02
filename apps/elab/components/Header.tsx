@@ -176,7 +176,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   return (
     <nav className="w-full flex flex-row justify-center mt-9 mb-1 md:px-16 xl:px-24">
       <div className="w-full xl:w-8/12 px-6 xl:px-0 flex items-center">
-        <Link href="/" passHref className="w-36 xl:w-52 h-min">
+        <Link href="/" passHref className="w-36 md:w-44 xl:w-52 h-min">
           <motion.svg
             id="logo-img"
             viewBox="0 0 166 58.741"

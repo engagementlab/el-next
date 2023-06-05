@@ -26,29 +26,14 @@ const Filter: Lists.Filter = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    type: select({
-      type: 'enum',
-      options: [
-        { label: 'Voice', value: 'Voices' },
-        { label: 'Media', value: 'Media' },
-        { label: 'Studio Dept', value: 'Departments' },
-        { label: 'Year', value: 'Year' },
-        { label: 'Department', value: 'Department' },
-        { label: 'Partner', value: 'Partner' },
-        { label: 'Faculty', value: 'Faculty' },
-        { label: 'Semester', value: 'Semester' },
-      ],
-      validation: { isRequired: true },
-      ui: { displayMode: 'select' },
-    }),
-    section: select({
-      type: 'enum',
-      options: [
-        { label: 'Media', value: 'media' },
-        { label: 'Studio', value: 'studio' },
-      ],
-      ui: { displayMode: 'segmented-control' },
-    }),
+    // section: select({
+    //   type: 'enum',
+    //   options: [
+    //     { label: 'Media', value: 'media' },
+    //     { label: 'Studio', value: 'studio' },
+    //   ],
+    //   ui: { displayMode: 'segmented-control' },
+    // }),
     // order: integer(),
   },
   hooks: {
@@ -63,7 +48,7 @@ const Filter: Lists.Filter = list({
       if (resolvedData.name) {
         resolvedData = {
           ...resolvedData,
-          key: CreateKey(resolvedData.name),
+          key: CreateKey(resolvedData.name as string),
         };
       }
       return resolvedData;
@@ -71,7 +56,7 @@ const Filter: Lists.Filter = list({
   },
   ui: {
     listView: {
-      initialColumns: ['name', 'section'],
+      initialColumns: ['name'],
     },
   },
 });

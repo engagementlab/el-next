@@ -18,27 +18,26 @@ model About {
 }
 
 model Filter {
-  id                     String             @id @default(cuid())
-  name                   String             @default("")
-  key                    String             @default("")
-  enabled                Boolean            @default(true)
-  type                   FilterTypeType
-  section                FilterSectionType?
-  from_MediaItem_filters MediaItem[]        @relation("MediaItem_filters")
-  from_Studio_filters    Studio[]           @relation("Studio_filters")
+  id                     String      @id @default(cuid())
+  name                   String      @default("")
+  key                    String      @default("")
+  enabled                Boolean     @default(true)
+  from_MediaItem_filters MediaItem[] @relation("MediaItem_filters")
+  from_Studio_filters    Studio[]    @relation("Studio_filters")
 }
 
 model MediaItem {
-  id               String    @id @default(cuid())
-  title            String    @default("")
-  key              String    @unique @default("")
+  id               String                  @id @default(cuid())
+  title            String                  @default("")
+  key              String                  @unique @default("")
   createdDate      DateTime?
-  enabled          Boolean   @default(true)
+  enabled          Boolean                 @default(true)
   thumbnail        Json?
-  shortDescription String    @default("")
-  filters          Filter[]  @relation("MediaItem_filters")
-  associatedPeople Person[]  @relation("MediaItem_associatedPeople")
-  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  shortDescription String                  @default("")
+  filters          Filter[]                @relation("MediaItem_filters")
+  initiative       MediaItemInitiativeType @default(GunViolence)
+  associatedPeople Person[]                @relation("MediaItem_associatedPeople")
+  content          Json                    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   videos           Json?
   file_filename    String?
   file_filesize    Int?
@@ -74,20 +73,9 @@ model Studio {
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
-enum FilterTypeType {
-  Voices
-  Media
-  Departments
-  Year
-  Department
-  Partner
-  Faculty
-  Semester
-}
-
-enum FilterSectionType {
-  media
-  studio
+enum MediaItemInitiativeType {
+  GunViolence
+  Climate
 }
 
 enum icon {

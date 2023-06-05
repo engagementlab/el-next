@@ -99,24 +99,6 @@ type Filter {
   name: String
   key: String
   enabled: Boolean
-  type: FilterTypeType
-  section: FilterSectionType
-}
-
-enum FilterTypeType {
-  Voices
-  Media
-  Departments
-  Year
-  Department
-  Partner
-  Faculty
-  Semester
-}
-
-enum FilterSectionType {
-  media
-  studio
 }
 
 input FilterWhereUniqueInput {
@@ -131,8 +113,6 @@ input FilterWhereInput {
   name: StringFilter
   key: StringFilter
   enabled: BooleanFilter
-  type: FilterTypeTypeNullableFilter
-  section: FilterSectionTypeNullableFilter
 }
 
 input BooleanFilter {
@@ -140,35 +120,17 @@ input BooleanFilter {
   not: BooleanFilter
 }
 
-input FilterTypeTypeNullableFilter {
-  equals: FilterTypeType
-  in: [FilterTypeType!]
-  notIn: [FilterTypeType!]
-  not: FilterTypeTypeNullableFilter
-}
-
-input FilterSectionTypeNullableFilter {
-  equals: FilterSectionType
-  in: [FilterSectionType!]
-  notIn: [FilterSectionType!]
-  not: FilterSectionTypeNullableFilter
-}
-
 input FilterOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
   enabled: OrderDirection
-  type: OrderDirection
-  section: OrderDirection
 }
 
 input FilterUpdateInput {
   name: String
   key: String
   enabled: Boolean
-  type: FilterTypeType
-  section: FilterSectionType
 }
 
 input FilterUpdateArgs {
@@ -180,8 +142,6 @@ input FilterCreateInput {
   name: String
   key: String
   enabled: Boolean
-  type: FilterTypeType
-  section: FilterSectionType
 }
 
 type MediaItem {
@@ -194,6 +154,7 @@ type MediaItem {
   shortDescription: String
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
+  initiative: MediaItemInitiativeType
   associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
   content: MediaItem_content_Document
@@ -252,6 +213,11 @@ input CloudinaryImageFormat {
   transformation: String
 }
 
+enum MediaItemInitiativeType {
+  GunViolence
+  Climate
+}
+
 type MediaItem_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
@@ -286,6 +252,7 @@ input MediaItemWhereInput {
   enabled: BooleanFilter
   shortDescription: StringFilter
   filters: FilterManyRelationFilter
+  initiative: MediaItemInitiativeTypeNullableFilter
   associatedPeople: PersonManyRelationFilter
 }
 
@@ -306,6 +273,13 @@ input FilterManyRelationFilter {
   none: FilterWhereInput
 }
 
+input MediaItemInitiativeTypeNullableFilter {
+  equals: MediaItemInitiativeType
+  in: [MediaItemInitiativeType!]
+  notIn: [MediaItemInitiativeType!]
+  not: MediaItemInitiativeTypeNullableFilter
+}
+
 input PersonManyRelationFilter {
   every: PersonWhereInput
   some: PersonWhereInput
@@ -319,6 +293,7 @@ input MediaItemOrderByInput {
   createdDate: OrderDirection
   enabled: OrderDirection
   shortDescription: OrderDirection
+  initiative: OrderDirection
 }
 
 input MediaItemUpdateInput {
@@ -329,6 +304,7 @@ input MediaItemUpdateInput {
   thumbnail: Upload
   shortDescription: String
   filters: FilterRelateToManyForUpdateInput
+  initiative: MediaItemInitiativeType
   associatedPeople: PersonRelateToManyForUpdateInput
   content: JSON
   videos: JSON
@@ -370,6 +346,7 @@ input MediaItemCreateInput {
   thumbnail: Upload
   shortDescription: String
   filters: FilterRelateToManyForCreateInput
+  initiative: MediaItemInitiativeType
   associatedPeople: PersonRelateToManyForCreateInput
   content: JSON
   videos: JSON

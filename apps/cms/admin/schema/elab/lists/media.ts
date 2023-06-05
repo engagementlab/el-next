@@ -63,10 +63,25 @@ const MediaItem: Lists.MediaItem = list({
         displayMode: 'select',
       },
     }),
+    initiative: select({
+      type: 'enum',
+      options: [
+        { label: 'Gun Violence', value: 'GunViolence' },
+        { label: 'Climate', value: 'Climate' },
+        // { label: 'Studio Dept', value: 'Departments' },
+      ],
+      validation: { isRequired: true },
+      ui: { displayMode: 'select' },
+      defaultValue: 'GunViolence',
+    }),
     associatedPeople: relationship({
       ref: 'Person.mediaItems',
       many: true,
       ui: {
+        displayMode: 'cards',
+        cardFields: ['name'],
+        linkToItem: true,
+        removeMode: 'disconnect',
         description:
           'Use + button -> "Associated People" on toolbar to display in Content document.',
       },
@@ -131,7 +146,7 @@ const MediaItem: Lists.MediaItem = list({
       if (resolvedData.title) {
         resolvedData = {
           ...resolvedData,
-          key: CreateKey(resolvedData.title),
+          key: CreateKey(resolvedData.title as string),
         };
       }
       return resolvedData;

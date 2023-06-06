@@ -72,18 +72,22 @@ export default function MediaArchive({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  const preSelectedFilters =
-    Object.keys(router.query).length === 1
-      ? (Object.keys(router.query)[0].split('/') as never[])
-      : [];
+  let preSelectedFilters: never[] = [];
+  let preSelectedGroup = '';
+  if (Object.keys(router.query).length === 1) {
+    const params = Object.keys(router.query)[0].split('/');
+    console.log(params);
+    preSelectedFilters = params.slice(1) as never[];
+    preSelectedGroup = params[0];
+  }
+
   // Create store with Zustand
   const useStore = create<FilterState>()(
     // Mutate<StoreApi<FilterState>, [['zustand/subscribeWithSelector', never]]>
     subscribeWithSelector((set) => ({
       // If defined, pre-populate filter store
       currentFilters: preSelectedFilters || [],
-      // filtersNavOpen: false as boolean,
-      filterGroupOpen: '',
+      filterGroupOpen: preSelectedGroup || '',
       toggle: (filter: any) =>
         set((state) => {
           return state.currentFilters.includes(filter as never)
@@ -113,6 +117,8 @@ export default function MediaArchive({
         }),
     }))
   );
+
+  // Alter URL when groups and filters change
   useStore.subscribe(
     (state) => state.filterGroupOpen,
     (current) => {
@@ -126,13 +132,11 @@ export default function MediaArchive({
   useStore.subscribe(
     (state) => state.currentFilters,
     (current) => {
-      const { filterGroupOpen } = useStore((state) => state);
+      const group = location.search.length > 0 ? location.search : null;
       history.replaceState(
         {},
         'Filtered Data',
-        `${location.pathname}?${filterGroupOpen.toLowerCase()}/${current.join(
-          '/'
-        )}`
+        `${location.pathname}${group}/${current.join('/')}`
       );
     }
   );
@@ -151,116 +155,105 @@ export default function MediaArchive({
       return filterGroupOpen === '';
     };
     const haveGroupOpen = (key: string) => {
-      return filterGroupOpen === key;
+      return filterGroupOpen.toLowerCase() === key.toLowerCase();
     };
     const toggleFilter = useStore((state) => state.toggle);
     const reset = useStore((state) => state.reset);
 
     const filterGroups = [
-      { key: 'GunViolence', label: 'Gun Violence' },
-      { key: 'Climate', label: 'Climate' },
+      {
+        key: 'GunViolence',
+        label: 'Transforming Narratives of Gun Violence',
+        color: 'purple',
+      },
+      {
+        key: 'Climate',
+        label: 'Transforming Narratives for Climate Justice',
+        color: 'green-blue',
+      },
     ];
 
     const menu = (
-      <div>
-        {filterGroups.map((group) => (
-          <div key={group.key}>
-            <a
-              href="#"
-              className={`text-xl ${
-                !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
-              } `}
-              onClick={(e) => {
-                toggleFilterGroupOpen(group.key);
-                e.preventDefault();
-              }}
-            >
-              <div className="mt-4 flex items-center flex-shrink-0 flex-grow-0 uppercase">
-                <span className="ml-2 text-coated text-lg xl:text-sm font-semibold">
-                  {group.label}
-                </span>
-                <svg
-                  viewBox="185.411 115.41 11 11"
-                  width="11"
-                  height="11"
-                  className="flex-shrink-0 mx-6"
-                  style={{
-                    visibility: !haveGroupOpen(group.key)
-                      ? 'hidden'
-                      : 'visible',
-                  }}
-                >
-                  <path
-                    d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
-                    className="fill-purple"
-                  ></path>
-                </svg>
-              </div>
-            </a>
-            <ul
-              className={`relative transition-all ${
-                haveGroupOpen(group.key) ? 'block' : 'hidden'
-              }`}
-            >
-              {filters.map((filter) => {
-                return (
-                  <li
-                    key={filter.key}
-                    className={`text-lg xl:text-sm font-semibold my-8 xl:my-4
-                                                    ${
-                                                      !haveSpecificFilter(
-                                                        filter.key
-                                                      )
-                                                        ? 'text-bluegreen'
-                                                        : 'text-purple'
-                                                    }`}
+      <div className="flex flex-col lg:flex-row w-full xl:w-3/4">
+        {filterGroups.map((group) => {
+          const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 border-${
+            group.color
+          } rounded-full px-3 py-1 ${
+            !haveGroupOpen(group.key)
+              ? `text-${group.color}`
+              : `text-white bg-${group.color}`
+          } `;
+          return (
+            <div key={group.key} className="my-3 xl:my-0 md:mx-3">
+              {/* Hide group selector if other is selected */}
+              <a
+                href="#"
+                className={` ${
+                  !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
+                } `}
+                onClick={(e) => {
+                  toggleFilterGroupOpen(group.key);
+                  e.preventDefault();
+                }}
+              >
+                <div className={groupButtonStyle}>
+                  <span>{group.label}</span>
+                  <svg
+                    viewBox="185.411 115.41 11 11"
+                    width="11"
+                    height="11"
+                    className={`flex-shrink-0 ml-3 ${
+                      !haveGroupOpen(group.key) ? 'hidden' : 'block'
+                    }`}
                   >
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        toggleFilter(filter.key);
-                        e.preventDefault();
-                      }}
-                      className="w-full flex items-center justify-between"
-                    >
-                      <span
-                      // className={
-                      //   !haveSpecificFilter(filter.key) ? linkClass : ''
-                      // }
+                    <path
+                      d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
+                      className="fill-white"
+                    ></path>
+                  </svg>
+                </div>
+              </a>
+              <div
+                className={`flex ml-5 ${
+                  haveGroupOpen(group.key) ? 'block' : 'hidden'
+                }`}
+              >
+                ↳
+                <div className="flex flex-grow items-center justify-evenly ml-4 transition-all">
+                  {filters.map((filter) => {
+                    const filterButtonStyle = `font-bold border-2 border-${
+                      group.color
+                    } rounded-full px-3 py-1 ${
+                      !haveSpecificFilter(filter.key)
+                        ? `text-${group.color}`
+                        : `text-white bg-${group.color}`
+                    } `;
+                    return (
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          toggleFilter(filter.key);
+                          e.preventDefault();
+                        }}
+                        key={filter.key}
+                        className={filterButtonStyle}
                       >
                         {filter.name}
-                      </span>
-                      <svg
-                        viewBox="185.411 115.41 11 11"
-                        width="11"
-                        height="11"
-                        className="flex-shrink-0 mx-6"
-                        style={{
-                          visibility: !haveSpecificFilter(filter.key)
-                            ? 'hidden'
-                            : 'visible',
-                        }}
-                      >
-                        <path
-                          d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
-                          className="fill-purple"
-                        ></path>
-                      </svg>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
 
     return (
       <div>
         <div className="mr-4 flex justify-between">
-          <span>Filters</span>
-          <a
+          {/* <a
             href="#"
             className="text-bluegreen"
             onClick={(e) => {
@@ -271,6 +264,7 @@ export default function MediaArchive({
           >
             Clear
           </a>
+             */}
         </div>
         {menu}
       </div>
@@ -279,13 +273,13 @@ export default function MediaArchive({
   const FilteredItems = (props: { items: MediaItem[] | null }) => {
     // Store get/set
     const { filterGroupOpen } = useStore((state) => state);
-    const haveGroupOpen = (key: string) => {
-      return filterGroupOpen === key;
-    };
+    // const haveGroupOpen = (key: string) => {
+    //   return filterGroupOpen === key;
+    // };
     let selectedFilters = useStore((state) => state.currentFilters);
 
-    const haveFilters = selectedFilters.length > 0;
-    const reset = useStore((state) => state.reset);
+    // const haveFilters = selectedFilters.length > 0;
+    // const reset = useStore((state) => state.reset);
 
     const filteredItems = props.items
       ? props.items.filter((item) => {
@@ -293,7 +287,7 @@ export default function MediaArchive({
           return (
             filterGroupOpen === '' ||
             // ...otherwise, item's filters must match group and ALL selected sub-filters
-            (item.initiative === filterGroupOpen &&
+            (item.initiative.toLowerCase() === filterGroupOpen.toLowerCase() &&
               _.every(
                 selectedFilters,
                 (r) => _.map(item.filters, 'key').indexOf(r) >= 0
@@ -334,13 +328,7 @@ export default function MediaArchive({
   };
   return (
     <Layout error={error}>
-      <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
-        <h2 className="text-2xl text-bluegreen font-semibold mb-8">
-          Media Archive
-        </h2>
-
-        <FilteredItems items={mediaItems} />
-      </div>
+      <FilteredItems items={mediaItems} />
     </Layout>
   );
 }

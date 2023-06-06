@@ -84,12 +84,13 @@ const Layout = ({
           transition: {
             type: 'tween',
             // velocity: 200,
-
             duration: 0.4,
           },
         }}
       >
-        <div className="mx-4 md:px-20">{children}</div>
+        <div className="container mt-14 mb-24 md:px-20 xl:mt-16 px-5 xl:px-24">
+          {children}
+        </div>
       </SuperLayout>
 
       <span

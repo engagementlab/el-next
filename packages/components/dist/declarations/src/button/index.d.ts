@@ -12,7 +12,7 @@ interface ButtonProps {
     /**
      * The button's HREF attribute
      */
-    link: string;
+    link?: string;
     /**
      * The button's label
      */
@@ -32,10 +32,11 @@ interface ButtonProps {
      * @defaultValue "my-10"
      */
     margin?: string;
+    anchorId?: string;
 }
 /**
  * Return a <button> element wrapped in <Link>
  * @returns {JSX.Element} Element
  */
-export declare const Button: ({ className, hoverColor, link, label, margin, }: ButtonProps) => JSX.Element;
+export declare const Button: ({ className, hoverColor, link, label, margin, anchorId, }: ButtonProps) => JSX.Element;
 export {};

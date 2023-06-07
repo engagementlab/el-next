@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { scroller } from 'react-scroll';
 
 /**
  * @packageDocumentation
@@ -15,7 +16,7 @@ interface ButtonProps {
   /**
    * The button's HREF attribute
    */
-  link: string;
+  link?: string;
   /**
    * The button's label
    */
@@ -35,6 +36,7 @@ interface ButtonProps {
    * @defaultValue "my-10"
    */
   margin?: string;
+  anchorId?: string;
 }
 
 /**
@@ -47,10 +49,26 @@ export const Button = ({
   link,
   label,
   margin,
+  anchorId,
 }: ButtonProps) => {
+  const scrollTo = (element: string) => {
+    scroller.scrollTo(element, {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart',
+    });
+  };
+
   const classStr = `${margin ? margin : `my-10`} hover:bg-[${
     hoverColor ? hoverColor : '#ab45f8'
   }] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ${className}`;
+  if (anchorId) {
+    return (
+      <button className={classStr} onClick={() => scrollTo(anchorId)}>
+        {label}
+      </button>
+    );
+  }
   return (
     <Link href={link} passHref>
       <button className={classStr}>{label}</button>

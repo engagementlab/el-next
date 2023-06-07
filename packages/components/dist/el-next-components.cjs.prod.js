@@ -22,6 +22,7 @@ var errors = require('@apollo/client/errors');
 var changeCase = require('change-case');
 var jsxRuntime = require('react/jsx-runtime');
 require('next/link');
+require('react-scroll');
 require('@el-next/components/flexLayout');
 require('@el-next/components/headingStyle');
 require('./unsupportedIterableToArray-42309462.cjs.prod.js');

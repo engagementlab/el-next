@@ -18,6 +18,7 @@ require('../../dist/unsupportedIterableToArray-42309462.cjs.prod.js');
 require('next/image');
 require('zustand');
 require('../../button/dist/el-next-components-button.cjs.prod.js');
+require('react-scroll');
 require('../../dateFormat/dist/el-next-components-dateFormat.cjs.prod.js');
 require('../../docRenderers/dist/el-next-components-docRenderers.cjs.prod.js');
 require('@el-next/components/flexLayout');

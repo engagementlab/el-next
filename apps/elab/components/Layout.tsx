@@ -13,6 +13,7 @@ type Props = {
   error?: any;
   theme?: Theme;
   breadcrumbs?: Breadcrumb[];
+  fullBleed?: boolean;
 };
 
 const appName = 'Engagement Lab';
@@ -25,6 +26,7 @@ const Layout = ({
   error,
   theme,
   breadcrumbs,
+  fullBleed,
 }: Props): JSX.Element => {
   let currentBg =
     'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]';
@@ -88,7 +90,11 @@ const Layout = ({
           },
         }}
       >
-        <div className="container mt-14 mb-24 md:px-20 xl:mt-16 px-5 xl:px-24">
+        <div
+          className={`mt-14 mb-24 xl:mt-16 px-1 ${
+            !fullBleed ? 'md:px-20 xl:px-24' : 'md:px-16'
+          }`}
+        >
           {children}
         </div>
       </SuperLayout>

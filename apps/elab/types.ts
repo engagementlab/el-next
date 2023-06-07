@@ -3,6 +3,7 @@ export interface Breadcrumb {
   label: string;
 }
 export const enum Theme {
+  none,
   gunviolence,
   climate,
   incarceration,

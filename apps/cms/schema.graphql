@@ -144,6 +144,47 @@ input FilterCreateInput {
   enabled: Boolean
 }
 
+type InitiativesLanding {
+  id: ID!
+  name: String
+  description: String
+}
+
+input InitiativesLandingWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input InitiativesLandingWhereInput {
+  AND: [InitiativesLandingWhereInput!]
+  OR: [InitiativesLandingWhereInput!]
+  NOT: [InitiativesLandingWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  description: StringFilter
+}
+
+input InitiativesLandingOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  description: OrderDirection
+}
+
+input InitiativesLandingUpdateInput {
+  name: String
+  description: String
+}
+
+input InitiativesLandingUpdateArgs {
+  where: InitiativesLandingWhereUniqueInput!
+  data: InitiativesLandingUpdateInput!
+}
+
+input InitiativesLandingCreateInput {
+  name: String
+  description: String
+}
+
 type MediaItem {
   id: ID!
   title: String
@@ -602,6 +643,12 @@ type Mutation {
   updateFilters(data: [FilterUpdateArgs!]!): [Filter]
   deleteFilter(where: FilterWhereUniqueInput!): Filter
   deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
+  createInitiativesLanding(data: InitiativesLandingCreateInput!): InitiativesLanding
+  createInitiativesLandings(data: [InitiativesLandingCreateInput!]!): [InitiativesLanding]
+  updateInitiativesLanding(where: InitiativesLandingWhereUniqueInput!, data: InitiativesLandingUpdateInput!): InitiativesLanding
+  updateInitiativesLandings(data: [InitiativesLandingUpdateArgs!]!): [InitiativesLanding]
+  deleteInitiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
+  deleteInitiativesLandings(where: [InitiativesLandingWhereUniqueInput!]!): [InitiativesLanding]
   createMediaItem(data: MediaItemCreateInput!): MediaItem
   createMediaItems(data: [MediaItemCreateInput!]!): [MediaItem]
   updateMediaItem(where: MediaItemWhereUniqueInput!, data: MediaItemUpdateInput!): MediaItem
@@ -629,6 +676,9 @@ type Query {
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filter(where: FilterWhereUniqueInput!): Filter
   filtersCount(where: FilterWhereInput! = {}): Int
+  initiativesLandings(where: InitiativesLandingWhereInput! = {}, orderBy: [InitiativesLandingOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativesLandingWhereUniqueInput): [InitiativesLanding!]
+  initiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
+  initiativesLandingsCount(where: InitiativesLandingWhereInput! = {}): Int
   mediaItems(where: MediaItemWhereInput! = {}, orderBy: [MediaItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: MediaItemWhereUniqueInput): [MediaItem!]
   mediaItem(where: MediaItemWhereUniqueInput!): MediaItem
   mediaItemsCount(where: MediaItemWhereInput! = {}): Int

@@ -26,6 +26,12 @@ model Filter {
   from_Studio_filters    Studio[]    @relation("Studio_filters")
 }
 
+model InitiativesLanding {
+  id          String @id @default(cuid())
+  name        String @unique @default("Initiatives Landing Page")
+  description String @default("")
+}
+
 model MediaItem {
   id               String                  @id @default(cuid())
   title            String                  @default("")

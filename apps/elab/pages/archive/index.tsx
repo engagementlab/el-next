@@ -10,6 +10,7 @@ import { Image, Filtering, Query } from '@el-next/components';
 
 import { Theme } from '@/types';
 import Layout from '../../components/Layout';
+import { useEffect, useState } from 'react';
 
 // import ImagePlaceholder from '../../components/';
 
@@ -77,15 +78,7 @@ export default function MediaArchive({
   let preSelectedFilters: never[] = [];
   let preSelectedGroup = '';
   let preSelectedTheme = Theme.none;
-  if (Object.keys(router.query).length === 1) {
-    const params = Object.keys(router.query)[0].split('/');
-    preSelectedFilters = params.slice(1) as never[];
-    preSelectedGroup = params[0];
-  }
 
-  if (preSelectedGroup === 'gunviolence') {
-    preSelectedTheme = Theme.gunviolence;
-  }
   // Create store with Zustand
   const useStore = create<FilterState>()(
     subscribeWithSelector((set) => ({
@@ -111,14 +104,13 @@ export default function MediaArchive({
         set((state) => {
           const group = filterGroupKey.toLocaleLowerCase();
           let theme = Theme.none;
-          if (state.filterGroupOpen === '' && group === 'gunviolence') {
+          if (group === 'gunviolence') {
             theme = Theme.gunviolence;
           }
           return {
             ...state,
             currentTheme: theme || Theme.none,
-            filterGroupOpen:
-              state.filterGroupOpen === filterGroupKey ? '' : filterGroupKey,
+            filterGroupOpen: state.filterGroupOpen === group ? '' : group,
           };
         });
       },
@@ -134,25 +126,46 @@ export default function MediaArchive({
   useStore.subscribe(
     (state) => state.filterGroupOpen,
     (current) => {
-      const group = current.toLocaleLowerCase();
-      history.replaceState(
-        {},
-        'Filtered Group',
-        `${location.pathname}?${group}`
-      );
+      const group = current.toLowerCase();
+
+      window.location.hash = group + '?';
     }
   );
   useStore.subscribe(
     (state) => state.currentFilters,
     (current) => {
-      const group = location.search.length > 0 ? location.search : null;
+      // Preserve the current initiative key in path
+      const initiativeKey = window.location.hash.substring(
+        0,
+        window.location.hash.indexOf('?')
+      );
+
       history.replaceState(
         {},
         'Filtered Data',
-        `${location.pathname}${group}/${current.join('/')}`
+        `${location.pathname}${initiativeKey}?/${current.join('/')}`
       );
     }
   );
+  const toggleFilterGroupOpen = useStore(
+    (state) => state.toggleFilterGroupOpen
+  );
+  useEffect(() => {
+    // The preselected group will be in the hash, if any
+    preSelectedGroup = router.asPath
+      .substring(router.asPath.indexOf('#'), router.asPath.indexOf('?'))
+      .replace('#', '');
+
+    if (useStore.getState().currentTheme === Theme.none)
+      toggleFilterGroupOpen(preSelectedGroup);
+
+    // Call group-specific filters from the router path after the "?/" symbol
+    if (router.asPath.split('?')[1] && router.asPath.split('?')[1].length > 0) {
+      const params = router.asPath.split('?/')[1].split('/');
+      preSelectedFilters = params as never[];
+      useStore.setState({ currentFilters: preSelectedFilters });
+    }
+  }, []);
 
   const FilteredItems = (props: { items: MediaItem[] | null }) => {
     // Store get/set
@@ -162,7 +175,6 @@ export default function MediaArchive({
       filterGroupOpen,
       toggleFilterGroupOpen,
     } = useStore((state) => state);
-
     const RenderFilters = (filters: any[]) => {
       // const haveFilters = currentFilters.length > 0;
 
@@ -343,6 +355,7 @@ export default function MediaArchive({
       </Layout>
     );
   };
+
   return <FilteredItems items={mediaItems} />;
 }
 

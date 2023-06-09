@@ -46,7 +46,7 @@ const MediaItem: Lists.MediaItem = list({
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
         apiKey: `${process.env.CLOUDINARY_KEY}`,
         apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'tngvi/media',
+        folder: 'elab-home-v3.xZ/media',
       },
     }),
     shortDescription: text({

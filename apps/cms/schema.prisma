@@ -26,6 +26,15 @@ model Filter {
   from_Studio_filters    Studio[]    @relation("Studio_filters")
 }
 
+model Initiative {
+  id              String  @id @default(cuid())
+  name            String  @unique @default("Initiative Name")
+  intro           String  @default("")
+  helper_html     String  @default("<p>Need HTML!</p>")
+  helper_iconType icon?   @default(help)
+  slides          Slide[] @relation("Initiative_slides")
+}
+
 model InitiativesLanding {
   id          String @id @default(cuid())
   name        String @unique @default("Initiatives Landing Page")
@@ -63,6 +72,13 @@ model Person {
   studios     Studio[]    @relation("Person_studios")
 }
 
+model Slide {
+  id               String       @id @default(cuid())
+  initiativeSlides Initiative[] @relation("Initiative_slides")
+  image            Json?
+  altText          String       @default("")
+}
+
 model Studio {
   id               String    @id @default(cuid())
   name             String    @default("")
@@ -79,12 +95,12 @@ model Studio {
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
-enum MediaItemInitiativeType {
-  GunViolence
-  Climate
-}
-
 enum icon {
   help
   info
+}
+
+enum MediaItemInitiativeType {
+  GunViolence
+  Climate
 }

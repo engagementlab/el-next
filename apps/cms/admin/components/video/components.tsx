@@ -7,7 +7,7 @@ import { controller } from '@keystone-6/core/fields/types/json/views';
 import { Fragment, useState } from 'react';
 
 import { css as emCss } from '@emotion/css';
-import create from 'zustand';
+import { create } from 'zustand';
 
 import axios from 'axios';
 import _ from 'lodash';
@@ -159,7 +159,6 @@ export const Field = ({
             setVideo(item);
             setTimeout(() => {
               if (onChange) onChange(JSON.stringify(currentVideos));
-              console.log(_.map(currentVideos, 'label'));
             }, 1000);
           }}
           done={() => setGridOpen(false)}

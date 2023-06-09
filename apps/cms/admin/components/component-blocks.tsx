@@ -358,7 +358,7 @@ function imageSelect({
       return (
         <FieldContainer>
           <>
-            {/* <Script src="https://cdn.tailwindcss.com/3.3.0" />
+            <Script src="https://cdn.tailwindcss.com/3.3.0" />
             <Script>
               {`
           if(tailwind) {
@@ -368,7 +368,7 @@ function imageSelect({
               },        
             }
         }`}
-            </Script> */}
+            </Script>
           </>
           Click <em>Done</em> for image preview.
           <Modal

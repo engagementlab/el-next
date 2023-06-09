@@ -144,6 +144,83 @@ input FilterCreateInput {
   enabled: Boolean
 }
 
+type Initiative {
+  id: ID!
+  name: String
+  intro: String
+  helper: HelperFieldOutput
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slidesCount(where: SlideWhereInput! = {}): Int
+}
+
+interface HelperFieldOutput {
+  html: String!
+  iconType: String
+}
+
+input InitiativeWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input InitiativeWhereInput {
+  AND: [InitiativeWhereInput!]
+  OR: [InitiativeWhereInput!]
+  NOT: [InitiativeWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  intro: StringFilter
+  slides: SlideManyRelationFilter
+}
+
+input SlideManyRelationFilter {
+  every: SlideWhereInput
+  some: SlideWhereInput
+  none: SlideWhereInput
+}
+
+input InitiativeOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  intro: OrderDirection
+}
+
+input InitiativeUpdateInput {
+  name: String
+  intro: String
+  helper: HelperFieldInput
+  slides: SlideRelateToManyForUpdateInput
+}
+
+input HelperFieldInput {
+  html: String
+  iconType: String
+}
+
+input SlideRelateToManyForUpdateInput {
+  disconnect: [SlideWhereUniqueInput!]
+  set: [SlideWhereUniqueInput!]
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
+}
+
+input InitiativeUpdateArgs {
+  where: InitiativeWhereUniqueInput!
+  data: InitiativeUpdateInput!
+}
+
+input InitiativeCreateInput {
+  name: String
+  intro: String
+  helper: HelperFieldInput
+  slides: SlideRelateToManyForCreateInput
+}
+
+input SlideRelateToManyForCreateInput {
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
+}
+
 type InitiativesLanding {
   id: ID!
   name: String
@@ -520,6 +597,67 @@ input StudioRelateToManyForCreateInput {
   connect: [StudioWhereUniqueInput!]
 }
 
+type Slide {
+  id: ID!
+  initiativeSlides(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
+  image: CloudinaryImage_File
+  altText: String
+}
+
+input SlideWhereUniqueInput {
+  id: ID
+}
+
+input SlideWhereInput {
+  AND: [SlideWhereInput!]
+  OR: [SlideWhereInput!]
+  NOT: [SlideWhereInput!]
+  id: IDFilter
+  initiativeSlides: InitiativeManyRelationFilter
+  altText: StringFilter
+}
+
+input InitiativeManyRelationFilter {
+  every: InitiativeWhereInput
+  some: InitiativeWhereInput
+  none: InitiativeWhereInput
+}
+
+input SlideOrderByInput {
+  id: OrderDirection
+  altText: OrderDirection
+}
+
+input SlideUpdateInput {
+  initiativeSlides: InitiativeRelateToManyForUpdateInput
+  image: Upload
+  altText: String
+}
+
+input InitiativeRelateToManyForUpdateInput {
+  disconnect: [InitiativeWhereUniqueInput!]
+  set: [InitiativeWhereUniqueInput!]
+  create: [InitiativeCreateInput!]
+  connect: [InitiativeWhereUniqueInput!]
+}
+
+input SlideUpdateArgs {
+  where: SlideWhereUniqueInput!
+  data: SlideUpdateInput!
+}
+
+input SlideCreateInput {
+  initiativeSlides: InitiativeRelateToManyForCreateInput
+  image: Upload
+  altText: String
+}
+
+input InitiativeRelateToManyForCreateInput {
+  create: [InitiativeCreateInput!]
+  connect: [InitiativeWhereUniqueInput!]
+}
+
 type Studio {
   id: ID!
   name: String
@@ -535,11 +673,6 @@ type Studio {
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
   helper: HelperFieldOutput
   content: Studio_content_Document
-}
-
-interface HelperFieldOutput {
-  html: String!
-  iconType: String
 }
 
 type Studio_content_Document {
@@ -601,11 +734,6 @@ input StudioUpdateInput {
   content: JSON
 }
 
-input HelperFieldInput {
-  html: String
-  iconType: String
-}
-
 input StudioUpdateArgs {
   where: StudioWhereUniqueInput!
   data: StudioUpdateInput!
@@ -643,6 +771,12 @@ type Mutation {
   updateFilters(data: [FilterUpdateArgs!]!): [Filter]
   deleteFilter(where: FilterWhereUniqueInput!): Filter
   deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
+  createInitiative(data: InitiativeCreateInput!): Initiative
+  createInitiatives(data: [InitiativeCreateInput!]!): [Initiative]
+  updateInitiative(where: InitiativeWhereUniqueInput!, data: InitiativeUpdateInput!): Initiative
+  updateInitiatives(data: [InitiativeUpdateArgs!]!): [Initiative]
+  deleteInitiative(where: InitiativeWhereUniqueInput!): Initiative
+  deleteInitiatives(where: [InitiativeWhereUniqueInput!]!): [Initiative]
   createInitiativesLanding(data: InitiativesLandingCreateInput!): InitiativesLanding
   createInitiativesLandings(data: [InitiativesLandingCreateInput!]!): [InitiativesLanding]
   updateInitiativesLanding(where: InitiativesLandingWhereUniqueInput!, data: InitiativesLandingUpdateInput!): InitiativesLanding
@@ -661,6 +795,12 @@ type Mutation {
   updatePeople(data: [PersonUpdateArgs!]!): [Person]
   deletePerson(where: PersonWhereUniqueInput!): Person
   deletePeople(where: [PersonWhereUniqueInput!]!): [Person]
+  createSlide(data: SlideCreateInput!): Slide
+  createSlides(data: [SlideCreateInput!]!): [Slide]
+  updateSlide(where: SlideWhereUniqueInput!, data: SlideUpdateInput!): Slide
+  updateSlides(data: [SlideUpdateArgs!]!): [Slide]
+  deleteSlide(where: SlideWhereUniqueInput!): Slide
+  deleteSlides(where: [SlideWhereUniqueInput!]!): [Slide]
   createStudio(data: StudioCreateInput!): Studio
   createStudios(data: [StudioCreateInput!]!): [Studio]
   updateStudio(where: StudioWhereUniqueInput!, data: StudioUpdateInput!): Studio
@@ -676,6 +816,9 @@ type Query {
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filter(where: FilterWhereUniqueInput!): Filter
   filtersCount(where: FilterWhereInput! = {}): Int
+  initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiative(where: InitiativeWhereUniqueInput!): Initiative
+  initiativesCount(where: InitiativeWhereInput! = {}): Int
   initiativesLandings(where: InitiativesLandingWhereInput! = {}, orderBy: [InitiativesLandingOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativesLandingWhereUniqueInput): [InitiativesLanding!]
   initiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
   initiativesLandingsCount(where: InitiativesLandingWhereInput! = {}): Int
@@ -685,6 +828,9 @@ type Query {
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slide(where: SlideWhereUniqueInput!): Slide
+  slidesCount(where: SlideWhereInput! = {}): Int
   studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
   studio(where: StudioWhereUniqueInput!): Studio
   studiosCount(where: StudioWhereInput! = {}): Int

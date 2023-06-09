@@ -1,13 +1,22 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { InferGetStaticPropsType } from 'next';
 
 import { Button, HeadingStyle, Query } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
+import { AnimatePresence, motion, wrap } from 'framer-motion';
 
 type AboutPage = {
-  description: string;
+  intro: string;
+  slides: [
+    {
+      image: {
+        publicId: string;
+      };
+      altText: string;
+    }
+  ];
 };
 
 const rendererOverrides = {
@@ -33,11 +42,52 @@ const valuesRendererOverrides = {
     return HeadingStyle({ level, children, textAlign, customRenderers });
   },
 };
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
+const variants = {
+  enter: (direction: number) => {
+    return {
+      x: direction > 0 ? 1500 : -1500,
+      opacity: 0,
+    };
+  },
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => {
+    return {
+      zIndex: 0,
+      x: direction < 0 ? 0 : -1000,
+      opacity: 0,
+    };
+  },
+};
 
 export default function Initiatives({
   page,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [[slide, direction], setPage] = useState([0, 0]);
+  const images = [
+    'https://d33wubrfki0l68.cloudfront.net/dd23708ebc4053551bb33e18b7174e73b6e1710b/dea24/static/images/wallpapers/shared-colors@2x.png',
+    'https://d33wubrfki0l68.cloudfront.net/49de349d12db851952c5556f3c637ca772745316/cfc56/static/images/wallpapers/bridge-02@2x.png',
+    'https://d33wubrfki0l68.cloudfront.net/594de66469079c21fc54c14db0591305a1198dd6/3f4b1/static/images/wallpapers/bridge-01@2x.png',
+  ];
+  // We only have 3 images, but we paginate them absolutely (ie 1, 2, 3, 4, 5...) and
+  // then wrap that within 0-2 to find our image ID in the array below. By passing an
+  // absolute page index as the `motion` component's `key` prop, `AnimatePresence` will
+  // detect it as an entirely new image. So you can infinitely paginate as few as 1 images.
+  const imageIndex = wrap(0, images.length, slide);
+
+  const paginate = (newDirection: number) => {
+    setPage([slide + newDirection, newDirection]);
+  };
+
   return (
     <Layout error={error} fullBleed={true}>
       <div
@@ -45,17 +95,46 @@ export default function Initiatives({
         className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full"
       >
         <h2>Transforming Narratives of Gun Violence</h2>
-        <p>
-          Transforming Narratives of Gun Violence (TNGV) is a collaborative
-          initiative which seeks to understand the impact of dominant narratives
-          of gun violence on individuals, families, and communities most
-          impacted, and aims to co-create interventions to change these
-          narratives. TNGV is facilitated by the Engagement Lab at Emerson
-          College in partnership with the Louis D. Brown Peace Institute,
-          Massachusetts General Hospital’s Gun Violence Prevention Center, and a
-          growing cohort of grassroots organizations.
+        <div>
+          <p>{page?.intro}</p>
           <Button label="→ Projects" link="/archive?gunviolence" />
-        </p>
+        </div>
+        <div className="relative flex justify-center items-center overflow-hidden w-1/4">
+          <AnimatePresence initial={false} custom={direction}>
+            <motion.img
+              className="absolute maw"
+              key={slide}
+              src={images[imageIndex]}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: 'spring', stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x);
+
+                if (swipe < -swipeConfidenceThreshold) {
+                  paginate(1);
+                } else if (swipe > swipeConfidenceThreshold) {
+                  paginate(-1);
+                }
+              }}
+            />
+          </AnimatePresence>
+          <div className="next" onClick={() => paginate(1)}>
+            {'‣'}
+          </div>
+          <div className="prev" onClick={() => paginate(-1)}>
+            {'‣'}
+          </div>
+        </div>
       </div>
     </Layout>
   );
@@ -63,9 +142,15 @@ export default function Initiatives({
 
 export async function getStaticProps() {
   const result = await Query(
-    'initiativesLanding',
-    `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
-        description
+    'initiative',
+    `initiative(where: { name: "Initiative Name" }) {
+        intro 
+        slides {
+          image {
+            publicId
+          }
+          altText
+        }
       }`
   );
   if (result.error) {

@@ -173,7 +173,12 @@ export default function Initiatives({
           College in partnership with the Louis D. Brown Peace Institute,
           Massachusetts General Hospital’s Gun Violence Prevention Center, and a
           growing cohort of grassroots organizations.
-          <Button label="→ Learn more" link="/initiatives/gunviolence" />
+          <Button
+            label="Learn more →"
+            link="/initiatives/gunviolence"
+            className="border-1 "
+            classOverride="hover:bg-purple hover:scale-105 inline-block px-3 py-3 text-purple border-purple border-2 shadow-[3px_5px_0px_0px_rgba(141,51,210)] transition-all duration-700"
+          />
         </p>
       </div>
     </Layout>

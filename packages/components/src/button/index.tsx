@@ -37,6 +37,8 @@ interface ButtonProps {
    */
   margin?: string;
   anchorId?: string;
+  classOverride?: string;
+  icon?: JSX.Element;
 }
 
 /**
@@ -50,6 +52,8 @@ export const Button = ({
   label,
   margin,
   anchorId,
+  classOverride,
+  icon,
 }: ButtonProps) => {
   const scrollTo = (element: string) => {
     scroller.scrollTo(element, {
@@ -64,14 +68,19 @@ export const Button = ({
   }] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ${className}`;
   if (anchorId) {
     return (
-      <button className={classStr} onClick={() => scrollTo(anchorId)}>
+      <button
+        className={classOverride || classStr}
+        onClick={() => scrollTo(anchorId)}
+      >
         {label}
       </button>
     );
   }
   return (
     <Link href={link} passHref>
-      <button className={classStr}>{label}</button>
+      <button className={`group ${classOverride || classStr}`}>
+        {label} {icon}
+      </button>
     </Link>
   );
 };

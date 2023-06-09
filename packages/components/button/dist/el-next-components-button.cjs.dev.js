@@ -21,7 +21,9 @@ var Button = function Button(_ref) {
     link = _ref.link,
     label = _ref.label,
     margin = _ref.margin,
-    anchorId = _ref.anchorId;
+    anchorId = _ref.anchorId,
+    classOverride = _ref.classOverride,
+    icon = _ref.icon;
   var scrollTo = function scrollTo(element) {
     reactScroll.scroller.scrollTo(element, {
       duration: 800,
@@ -32,7 +34,7 @@ var Button = function Button(_ref) {
   var classStr = "".concat(margin ? margin : "my-10", " hover:bg-[").concat(hoverColor ? hoverColor : '#ab45f8', "] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ").concat(className);
   if (anchorId) {
     return /*#__PURE__*/jsxRuntime.jsx("button", {
-      className: classStr,
+      className: classOverride || classStr,
       onClick: function onClick() {
         return scrollTo(anchorId);
       },
@@ -42,9 +44,9 @@ var Button = function Button(_ref) {
   return /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
     href: link,
     passHref: true,
-    children: /*#__PURE__*/jsxRuntime.jsx("button", {
-      className: classStr,
-      children: label
+    children: /*#__PURE__*/jsxRuntime.jsxs("button", {
+      className: "group ".concat(classOverride || classStr),
+      children: [label, " ", icon]
     })
   });
 };

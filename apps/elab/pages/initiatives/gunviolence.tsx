@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { HTMLProps, HtmlHTMLAttributes, ReactNode, useState } from 'react';
 import { InferGetStaticPropsType } from 'next';
 
 import { Button, HeadingStyle, Query } from '@el-next/components';
@@ -50,7 +50,7 @@ const swipePower = (offset: number, velocity: number) => {
 const variants = {
   enter: (direction: number) => {
     return {
-      x: direction > 0 ? 1500 : -1500,
+      x: direction > 0 ? 500 : -500,
       opacity: 0,
     };
   },
@@ -88,6 +88,8 @@ export default function Initiatives({
     setPage([slide + newDirection, newDirection]);
   };
 
+  const dotClass: HTMLProps<HTMLElement>['className'] =
+    'relative w-10 h-3 mx-1 rounded-full inline-block bg-purple transition-all hover:scale-125 cursor-pointer';
   return (
     <Layout error={error} fullBleed={true}>
       <div
@@ -99,41 +101,57 @@ export default function Initiatives({
           <p>{page?.intro}</p>
           <Button label="→ Projects" link="/archive?gunviolence" />
         </div>
-        <div className="relative flex justify-center items-center overflow-hidden w-1/4">
-          <AnimatePresence initial={false} custom={direction}>
-            <motion.img
-              className="absolute maw"
-              key={slide}
-              src={images[imageIndex]}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{
-                x: { type: 'spring', stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 },
-              }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={1}
-              onDragEnd={(e, { offset, velocity }) => {
-                const swipe = swipePower(offset.x, velocity.x);
+        <div className="flex flex-col w-1/4 pb-4 overflow-hidden">
+          <div className="relative flex justify-between items-center min-h-[365px]">
+            {/* <div className="prev" onClick={() => paginate(-1)}>
+              {'‣'}
+            </div> */}
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.img
+                className="absolute min-h-max mx-4"
+                key={slide}
+                src={images[imageIndex]}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: 'spring', stiffness: 200, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x);
 
-                if (swipe < -swipeConfidenceThreshold) {
-                  paginate(1);
-                } else if (swipe > swipeConfidenceThreshold) {
-                  paginate(-1);
-                }
-              }}
-            />
-          </AnimatePresence>
-          <div className="next" onClick={() => paginate(1)}>
-            {'‣'}
+                  if (swipe < -swipeConfidenceThreshold) {
+                    paginate(1);
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    paginate(-1);
+                  }
+                }}
+              />
+            </AnimatePresence>
+            {/* <div className="relative left-4" onClick={() => paginate(1)}>
+              {'‣'}
+            </div> */}
           </div>
-          <div className="prev" onClick={() => paginate(-1)}>
-            {'‣'}
-          </div>
+          <li className="flex justify-center mt-3">
+            {images.map((image, index) => (
+              <label
+                htmlFor="img-1"
+                className={`${dotClass} ${
+                  index !== imageIndex && 'opacity-50'
+                }`}
+                id="img-dot-1"
+                onClick={(event) => {
+                  setPage([index, 1]);
+                }}
+              ></label>
+            ))}
+          </li>
         </div>
       </div>
     </Layout>

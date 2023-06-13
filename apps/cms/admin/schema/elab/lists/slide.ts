@@ -29,17 +29,9 @@ const Slide: Lists.Slide = list({
         description: 'This must be defined if using an image.',
       },
     }),
-    // video: json({
-    //   ui: {
-    //     views: path.join(
-    //       process.cwd(),
-    //       '/admin/components/video/components.tsx'
-    //     ),
-    //     createView: { fieldMode: 'edit' },
-    //     listView: { fieldMode: 'hidden' },
-    //     itemView: { fieldMode: 'edit' },
-    //   },
-    // }),
+    videoId: text({
+      label: 'Vimeo ID',
+    }),
   },
   //   ui: {
   //     isHidden: true,

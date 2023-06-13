@@ -10,7 +10,16 @@ export enum HelperIcon {
   help = 'help',
   info = 'info',
 }
+type PairInput = {
+  html: string;
+  iconType: HelperIcon | string;
+};
+type PairOutput = PairInput;
 
+type helperConfig = {
+  html: string;
+  iconType: HelperIcon;
+};
 const fileOutputFields = graphql.fields<Omit<helperConfig, 'type'>>()({
   html: graphql.field({
     type: graphql.nonNull(graphql.String),
@@ -25,32 +34,17 @@ const HelperFieldInput = graphql.inputObject({
     iconType: graphql.arg({ type: graphql.String }),
   },
 });
-const HelperFieldOutput = graphql.interface<Omit<helperConfig, 'type'>>()({
+const HelperFieldOutput = graphql.object<PairOutput>()({
   name: 'HelperFieldOutput',
-  fields: fileOutputFields,
+  fields: {
+    html: graphql.field({ type: graphql.String }),
+    iconType: graphql.field({ type: graphql.String }),
+  },
   // resolveType: () => 'HelperFieldOutputType',
 });
 
-function inputResolver(
-  val:
-    | graphql.InferValueFromArgs<{
-        html: graphql.Arg<graphql.ScalarType<string>, false>;
-        iconType: graphql.Arg<graphql.ScalarType<string>, false>;
-      }>
-    | null
-    | undefined
-) {
-  if (val !== null) {
-    return val;
-  }
-}
-
-type helperConfig = {
-  html: string;
-  iconType?: HelperIcon;
-};
 export type HelperFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
-  CommonFieldConfig<ListTypeInfo> & helperConfig;
+  CommonFieldConfig<ListTypeInfo> & PairOutput;
 
 export function helper<ListTypeInfo extends BaseListTypeInfo>(
   { html, iconType, ...config }: HelperFieldConfig<ListTypeInfo> = {
@@ -75,7 +69,7 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
           name: 'icon',
           values: ['help', 'info'],
           kind: 'enum',
-          mode: 'optional',
+          mode: 'required',
           default: {
             kind: 'literal',
             value: HelperIcon.help,
@@ -107,11 +101,8 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
       },
       output: graphql.field({
         type: HelperFieldOutput,
-        resolve(val) {
-          return {
-            html: 'not used',
-            iconType: HelperIcon.help,
-          };
+        resolve({ value, item }, args, context, info) {
+          return value;
         },
       }),
 

@@ -27,12 +27,10 @@ model Filter {
 }
 
 model Initiative {
-  id              String  @id @default(cuid())
-  name            String  @unique @default("Initiative Name")
-  intro           String  @default("")
-  helper_html     String  @default("<p>Need HTML!</p>")
-  helper_iconType icon?   @default(help)
-  slides          Slide[] @relation("Initiative_slides")
+  id     String  @id @default(cuid())
+  name   String  @unique @default("Initiative Name")
+  intro  String  @default("")
+  slides Slide[] @relation("Initiative_slides")
 }
 
 model InitiativesLanding {
@@ -77,6 +75,7 @@ model Slide {
   initiativeSlides Initiative[] @relation("Initiative_slides")
   image            Json?
   altText          String       @default("")
+  videoId          String       @default("")
 }
 
 model Studio {
@@ -91,16 +90,16 @@ model Studio {
   filters          Filter[]  @relation("Studio_filters")
   associatedPeople Person[]  @relation("Person_studios")
   helper_html      String    @default("<p>Need HTML!</p>")
-  helper_iconType  icon?     @default(help)
+  helper_iconType  icon      @default(help)
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-enum icon {
-  help
-  info
 }
 
 enum MediaItemInitiativeType {
   GunViolence
   Climate
+}
+
+enum icon {
+  help
+  info
 }

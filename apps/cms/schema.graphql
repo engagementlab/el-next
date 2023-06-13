@@ -148,14 +148,8 @@ type Initiative {
   id: ID!
   name: String
   intro: String
-  helper: HelperFieldOutput
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
-}
-
-interface HelperFieldOutput {
-  html: String!
-  iconType: String
 }
 
 input InitiativeWhereUniqueInput {
@@ -188,13 +182,7 @@ input InitiativeOrderByInput {
 input InitiativeUpdateInput {
   name: String
   intro: String
-  helper: HelperFieldInput
   slides: SlideRelateToManyForUpdateInput
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
 }
 
 input SlideRelateToManyForUpdateInput {
@@ -212,7 +200,6 @@ input InitiativeUpdateArgs {
 input InitiativeCreateInput {
   name: String
   intro: String
-  helper: HelperFieldInput
   slides: SlideRelateToManyForCreateInput
 }
 
@@ -603,6 +590,7 @@ type Slide {
   initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
   image: CloudinaryImage_File
   altText: String
+  videoId: String
 }
 
 input SlideWhereUniqueInput {
@@ -616,6 +604,7 @@ input SlideWhereInput {
   id: IDFilter
   initiativeSlides: InitiativeManyRelationFilter
   altText: StringFilter
+  videoId: StringFilter
 }
 
 input InitiativeManyRelationFilter {
@@ -627,12 +616,14 @@ input InitiativeManyRelationFilter {
 input SlideOrderByInput {
   id: OrderDirection
   altText: OrderDirection
+  videoId: OrderDirection
 }
 
 input SlideUpdateInput {
   initiativeSlides: InitiativeRelateToManyForUpdateInput
   image: Upload
   altText: String
+  videoId: String
 }
 
 input InitiativeRelateToManyForUpdateInput {
@@ -651,6 +642,7 @@ input SlideCreateInput {
   initiativeSlides: InitiativeRelateToManyForCreateInput
   image: Upload
   altText: String
+  videoId: String
 }
 
 input InitiativeRelateToManyForCreateInput {
@@ -673,6 +665,11 @@ type Studio {
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
   helper: HelperFieldOutput
   content: Studio_content_Document
+}
+
+type HelperFieldOutput {
+  html: String
+  iconType: String
 }
 
 type Studio_content_Document {
@@ -732,6 +729,11 @@ input StudioUpdateInput {
   associatedPeople: PersonRelateToManyForUpdateInput
   helper: HelperFieldInput
   content: JSON
+}
+
+input HelperFieldInput {
+  html: String
+  iconType: String
 }
 
 input StudioUpdateArgs {

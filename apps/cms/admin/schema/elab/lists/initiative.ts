@@ -1,4 +1,4 @@
-import { list } from '@keystone-6/core';
+import { graphql, list } from '@keystone-6/core';
 import { relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
@@ -26,25 +26,25 @@ const Initiative: Lists.Initiative = list({
         displayMode: 'textarea',
       },
     }),
-    helper: helper({
-      html: 'A slide can be <i>either</i> an image or video. If you define both, only the image will display. ',
-      iconType: HelperIcon.info,
-      ui: {
-        itemView: { fieldMode: 'hidden' },
-        listView: { fieldMode: 'hidden' },
-      },
-    }),
+    // helper: helper({
+    //   html: 'A slide can be <i>either</i> an image or video. If you define both, only the image will display. ',
+    //   iconType: HelperIcon.info,
+    //   ui: {
+    //     itemView: { fieldMode: 'read' },
+    //     listView: { fieldMode: 'hidden' },
+    //   },
+    // }),
     slides: relationship({
       ref: 'Slide.initiativeSlides',
       many: true,
       ui: {
         displayMode: 'cards',
-        cardFields: ['image', 'altText'],
+        cardFields: ['image', 'altText', 'videoId'],
         inlineCreate: {
-          fields: ['image', 'altText'],
+          fields: ['image', 'altText', 'videoId'],
         },
         inlineEdit: {
-          fields: ['image', 'altText'],
+          fields: ['image', 'altText', 'videoId'],
         },
       },
     }),

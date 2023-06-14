@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import {
   AnimatePresence,
   Variants,
+  cubicBezier,
   motion,
   sync,
   useCycle,
@@ -53,11 +54,6 @@ const links: NavLink[] = [
   },
   { url: 'people', label: 'People', enabled: true },
 ];
-
-const customEase =
-  'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300';
-const linkClass =
-  'text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all';
 const sidebar: Variants = {
   open: (height = 1000) => ({
     transition: {
@@ -103,19 +99,24 @@ const navItemsVariants: Variants = {
     scale: 1.03,
   },
 };
-const subMenuAnimate = {
+const subMenuAnimate: Variants = {
   enter: {
+    left: '50%',
+    translateX: '-50%',
     opacity: 1,
     rotateX: 0,
     y: 0,
     transition: {
-      duration: 0.2,
+      duration: 0.7,
+      ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
     },
     display: 'flex',
   },
   exit: {
+    left: '50%',
+    translateX: '-50%',
     opacity: 0,
-    y: -100,
+    y: -20,
     transition: {
       duration: 0.15,
     },
@@ -153,15 +154,25 @@ const ActiveLink = (href: string | undefined) => {
 };
 
 const Header = ({ theme }: Props): JSX.Element => {
+  const customEase =
+    'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600';
+  const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-1000`;
+  const navSubClass =
+    'absolute flex flex-col text-stone text-sm border-t-2 border-white p-3';
+  const linkClass =
+    'text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all';
   let isMobile = false;
 
   const router = useRouter();
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
-  const [isHover, toggleHover] = useCycle(false, true);
+  const [hoverAbout, toggleHoverAbout] = useCycle(false, true);
+  const [hoverSII, toggleHoverSII] = useCycle(false, true);
+  const [hoverResearch, toggleHoverResearch] = useCycle(false, true);
+  const [hoverNews, toggleHoverNews] = useCycle(false, true);
 
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
-  // const [blockScroll, allowScroll] = useScrollBlock();
+  const [blockScroll, allowScroll] = useScrollBlock();
 
   const { navOpen, toggleNavOpen } = useStore();
 
@@ -175,7 +186,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   // eslint-disable-next-line class-methods-use-this
   return (
     <nav className="w-full flex flex-row justify-center mt-9 mb-1 md:px-16 xl:px-24">
-      <div className="w-full xl:w-8/12 px-6 xl:px-0 flex items-center">
+      <div className="w-full xl:w-6/12 px-6 xl:px-0 flex items-center">
         <Link href="/" passHref className="w-36 md:w-44 xl:w-52 h-min">
           <motion.svg
             id="logo-img"
@@ -327,38 +338,138 @@ const Header = ({ theme }: Props): JSX.Element => {
       </div>
       {/* Desktop+ */}
       <div className="hidden xl:block flex-grow">
-        <motion.div
-          // className="flex flex-row"
-          onHoverStart={() => toggleHover()}
-          onHoverEnd={() => toggleHover()}
-        >
-          <Link href="/">For Students</Link>
+        <Link href="/">For Students</Link>
+        <div className="flex flex-row">
           <motion.div
-            className="absolute flex flex-col bg-white border-2 border-black p-3"
-            initial="exit"
-            animate={isHover ? 'enter' : 'exit'}
-            variants={subMenuAnimate}
+            className="group relative"
+            onMouseEnter={() => {
+              toggleHoverAbout();
+            }}
+            onHoverEnd={() => {
+              toggleHoverAbout();
+            }}
           >
-            <Link href="/">Submenu Item 1</Link>
-            <Link href="/">Submenu Item 2</Link>
-            <Link href="/">Submenu Item 3</Link>
+            <Link href="/" className="block w-40 text-center">
+              <span className={`w-11 border-yellow ${navHeaderClass}`}>
+                About
+              </span>
+            </Link>
+            <motion.div
+              className={`bg-[#FFEACB] w-40 ${navSubClass}`}
+              initial="exit"
+              animate={hoverAbout ? 'enter' : 'exit'}
+              variants={subMenuAnimate}
+            >
+              <Link href="/" className="my-1">
+                Mission & Values
+              </Link>
+              <Link href="/" className="my-1">
+                Our Approach
+              </Link>
+              <Link href="/" className="my-1">
+                Our People
+              </Link>
+              <Link href="/" className="my-1">
+                Get Involved
+              </Link>
+            </motion.div>
           </motion.div>
-        </motion.div>
-        <div className="flex flex-row justify-evenly">
-          <Link href="/" className="group">
-            <span className="group-hover:text-red">Our Approach</span>
-            <hr className="border-2 border-red group-hover:hidden" />
-          </Link>
-          <Link href="/initiatives" className="group">
-            <span className="group-hover:text-green-blue">
-              Social Impact Initiatives
-            </span>
-            <hr className="border-2 border-green-blue group-hover:hidden" />
-          </Link>
-          <Link href="/" className="group">
-            <span className="group-hover:text-yellow">News & Events</span>
-            <hr className="border-2 border-yellow group-hover:hidden" />
-          </Link>
+
+          <motion.div
+            className="group relative"
+            onMouseEnter={() => {
+              toggleHoverSII();
+            }}
+            onHoverEnd={() => {
+              toggleHoverSII();
+            }}
+          >
+            <Link href="/initiatives" className="block w-52 text-center">
+              <span className={`w-[189px] border-red ${navHeaderClass}`}>
+                Social Impact Initiatives
+              </span>
+            </Link>
+            <motion.div
+              className={`bg-[#FFCFCC] w-52 ${navSubClass}`}
+              initial="exit"
+              animate={hoverSII ? 'enter' : 'exit'}
+              variants={subMenuAnimate}
+            >
+              <Link href="/" className="my-1">
+                Transforming Narratives of Gun Violence
+              </Link>
+              <Link href="/" className="my-1">
+                Transforming Narratives for Climate Justice
+              </Link>
+              <Link href="/" className="my-1">
+                Social Impact Studio Archive
+              </Link>
+              <Link href="/" className="my-1">
+                Project Archive
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="group relative"
+            onMouseEnter={() => {
+              toggleHoverResearch();
+            }}
+            onHoverEnd={() => {
+              toggleHoverResearch();
+            }}
+          >
+            <Link href="/initiatives" className="block w-40 text-center">
+              <span className={`w-[70px] border-green-blue ${navHeaderClass}`}>
+                Research
+              </span>
+            </Link>
+            <motion.div
+              className={`bg-[#BBEBE7] w-40 ${navSubClass}`}
+              initial="exit"
+              animate={hoverResearch ? 'enter' : 'exit'}
+              variants={subMenuAnimate}
+            >
+              <Link href="/" className="my-1">
+                Research Projects
+              </Link>
+              <Link href="/" className="my-1">
+                Publications
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="group relative"
+            onMouseEnter={() => {
+              toggleHoverNews();
+            }}
+            onHoverEnd={() => {
+              toggleHoverNews();
+            }}
+          >
+            <Link href="/initiatives" className="block w-28 text-center">
+              <span className={`w-[86px] border-yellow ${navHeaderClass}`}>
+                What’s New
+              </span>
+            </Link>
+            <motion.div
+              className={`bg-[#FFEACB] w-28 ${navSubClass}`}
+              initial="exit"
+              animate={hoverNews ? 'enter' : 'exit'}
+              variants={subMenuAnimate}
+            >
+              <Link href="/news" className="my-1">
+                News
+              </Link>
+              <Link href="/events" className="my-1">
+                Events
+              </Link>
+              <Link href="/press" className="my-1">
+                Press Room
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
       {/* Non-desktop */}

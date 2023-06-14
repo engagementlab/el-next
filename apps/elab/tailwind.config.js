@@ -13,16 +13,18 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: [`Inter`, ...defaultTheme.fontFamily.sans],
+        sans: [`var(--font-base)`],
       },
       borderRadius: {
         large: '38px',
       },
     },
     colors: {
+      grey: '#707070',
       'green-blue': '#5EB89E',
       purple: '#8D33D2',
       red: '#FF0001',
+      stone: '#555555',
       white: '#FFF',
       yellow: '#F6A536',
     },

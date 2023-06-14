@@ -1,7 +1,7 @@
 import { HTMLProps, HtmlHTMLAttributes, ReactNode, useState } from 'react';
 import { InferGetStaticPropsType } from 'next';
 
-import { Button, HeadingStyle, Query } from '@el-next/components';
+import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
@@ -13,8 +13,10 @@ type AboutPage = {
     {
       image: {
         publicId: string;
+        publicUrl: string;
       };
       altText: string;
+      videoId: string;
     }
   ];
 };
@@ -107,10 +109,10 @@ export default function Initiatives({
               {'‣'}
             </div> */}
             <AnimatePresence initial={false} custom={direction}>
-              <motion.img
+              <motion.div
                 className="absolute min-h-max mx-4"
                 key={slide}
-                src={images[imageIndex]}
+                // src={images[imageIndex]}
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -132,14 +134,37 @@ export default function Initiatives({
                     paginate(-1);
                   }
                 }}
-              />
+              >
+                {page?.slides.map((slide, index) => {
+                  return (
+                    index === imageIndex &&
+                    (slide.videoId ? (
+                      <Video
+                        videoLabel={'item?.videos[0].label'}
+                        videoUrl={`https://player.vimeo.com/video/${slide.videoId}`}
+                        thumbUrl={slide.image.publicUrl}
+                        isSlide={true}
+                      />
+                    ) : (
+                      <Image
+                        id={'img-' + slide.image.publicId}
+                        alt={slide.altText}
+                        imgId={slide.image.publicId}
+                        aspectDefault={true}
+                        lazy={false}
+                        className="pointer-events-none"
+                      />
+                    ))
+                  );
+                })}
+              </motion.div>
             </AnimatePresence>
             {/* <div className="relative left-4" onClick={() => paginate(1)}>
               {'‣'}
             </div> */}
           </div>
           <li className="flex justify-center mt-3">
-            {images.map((image, index) => (
+            {page?.slides.map((slide, index) => (
               <label
                 htmlFor="img-1"
                 className={`${dotClass} ${
@@ -166,11 +191,14 @@ export async function getStaticProps() {
         slides {
           image {
             publicId
+            publicUrl
           }
           altText
+          videoId
         }
       }`
   );
+  // console.log(result.slides[1].image);
   if (result.error) {
     return {
       props: {

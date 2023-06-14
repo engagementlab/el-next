@@ -56,7 +56,8 @@ function _slicedToArray(arr, i) {
 var Video = function Video(_ref2) {
   var thumbUrl = _ref2.thumbUrl,
     videoUrl = _ref2.videoUrl,
-    videoLabel = _ref2.videoLabel;
+    videoLabel = _ref2.videoLabel,
+    isSlide = _ref2.isSlide;
   // Create store with Zustand
   var _useState = react.useState(function () {
       return create__default["default"](function (set) {
@@ -78,6 +79,7 @@ var Video = function Video(_ref2) {
   var videoOpen = useStore(function (state) {
     return state.videoOpen;
   });
+  var buttonSize = isSlide ? 75 : 150;
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
     className: "relative video w-full h-full lg:mb-8",
     children: [videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsxs("a", {
@@ -89,21 +91,23 @@ var Video = function Video(_ref2) {
       className: "group",
       children: [/*#__PURE__*/jsxRuntime.jsx(Image__default["default"], {
         alt: "Thumbnail image for video with title \"".concat(videoLabel, "\""),
+        className: "pointer-events-none",
         src: thumbUrl,
         width: 1920,
-        height: 1080,
-        layout: "responsive",
+        height: 1080
+        // fill=''
+        ,
         unoptimized: true
       }), /*#__PURE__*/jsxRuntime.jsx("span", {
         className: "absolute",
         style: {
-          top: 'calc(50% - 75px)',
-          left: 'calc(50% - 75px)'
+          top: "calc(50% - ".concat(buttonSize / 2, "px)"),
+          left: "calc(50% - ".concat(buttonSize / 2, "px)")
         },
         children: /*#__PURE__*/jsxRuntime.jsxs("svg", {
           viewBox: "0 0 151 151",
-          width: "151",
-          height: "151",
+          width: buttonSize,
+          height: buttonSize,
           className: "transition-all group-hover:scale-110",
           children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
             style: {
@@ -138,14 +142,13 @@ var Video = function Video(_ref2) {
         children: /*#__PURE__*/jsxRuntime.jsx("iframe", {
           src: "".concat(videoUrl, "?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1"),
           style: {
-            position: 'absolute',
+            position: isSlide ? 'relative' : 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%'
           },
-          frameBorder: "0",
-          allow: "autoplay; fullscreen; picture-in-picture",
+          allow: "autoplay; fullscreen;",
           allowFullScreen: true
         })
       })

@@ -185,7 +185,7 @@ const Header = ({ theme }: Props): JSX.Element => {
 
   // eslint-disable-next-line class-methods-use-this
   return (
-    <nav className="w-full flex flex-row justify-center mt-9 mb-1 md:px-16 xl:px-24">
+    <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16  ">
       <div className="w-full xl:w-6/12 px-6 xl:px-0 flex items-center">
         <Link href="/" passHref className="w-36 md:w-44 xl:w-52 h-min">
           <motion.svg

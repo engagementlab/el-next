@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { create } from 'zustand';
 
 import packageInfo from '../package.json';
+import Divider from './Divider';
 
 type FormState = {
   status: string;
@@ -61,8 +62,10 @@ export const Footer = () => {
   };
   return (
     <>
-      <nav className="w-full flex flex-col bottom-0 xl:flex-row justify-between px-6 md:px-16 xl:px-24 my-7 mb-24">
-        <div className="flex flex-row">
+      <nav className="w-full flex flex-col bottom-0 xl:flex-row justify-between bg-yellow bg-opacity-50 my-7 mb-24">
+        <Divider />
+
+        <div className="flex flex-row px-6 md:px-16 xl:px-24">
           <svg width="70" height="70" fill="none" viewBox="0 0 70 70">
             <title>Engagement Lab logo</title>
             <path
@@ -98,7 +101,7 @@ export const Footer = () => {
             />
           </svg>
         </div>
-        <div className="mt-4 flex flex-col lg:flex-row justify-between">
+        <div className="mt-4 px-6 md:px-16 xl:px-24 flex flex-col lg:flex-row justify-between">
           {/* Newsletter signup */}
           <div id="newsletter">
             <form onSubmit={SubmitEmail}>

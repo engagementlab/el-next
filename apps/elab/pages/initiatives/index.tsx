@@ -6,6 +6,9 @@ import { Button, HeadingStyle, Query } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
 import Divider from '../../components/Divider';
+import CTAButton from '@/components/CTAButton';
+import { Theme } from '@/types';
+import CaptionedImage from '@/components/CaptionedImage';
 
 type AboutPage = {
   description: string;
@@ -35,6 +38,7 @@ const valuesRendererOverrides = {
   },
 };
 const wrapperClass = 'mt-14 mb-24 xl:mt-16 md:px-20 xl:px-24 w-full';
+
 export default function Initiatives({
   page,
   error,
@@ -57,40 +61,27 @@ export default function Initiatives({
               className="border-green-blue text-green-blue fill-green-blue"
             />
           </h3>
-          <div className="relative overflow-hidden">
-            <img
-              className="relative rounded-[100%] max-w-none w-[110%] -left-[5%] md:max-w-full md:-left-0
-              "
-              src="https://placehold.co/812x812?text=SII Image Here"
-            />
-
-            <aside className="absolute bottom-0 right-0 p-3 w-3/4 bg-red text-white">
-              ↳ Members of Spring 2023 Social Impact Studio in theatre,
-              participating in March for Our Lives anti-gun violence rally on
-              the Boston Common
-            </aside>
-          </div>
+          <CaptionedImage
+            alt=""
+            caption="Members of Spring 2023 Social Impact Studio in theatre, participating
+        in March for Our Lives anti-gun violence rally on the Boston Common"
+            themeColor="red"
+          />
         </div>
       </div>
       <Divider />
       <div
         id="tngvi"
-        className="flex flex-col justify-center mt-14 mb-10 xl:mt-16 md:px-20 px-5 xl:px-24 w-full"
+        className="flex flex-col items-center mt-14 mb-10 xl:mt-16 md:px-20xl:px-24 w-full"
       >
-        <svg
-          viewBox="0 0.081 81.459 50"
-          width="81.459"
-          height="50"
-          className="cursor-pointer"
-        >
-          <title>Transforming Narratives of Gun Violence logo</title>
-          <g transform="matrix(0.159112, 0, 0, 0.159112, 0, 0.068195)">
+        <svg viewBox="0 0.081 202 123.988" width="202" height="123.988">
+          <g transform="matrix(0.39456, 0, 0, 0.39456, 0, 0.0491)">
             <path
-              style={{ fill: '#8D33D2' }}
+              style={{ fill: '#8d33d2' }}
               d="M149,61.7V17.8H0v43.9h32.2c3.9,0,11.1-0.8,14.4,0.2v132.7H102V74.4c0-3.5-0.7-9.8,0.2-12.7H149z"
-            />
+            ></path>
             <path
-              style={{ fill: '#8D33D2' }}
+              style={{ fill: '#8d33d2' }}
               d="M362.4,163.7v-28.1c0-3.6,0.8-10-0.2-13h-59.8c-2,0-4.7-0.3-6.2,0.2v19.5c0,2.8-0.5,6.8,0.2,9.1h21.8
                                   c3.1,0,7.5-0.6,10.1,0.2c-0.7,2.1-3.1,3.8-4.8,5c-1.9,1.4-3.7,3.1-6,4.1c-6,2.6-17.4,2.6-24,0.5c-9.3-3.1-13.6-9.7-16.1-19.7
                                   c-0.7-2.6-0.5-5.5-0.5-8.6c0-13.5,4.6-22.9,13.9-26.9c9.7-4.2,24-1.3,27.8,6.2h29.6c3.7,0,10.4,0.8,13.4-0.2
@@ -100,14 +91,14 @@ export default function Initiatives({
                                   c2.4-1.7,4.6-3.7,6.5-6c1.9-2.5,4-4.9,5.8-7.4C360.4,167.2,361,165.1,362.4,163.7z"
             ></path>
             <path
-              style={{ fill: '#8D33D2' }}
+              style={{ fill: '#8d33d2' }}
               d="M202.8,67.7c-3.7,0-9.3-0.8-12.5,0.2v64.2h-0.5c-2.8-5.4-6.9-10.3-10.1-15.4c-7-11.1-14.1-22-21.1-33.1
                                   c-2.3-3.6-4.8-7.3-7.2-11c-1-1.5-2.8-3.1-3.4-5h-27.6c-3.7,0-9.3-0.8-12.5,0.2v127.2h40.1l0-63.3c1.6,0.8,2.4,3.4,3.4,4.8
                                   c2.4,3.7,4.9,7.5,7.4,11.3c7.2,10.7,14.2,21.6,21.4,32.4c2.4,3.5,4.7,6.9,7,10.6c0.9,1.4,2.4,2.6,2.9,4.3h27.6
                                   c3.5,0,9.8,0.8,12.7-0.2v-115c0-3.7,0.8-9.1-0.2-12.2H202.8z"
             ></path>
             <path
-              style={{ fill: '#8D33D2' }}
+              style={{ fill: '#8d33d2' }}
               d="M509.3,171c1.5-2.9,3.2-6.1,2.5-9.6c-1.1-6-3.6-10.3-7.4-12.5c-3.6-2.1-8-2.2-13.2-0.3l-1.2,0.4l-0.4,0.1
                                   c0.1-0.4,0.3-0.7,0.4-1.1c0.6-1.6,1.3-3.3,1.8-5.1c0.9-3.4,0.9-6.9,0.3-10.3c-0.1-0.5-0.2-1.1-0.2-1.6c0-0.9-0.1-1.8-0.4-2.7
                                   c-2-5.9-7.2-7.9-11.5-9c-2.3-0.7-4.8-0.9-7.2-0.5l-1.2,0.3c-1.3,0.3-2.5,0.6-3.7,1c0.3-1.1,0.8-2.3,1.2-3.2s0.8-1.9,1.1-2.9l1-4.9
@@ -168,89 +159,66 @@ export default function Initiatives({
             ></path>
           </g>
         </svg>
-        <h2 className="text-3xl text-grey font-bold">
-          Transforming Narratives of Gun Violence
-        </h2>
-        <p className="flex flex-col items-center text-grey">
-          Transforming Narratives of Gun Violence (TNGV) is a collaborative
-          initiative which seeks to understand the impact of dominant narratives
-          of gun violence on individuals, families, and communities most
-          impacted, and aims to co-create interventions to change these
-          narratives. TNGV is facilitated by the Engagement Lab at Emerson
-          College in partnership with the Louis D. Brown Peace Institute,
-          Massachusetts General Hospital’s Gun Violence Prevention Center, and a
-          growing cohort of grassroots organizations.
-          <div className="mt-8">
-            <Button
-              label="Learn more"
-              link="/initiatives/gunviolence"
-              icon={
-                <svg
-                  className="h-4 w-6 inline-block group-hover:translate-x-1 group-hover:stroke-white group-hover:scale-150 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="#8D33D2"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              }
-              classOverride="hover:bg-purple hover:scale-110 inline-block px-3 py-3 text-purple border-purple border-2 shadow-[3px_5px_0px_0px_rgba(141,51,210)] hover:shadow-[0px_0px_0px_0px_rgba(141,51,210)] hover:text-white transition-all duration-200"
-            />
+        <div className="flex flex-col lg:flex-row-reverse">
+          <div className="lg:w-1/2 lg:ml-14 px-5 ">
+            <h2 className="text-3xl text-grey font-bold">
+              Transforming Narratives of Gun Violence
+            </h2>
+            <div className="flex flex-col items-center text-grey">
+              Transforming Narratives of Gun Violence (TNGV) is a collaborative
+              initiative which seeks to understand the impact of dominant
+              narratives of gun violence on individuals, families, and
+              communities most impacted, and aims to co-create interventions to
+              change these narratives. TNGV is facilitated by the Engagement Lab
+              at Emerson College in partnership with the Louis D. Brown Peace
+              Institute, Massachusetts General Hospital’s Gun Violence
+              Prevention Center, and a growing cohort of grassroots
+              organizations.
+              <div className="mt-8">
+                <CTAButton
+                  label="Learn more"
+                  link="/initiatives/gunviolence"
+                  theme={Theme.gunviolence}
+                />
+              </div>
+            </div>
           </div>
-        </p>
-      </div>
-      <div className="relative overflow-hidden">
-        <img
-          className="relative rounded-[100%] max-w-none w-[110%] -left-[5%] md:max-w-full md:-left-0
-              "
-          src="https://placehold.co/812x812?text=SII Image Here"
-        />
 
-        <aside className="absolute bottom-0 right-0 p-3 w-3/4 bg-purple text-white">
-          ↳ Ruth Rollins, LeeAnn Taylor, and Dr. Cornelia Griggs at TNGV
+          <CaptionedImage
+            alt=""
+            caption="Ruth Rollins, LeeAnn Taylor, and Dr. Cornelia Griggs at TNGV
           documentary screening and panel discussion, hosted by Brigham and
-          Women’s Hospital on April 11, 2023
-        </aside>
+          Women’s Hospital on April 11, 2023"
+            themeColor="purple"
+          />
+        </div>
       </div>
-      <div id="tnej">
-        <h2>Transforming Narratives of Gun Violence</h2>
-        <p>
-          Transforming Narratives of Gun Violence (TNGV) is a collaborative
-          initiative which seeks to understand the impact of dominant narratives
-          of gun violence on individuals, families, and communities most
-          impacted, and aims to co-create interventions to change these
-          narratives. TNGV is facilitated by the Engagement Lab at Emerson
-          College in partnership with the Louis D. Brown Peace Institute,
-          Massachusetts General Hospital’s Gun Violence Prevention Center, and a
-          growing cohort of grassroots organizations.
+      <Divider />
+      <div id="tnej" className="mt-5">
+        <h2 className="text-3xl text-grey font-bold">
+          Transforming Narratives for Environmental Justice
+        </h2>
+        <div className="flex flex-col items-center text-grey">
+          Fusce fermentum. Praesent vestibulum dapibus nibh. Pellentesque
+          habitant morbi tristique senectus et netus et malesuada fames ac
+          turpis egestas. Fusce risus nisl, viverra et, tempor et, pretium in,
+          sapien. Pellentesque posuere. Fusce pharetra convallis urna.
+          Suspendisse pulvinar, augue ac venenatis condimentum, sem libero
+          volutpat nibh, nec pellentesque velit pede quis nunc. Ut varius
+          tincidunt libero.
           <div className="mt-4">
-            <Button
+            <CTAButton
               label="Learn more"
-              link="/initiatives/gunviolence"
-              icon={
-                <svg
-                  className="h-4 w-6 inline-block group-hover:translate-x-1 group-hover:stroke-white group-hover:scale-150 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="#8D33D2"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              }
-              classOverride="hover:bg-purple hover:scale-110 inline-block px-3 py-3 text-purple border-purple border-2 shadow-[3px_5px_0px_0px_rgba(141,51,210)] hover:shadow-[0px_0px_0px_0px_rgba(141,51,210)] hover:text-white transition-all duration-200"
+              link="/initiatives/climate"
+              theme={Theme.climate}
             />
           </div>
-        </p>
+          <CaptionedImage
+            alt=""
+            caption="Emerson College students at workshop led by GreenRoots’ Environmental Chelsea Organizers (ECO) youth corps during Emerson’s Teach-In on Sustainability on March 29, 2023"
+            themeColor="green-blue"
+          />
+        </div>
       </div>
     </Layout>
   );

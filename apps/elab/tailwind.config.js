@@ -9,7 +9,7 @@ module.exports = {
   ],
   theme: {
     borderRadius: {
-      full: '100px',
+      full: '100%',
     },
     extend: {
       fontFamily: {

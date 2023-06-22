@@ -47,19 +47,24 @@ export default function Initiatives({
     <Layout error={error} fullBleed={true}>
       <div className={wrapperClass}>
         <h1 className="">Social Impact Initiatives</h1>
-        <div className="flex flex-col lg:flex-row">
-          <h3 className="w-full lg:w-3/5">
+        <div className="flex flex-col lg:flex-row justify-center">
+          <h3 className="flex flex-col items-center w-full lg:w-3/5">
             {page?.description}
-            <Button
-              label="Transforming Narratives of Gun Violence"
-              anchorId="tngvi"
-              className="border-purple text-purple fill-purple"
-            />
-            <Button
-              label="Transforming Narratives for Environmental Justice"
-              anchorId="tnej"
-              className="border-green-blue text-green-blue fill-green-blue"
-            />
+            <div className="w-3/4 lg:w-full mt-6">
+              <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
+                Jump to:
+              </p>
+              <Button
+                label="Transforming Narratives of Gun Violence"
+                anchorId="tngvi"
+                className="border-purple text-purple fill-purple text-sm"
+              />
+              <Button
+                label="Transforming Narratives for Environmental Justice"
+                anchorId="tnej"
+                className="border-green-blue text-green-blue fill-green-blue"
+              />
+            </div>
           </h3>
           <CaptionedImage
             alt=""

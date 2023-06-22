@@ -18,6 +18,10 @@ module.exports = {
       borderRadius: {
         large: '38px',
       },
+      dropShadow: {
+        purple: '3px 5px 0 rgba(227,191,255,1)',
+        'green-blue': '3px 5px 0 rgba(187,235,231,1)',
+      },
     },
     colors: {
       grey: '#707070',

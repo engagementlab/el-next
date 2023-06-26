@@ -26,7 +26,7 @@ module.exports = {
     colors: {
       grey: '#707070',
       'green-blue': '#5EB89E',
-      purple: '#8D33D2',
+      purple: '#7C4E9F',
       red: '#FF0001',
       stone: '#555555',
       white: '#FFF',

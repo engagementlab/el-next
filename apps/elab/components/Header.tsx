@@ -1,6 +1,6 @@
 // 'use client';
 import * as React from 'react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import _ from 'lodash';
@@ -9,10 +9,10 @@ import { useEffect } from 'react';
 
 import {
   AnimatePresence,
+  MotionValue,
   Variants,
   cubicBezier,
   motion,
-  sync,
   useCycle,
 } from 'framer-motion';
 import { useDimensions } from './use-dimensions';
@@ -33,27 +33,6 @@ type Props = {
   theme?: Theme;
 };
 
-const links: NavLink[] = [
-  {
-    label: 'For Students',
-    subLinks: [
-      { url: '/', label: 'Social Impact Studios' },
-      {
-        url: '/',
-        label: 'Link 1',
-      },
-      {
-        url: '/',
-        label: 'Link 2',
-      },
-      {
-        url: '/',
-        label: 'Link 3',
-      },
-    ],
-  },
-  { url: 'people', label: 'People', enabled: true },
-];
 const sidebar: Variants = {
   open: (height = 1000) => ({
     transition: {
@@ -124,6 +103,29 @@ const subMenuAnimate: Variants = {
       display: 'none',
     },
   },
+
+  enterMobile: {
+    opacity: 1,
+    y: 0,
+    height: 'auto',
+    transition: {
+      duration: 0.7,
+      ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+    },
+    display: 'flex',
+  },
+  exitMobile: {
+    opacity: 0,
+    y: -20,
+    height: 0,
+    transition: {
+      duration: 0.7,
+      ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+    },
+    transitionEnd: {
+      display: 'none',
+    },
+  },
 };
 type NavState = {
   navOpen: boolean;
@@ -156,12 +158,8 @@ const ActiveLink = (href: string | undefined) => {
 const Header = ({ theme }: Props): JSX.Element => {
   const customEase =
     'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600';
-  const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-1000`;
-  const navSubClass =
-    'absolute flex flex-col text-stone text-sm border-t-2 border-white p-3';
-  const linkClass =
-    'text-purple no-underline border-b-2 border-b-[rgba(141,51,210,0)] hover:border-b-[rgba(141,51,210,1)] transition-all';
-  let isMobile = false;
+  const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
+  const navSubClass = 'absolute flex flex-col text-stone text-sm mt-1 p-3';
 
   const router = useRouter();
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
@@ -170,12 +168,119 @@ const Header = ({ theme }: Props): JSX.Element => {
   const [hoverResearch, toggleHoverResearch] = useCycle(false, true);
   const [hoverNews, toggleHoverNews] = useCycle(false, true);
 
-  const containerRef = useRef(null);
-  const { height } = useDimensions(containerRef);
+  const [expanded, setExpanded] = useState<false | number>(-1);
+
+  // const containerRef = useRef(null);
+  // const { height } = useDimensions(containerRef);
   const [blockScroll, allowScroll] = useScrollBlock();
 
   const { navOpen, toggleNavOpen } = useStore();
 
+  const aboutLinks = (
+    <>
+      <Link href="/" className="mt-3 xl:my-1">
+        Mission & Values
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Our Approach
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        People
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Jobs
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Get Involved
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Donate
+      </Link>
+    </>
+  );
+  const siiLinks = (
+    <>
+      <Link href="/" className="mt-3 xl:my-1">
+        Transforming Narratives of Gun Violence
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Transforming Narratives for Climate Justice
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Social Impact Studios
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Studio Projects
+      </Link>
+    </>
+  );
+  const researchLinks = (
+    <>
+      <Link href="/" className="mt-3 xl:my-1">
+        Research Projects
+      </Link>
+      <Link href="/" className="mt-3 xl:my-1">
+        Publications
+      </Link>
+    </>
+  );
+  const whatsNewLinks = (
+    <>
+      <Link href="/news" className="mt-3 xl:my-1">
+        News
+      </Link>
+      <Link href="/events" className="mt-3 xl:my-1">
+        Events
+      </Link>
+      <Link href="/press" className="mt-3 xl:my-1">
+        Press Room
+      </Link>
+      <Link href="/newsletter" className="mt-3 xl:my-1">
+        Join Newsletter
+      </Link>
+    </>
+  );
+  const MobileAccordion = ({
+    i,
+    expanded,
+    setExpanded,
+    links,
+    label,
+  }: {
+    i: number;
+    expanded: number | false;
+    setExpanded: React.Dispatch<React.SetStateAction<number | false>>;
+    links: React.ReactElement;
+    label: string;
+  }) => {
+    const isOpen = i === expanded;
+    return (
+      <>
+        <motion.header
+          className="text-2xl font-light mt-3"
+          initial={false}
+          onClick={() => setExpanded(isOpen ? false : i)}
+        >
+          {label}
+        </motion.header>
+        <motion.section
+          animate={isOpen ? 'enterMobile' : 'exitMobile'}
+          initial="exitMobile"
+          variants={subMenuAnimate}
+        >
+          <motion.div
+            variants={{
+              open: { scale: 1 },
+            }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col font-semibold ml-5"
+          >
+            {links}
+          </motion.div>
+        </motion.section>
+      </>
+    );
+  };
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
       toggleNavOpen(false);
@@ -183,9 +288,8 @@ const Header = ({ theme }: Props): JSX.Element => {
     // isMobile = /Android|iPhone|iPad|webOS/i.test(navigator.userAgent);
   });
 
-  // eslint-disable-next-line class-methods-use-this
   return (
-    <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16  ">
+    <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16">
       <div className="w-full xl:w-6/12 px-6 xl:px-0 flex items-center">
         <Link href="/" passHref className="w-36 md:w-44 xl:w-52 h-min">
           <motion.svg
@@ -338,8 +442,18 @@ const Header = ({ theme }: Props): JSX.Element => {
       </div>
       {/* Desktop+ */}
       <div className="hidden xl:block flex-grow">
-        <Link href="/">For Students</Link>
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-end mr-3">
+          <Link href="/" className="uppercase mr-7">
+            Undergraduate
+          </Link>
+          <Link href="/" className="uppercase mr-7">
+            Graduate
+          </Link>
+          <Link href="/" className="uppercase">
+            Learning Partners
+          </Link>
+        </div>
+        <div className="flex flex-row relative z-50">
           <motion.div
             className="group relative"
             onMouseEnter={() => {
@@ -360,18 +474,7 @@ const Header = ({ theme }: Props): JSX.Element => {
               animate={hoverAbout ? 'enter' : 'exit'}
               variants={subMenuAnimate}
             >
-              <Link href="/" className="my-1">
-                Mission & Values
-              </Link>
-              <Link href="/" className="my-1">
-                Our Approach
-              </Link>
-              <Link href="/" className="my-1">
-                Our People
-              </Link>
-              <Link href="/" className="my-1">
-                Get Involved
-              </Link>
+              {aboutLinks}
             </motion.div>
           </motion.div>
 
@@ -384,29 +487,18 @@ const Header = ({ theme }: Props): JSX.Element => {
               toggleHoverSII();
             }}
           >
-            <Link href="/initiatives" className="block w-52 text-center">
-              <span className={`w-[189px] border-red ${navHeaderClass}`}>
+            <Link href="/initiatives" className="block w-56 text-center">
+              <span className={`w-[183px] border-red ${navHeaderClass}`}>
                 Social Impact Initiatives
               </span>
             </Link>
             <motion.div
-              className={`bg-[#FFCFCC] w-52 ${navSubClass}`}
+              className={`bg-[#FFCFCC] w-56 ${navSubClass}`}
               initial="exit"
               animate={hoverSII ? 'enter' : 'exit'}
               variants={subMenuAnimate}
             >
-              <Link href="/" className="my-1">
-                Transforming Narratives of Gun Violence
-              </Link>
-              <Link href="/" className="my-1">
-                Transforming Narratives for Climate Justice
-              </Link>
-              <Link href="/" className="my-1">
-                Social Impact Studio Archive
-              </Link>
-              <Link href="/" className="my-1">
-                Project Archive
-              </Link>
+              {siiLinks}
             </motion.div>
           </motion.div>
 
@@ -430,12 +522,7 @@ const Header = ({ theme }: Props): JSX.Element => {
               animate={hoverResearch ? 'enter' : 'exit'}
               variants={subMenuAnimate}
             >
-              <Link href="/" className="my-1">
-                Research Projects
-              </Link>
-              <Link href="/" className="my-1">
-                Publications
-              </Link>
+              {researchLinks}
             </motion.div>
           </motion.div>
 
@@ -448,40 +535,28 @@ const Header = ({ theme }: Props): JSX.Element => {
               toggleHoverNews();
             }}
           >
-            <Link href="/initiatives" className="block w-28 text-center">
+            <Link href="/initiatives" className="block w-36 text-center">
               <span className={`w-[86px] border-yellow ${navHeaderClass}`}>
                 What’s New
               </span>
             </Link>
             <motion.div
-              className={`bg-[#FFEACB] w-28 ${navSubClass}`}
+              className={`bg-[#FFEACB] w-36 ${navSubClass}`}
               initial="exit"
               animate={hoverNews ? 'enter' : 'exit'}
               variants={subMenuAnimate}
             >
-              <Link href="/news" className="my-1">
-                News
-              </Link>
-              <Link href="/events" className="my-1">
-                Events
-              </Link>
-              <Link href="/press" className="my-1">
-                Press Room
-              </Link>
+              {whatsNewLinks}
             </motion.div>
           </motion.div>
         </div>
       </div>
       {/* Non-desktop */}
-      <motion.nav
-        className="block xl:hidden"
-        custom={height}
-        ref={containerRef}
-      >
+      <motion.nav className="block xl:hidden">
         <MenuToggle
           toggle={() => {
             toggleNavOpen(!navOpen);
-            // !navOpen ? blockScroll() : allowScroll();
+            !navOpen ? blockScroll() : allowScroll();
           }}
           hover={() => toggleMenuHover()}
           isHover={menuButtonHover}
@@ -490,13 +565,13 @@ const Header = ({ theme }: Props): JSX.Element => {
         <AnimatePresence>
           {navOpen && (
             <motion.aside
-              className="absolute flex flex-col items-center w-full h-full top-0 left-0 bottom-0 pt-20 z-40 bg-white"
+              className="absolute w-full h-full top-0 left-0 bottom-0 pl-8 pr-20 pt-10 z-40 text-white font-bold bg-gradient-to-b from-[#00A494] to-[#438EA0]"
               animate={{
                 borderRadius: 0,
-                // opacity: 1,
-                // top: 0,
-                // right: 0,
-                // transition: { ease: "easeOut" delay: 0.7, duration: 5.3 },
+                opacity: 1,
+                top: 0,
+                right: 0,
+                transition: { ease: 'easeOut', delay: 0.7, duration: 5.3 },
               }}
               exit={{
                 // width: '30px',
@@ -509,67 +584,52 @@ const Header = ({ theme }: Props): JSX.Element => {
                 transition: { delay: 0.2, duration: 1.15 },
               }}
             >
-              <div className="">
-                <Link
-                  href="/"
-                  className="inline-block border-b-4 border-red hover:border-b-0"
-                >
-                  Our Approach
+              <section className="flex flex-col">
+                <h2 className="uppercase">Main Menu</h2>
+                <MobileAccordion
+                  i={0}
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  links={aboutLinks}
+                  label="About"
+                />
+                <MobileAccordion
+                  i={1}
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  links={siiLinks}
+                  label="Social Impact Initiatives"
+                />
+                <MobileAccordion
+                  i={2}
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  links={researchLinks}
+                  label="Research"
+                />
+                <MobileAccordion
+                  i={3}
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                  links={whatsNewLinks}
+                  label="What's New"
+                />
+              </section>
+              <div className="absolute flex flex-col left-[9vw] top-[80vh]">
+                <Link href="/" className="uppercase mr-7">
+                  Undergraduate
                 </Link>
-                <br />
-                <Link
-                  href="/initiatives"
-                  className="border-b-4 border-green-blue hover:border-b-0"
-                >
-                  Social Impact Initiatives
+                <Link href="/" className="uppercase mr-7">
+                  Graduate
                 </Link>
-                <br />
-                <Link
-                  href="/"
-                  className="inline-block border-b-4 border-yellow group-hover:hidden"
-                >
-                  News & Events
+                <Link href="/" className="uppercase">
+                  Learning Partners
                 </Link>
               </div>
-              <motion.ul
-                initial="closed"
-                animate="open"
-                exit="closed"
-                variants={sidebar}
-              >
-                {links.map((link: NavLink) => (
-                  <motion.li
-                    variants={navItemsVariants}
-                    // whileHover="hover"
-                    className="mt-4 text-2xl"
-                    key={link.label}
-                  >
-                    {ActiveLink(link.url) ? (
-                      <span className="opacity-40">{link.label}</span>
-                    ) : (
-                      <Link href={link.url || ''} passHref>
-                        {link.label}
-                      </Link>
-                    )}
-                  </motion.li>
-                ))}
-              </motion.ul>
             </motion.aside>
           )}
         </AnimatePresence>
       </motion.nav>
-      {/* <div className="flex flex-col items-center absolute w-full h-full xl:hidden">
-            <div
-            // className="flex flex-row"
-            >
-              <Link href="/">For Students</Link>
-              <div className="flex flex-col">
-                <Link href="/">Submenu Item 1</Link>
-                <Link href="/">Submenu Item 2</Link>
-                <Link href="/">Submenu Item 3</Link>
-              </div>
-            </div>
-          </div> */}
     </nav>
   );
 };

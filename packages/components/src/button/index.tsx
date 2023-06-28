@@ -66,7 +66,7 @@ export const Button = ({
   const classStr = `${margin ? margin : `my-10`} hover:bg-[${
     hoverColor ? hoverColor : '#ab45f8'
   }] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ${className}`;
-  const anchorClassStr = `block flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-sm lg:text-md mt-3 ${className}`;
+  const anchorClassStr = `inline-flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-sm lg:text-lg mt-3 font-semibold ${className}`;
   if (anchorId) {
     return (
       <button

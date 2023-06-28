@@ -58,6 +58,7 @@ var Video = function Video(_ref2) {
     videoUrl = _ref2.videoUrl,
     videoLabel = _ref2.videoLabel,
     isSlide = _ref2.isSlide;
+    _ref2.themeColor;
   // Create store with Zustand
   var _useState = react.useState(function () {
       return create__default["default"](function (set) {
@@ -82,8 +83,7 @@ var Video = function Video(_ref2) {
   var buttonSize = isSlide ? 75 : 150;
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
     className: "relative video w-full h-full lg:mb-8",
-    children: [videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsxs("a", {
-      href: "#",
+    children: [videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
       onClick: function onClick(e) {
         toggleOpen(true);
         e.preventDefault();
@@ -97,7 +97,8 @@ var Video = function Video(_ref2) {
         height: 1080
         // fill=''
         ,
-        unoptimized: true
+        unoptimized: true,
+        draggable: "true"
       }), /*#__PURE__*/jsxRuntime.jsx("span", {
         className: "absolute",
         style: {
@@ -134,6 +135,7 @@ var Video = function Video(_ref2) {
       })]
     }), !videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
       id: "video-embed",
+      className: "w-full",
       children: /*#__PURE__*/jsxRuntime.jsx("div", {
         className: "relative",
         style: {

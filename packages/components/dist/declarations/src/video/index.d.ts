@@ -4,6 +4,7 @@ interface VideoProps {
     videoUrl: string;
     videoLabel: string;
     isSlide?: boolean;
+    themeColor?: string;
 }
-export declare const Video: ({ thumbUrl, videoUrl, videoLabel, isSlide, }: VideoProps) => JSX.Element;
+export declare const Video: ({ thumbUrl, videoUrl, videoLabel, isSlide, themeColor, }: VideoProps) => JSX.Element;
 export {};

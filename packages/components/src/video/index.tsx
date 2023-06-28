@@ -8,6 +8,7 @@ interface VideoProps {
   videoUrl: string;
   videoLabel: string;
   isSlide?: boolean;
+  themeColor?: string;
 }
 interface VideoState {
   videoOpen: boolean;
@@ -22,6 +23,7 @@ export const Video = ({
   videoUrl,
   videoLabel,
   isSlide,
+  themeColor,
 }: VideoProps) => {
   // Create store with Zustand
   const [useStore] = useState(() =>
@@ -38,8 +40,7 @@ export const Video = ({
       {videoOpen ? (
         ''
       ) : (
-        <a
-          href="#"
+        <button
           onClick={(e) => {
             toggleOpen(true);
             e.preventDefault();
@@ -54,6 +55,7 @@ export const Video = ({
             height={1080}
             // fill=''
             unoptimized={true}
+            draggable="true"
           />
 
           <span
@@ -93,13 +95,13 @@ export const Video = ({
               ></path>
             </svg>
           </span>
-        </a>
+        </button>
       )}
 
       {!videoOpen ? (
         ''
       ) : (
-        <div id="video-embed">
+        <div id="video-embed" className="w-full">
           <div className="relative" style={{ padding: '49.27% 0 0 0' }}>
             <iframe
               src={`${videoUrl}?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1`}

@@ -32,7 +32,7 @@ var Button = function Button(_ref) {
     });
   };
   var classStr = "".concat(margin ? margin : "my-10", " hover:bg-[").concat(hoverColor ? hoverColor : '#ab45f8', "] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ").concat(className);
-  var anchorClassStr = "block flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-sm lg:text-md mt-3 ".concat(className);
+  var anchorClassStr = "inline-flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-sm lg:text-lg mt-3 font-semibold ".concat(className);
   if (anchorId) {
     return /*#__PURE__*/jsxRuntime.jsxs("button", {
       className: classOverride || anchorClassStr,

@@ -34,7 +34,7 @@ const Layout = ({
   let currentBg =
     'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]';
   if (theme === Theme.gunviolence)
-    currentBg = 'bg-gradient-to-b from-purple/[.1] to-purple';
+    currentBg = 'bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]';
   const BG = topBgElement ? topBgElement : <></>;
 
   return (

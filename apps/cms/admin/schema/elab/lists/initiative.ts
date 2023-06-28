@@ -1,9 +1,9 @@
 import { graphql, list } from '@keystone-6/core';
 import { relationship, text } from '@keystone-6/core/fields';
-import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
-import { HelperIcon, helper } from '../../../components/helper';
+import { helper, HelperIcon } from '../../../components/helper';
+// import { HelperIcon, helper } from '../../../components/helper';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -12,14 +12,6 @@ const Initiative: Lists.Initiative = list({
       isIndexed: 'unique',
       isFilterable: true,
       defaultValue: 'Initiative Name',
-      ui: {
-        createView: {
-          fieldMode: 'hidden',
-        },
-        itemView: {
-          fieldMode: 'read',
-        },
-      },
     }),
     intro: text({
       ui: {
@@ -38,6 +30,8 @@ const Initiative: Lists.Initiative = list({
       ref: 'Slide.initiativeSlides',
       many: true,
       ui: {
+        description:
+          'A slide can be either an image or video. If you define both, only the image will display. ',
         displayMode: 'cards',
         cardFields: ['image', 'altText', 'videoId'],
         inlineCreate: {

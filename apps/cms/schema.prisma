@@ -23,7 +23,6 @@ model Filter {
   key                    String      @default("")
   enabled                Boolean     @default(true)
   from_MediaItem_filters MediaItem[] @relation("MediaItem_filters")
-  from_Studio_filters    Studio[]    @relation("Studio_filters")
 }
 
 model Initiative {
@@ -68,6 +67,20 @@ model Person {
   content     Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   mediaItems  MediaItem[] @relation("MediaItem_associatedPeople")
   studios     Studio[]    @relation("Person_studios")
+  semesters   Semester[]  @relation("Person_semesters")
+}
+
+model Semester {
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  order            Int?
+  thumbnail        Json?
+  blurb            String    @default("")
+  associatedPeople Person[]  @relation("Person_semesters")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Slide {
@@ -79,19 +92,13 @@ model Slide {
 }
 
 model Studio {
-  id               String    @id @default(cuid())
-  name             String    @default("")
-  key              String    @unique @default("")
-  createdDate      DateTime?
-  enabled          Boolean   @default(true)
-  order            Int?
-  thumbnail        Json?
-  blurb            String    @default("")
-  filters          Filter[]  @relation("Studio_filters")
-  associatedPeople Person[]  @relation("Person_studios")
-  helper_html      String    @default("<p>Need HTML!</p>")
-  helper_iconType  icon      @default(help)
-  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id          String               @id @default(cuid())
+  name        String               @default("")
+  key         String               @unique @default("")
+  createdDate DateTime?
+  instructors Person[]             @relation("Person_studios")
+  description String               @default("")
+  initiatives StudioInitiativeType
 }
 
 enum MediaItemInitiativeType {
@@ -99,7 +106,8 @@ enum MediaItemInitiativeType {
   Climate
 }
 
-enum icon {
-  help
-  info
+enum StudioInitiativeType {
+  gunviolence
+  climate
+  incarceration
 }

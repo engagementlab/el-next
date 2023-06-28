@@ -482,6 +482,8 @@ type Person {
   mediaItemsCount(where: MediaItemWhereInput! = {}): Int
   studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
   studiosCount(where: StudioWhereInput! = {}): Int
+  semesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  semestersCount(where: SemesterWhereInput! = {}): Int
 }
 
 type Person_content_Document {
@@ -505,6 +507,7 @@ input PersonWhereInput {
   blurb: StringFilter
   mediaItems: MediaItemManyRelationFilter
   studios: StudioManyRelationFilter
+  semesters: SemesterManyRelationFilter
 }
 
 input MediaItemManyRelationFilter {
@@ -517,6 +520,12 @@ input StudioManyRelationFilter {
   every: StudioWhereInput
   some: StudioWhereInput
   none: StudioWhereInput
+}
+
+input SemesterManyRelationFilter {
+  every: SemesterWhereInput
+  some: SemesterWhereInput
+  none: SemesterWhereInput
 }
 
 input PersonOrderByInput {
@@ -540,6 +549,7 @@ input PersonUpdateInput {
   content: JSON
   mediaItems: MediaItemRelateToManyForUpdateInput
   studios: StudioRelateToManyForUpdateInput
+  semesters: SemesterRelateToManyForUpdateInput
 }
 
 input MediaItemRelateToManyForUpdateInput {
@@ -554,6 +564,13 @@ input StudioRelateToManyForUpdateInput {
   set: [StudioWhereUniqueInput!]
   create: [StudioCreateInput!]
   connect: [StudioWhereUniqueInput!]
+}
+
+input SemesterRelateToManyForUpdateInput {
+  disconnect: [SemesterWhereUniqueInput!]
+  set: [SemesterWhereUniqueInput!]
+  create: [SemesterCreateInput!]
+  connect: [SemesterWhereUniqueInput!]
 }
 
 input PersonUpdateArgs {
@@ -572,6 +589,7 @@ input PersonCreateInput {
   content: JSON
   mediaItems: MediaItemRelateToManyForCreateInput
   studios: StudioRelateToManyForCreateInput
+  semesters: SemesterRelateToManyForCreateInput
 }
 
 input MediaItemRelateToManyForCreateInput {
@@ -582,6 +600,98 @@ input MediaItemRelateToManyForCreateInput {
 input StudioRelateToManyForCreateInput {
   create: [StudioCreateInput!]
   connect: [StudioWhereUniqueInput!]
+}
+
+input SemesterRelateToManyForCreateInput {
+  create: [SemesterCreateInput!]
+  connect: [SemesterWhereUniqueInput!]
+}
+
+type Semester {
+  id: ID!
+  name: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  order: Int
+  thumbnail: CloudinaryImage_File
+  blurb: String
+  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  associatedPeopleCount(where: PersonWhereInput! = {}): Int
+  content: Semester_content_Document
+}
+
+type Semester_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input SemesterWhereUniqueInput {
+  id: ID
+  key: String
+}
+
+input SemesterWhereInput {
+  AND: [SemesterWhereInput!]
+  OR: [SemesterWhereInput!]
+  NOT: [SemesterWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+  createdDate: DateTimeNullableFilter
+  enabled: BooleanFilter
+  order: IntNullableFilter
+  blurb: StringFilter
+  associatedPeople: PersonManyRelationFilter
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
+input SemesterOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+  createdDate: OrderDirection
+  enabled: OrderDirection
+  order: OrderDirection
+  blurb: OrderDirection
+}
+
+input SemesterUpdateInput {
+  name: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  order: Int
+  thumbnail: Upload
+  blurb: String
+  associatedPeople: PersonRelateToManyForUpdateInput
+  content: JSON
+}
+
+input SemesterUpdateArgs {
+  where: SemesterWhereUniqueInput!
+  data: SemesterUpdateInput!
+}
+
+input SemesterCreateInput {
+  name: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  order: Int
+  thumbnail: Upload
+  blurb: String
+  associatedPeople: PersonRelateToManyForCreateInput
+  content: JSON
 }
 
 type Slide {
@@ -655,25 +765,16 @@ type Studio {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
-  order: Int
-  thumbnail: CloudinaryImage_File
-  blurb: String
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
-  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  associatedPeopleCount(where: PersonWhereInput! = {}): Int
-  helper: HelperFieldOutput
-  content: Studio_content_Document
+  instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  instructorsCount(where: PersonWhereInput! = {}): Int
+  description: String
+  initiatives: StudioInitiativeType
 }
 
-type HelperFieldOutput {
-  html: String
-  iconType: String
-}
-
-type Studio_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
+enum StudioInitiativeType {
+  gunviolence
+  climate
+  incarceration
 }
 
 input StudioWhereUniqueInput {
@@ -689,22 +790,16 @@ input StudioWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  order: IntNullableFilter
-  blurb: StringFilter
-  filters: FilterManyRelationFilter
-  associatedPeople: PersonManyRelationFilter
+  instructors: PersonManyRelationFilter
+  description: StringFilter
+  initiatives: StudioInitiativeTypeNullableFilter
 }
 
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
+input StudioInitiativeTypeNullableFilter {
+  equals: StudioInitiativeType
+  in: [StudioInitiativeType!]
+  notIn: [StudioInitiativeType!]
+  not: StudioInitiativeTypeNullableFilter
 }
 
 input StudioOrderByInput {
@@ -712,28 +807,17 @@ input StudioOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
-  order: OrderDirection
-  blurb: OrderDirection
+  description: OrderDirection
+  initiatives: OrderDirection
 }
 
 input StudioUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
-  order: Int
-  thumbnail: Upload
-  blurb: String
-  filters: FilterRelateToManyForUpdateInput
-  associatedPeople: PersonRelateToManyForUpdateInput
-  helper: HelperFieldInput
-  content: JSON
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
+  instructors: PersonRelateToManyForUpdateInput
+  description: String
+  initiatives: StudioInitiativeType
 }
 
 input StudioUpdateArgs {
@@ -745,14 +829,9 @@ input StudioCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
-  order: Int
-  thumbnail: Upload
-  blurb: String
-  filters: FilterRelateToManyForCreateInput
-  associatedPeople: PersonRelateToManyForCreateInput
-  helper: HelperFieldInput
-  content: JSON
+  instructors: PersonRelateToManyForCreateInput
+  description: String
+  initiatives: StudioInitiativeType
 }
 
 """
@@ -797,6 +876,12 @@ type Mutation {
   updatePeople(data: [PersonUpdateArgs!]!): [Person]
   deletePerson(where: PersonWhereUniqueInput!): Person
   deletePeople(where: [PersonWhereUniqueInput!]!): [Person]
+  createSemester(data: SemesterCreateInput!): Semester
+  createSemesters(data: [SemesterCreateInput!]!): [Semester]
+  updateSemester(where: SemesterWhereUniqueInput!, data: SemesterUpdateInput!): Semester
+  updateSemesters(data: [SemesterUpdateArgs!]!): [Semester]
+  deleteSemester(where: SemesterWhereUniqueInput!): Semester
+  deleteSemesters(where: [SemesterWhereUniqueInput!]!): [Semester]
   createSlide(data: SlideCreateInput!): Slide
   createSlides(data: [SlideCreateInput!]!): [Slide]
   updateSlide(where: SlideWhereUniqueInput!, data: SlideUpdateInput!): Slide
@@ -830,6 +915,9 @@ type Query {
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
+  semesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  semester(where: SemesterWhereUniqueInput!): Semester
+  semestersCount(where: SemesterWhereInput! = {}): Int
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slide(where: SlideWhereUniqueInput!): Slide
   slidesCount(where: SlideWhereInput! = {}): Int

@@ -63,7 +63,14 @@ const Person: Lists.Person = list({
       },
     }),
     studios: relationship({
-      ref: 'Studio.associatedPeople',
+      ref: 'Studio.instructors',
+      many: true,
+      ui: {
+        hideCreate: true,
+      },
+    }),
+    semesters: relationship({
+      ref: 'Semester.associatedPeople',
       many: true,
       ui: {
         hideCreate: true,

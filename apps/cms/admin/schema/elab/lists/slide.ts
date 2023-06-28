@@ -26,11 +26,14 @@ const Slide: Lists.Slide = list({
     altText: text({
       label: 'Describe appearance of image',
       ui: {
-        description: 'This must be defined if using an image.',
+        description: 'This must be defined.',
       },
     }),
     videoId: text({
       label: 'Vimeo ID',
+      ui: {
+        description: 'Use the image field to specify thumbnail.',
+      },
     }),
   },
   //   ui: {

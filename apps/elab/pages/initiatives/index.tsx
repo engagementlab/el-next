@@ -164,12 +164,12 @@ export default function Initiatives({
             ></path>
           </g>
         </svg>
-        <div className="flex flex-col lg:flex-row-reverse">
-          <div className="lg:w-1/2 lg:ml-14 px-5 ">
-            <h2 className="text-3xl text-grey font-bold">
+        <div className="flex flex-col lg:flex-row-reverse text-grey">
+          <div className="lg:w-1/2 lg:ml-14 px-5">
+            <h2 className="text-3xl font-bold">
               Transforming Narratives of Gun Violence
             </h2>
-            <div className="flex flex-col items-center text-grey">
+            <div className="flex flex-col items-center">
               Transforming Narratives of Gun Violence (TNGV) is a collaborative
               initiative which seeks to understand the impact of dominant
               narratives of gun violence on individuals, families, and
@@ -199,31 +199,37 @@ export default function Initiatives({
         </div>
       </div>
       <Divider />
-      <div id="tnej" className="mt-5">
-        <h2 className="text-3xl text-grey font-bold">
-          Transforming Narratives for Environmental Justice
-        </h2>
-        <div className="flex flex-col items-center text-grey">
-          Fusce fermentum. Praesent vestibulum dapibus nibh. Pellentesque
-          habitant morbi tristique senectus et netus et malesuada fames ac
-          turpis egestas. Fusce risus nisl, viverra et, tempor et, pretium in,
-          sapien. Pellentesque posuere. Fusce pharetra convallis urna.
-          Suspendisse pulvinar, augue ac venenatis condimentum, sem libero
-          volutpat nibh, nec pellentesque velit pede quis nunc. Ut varius
-          tincidunt libero.
-          <div className="mt-4">
-            <CTAButton
-              label="Learn more"
-              link="/initiatives/climate"
-              theme={Theme.climate}
-            />
+      <div
+        id="tnej"
+        className="flex flex-col lg:flex-row items-center mt-14 mb-10 xl:mt-16
+      md:px-20 xl:px-24 w-full"
+      >
+        <div className="lg:w-1/2 px-5">
+          <h2 className="text-3xl text-grey font-bold">
+            Transforming Narratives for Environmental Justice
+          </h2>
+          <div className="flex flex-col items-center text-grey">
+            Fusce fermentum. Praesent vestibulum dapibus nibh. Pellentesque
+            habitant morbi tristique senectus et netus et malesuada fames ac
+            turpis egestas. Fusce risus nisl, viverra et, tempor et, pretium in,
+            sapien. Pellentesque posuere. Fusce pharetra convallis urna.
+            Suspendisse pulvinar, augue ac venenatis condimentum, sem libero
+            volutpat nibh, nec pellentesque velit pede quis nunc. Ut varius
+            tincidunt libero.
+            <div className="mt-4">
+              <CTAButton
+                label="Learn more"
+                link="/initiatives/climate"
+                theme={Theme.climate}
+              />
+            </div>
           </div>
-          <CaptionedImage
-            alt=""
-            caption="Emerson College students at workshop led by GreenRoots’ Environmental Chelsea Organizers (ECO) youth corps during Emerson’s Teach-In on Sustainability on March 29, 2023"
-            themeColor="green-blue"
-          />
         </div>
+        <CaptionedImage
+          alt=""
+          caption="Emerson College students at workshop led by GreenRoots’ Environmental Chelsea Organizers (ECO) youth corps during Emerson’s Teach-In on Sustainability on March 29, 2023"
+          themeColor="green-blue"
+        />
       </div>
     </Layout>
   );

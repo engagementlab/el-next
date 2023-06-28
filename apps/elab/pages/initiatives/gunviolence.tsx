@@ -6,179 +6,108 @@ import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
 import { AnimatePresence, motion, wrap } from 'framer-motion';
+import { Theme } from '@/types';
+import CTAButton from '@/components/CTAButton';
+import Divider from '@/components/Divider';
+import Slideshow from '@/components/Slideshow';
 
 type AboutPage = {
   intro: string;
-  slides: [
-    {
-      image: {
-        publicId: string;
-        publicUrl: string;
-      };
-      altText: string;
-      videoId: string;
-    }
-  ];
-};
-
-const rendererOverrides = {
-  heading: (level: number, children: ReactNode, textAlign: any) => {
-    return (
-      <p
-        className={`${level === 3 && 'text-2xl text-bluegreen leading-none'} ${
-          level === 4 && 'text-xl text-coated'
-        } font-semibold mb-8`}
-        style={{ textAlign }}
-      >
-        {children}
-      </p>
-    );
-  },
-};
-const valuesRendererOverrides = {
-  heading: (level: number, children: ReactNode, textAlign: any) => {
-    const customRenderers = {
-      4: 'text-xl font-semibold text-coated my-8',
-      5: 'text-lg font-extrabold text-purple',
-    };
-    return HeadingStyle({ level, children, textAlign, customRenderers });
-  },
+  slides: any[];
 };
 const swipeConfidenceThreshold = 10000;
 const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-const variants = {
-  enter: (direction: number) => {
-    return {
-      x: direction > 0 ? 500 : -500,
-      opacity: 0,
-    };
-  },
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => {
-    return {
-      zIndex: 0,
-      x: direction < 0 ? 0 : -1000,
-      opacity: 0,
-    };
-  },
+const renderSlide = (props: { slide: any }) => {
+  return (
+    <div className="flex flex-col lg:flex-row">
+      <div className="flex-grow w-1/2">
+        <p>Peace in Process May 2 at 5pm Little Building at Emerson College</p>
+        <p>
+          This is the blurb for Peace in Process. This is the blurb for Peace in
+          Process. This is the blurb for Peace in Process. This is the blurb for
+          Peace in Process. This is the blurb for Peace in Process. This is the
+          blurb for Peace in Process.
+        </p>
+
+        <CTAButton label="RSVP Today" link="/" theme={Theme.gunviolence} />
+      </div>
+      <div>
+        <Image
+          id={'img-' + props.slide.image.publicId}
+          alt={props.slide.altText}
+          imgId={props.slide.image.publicId}
+          lazy={false}
+          className="pointer-events-none"
+        />
+      </div>
+    </div>
+  );
 };
 
 export default function Initiatives({
   page,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [[slide, direction], setPage] = useState([0, 0]);
-  const images = [
-    'https://d33wubrfki0l68.cloudfront.net/dd23708ebc4053551bb33e18b7174e73b6e1710b/dea24/static/images/wallpapers/shared-colors@2x.png',
-    'https://d33wubrfki0l68.cloudfront.net/49de349d12db851952c5556f3c637ca772745316/cfc56/static/images/wallpapers/bridge-02@2x.png',
-    'https://d33wubrfki0l68.cloudfront.net/594de66469079c21fc54c14db0591305a1198dd6/3f4b1/static/images/wallpapers/bridge-01@2x.png',
-  ];
-  // We only have 3 images, but we paginate them absolutely (ie 1, 2, 3, 4, 5...) and
-  // then wrap that within 0-2 to find our image ID in the array below. By passing an
-  // absolute page index as the `motion` component's `key` prop, `AnimatePresence` will
-  // detect it as an entirely new image. So you can infinitely paginate as few as 1 images.
-  const imageIndex = wrap(0, images.length, slide);
-
-  const paginate = (newDirection: number) => {
-    setPage([slide + newDirection, newDirection]);
-  };
-
-  const dotClass: HTMLProps<HTMLElement>['className'] =
-    'relative w-10 h-3 mx-1 rounded-full inline-block bg-purple transition-all hover:scale-125 cursor-pointer';
   return (
-    <Layout error={error} fullBleed={true}>
-      <div
-        id="tngvi"
-        className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full"
-      >
-        <h2>Transforming Narratives of Gun Violence</h2>
-        <div>
-          <p>{page?.intro}</p>
-          <Button label="→ Projects" link="/archive?gunviolence" />
-        </div>
-        <div className="flex flex-col w-1/4 pb-4 overflow-hidden">
-          <div className="relative flex justify-between items-center min-h-[365px]">
-            {/* <div className="prev" onClick={() => paginate(-1)}>
-              {'‣'}
-            </div> */}
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                className="absolute min-h-max mx-4"
-                key={slide}
-                // src={images[imageIndex]}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: 'spring', stiffness: 200, damping: 30 },
-                  opacity: { duration: 0.2 },
-                }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
+    <Layout
+      error={error}
+      fullBleed={true}
+      theme={Theme.gunviolence}
+      breadcrumbs={[
+        { label: 'Social Impact Initiatives', href: '/initiatives' },
+      ]}
+    >
+      <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
+        <h2 className="text-5xl text-slate font-extrabold">
+          Transforming Narratives of Gun Violence
+        </h2>
+        <div className="flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2">
+            <p>{page?.intro}</p>
 
-                  if (swipe < -swipeConfidenceThreshold) {
-                    paginate(1);
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    paginate(-1);
-                  }
-                }}
-              >
-                {page?.slides.map((slide, index) => {
-                  return (
-                    index === imageIndex &&
-                    (slide.videoId ? (
-                      <Video
-                        videoLabel={'item?.videos[0].label'}
-                        videoUrl={`https://player.vimeo.com/video/${slide.videoId}`}
-                        thumbUrl={slide.image.publicUrl}
-                        isSlide={true}
-                      />
-                    ) : (
-                      <Image
-                        id={'img-' + slide.image.publicId}
-                        alt={slide.altText}
-                        imgId={slide.image.publicId}
-                        aspectDefault={true}
-                        lazy={false}
-                        className="pointer-events-none"
-                      />
-                    ))
-                  );
-                })}
-              </motion.div>
-            </AnimatePresence>
-            {/* <div className="relative left-4" onClick={() => paginate(1)}>
-              {'‣'}
-            </div> */}
+            <div className="w-3/4 lg:w-full mt-6">
+              <p className="text-blue text-xl lg:text-3xl font-extrabold uppercase">
+                Jump to:
+              </p>
+              <div>
+                <Button
+                  label="The Big Picture of Gun Violence in Boston"
+                  anchorId="context"
+                  className="border-purple text-purple fill-purple text-sm"
+                />
+              </div>
+              <Button
+                label="Projects"
+                anchorId="projects"
+                className="inline border-purple text-purple fill-purple text-sm"
+              />
+              <Button
+                label="Studios"
+                anchorId="studios"
+                className="border-purple text-purple fill-purple text-sm ml-2"
+              />
+              <Button
+                label="Research"
+                anchorId="research"
+                className="border-purple text-purple fill-purple text-sm ml-2"
+              />
+            </div>
           </div>
-          <li className="flex justify-center mt-3">
-            {page?.slides.map((slide, index) => (
-              <label
-                htmlFor="img-1"
-                className={`${dotClass} ${
-                  index !== imageIndex && 'opacity-50'
-                }`}
-                id="img-dot-1"
-                onClick={(event) => {
-                  setPage([index, 1]);
-                }}
-              ></label>
-            ))}
-          </li>
+          {/* <Button label="→ Projects" link="/archive?gunviolence" /> */}
+          {page?.slides && <Slideshow slides={page?.slides} />}
         </div>
+
+        <p className="text-blue text-xl lg:text-3xl font-extrabold uppercase">
+          What's new
+        </p>
+        {page?.slides && (
+          <Slideshow slides={page?.slides} ContentRenderer={renderSlide} />
+        )}
       </div>
+      <Divider color="bg-blue" />
     </Layout>
   );
 }
@@ -186,7 +115,7 @@ export default function Initiatives({
 export async function getStaticProps() {
   const result = await Query(
     'initiative',
-    `initiative(where: { name: "Initiative Name" }) {
+    `initiative(where: { name: "Gun Violence" }) {
         intro 
         slides {
           image {

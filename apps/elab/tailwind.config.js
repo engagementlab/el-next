@@ -24,11 +24,13 @@ module.exports = {
       },
     },
     colors: {
+      blue: '#438EA0',
       grey: '#707070',
       'green-blue': '#5EB89E',
       purple: '#7C4E9F',
       red: '#FF0001',
       stone: '#555555',
+      slate: '#444444',
       white: '#FFF',
       yellow: '#F6A536',
     },

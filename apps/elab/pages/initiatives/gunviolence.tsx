@@ -1,29 +1,24 @@
-import { HTMLProps, HtmlHTMLAttributes, ReactNode, useState } from 'react';
 import { InferGetStaticPropsType } from 'next';
 
 import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
-import { AnimatePresence, motion, wrap } from 'framer-motion';
 import { Theme } from '@/types';
-import CTAButton from '@/components/CTAButton';
+import { CTAButton, MoreButton } from '@/components/Buttons';
 import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
+import Link from 'next/link';
 
 type AboutPage = {
   intro: string;
   slides: any[];
 };
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset: number, velocity: number) => {
-  return Math.abs(offset) * velocity;
-};
 
 const renderSlide = (props: { slide: any }) => {
   return (
     <div className="flex flex-col lg:flex-row">
-      <div className="flex-grow w-1/2">
+      <div className="flex-grow w-1/2 p-10">
         <p>Peace in Process May 2 at 5pm Little Building at Emerson College</p>
         <p>
           This is the blurb for Peace in Process. This is the blurb for Peace in
@@ -47,7 +42,7 @@ const renderSlide = (props: { slide: any }) => {
   );
 };
 
-export default function Initiatives({
+export default function GunViolence({
   page,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -97,15 +92,23 @@ export default function Initiatives({
             </div>
           </div>
           {/* <Button label="→ Projects" link="/archive?gunviolence" /> */}
-          {page?.slides && <Slideshow slides={page?.slides} />}
+          {page?.slides && (
+            <Slideshow slides={page?.slides} themeColor="bg-purple" />
+          )}
         </div>
 
         <p className="text-blue text-xl lg:text-3xl font-extrabold uppercase">
           What's new
         </p>
         {page?.slides && (
-          <Slideshow slides={page?.slides} ContentRenderer={renderSlide} />
+          <Slideshow
+            slides={page?.slides}
+            ContentRenderer={renderSlide}
+            className="border-4 border-blue rounded-large"
+            themeColor="bg-blue"
+          />
         )}
+        <MoreButton link="/" label="See more news" />
       </div>
       <Divider color="bg-blue" />
     </Layout>
@@ -123,6 +126,7 @@ export async function getStaticProps() {
             publicUrl
           }
           altText
+          caption
           videoId
         }
       }`

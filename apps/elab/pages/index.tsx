@@ -1,6 +1,6 @@
 import { Variants, motion } from 'framer-motion';
 import Layout from '../components/Layout';
-import CTAButton from '@/components/CTAButton';
+import { CTAButton } from '@/components/Buttons';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { Theme } from '@/types';
 import { Parallax } from 'react-scroll-parallax';

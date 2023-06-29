@@ -6,7 +6,7 @@ import { Button, HeadingStyle, Query } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
 import Divider from '../../components/Divider';
-import CTAButton from '@/components/CTAButton';
+import { CTAButton } from '@/components/Buttons';
 import { Theme } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 

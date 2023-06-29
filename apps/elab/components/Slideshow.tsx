@@ -2,15 +2,15 @@ import { Image, Video } from '@el-next/components';
 import { AnimatePresence, motion, wrap } from 'framer-motion';
 import * as React from 'react';
 import { HTMLProps } from 'react';
+import CaptionedImage from './CaptionedImage';
 
 type Props = {
   slides: any[];
+  className?: HTMLProps<HTMLElement>['className'];
   themeColor?: string;
   ContentRenderer?: React.ComponentType<any>;
 };
 
-const dotClass: HTMLProps<HTMLElement>['className'] =
-  'relative w-10 h-3 mx-1 rounded-large inline-block bg-purple transition-all hover:scale-125 cursor-pointer';
 const variants = {
   enter: (direction: number) => {
     return {
@@ -38,9 +38,13 @@ const swipePower = (offset: number, velocity: number) => {
 
 const Slideshow = ({
   slides,
+  className,
   themeColor,
   ContentRenderer,
 }: Props): JSX.Element => {
+  const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-1 rounded-large inline-block transition-all hover:scale-125 cursor-pointer ${
+    themeColor || ' bg-purple'
+  }`;
   const [[slide, direction], setPage] = React.useState([0, 0]);
   const slideIndex = wrap(0, slides.length, slide);
 
@@ -49,10 +53,12 @@ const Slideshow = ({
   };
   return (
     <div className="flex-grow">
-      <div className="relative min-h-[465px] overflow-hidden">
+      <div className={`relative min-h-[465px] overflow-hidden ${className}`}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
-            className="absolute mx-4 w-full"
+            className={`absolute mx-4 max-h-[465px] w-full ${
+              !ContentRenderer && 'flex justify-center'
+            }`}
             key={slide}
             custom={direction}
             variants={variants}
@@ -90,6 +96,35 @@ const Slideshow = ({
                       thumbUrl={slide.image.publicUrl}
                       isSlide={true}
                     />
+                  ) : slide.caption ? (
+                    <div className="relative overflow-x-hidden">
+                      <Image
+                        id={'img-' + slide.image.publicId}
+                        alt={slide.altText}
+                        imgId={slide.image.publicId}
+                        lazy={false}
+                        aspectDefault={false}
+                        transforms="f_auto,dpr_auto,c_crop,g_center,r_max,h_630,w_630"
+                        className="pointer-events-none max-h-[465px]"
+                      />
+                      <aside
+                        className={`absolute bottom-0 right-0 p-3 w-3/4 ${themeColor} text-white`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="20"
+                          viewBox="0 -960 960 960"
+                          width="20"
+                          className="inline"
+                        >
+                          <path
+                            d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z"
+                            style={{ fill: '#fff' }}
+                          />
+                        </svg>{' '}
+                        {slide.caption}
+                      </aside>
+                    </div>
                   ) : (
                     <Image
                       id={'img-' + slide.image.publicId}

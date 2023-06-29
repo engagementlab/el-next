@@ -11,6 +11,7 @@ import { FormField } from '@keystone-6/fields-document/dist/declarations/src/Doc
 import { FieldContainer } from '@keystone-ui/fields';
 import {
   Alert,
+  Avatar,
   Box,
   Checkbox,
   FormControlLabel,
@@ -35,6 +36,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { create } from 'zustand';
 import VideoSelector, { RelatedVideoField } from './video/selector';
 import Script from 'next/script';
+import { Image } from '@el-next/components';
 
 const axios = require('axios').default;
 const _ = require('underscore');
@@ -544,9 +546,11 @@ export const componentBlocks = {
   }),
   video: component({
     preview: (props) => {
+      console.log(props.fields.video);
       return (
         <div>
-          {!props.fields.video.value.label ? (
+          {Object.keys(props.fields.video.value)}
+          {/* {!props.fields.video.value.label ? (
             <span>
               Click <em>Edit</em>
             </span>
@@ -561,7 +565,7 @@ export const componentBlocks = {
                 src={props.fields.video.value.thumbSm as unknown as string}
               />
             </>
-          )}
+          )} */}
         </div>
       );
     },
@@ -717,16 +721,45 @@ export const componentBlocks = {
         many: true,
       }),
     },
-    //  preview: props => {
-    //    return (
-    //     <div>
-    //      <div style={{ fontStyle: 'italic', color: '#4A5568' }}>
-    //       {props.fields.title.element}
-    //       </div>
-    //      <p>{!props.fields.person.value?.label ? <span>Click <em>Edit</em> to select person</span> : <NotEditable>{props.fields.person.value?.label}</NotEditable>}</p>
-    //       </div>
-    //    );
-    //  },
-    //  chromeless: true,
+  }),
+  slideshow: component({
+    label: 'Slideshow',
+    preview: (props) => {
+      console.log(props.fields.slideshow.value);
+      return (
+        <>
+          <NotEditable>
+            {props.fields.slideshow.value?.data.slides.map(
+              (
+                value: { image: { publicId: string }; altText: string },
+                index: number
+              ) => {
+                return (
+                  <span style={{ marginLeft: '5px' }}>
+                    <Image
+                      id={`img-preview-${index}`}
+                      imgId={value.image.publicId}
+                      alt={value.altText}
+                      width={30}
+                    />
+                  </span>
+                );
+              }
+            )}
+          </NotEditable>
+
+          {/* 
+          \{props.fields.slideshow.value[0].label}</NotEditable> */}
+        </>
+      );
+    },
+    schema: {
+      slideshow: fields.relationship({
+        listKey: 'Slideshow',
+        label: 'Select:',
+        selection:
+          'key name slides { image {publicId} altText caption videoId }',
+      }),
+    },
   }),
 };

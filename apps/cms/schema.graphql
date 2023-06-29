@@ -696,11 +696,20 @@ input SemesterCreateInput {
 
 type Slide {
   id: ID!
+  slideshowSlides(where: SlideshowWhereInput! = {}, orderBy: [SlideshowOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideshowWhereUniqueInput): [Slideshow!]
+  slideshowSlidesCount(where: SlideshowWhereInput! = {}): Int
   initiativeSlides(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
   image: CloudinaryImage_File
+  helper: HelperFieldOutput
   altText: String
+  caption: String
   videoId: String
+}
+
+type HelperFieldOutput {
+  html: String
+  iconType: String
 }
 
 input SlideWhereUniqueInput {
@@ -712,9 +721,17 @@ input SlideWhereInput {
   OR: [SlideWhereInput!]
   NOT: [SlideWhereInput!]
   id: IDFilter
+  slideshowSlides: SlideshowManyRelationFilter
   initiativeSlides: InitiativeManyRelationFilter
   altText: StringFilter
+  caption: StringFilter
   videoId: StringFilter
+}
+
+input SlideshowManyRelationFilter {
+  every: SlideshowWhereInput
+  some: SlideshowWhereInput
+  none: SlideshowWhereInput
 }
 
 input InitiativeManyRelationFilter {
@@ -726,14 +743,25 @@ input InitiativeManyRelationFilter {
 input SlideOrderByInput {
   id: OrderDirection
   altText: OrderDirection
+  caption: OrderDirection
   videoId: OrderDirection
 }
 
 input SlideUpdateInput {
+  slideshowSlides: SlideshowRelateToManyForUpdateInput
   initiativeSlides: InitiativeRelateToManyForUpdateInput
   image: Upload
+  helper: HelperFieldInput
   altText: String
+  caption: String
   videoId: String
+}
+
+input SlideshowRelateToManyForUpdateInput {
+  disconnect: [SlideshowWhereUniqueInput!]
+  set: [SlideshowWhereUniqueInput!]
+  create: [SlideshowCreateInput!]
+  connect: [SlideshowWhereUniqueInput!]
 }
 
 input InitiativeRelateToManyForUpdateInput {
@@ -743,21 +771,80 @@ input InitiativeRelateToManyForUpdateInput {
   connect: [InitiativeWhereUniqueInput!]
 }
 
+input HelperFieldInput {
+  html: String
+  iconType: String
+}
+
 input SlideUpdateArgs {
   where: SlideWhereUniqueInput!
   data: SlideUpdateInput!
 }
 
 input SlideCreateInput {
+  slideshowSlides: SlideshowRelateToManyForCreateInput
   initiativeSlides: InitiativeRelateToManyForCreateInput
   image: Upload
+  helper: HelperFieldInput
   altText: String
+  caption: String
   videoId: String
+}
+
+input SlideshowRelateToManyForCreateInput {
+  create: [SlideshowCreateInput!]
+  connect: [SlideshowWhereUniqueInput!]
 }
 
 input InitiativeRelateToManyForCreateInput {
   create: [InitiativeCreateInput!]
   connect: [InitiativeWhereUniqueInput!]
+}
+
+type Slideshow {
+  id: ID!
+  name: String
+  key: String
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slidesCount(where: SlideWhereInput! = {}): Int
+}
+
+input SlideshowWhereUniqueInput {
+  id: ID
+  key: String
+}
+
+input SlideshowWhereInput {
+  AND: [SlideshowWhereInput!]
+  OR: [SlideshowWhereInput!]
+  NOT: [SlideshowWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+  slides: SlideManyRelationFilter
+}
+
+input SlideshowOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+}
+
+input SlideshowUpdateInput {
+  name: String
+  key: String
+  slides: SlideRelateToManyForUpdateInput
+}
+
+input SlideshowUpdateArgs {
+  where: SlideshowWhereUniqueInput!
+  data: SlideshowUpdateInput!
+}
+
+input SlideshowCreateInput {
+  name: String
+  key: String
+  slides: SlideRelateToManyForCreateInput
 }
 
 type Studio {
@@ -768,7 +855,7 @@ type Studio {
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   instructorsCount(where: PersonWhereInput! = {}): Int
   description: String
-  initiatives: StudioInitiativeType
+  initiatives: [StudioInitiativeType!]
 }
 
 enum StudioInitiativeType {
@@ -792,14 +879,6 @@ input StudioWhereInput {
   createdDate: DateTimeNullableFilter
   instructors: PersonManyRelationFilter
   description: StringFilter
-  initiatives: StudioInitiativeTypeNullableFilter
-}
-
-input StudioInitiativeTypeNullableFilter {
-  equals: StudioInitiativeType
-  in: [StudioInitiativeType!]
-  notIn: [StudioInitiativeType!]
-  not: StudioInitiativeTypeNullableFilter
 }
 
 input StudioOrderByInput {
@@ -808,7 +887,6 @@ input StudioOrderByInput {
   key: OrderDirection
   createdDate: OrderDirection
   description: OrderDirection
-  initiatives: OrderDirection
 }
 
 input StudioUpdateInput {
@@ -817,7 +895,7 @@ input StudioUpdateInput {
   createdDate: DateTime
   instructors: PersonRelateToManyForUpdateInput
   description: String
-  initiatives: StudioInitiativeType
+  initiatives: [StudioInitiativeType!]
 }
 
 input StudioUpdateArgs {
@@ -831,7 +909,7 @@ input StudioCreateInput {
   createdDate: DateTime
   instructors: PersonRelateToManyForCreateInput
   description: String
-  initiatives: StudioInitiativeType
+  initiatives: [StudioInitiativeType!]
 }
 
 """
@@ -888,6 +966,12 @@ type Mutation {
   updateSlides(data: [SlideUpdateArgs!]!): [Slide]
   deleteSlide(where: SlideWhereUniqueInput!): Slide
   deleteSlides(where: [SlideWhereUniqueInput!]!): [Slide]
+  createSlideshow(data: SlideshowCreateInput!): Slideshow
+  createSlideshows(data: [SlideshowCreateInput!]!): [Slideshow]
+  updateSlideshow(where: SlideshowWhereUniqueInput!, data: SlideshowUpdateInput!): Slideshow
+  updateSlideshows(data: [SlideshowUpdateArgs!]!): [Slideshow]
+  deleteSlideshow(where: SlideshowWhereUniqueInput!): Slideshow
+  deleteSlideshows(where: [SlideshowWhereUniqueInput!]!): [Slideshow]
   createStudio(data: StudioCreateInput!): Studio
   createStudios(data: [StudioCreateInput!]!): [Studio]
   updateStudio(where: StudioWhereUniqueInput!, data: StudioUpdateInput!): Studio
@@ -921,6 +1005,9 @@ type Query {
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slide(where: SlideWhereUniqueInput!): Slide
   slidesCount(where: SlideWhereInput! = {}): Int
+  slideshows(where: SlideshowWhereInput! = {}, orderBy: [SlideshowOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideshowWhereUniqueInput): [Slideshow!]
+  slideshow(where: SlideshowWhereUniqueInput!): Slideshow
+  slideshowsCount(where: SlideshowWhereInput! = {}): Int
   studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
   studio(where: StudioWhereUniqueInput!): Studio
   studiosCount(where: StudioWhereInput! = {}): Int

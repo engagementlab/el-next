@@ -1,15 +1,19 @@
 import { list } from '@keystone-6/core';
 import { json, relationship, text } from '@keystone-6/core/fields';
 import { allowAll } from '@keystone-6/core/access';
-import path from 'path';
 
 import { Lists } from '.keystone/types';
-import { CreateKey } from '../../hooks';
+
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { helper, HelperIcon } from '../../../components/helper';
 
 const Slide: Lists.Slide = list({
   access: allowAll,
   fields: {
+    slideshowSlides: relationship({
+      ref: 'Slideshow.slides',
+      many: true,
+    }),
     initiativeSlides: relationship({
       ref: 'Initiative.slides',
       many: true,
@@ -23,10 +27,26 @@ const Slide: Lists.Slide = list({
       },
       label: 'Source',
     }),
-    altText: text({
-      label: 'Describe appearance of image',
+
+    helper: helper({
+      html: 'Please look at <a href="https://docs.google.com/document/d/1OAjHllntfrr_-godz-ekbNEfs0kxrWGymJHgTlXYYQc/edit" target="_blank">this document</a> for tips on alt text.',
       ui: {
-        description: 'This must be defined.',
+        itemView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
+      },
+      iconType: HelperIcon.info,
+    }),
+    altText: text({
+      label: 'Describe appearance of image (alt text)',
+      ui: {
+        description:
+          'This must be defined and is not a caption, but for accessibility purposes.',
+      },
+    }),
+    caption: text({
+      ui: {
+        description:
+          'This is optional and different from the description of the image.',
       },
     }),
     videoId: text({
@@ -36,8 +56,8 @@ const Slide: Lists.Slide = list({
       },
     }),
   },
-  //   ui: {
-  //     isHidden: true,
-  //   },
+  ui: {
+    isHidden: true,
+  },
 });
 export default Slide;

@@ -12,6 +12,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { HelperIcon, helper } from '../../../components/helper';
 
 const Semester: Lists.Semester = list({
   access: allowAll,
@@ -72,6 +73,7 @@ const Semester: Lists.Semester = list({
     //     itemView: { fieldMode: 'hidden' },
     //     listView: { fieldMode: 'hidden' },
     //   },
+    //   iconType: HelperIcon.info,
     // }),
     content: document({
       formatting: {

@@ -3,6 +3,7 @@ import {
   checkbox,
   integer,
   json,
+  multiselect,
   relationship,
   select,
   text,
@@ -51,15 +52,13 @@ const Studio: Lists.Studio = list({
         displayMode: 'textarea',
       },
     }),
-    initiatives: select({
+    initiatives: multiselect({
       type: 'enum',
       options: [
         { label: 'Gun Violence', value: 'gunviolence' },
         { label: 'Climate', value: 'climate' },
         { label: 'Incarceration', value: 'incarceration' },
       ],
-      validation: { isRequired: true },
-      ui: { displayMode: 'select' },
     }),
   },
   ui: {

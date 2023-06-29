@@ -725,7 +725,6 @@ export const componentBlocks = {
   slideshow: component({
     label: 'Slideshow',
     preview: (props) => {
-      console.log(props.fields.slideshow.value);
       return (
         <>
           <NotEditable>
@@ -747,9 +746,6 @@ export const componentBlocks = {
               }
             )}
           </NotEditable>
-
-          {/* 
-          \{props.fields.slideshow.value[0].label}</NotEditable> */}
         </>
       );
     },

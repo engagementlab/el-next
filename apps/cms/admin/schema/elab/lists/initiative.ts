@@ -33,12 +33,12 @@ const Initiative: Lists.Initiative = list({
         description:
           'A slide can be either an image or video. If you define both, only the image will display. ',
         displayMode: 'cards',
-        cardFields: ['image', 'altText', 'videoId'],
+        cardFields: ['image', 'altText', 'caption', 'videoId'],
         inlineCreate: {
-          fields: ['image', 'altText', 'videoId'],
+          fields: ['image', 'altText', 'caption', 'videoId'],
         },
         inlineEdit: {
-          fields: ['image', 'altText', 'videoId'],
+          fields: ['image', 'altText', 'caption', 'videoId'],
         },
       },
     }),

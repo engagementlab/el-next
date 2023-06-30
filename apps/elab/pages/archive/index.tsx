@@ -104,8 +104,12 @@ export default function MediaArchive({
         set((state) => {
           const group = filterGroupKey.toLocaleLowerCase();
           let theme = Theme.none;
-          if (group === 'gunviolence') {
-            theme = Theme.gunviolence;
+          if (state.filterGroupOpen !== group) {
+            if (group === 'gunviolence') {
+              theme = Theme.gunviolence;
+            } else if (group === 'climate') {
+              theme = Theme.climate;
+            }
           }
           return {
             ...state,
@@ -155,7 +159,7 @@ export default function MediaArchive({
     preSelectedGroup = router.asPath
       .substring(router.asPath.indexOf('#'), router.asPath.indexOf('?'))
       .replace('#', '');
-
+    console.log(preSelectedGroup);
     if (useStore.getState().currentTheme === Theme.none)
       toggleFilterGroupOpen(preSelectedGroup);
 
@@ -206,9 +210,9 @@ export default function MediaArchive({
       const menu = (
         <div className="flex flex-col lg:flex-row w-full xl:w-3/4">
           {filterGroups.map((group) => {
-            const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 border-${
+            const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 border-${
               group.color
-            } rounded-full px-3 py-1 ${
+            } ${
               !haveGroupOpen(group.key)
                 ? `text-${group.color}`
                 : `text-white bg-${group.color}`
@@ -244,16 +248,23 @@ export default function MediaArchive({
                   </div>
                 </a>
                 <div
-                  className={`flex ml-5 ${
+                  className={`flex mt-2 ml-5 ${
                     haveGroupOpen(group.key) ? 'block' : 'hidden'
                   }`}
                 >
-                  ↳
+                  <svg
+                    height="20"
+                    viewBox="0 -960 960 960"
+                    width="20"
+                    className="inline"
+                  >
+                    <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+                  </svg>
                   <div className="flex flex-grow items-center justify-evenly ml-4 transition-all">
                     {filters.map((filter) => {
                       const filterButtonStyle = `font-bold border-2 border-${
                         group.color
-                      } rounded-full px-3 py-1 ${
+                      } rounded-large px-3 py-1 ${
                         !haveSpecificFilter(filter.key)
                           ? `text-${group.color}`
                           : `text-white bg-${group.color}`

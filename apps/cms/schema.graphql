@@ -611,6 +611,7 @@ type Semester {
   id: ID!
   name: String
   key: String
+  embed: String
   createdDate: DateTime
   enabled: Boolean
   order: Int
@@ -637,6 +638,7 @@ input SemesterWhereInput {
   id: IDFilter
   name: StringFilter
   key: StringFilter
+  embed: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
   order: IntNullableFilter
@@ -659,6 +661,7 @@ input SemesterOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
+  embed: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
   order: OrderDirection
@@ -668,6 +671,7 @@ input SemesterOrderByInput {
 input SemesterUpdateInput {
   name: String
   key: String
+  embed: String
   createdDate: DateTime
   enabled: Boolean
   order: Int
@@ -685,6 +689,7 @@ input SemesterUpdateArgs {
 input SemesterCreateInput {
   name: String
   key: String
+  embed: String
   createdDate: DateTime
   enabled: Boolean
   order: Int

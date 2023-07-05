@@ -8,6 +8,7 @@ import {
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
+import { unfurl } from 'unfurl.js';
 import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
@@ -34,6 +35,7 @@ const Semester: Lists.Semester = list({
         },
       },
     }),
+    embed: text({}),
     createdDate: CreatedTimestamp,
     enabled: checkbox({
       defaultValue: true,
@@ -114,6 +116,14 @@ const Semester: Lists.Semester = list({
         resolvedData = {
           ...resolvedData,
           key: CreateKey(resolvedData.name),
+        };
+      }
+      if (resolvedData.embed) {
+        var oembed = await unfurl(resolvedData.embed);
+        console.log(oembed);
+        resolvedData = {
+          ...resolvedData,
+          embed: oembed,
         };
       }
       return resolvedData;

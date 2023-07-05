@@ -74,6 +74,7 @@ model Semester {
   id               String    @id @default(cuid())
   name             String    @default("")
   key              String    @unique @default("")
+  embed            String    @default("")
   createdDate      DateTime?
   enabled          Boolean   @default(true)
   order            Int?

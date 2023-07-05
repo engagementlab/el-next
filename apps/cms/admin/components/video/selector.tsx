@@ -10,7 +10,7 @@
 import React, { useState } from 'react';
 import Script from 'next/script';
 import _ from 'lodash';
-import create from 'zustand';
+import { create } from 'zustand';
 
 import {
   Box,
@@ -231,7 +231,7 @@ const VideoSelector = ({
                         : _.map(currentVideos, 'value').includes(
                             (item as RelatedVideo).value
                           );
-                      console.log(selected, currentVideo);
+                      // console.log(selected, currentVideo);
                       return (
                         <Grid item xs={3} key={item.value}>
                           <a

@@ -7,11 +7,9 @@ import {
 } from '@keystone-6/fields-document/component-blocks';
 import { FormField } from '@keystone-6/fields-document/dist/declarations/src/DocumentEditor/component-blocks/api';
 
-// import Select, { GroupBase, OptionProps } from 'react-select'
 import { FieldContainer } from '@keystone-ui/fields';
 import {
   Alert,
-  Avatar,
   Box,
   Checkbox,
   FormControlLabel,
@@ -26,6 +24,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import Script from 'next/script';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -34,9 +33,10 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import InfoIcon from '@mui/icons-material/Info';
 
 import { create } from 'zustand';
-import VideoSelector, { RelatedVideoField } from './video/selector';
-import Script from 'next/script';
+
 import { Image } from '@el-next/components';
+import VideoSelector, { RelatedVideoField } from './video/selector';
+import { EmbedMetadata } from '../../types';
 
 const axios = require('axios').default;
 const _ = require('underscore');
@@ -79,6 +79,11 @@ export interface RelatedImage {
     alt?: null | string;
   };
 }
+
+export interface EmbeddedUrl {
+  embed: EmbedMetadata;
+}
+
 function videoSelect({
   label,
   current,
@@ -502,6 +507,59 @@ function imageSelect({
   };
 }
 
+function embedField({
+  label,
+  current,
+  defaultValue = {
+    embed: {
+      title: '',
+    },
+  },
+}: {
+  label: string;
+  current?: EmbedMetadata;
+  defaultValue: EmbedMetadata;
+}): FormField<EmbedMetadata, undefined> {
+  return {
+    kind: 'form',
+
+    Input({ value, onChange, autoFocus }) {
+      const endpointPrefix =
+        window.location.protocol === 'https:'
+          ? '/api'
+          : 'http://localhost:8000';
+      return (
+        <FieldContainer>
+          <TextField
+            id="alt-field"
+            multiline
+            fullWidth
+            rows={1}
+            label="Alt Text"
+            variant="standard"
+            // value={alt}
+            onChange={(e) => {
+              axios
+                .post(`${endpointPrefix}/embed`, { url: e.target.value })
+                .then((response: { data: any }) => {
+                  let data = response.data;
+
+                  onChange(data);
+                })
+                .catch((error: any) => {});
+            }}
+          />
+        </FieldContainer>
+      );
+    },
+    options: undefined,
+    defaultValue,
+    validate(value) {
+      return typeof value === 'object';
+    },
+  };
+}
+
 export const componentBlocks = {
   image: component({
     preview: (props) => {
@@ -546,11 +604,10 @@ export const componentBlocks = {
   }),
   video: component({
     preview: (props) => {
-      console.log(props.fields.video);
       return (
         <div>
-          {Object.keys(props.fields.video.value)}
-          {/* {!props.fields.video.value.label ? (
+          {/* {Object.keys(props.fields.video.value)} */}
+          {!props.fields.video.value.label ? (
             <span>
               Click <em>Edit</em>
             </span>
@@ -565,7 +622,7 @@ export const componentBlocks = {
                 src={props.fields.video.value.thumbSm as unknown as string}
               />
             </>
-          )} */}
+          )}
         </div>
       );
     },
@@ -755,6 +812,45 @@ export const componentBlocks = {
         label: 'Select:',
         selection:
           'key name slides { image {publicId} altText caption videoId }',
+      }),
+    },
+  }),
+  embed: component({
+    preview: (props) => {
+      if (props.fields.embed && props.fields.embed.value.oEmbed)
+        return (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: props.fields.embed.value.oEmbed.html as string,
+            }}
+          />
+        );
+      else if (
+        props.fields.embed &&
+        props.fields.embed.value.twitter_card?.players?.length > 0
+      )
+        return (
+          <iframe
+            src={(props.fields.embed.value.twitter_card?.players[0] as any).url}
+          />
+        );
+      else if (props.fields.embed && props.fields.embed.value)
+        return (
+          <>
+            {/* {Object.keys(props.fields.embed.value).join('; ')}{' '} */}
+            {props.fields.embed.value['title']}
+          </>
+        );
+      else return <div></div>;
+      // <div>{props.fields.embed.value[0].embed.title}</div>;
+    },
+    label: 'Embed a URL',
+    schema: {
+      embed: embedField({
+        label: 'Embed a URL',
+        defaultValue: {
+          embed: { title: 'Embed a URL' },
+        },
       }),
     },
   }),

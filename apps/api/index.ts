@@ -6,6 +6,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import _ from 'lodash';
+import { unfurl } from 'unfurl.js';
 
 dotenv.config();
 
@@ -141,11 +142,27 @@ app.get(`/media/get/:app/:type`, async (req, res) => {
     res.status(500).send(err);
   }
 });
+
 app.get('/media/delete', async (req, res) => {
   try {
     cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
       res.status(200).send(response)
     );
+  } catch (err: any) {
+    res.status(500).send(err);
+  }
+});
+
+app.post('/embed', async (req, res) => {
+  if (!req.body) {
+    res.status(500).send('No body provided in payload.');
+    return;
+  }
+  const url = req.body.url;
+  try {
+    const oembed = await unfurl(url);
+
+    res.status(200).send(oembed);
   } catch (err: any) {
     res.status(500).send(err);
   }

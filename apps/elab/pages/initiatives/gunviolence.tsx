@@ -4,11 +4,12 @@ import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
-import { Theme } from '@/types';
+import { Partner, Theme } from '@/types';
 import { CTAButton, MoreButton } from '@/components/Buttons';
 import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
 import Link from 'next/link';
+import { Logos } from '@/components/Logos';
 
 type AboutPage = {
   intro: string;
@@ -42,6 +43,9 @@ const renderSlide = (props: { slide: any }) => {
   );
 };
 
+const jumpClass =
+  'border-purple text-purple fill-green group-hover:fill-purple';
+
 export default function GunViolence({
   page,
   error,
@@ -64,42 +68,42 @@ export default function GunViolence({
             <p>{page?.intro}</p>
 
             <div className="w-3/4 lg:w-full mt-6">
-              <p className="text-blue text-xl lg:text-3xl font-extrabold uppercase">
+              <h2 className="text-green text-xl lg:text-3xl font-extrabold uppercase">
                 Jump to:
-              </p>
+              </h2>
               <div>
                 <Button
                   label="The Big Picture of Gun Violence in Boston"
                   anchorId="context"
-                  className="border-purple text-purple fill-purple text-sm"
+                  className={jumpClass}
                 />
               </div>
               <Button
                 label="Projects"
                 anchorId="projects"
-                className="inline border-purple text-purple fill-purple text-sm"
+                className={`inline ${jumpClass}`}
               />
               <Button
                 label="Studios"
                 anchorId="studios"
-                className="border-purple text-purple fill-purple text-sm ml-2"
+                className={`ml-2 ${jumpClass}`}
               />
               <Button
                 label="Research"
                 anchorId="research"
-                className="border-purple text-purple fill-purple text-sm ml-2"
+                className={`ml-2 ${jumpClass}`}
               />
             </div>
           </div>
           {/* <Button label="→ Projects" link="/archive?gunviolence" /> */}
           {page?.slides && (
-            <Slideshow slides={page?.slides} themeColor="bg-purple" />
+            <Slideshow slides={page?.slides} themeColor="bg-green" />
           )}
         </div>
 
-        <p className="text-blue text-xl lg:text-3xl font-extrabold uppercase">
+        <h2 className="text-green text-xl lg:text-3xl font-extrabold uppercase">
           What's new
-        </p>
+        </h2>
         {page?.slides && (
           <Slideshow
             slides={page?.slides}
@@ -108,7 +112,20 @@ export default function GunViolence({
             themeColor="bg-blue"
           />
         )}
-        <MoreButton link="/" label="See more news" />
+        <MoreButton link="/" label="See more news" theme={Theme.gunviolence} />
+
+        <h2 className="text-green text-xl lg:text-3xl font-extrabold uppercase">
+          Collaborative Leadership Team
+        </h2>
+        <Logos
+          partners={[
+            Partner.ldbpi,
+            Partner.mgh,
+            Partner.magv,
+            Partner.teenempowerment,
+            Partner.uncornered,
+          ]}
+        />
       </div>
       <Divider color="bg-blue" />
     </Layout>

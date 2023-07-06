@@ -200,7 +200,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   );
   const siiLinks = (
     <>
-      <Link href="/" className="mt-3 xl:my-1">
+      <Link href="/initiatives/gunviolence" className="mt-3 xl:my-1">
         Transforming Narratives of Gun Violence
       </Link>
       <Link href="/" className="mt-3 xl:my-1">

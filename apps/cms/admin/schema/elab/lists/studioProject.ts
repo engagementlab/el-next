@@ -17,7 +17,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
 
-const MediaItem: Lists.MediaItem = list({
+const StudioProject: Lists.MediaItem = list({
   access: allowAll,
   fields: {
     title: text({
@@ -41,15 +41,7 @@ const MediaItem: Lists.MediaItem = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    thumbnail: cloudinaryImage({
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.xZ/media',
-      },
-    }),
-    shortDescription: text({
+    blurb: text({
       validation: {
         isRequired: true,
       },
@@ -74,19 +66,19 @@ const MediaItem: Lists.MediaItem = list({
       ui: { displayMode: 'select' },
       defaultValue: 'GunViolence',
     }),
-    associatedPeople: relationship({
-      ref: 'Person.mediaItems',
-      many: true,
-      ui: {
-        displayMode: 'cards',
-        cardFields: ['name'],
-        linkToItem: true,
-        removeMode: 'disconnect',
-        description:
-          'Use + button -> "Associated People" on toolbar to display in Content document.',
-      },
-    }),
-    content: document({
+    // associatedPeople: relationship({
+    //   ref: 'Person.mediaItems',
+    //   many: true,
+    //   ui: {
+    //     displayMode: 'cards',
+    //     cardFields: ['name'],
+    //     linkToItem: true,
+    //     removeMode: 'disconnect',
+    //     description:
+    //       'Use + button -> "Associated People" on toolbar to display in Content document.',
+    //   },
+    // }),
+    coCreation: document({
       formatting: true,
       dividers: true,
       links: true,
@@ -100,39 +92,43 @@ const MediaItem: Lists.MediaItem = list({
       ui: {
         views: './admin/components/component-blocks',
       },
+      label: 'Co-Creation Process',
 
       componentBlocks,
     }),
-    // galleryImages: relationship({
-    //   ref: 'MediaImage.mediaGalleryImages',
-    //   many: true,
-    //   label: "Gallery Images",
-    //   ui: {
-    //     displayMode: 'cards',
-    //     cardFields: ['image', 'altText', 'caption'],
-    //     inlineCreate: {
-    //       fields: ['image', 'altText', 'caption']
-    //     },
-    //     inlineEdit: {
-    //       fields: ['image', 'altText', 'caption']
-    //     },
-    //   },
-    // }),
+    impact: document({
+      formatting: true,
+      dividers: true,
+      links: true,
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+        [2, 1],
+        [1, 2],
+        [1, 2, 1],
+      ],
+      ui: {
+        views: './admin/components/component-blocks',
+      },
+      label: 'Impact Beyond the Studio',
+      componentBlocks,
+    }),
     videos: json({
       ui: {
         views: path.join(
           process.cwd(),
           '/admin/components/video/components.tsx'
         ),
-        createView: { fieldMode: 'edit' },
-        listView: { fieldMode: 'hidden' },
-        itemView: { fieldMode: 'edit' },
+        // createView: { fieldMode: 'edit' },
+        // listView: { fieldMode: 'hidden' },
+        // itemView: { fieldMode: 'edit' },
       },
     }),
     file: azureStorageFile({ azureStorageConfig: azConfig, label: 'PDF' }),
-  },
-  graphql: {
-    plural: 'MediaItems',
+    semester: relationship({
+      ref: 'Semester.projects',
+      many: true,
+    }),
   },
   hooks: {
     resolveInput: async ({
@@ -153,4 +149,4 @@ const MediaItem: Lists.MediaItem = list({
     },
   },
 });
-export default MediaItem;
+export default StudioProject;

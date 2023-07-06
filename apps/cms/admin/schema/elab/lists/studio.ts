@@ -39,18 +39,19 @@ const Studio: Lists.Studio = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    instructors: relationship({
-      ref: 'Person.studios',
-      many: true,
-    }),
-    description: text({
-      label: 'Studio Description',
+    blurb: text({
+      label: 'Blurb (appears on Semesters index page)',
       validation: {
         isRequired: true,
       },
       ui: {
         displayMode: 'textarea',
       },
+    }),
+    semesters: relationship({
+      ref: 'Semester.studio',
+      many: true,
+      ui: { hideCreate: true },
     }),
     initiatives: multiselect({
       type: 'enum',

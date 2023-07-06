@@ -26,14 +26,14 @@ const Filter: Lists.Filter = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    // section: select({
-    //   type: 'enum',
-    //   options: [
-    //     { label: 'Media', value: 'media' },
-    //     { label: 'Studio', value: 'studio' },
-    //   ],
-    //   ui: { displayMode: 'segmented-control' },
-    // }),
+    type: select({
+      type: 'enum',
+      options: [
+        { label: 'Media', value: 'media' },
+        { label: 'Studio', value: 'studio' },
+      ],
+      ui: { displayMode: 'segmented-control' },
+    }),
     // order: integer(),
   },
   hooks: {

@@ -132,9 +132,9 @@ export const Field = ({
 
   return (
     <FieldContainer>
-      {/* <FieldLabel>{field.label}</FieldLabel> */}
+      <FieldLabel>{field.label}</FieldLabel>
       <Fragment>
-        {/* <Button
+        <Button
           size="small"
           disabled={onChange === undefined}
           tone="positive"
@@ -163,11 +163,11 @@ export const Field = ({
             // }, 1000);
           }}
           done={() => setGridOpen(false)}
-        /> */}
+        />
       </Fragment>
 
       <ul className={styles.list.ul}>
-        {/* {currentVideos.map((relatedVideo: RelatedVideo, i: number) => {
+        {currentVideos.map((relatedVideo: RelatedVideo, i: number) => {
           return (
             <li key={`related-video-${i}`} className={styles.list.li}>
               <div className={styles.list.data}>
@@ -189,7 +189,7 @@ export const Field = ({
               </div>
             </li>
           );
-        })} */}
+        })}
       </ul>
     </FieldContainer>
   );

@@ -4,11 +4,11 @@ import {
   integer,
   json,
   relationship,
+  select,
   text,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
-import { unfurl } from 'unfurl.js';
 import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
@@ -35,38 +35,45 @@ const Semester: Lists.Semester = list({
         },
       },
     }),
-    embed: text({}),
     createdDate: CreatedTimestamp,
     enabled: checkbox({
       defaultValue: true,
     }),
-    order: integer({
-      label: 'Order on index page',
+    studio: relationship({
+      ref: 'Studio.semesters',
+      ui: { hideCreate: true },
     }),
-    thumbnail: cloudinaryImage({
-      label: 'Thumbnail (need to be sized consistently)',
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.x/studios',
+    // order: integer({
+    //   label: 'Order on index page',
+    // }),
+    type: select({
+      type: 'enum',
+      options: [
+        { label: 'Current', value: 'current' },
+        { label: 'upcoming', value: 'upcoming' },
+      ],
+      ui: {
+        displayMode: 'segmented-control',
+        description: 'Specify if not a past semester.',
       },
     }),
-    blurb: text({
-      label: 'Blurb (appears on Semesters index page)',
+    courseNumber: text({
+      validation: {
+        isRequired: true,
+      },
+    }),
+    instructors: relationship({
+      ref: 'Person.studioInstructors',
+      many: true,
+      ui: { hideCreate: true },
+    }),
+    description: text({
+      label: 'Semester Description',
       validation: {
         isRequired: true,
       },
       ui: {
         displayMode: 'textarea',
-      },
-    }),
-    associatedPeople: relationship({
-      ref: 'Person.semesters',
-      many: true,
-      ui: {
-        description:
-          'Use + button -> "Associated People" on toolbar to display in Content document.',
       },
     }),
     // helper: helper({
@@ -77,29 +84,53 @@ const Semester: Lists.Semester = list({
     //   },
     //   iconType: HelperIcon.info,
     // }),
-    content: document({
-      formatting: {
-        headingLevels: [3, 4],
-        inlineMarks: true,
-        listTypes: true,
-        alignment: true,
-        blockTypes: true,
-        softBreaks: true,
-      },
+    coCreation: document({
+      formatting: true,
       dividers: true,
       links: true,
-      layouts: [[2, 1]],
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+        [2, 1],
+        [1, 2],
+        [1, 2, 1],
+      ],
       ui: {
         views: './admin/components/component-blocks',
       },
-
+      label: 'Co-Creation Process',
       componentBlocks,
+    }),
+    impact: document({
+      formatting: true,
+      dividers: true,
+      links: true,
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+        [2, 1],
+        [1, 2],
+        [1, 2, 1],
+      ],
+      ui: {
+        views: './admin/components/component-blocks',
+      },
+      label: 'Impact Beyond the Studio',
+      componentBlocks,
+    }),
+    projects: relationship({
+      ref: 'StudioProject.semester',
+      many: true,
+    }),
+    participants: relationship({
+      ref: 'Person.studioParticipants',
+      many: true,
     }),
   },
   ui: {
     listView: {
-      initialColumns: ['name', 'order', 'thumbnail'],
-      initialSort: { field: 'order', direction: 'ASC' },
+      initialColumns: ['name'],
+      // initialSort: { field: 'order', direction: 'ASC' },
     },
     label: 'Studio Semester',
   },
@@ -116,14 +147,6 @@ const Semester: Lists.Semester = list({
         resolvedData = {
           ...resolvedData,
           key: CreateKey(resolvedData.name),
-        };
-      }
-      if (resolvedData.embed) {
-        var oembed = await unfurl(resolvedData.embed);
-        console.log(oembed);
-        resolvedData = {
-          ...resolvedData,
-          embed: oembed,
         };
       }
       return resolvedData;

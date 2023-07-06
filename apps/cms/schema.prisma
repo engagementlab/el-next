@@ -18,11 +18,12 @@ model About {
 }
 
 model Filter {
-  id                     String      @id @default(cuid())
-  name                   String      @default("")
-  key                    String      @default("")
-  enabled                Boolean     @default(true)
-  from_MediaItem_filters MediaItem[] @relation("MediaItem_filters")
+  id                         String          @id @default(cuid())
+  name                       String          @default("")
+  key                        String          @default("")
+  enabled                    Boolean         @default(true)
+  type                       FilterTypeType?
+  from_StudioProject_filters StudioProject[] @relation("StudioProject_filters")
 }
 
 model Initiative {
@@ -38,50 +39,37 @@ model InitiativesLanding {
   description String @default("")
 }
 
-model MediaItem {
-  id               String                  @id @default(cuid())
-  title            String                  @default("")
-  key              String                  @unique @default("")
-  createdDate      DateTime?
-  enabled          Boolean                 @default(true)
-  thumbnail        Json?
-  shortDescription String                  @default("")
-  filters          Filter[]                @relation("MediaItem_filters")
-  initiative       MediaItemInitiativeType @default(GunViolence)
-  associatedPeople Person[]                @relation("MediaItem_associatedPeople")
-  content          Json                    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  videos           Json?
-  file_filename    String?
-  file_filesize    Int?
-}
-
 model Person {
-  id          String      @id @default(cuid())
-  name        String      @default("")
-  key         String      @default("")
-  title       String      @default("")
-  createdDate DateTime?
-  enabled     Boolean     @default(true)
-  image       Json?
-  blurb       String      @default("")
-  content     Json        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  mediaItems  MediaItem[] @relation("MediaItem_associatedPeople")
-  studios     Studio[]    @relation("Person_studios")
-  semesters   Semester[]  @relation("Person_semesters")
+  id                 String     @id @default(cuid())
+  name               String     @default("")
+  key                String     @default("")
+  title              String     @default("")
+  createdDate        DateTime?
+  enabled            Boolean    @default(true)
+  image              Json?
+  content            Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studioInstructors  Semester[] @relation("Person_studioInstructors")
+  studioParticipants Semester[] @relation("Person_studioParticipants")
 }
 
 model Semester {
-  id               String    @id @default(cuid())
-  name             String    @default("")
-  key              String    @unique @default("")
-  embed            String    @default("")
-  createdDate      DateTime?
-  enabled          Boolean   @default(true)
-  order            Int?
-  thumbnail        Json?
-  blurb            String    @default("")
-  associatedPeople Person[]  @relation("Person_semesters")
-  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id           String            @id @default(cuid())
+  name         String            @default("")
+  key          String            @unique @default("")
+  createdDate  DateTime?
+  enabled      Boolean           @default(true)
+  studio       Studio?           @relation("Semester_studio", fields: [studioId], references: [id])
+  studioId     String?           @map("studio")
+  type         SemesterTypeType?
+  courseNumber String            @default("")
+  instructors  Person[]          @relation("Person_studioInstructors")
+  description  String            @default("")
+  coCreation   Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact       Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projects     StudioProject[]   @relation("Semester_projects")
+  participants Person[]          @relation("Person_studioParticipants")
+
+  @@index([studioId])
 }
 
 model Slide {
@@ -104,21 +92,48 @@ model Slideshow {
 }
 
 model Studio {
-  id          String    @id @default(cuid())
-  name        String    @default("")
-  key         String    @unique @default("")
+  id          String     @id @default(cuid())
+  name        String     @default("")
+  key         String     @unique @default("")
   createdDate DateTime?
-  instructors Person[]  @relation("Person_studios")
-  description String    @default("")
-  initiatives Json      @default("[]")
+  blurb       String     @default("")
+  semesters   Semester[] @relation("Semester_studio")
+  initiatives Json       @default("[]")
 }
 
-enum MediaItemInitiativeType {
-  GunViolence
-  Climate
+model StudioProject {
+  id            String                      @id @default(cuid())
+  title         String                      @default("")
+  key           String                      @unique @default("")
+  createdDate   DateTime?
+  enabled       Boolean                     @default(true)
+  blurb         String                      @default("")
+  filters       Filter[]                    @relation("StudioProject_filters")
+  initiative    StudioProjectInitiativeType @default(GunViolence)
+  coCreation    Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact        Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  videos        Json?
+  file_filename String?
+  file_filesize Int?
+  semester      Semester[]                  @relation("Semester_projects")
+}
+
+enum FilterTypeType {
+  media
+  studio
+}
+
+enum SemesterTypeType {
+  current
+  upcoming
 }
 
 enum icon {
   help
   info
+}
+
+enum StudioProjectInitiativeType {
+  GunViolence
+  Climate
 }

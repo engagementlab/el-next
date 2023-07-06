@@ -106,7 +106,7 @@ const Image = ({
   width,
   maxWidth,
   lazy,
-  aspectDefault,
+  aspectDefault = true,
 }: ImageProps) => {
   // Instantiate a CloudinaryImage object for the image with public ID
   const cloudImage = cld.image(`${imgId}`);

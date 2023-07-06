@@ -39,7 +39,8 @@ var Image = function Image(_ref) {
     width = _ref.width,
     maxWidth = _ref.maxWidth,
     lazy = _ref.lazy,
-    aspectDefault = _ref.aspectDefault;
+    _ref$aspectDefault = _ref.aspectDefault,
+    aspectDefault = _ref$aspectDefault === void 0 ? true : _ref$aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID
   var cloudImage = cld.image("".concat(imgId));
   // If maxWidth is defined, ensure that the image steps don't exceed it

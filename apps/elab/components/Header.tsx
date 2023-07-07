@@ -206,10 +206,10 @@ const Header = ({ theme }: Props): JSX.Element => {
       <Link href="/" className="mt-3 xl:my-1">
         Transforming Narratives for Climate Justice
       </Link>
-      <Link href="/" className="mt-3 xl:my-1">
+      <Link href="/studios" className="mt-3 xl:my-1">
         Social Impact Studios
       </Link>
-      <Link href="/" className="mt-3 xl:my-1">
+      <Link href="/studios/projects" className="mt-3 xl:my-1">
         Studio Projects
       </Link>
     </>

@@ -70,6 +70,13 @@ const Person: Lists.Person = list({
         hideCreate: true,
       },
     }),
+    projectTeam: relationship({
+      ref: 'StudioProject.team',
+      many: true,
+      ui: {
+        hideCreate: true,
+      },
+    }),
     /*     semesters: relationship({
       ref: 'Semester.associatedPeople',
       many: true,

@@ -3,6 +3,7 @@ import {
   checkbox,
   integer,
   json,
+  multiselect,
   relationship,
   select,
   text,
@@ -14,6 +15,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { HelperIcon, helper } from '../../../components/helper';
+import { Partners } from '../partners';
 
 const Semester: Lists.Semester = list({
   access: allowAll,
@@ -84,6 +86,7 @@ const Semester: Lists.Semester = list({
     //   },
     //   iconType: HelperIcon.info,
     // }),
+    partners: Partners,
     coCreation: document({
       formatting: true,
       dividers: true,
@@ -125,6 +128,12 @@ const Semester: Lists.Semester = list({
     participants: relationship({
       ref: 'Person.studioParticipants',
       many: true,
+      ui: {
+        displayMode: 'cards',
+        cardFields: ['name', 'title'],
+        inlineConnect: true,
+        // linkToItem: true,
+      },
     }),
   },
   ui: {

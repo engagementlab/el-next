@@ -279,6 +279,8 @@ type Person {
   studioInstructorsCount(where: SemesterWhereInput! = {}): Int
   studioParticipants(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   studioParticipantsCount(where: SemesterWhereInput! = {}): Int
+  projectTeam(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectTeamCount(where: StudioProjectWhereInput! = {}): Int
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
@@ -352,6 +354,7 @@ input PersonWhereInput {
   enabled: BooleanFilter
   studioInstructors: SemesterManyRelationFilter
   studioParticipants: SemesterManyRelationFilter
+  projectTeam: StudioProjectManyRelationFilter
 }
 
 input DateTimeNullableFilter {
@@ -369,6 +372,12 @@ input SemesterManyRelationFilter {
   every: SemesterWhereInput
   some: SemesterWhereInput
   none: SemesterWhereInput
+}
+
+input StudioProjectManyRelationFilter {
+  every: StudioProjectWhereInput
+  some: StudioProjectWhereInput
+  none: StudioProjectWhereInput
 }
 
 input PersonOrderByInput {
@@ -390,6 +399,7 @@ input PersonUpdateInput {
   content: JSON
   studioInstructors: SemesterRelateToManyForUpdateInput
   studioParticipants: SemesterRelateToManyForUpdateInput
+  projectTeam: StudioProjectRelateToManyForUpdateInput
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -400,6 +410,13 @@ input SemesterRelateToManyForUpdateInput {
   set: [SemesterWhereUniqueInput!]
   create: [SemesterCreateInput!]
   connect: [SemesterWhereUniqueInput!]
+}
+
+input StudioProjectRelateToManyForUpdateInput {
+  disconnect: [StudioProjectWhereUniqueInput!]
+  set: [StudioProjectWhereUniqueInput!]
+  create: [StudioProjectCreateInput!]
+  connect: [StudioProjectWhereUniqueInput!]
 }
 
 input PersonUpdateArgs {
@@ -417,11 +434,17 @@ input PersonCreateInput {
   content: JSON
   studioInstructors: SemesterRelateToManyForCreateInput
   studioParticipants: SemesterRelateToManyForCreateInput
+  projectTeam: StudioProjectRelateToManyForCreateInput
 }
 
 input SemesterRelateToManyForCreateInput {
   create: [SemesterCreateInput!]
   connect: [SemesterWhereUniqueInput!]
+}
+
+input StudioProjectRelateToManyForCreateInput {
+  create: [StudioProjectCreateInput!]
+  connect: [StudioProjectWhereUniqueInput!]
 }
 
 type Semester {
@@ -436,6 +459,7 @@ type Semester {
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   instructorsCount(where: PersonWhereInput! = {}): Int
   description: String
+  partners: [SemesterPartnerType!]
   coCreation: Semester_coCreation_Document
   impact: Semester_impact_Document
   projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
@@ -447,6 +471,18 @@ type Semester {
 enum SemesterTypeType {
   current
   upcoming
+}
+
+enum SemesterPartnerType {
+  uncornered
+  ficdc
+  greenroots
+  ldbpi
+  mgh
+  magv
+  sftt
+  swbcdc
+  teenempowerment
 }
 
 type Semester_coCreation_Document {
@@ -493,12 +529,6 @@ input PersonManyRelationFilter {
   none: PersonWhereInput
 }
 
-input StudioProjectManyRelationFilter {
-  every: StudioProjectWhereInput
-  some: StudioProjectWhereInput
-  none: StudioProjectWhereInput
-}
-
 input SemesterOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -520,6 +550,7 @@ input SemesterUpdateInput {
   courseNumber: String
   instructors: PersonRelateToManyForUpdateInput
   description: String
+  partners: [SemesterPartnerType!]
   coCreation: JSON
   impact: JSON
   projects: StudioProjectRelateToManyForUpdateInput
@@ -539,13 +570,6 @@ input PersonRelateToManyForUpdateInput {
   connect: [PersonWhereUniqueInput!]
 }
 
-input StudioProjectRelateToManyForUpdateInput {
-  disconnect: [StudioProjectWhereUniqueInput!]
-  set: [StudioProjectWhereUniqueInput!]
-  create: [StudioProjectCreateInput!]
-  connect: [StudioProjectWhereUniqueInput!]
-}
-
 input SemesterUpdateArgs {
   where: SemesterWhereUniqueInput!
   data: SemesterUpdateInput!
@@ -561,6 +585,7 @@ input SemesterCreateInput {
   courseNumber: String
   instructors: PersonRelateToManyForCreateInput
   description: String
+  partners: [SemesterPartnerType!]
   coCreation: JSON
   impact: JSON
   projects: StudioProjectRelateToManyForCreateInput
@@ -575,11 +600,6 @@ input StudioRelateToOneForCreateInput {
 input PersonRelateToManyForCreateInput {
   create: [PersonCreateInput!]
   connect: [PersonWhereUniqueInput!]
-}
-
-input StudioProjectRelateToManyForCreateInput {
-  create: [StudioProjectCreateInput!]
-  connect: [StudioProjectWhereUniqueInput!]
 }
 
 type Slide {
@@ -802,7 +822,7 @@ input StudioCreateInput {
 
 type StudioProject {
   id: ID!
-  title: String
+  name: String
   key: String
   createdDate: DateTime
   enabled: Boolean
@@ -810,10 +830,11 @@ type StudioProject {
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
   initiative: StudioProjectInitiativeType
+  partners: [StudioProjectPartnerType!]
   coCreation: StudioProject_coCreation_Document
   impact: StudioProject_impact_Document
-  videos: JSON
-  file: AzureStorageFileFieldOutput
+  team(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  teamCount(where: PersonWhereInput! = {}): Int
   semester(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   semesterCount(where: SemesterWhereInput! = {}): Int
 }
@@ -821,6 +842,18 @@ type StudioProject {
 enum StudioProjectInitiativeType {
   GunViolence
   Climate
+}
+
+enum StudioProjectPartnerType {
+  uncornered
+  ficdc
+  greenroots
+  ldbpi
+  mgh
+  magv
+  sftt
+  swbcdc
+  teenempowerment
 }
 
 type StudioProject_coCreation_Document {
@@ -831,23 +864,9 @@ type StudioProject_impact_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-interface AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
 input StudioProjectWhereUniqueInput {
   id: ID
   key: String
-}
-
-type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
 }
 
 input StudioProjectWhereInput {
@@ -855,13 +874,14 @@ input StudioProjectWhereInput {
   OR: [StudioProjectWhereInput!]
   NOT: [StudioProjectWhereInput!]
   id: IDFilter
-  title: StringFilter
+  name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
   blurb: StringFilter
   filters: FilterManyRelationFilter
   initiative: StudioProjectInitiativeTypeNullableFilter
+  team: PersonManyRelationFilter
   semester: SemesterManyRelationFilter
 }
 
@@ -880,7 +900,7 @@ input StudioProjectInitiativeTypeNullableFilter {
 
 input StudioProjectOrderByInput {
   id: OrderDirection
-  title: OrderDirection
+  name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
@@ -889,17 +909,17 @@ input StudioProjectOrderByInput {
 }
 
 input StudioProjectUpdateInput {
-  title: String
+  name: String
   key: String
   createdDate: DateTime
   enabled: Boolean
   blurb: String
   filters: FilterRelateToManyForUpdateInput
   initiative: StudioProjectInitiativeType
+  partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
-  videos: JSON
-  file: AzureStorageFileFieldInput
+  team: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
 }
 
@@ -910,28 +930,23 @@ input FilterRelateToManyForUpdateInput {
   connect: [FilterWhereUniqueInput!]
 }
 
-input AzureStorageFileFieldInput {
-  upload: Upload
-  ref: String
-}
-
 input StudioProjectUpdateArgs {
   where: StudioProjectWhereUniqueInput!
   data: StudioProjectUpdateInput!
 }
 
 input StudioProjectCreateInput {
-  title: String
+  name: String
   key: String
   createdDate: DateTime
   enabled: Boolean
   blurb: String
   filters: FilterRelateToManyForCreateInput
   initiative: StudioProjectInitiativeType
+  partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
-  videos: JSON
-  file: AzureStorageFileFieldInput
+  team: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
 }
 

@@ -16,11 +16,12 @@ import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
+import { Partners } from '../partners';
 
 const StudioProject: Lists.MediaItem = list({
   access: allowAll,
   fields: {
-    title: text({
+    name: text({
       validation: {
         isRequired: true,
       },
@@ -66,18 +67,7 @@ const StudioProject: Lists.MediaItem = list({
       ui: { displayMode: 'select' },
       defaultValue: 'GunViolence',
     }),
-    // associatedPeople: relationship({
-    //   ref: 'Person.mediaItems',
-    //   many: true,
-    //   ui: {
-    //     displayMode: 'cards',
-    //     cardFields: ['name'],
-    //     linkToItem: true,
-    //     removeMode: 'disconnect',
-    //     description:
-    //       'Use + button -> "Associated People" on toolbar to display in Content document.',
-    //   },
-    // }),
+    partners: Partners,
     coCreation: document({
       formatting: true,
       dividers: true,
@@ -113,18 +103,28 @@ const StudioProject: Lists.MediaItem = list({
       label: 'Impact Beyond the Studio',
       componentBlocks,
     }),
-    videos: json({
+    // videos: json({
+    //   ui: {
+    //     views: path.join(
+    //       process.cwd(),
+    //       '/admin/components/video/components.tsx'
+    //     ),
+    //     // createView: { fieldMode: 'edit' },
+    //     // listView: { fieldMode: 'hidden' },
+    //     // itemView: { fieldMode: 'edit' },
+    //   },
+    // }),
+    // file: azureStorageFile({ azureStorageConfig: azConfig, label: 'PDF' }),
+
+    team: relationship({
+      ref: 'Person.projectTeam',
+      many: true,
       ui: {
-        views: path.join(
-          process.cwd(),
-          '/admin/components/video/components.tsx'
-        ),
-        // createView: { fieldMode: 'edit' },
-        // listView: { fieldMode: 'hidden' },
-        // itemView: { fieldMode: 'edit' },
+        displayMode: 'cards',
+        cardFields: ['name', 'title'],
+        inlineConnect: true,
       },
     }),
-    file: azureStorageFile({ azureStorageConfig: azConfig, label: 'PDF' }),
     semester: relationship({
       ref: 'Semester.projects',
       many: true,

@@ -40,16 +40,17 @@ model InitiativesLanding {
 }
 
 model Person {
-  id                 String     @id @default(cuid())
-  name               String     @default("")
-  key                String     @default("")
-  title              String     @default("")
+  id                 String          @id @default(cuid())
+  name               String          @default("")
+  key                String          @default("")
+  title              String          @default("")
   createdDate        DateTime?
-  enabled            Boolean    @default(true)
+  enabled            Boolean         @default(true)
   image              Json?
-  content            Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studioInstructors  Semester[] @relation("Person_studioInstructors")
-  studioParticipants Semester[] @relation("Person_studioParticipants")
+  content            Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studioInstructors  Semester[]      @relation("Person_studioInstructors")
+  studioParticipants Semester[]      @relation("Person_studioParticipants")
+  projectTeam        StudioProject[] @relation("Person_projectTeam")
 }
 
 model Semester {
@@ -64,6 +65,7 @@ model Semester {
   courseNumber String            @default("")
   instructors  Person[]          @relation("Person_studioInstructors")
   description  String            @default("")
+  partners     Json              @default("[]")
   coCreation   Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   impact       Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   projects     StudioProject[]   @relation("Semester_projects")
@@ -102,20 +104,19 @@ model Studio {
 }
 
 model StudioProject {
-  id            String                      @id @default(cuid())
-  title         String                      @default("")
-  key           String                      @unique @default("")
-  createdDate   DateTime?
-  enabled       Boolean                     @default(true)
-  blurb         String                      @default("")
-  filters       Filter[]                    @relation("StudioProject_filters")
-  initiative    StudioProjectInitiativeType @default(GunViolence)
-  coCreation    Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  impact        Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  videos        Json?
-  file_filename String?
-  file_filesize Int?
-  semester      Semester[]                  @relation("Semester_projects")
+  id          String                      @id @default(cuid())
+  name        String                      @default("")
+  key         String                      @unique @default("")
+  createdDate DateTime?
+  enabled     Boolean                     @default(true)
+  blurb       String                      @default("")
+  filters     Filter[]                    @relation("StudioProject_filters")
+  initiative  StudioProjectInitiativeType @default(GunViolence)
+  partners    Json                        @default("[]")
+  coCreation  Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact      Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  team        Person[]                    @relation("Person_projectTeam")
+  semester    Semester[]                  @relation("Semester_projects")
 }
 
 enum FilterTypeType {

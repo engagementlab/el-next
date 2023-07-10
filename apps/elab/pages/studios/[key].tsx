@@ -15,8 +15,10 @@ import { create } from 'zustand';
 import Layout from '../../components/Layout';
 import { Blocks, Doc } from '../../components/Renderers';
 import { CTAButton } from '@/components/Buttons';
-import { Theme } from '@/types';
+import { Partner, Theme } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
+import { Logos } from '@/components/Logos';
+import { useEffect } from 'react';
 
 type Studio = {
   name: string;
@@ -30,6 +32,7 @@ type Studio = {
       name: string;
       key: string;
     }[];
+    description: string;
     partners: string[];
     coCreation: {
       document: any;
@@ -56,6 +59,7 @@ const useStore = create<SemestersState>()(
     currentSemester: preSelectedSemester || '',
     toggle: (semester: string) =>
       set((state) => {
+        // debugger;
         return {
           ...state,
           currentSemester: semester,
@@ -68,18 +72,10 @@ export default function Studio({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { toggle, currentSemester } = useStore((state) => state);
+
   const router = useRouter();
 
-  const searchParams = useSearchParams();
-
-  const search = searchParams.values();
-
-  // This will be logged on the server during the initial render
-  // and on the client on subsequent navigations.
-  console.log(Array.from(searchParams.values()), router.query);
-
-  preSelectedSemester =
-    Object.keys(router.query).length === 2 ? Object.keys(router.query)[1] : '';
   // Alter URL on semester change
   useStore.subscribe(
     (state) => state.currentSemester,
@@ -88,12 +84,18 @@ export default function Studio({
       history.replaceState(
         {},
         'Filtered Data',
-        `${location.pathname}/?${current}/lbjlbhhv`
+        `${location.pathname}?${current}`
       );
     }
   );
-
-  const { toggle, currentSemester } = useStore((state) => state);
+  useEffect(() => {
+    preSelectedSemester =
+      Object.keys(router.query).length === 2
+        ? Object.keys(router.query)[1]
+        : '';
+    if (preSelectedSemester !== '' && currentSemester === '')
+      toggle(preSelectedSemester);
+  });
   return (
     <Layout
       error={error}
@@ -102,7 +104,7 @@ export default function Studio({
       {item && (
         <>
           <h1>{item.name}</h1>
-          {router.query[0]?.toString()}
+          {/* {router.query[0]?.toString()} */}
           {item.semesters.map((se) => {
             return (
               <a
@@ -118,8 +120,24 @@ export default function Studio({
               </a>
             );
           })}
+          {currentSemester}
           {currentSemester !== '' && (
             <div className="content-container container w-full mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
+              <h2 className="uppercase text-blue">Course Information</h2>
+              <p>NUMBER: {item.semesters[0].courseNumber}</p>
+              <p>
+                INSTRUCTOR:&nbsp;
+                {item.semesters[0].instructors.map((i) => i.name).join(', ')}
+              </p>
+              <p>{item.semesters[0].description}</p>
+              <h2 className="uppercase text-blue">
+                {item.semesters[0].name} Partners
+              </h2>
+              {/* <Logos
+              partners={item.semesters[0].partners.map(
+                (i: string) => i as unknown as Partner
+              )}
+            /> */}
               <DocumentRenderer
                 document={item?.semesters[0].coCreation.document}
                 componentBlocks={Blocks()}

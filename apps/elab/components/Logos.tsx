@@ -9,6 +9,7 @@ type Props = {
 export const Logos = ({ all = false, partners }: Props): JSX.Element => {
   return (
     <div className="grid grid-flow-row grid-cols-6">
+      {Object.keys(partners)}
       {(all || partners.includes(Partner.ldbpi)) && (
         <Image
           id="ldpni-logo"

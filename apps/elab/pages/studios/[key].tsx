@@ -6,7 +6,7 @@ import {
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Query, Video } from '@el-next/components';
+import { Image, Query, Video } from '@el-next/components';
 
 import _ from 'lodash';
 import { create } from 'zustand';
@@ -19,6 +19,10 @@ import { Partner, Theme } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { Logos } from '@/components/Logos';
 import { useEffect } from 'react';
+import Divider from '@/components/Divider';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import ImagePlaceholder from '@/components/ImagePlaceholder';
 
 type Studio = {
   name: string;
@@ -41,6 +45,11 @@ type Studio = {
     projects: {
       name: string;
       key: string;
+      shortDescription: string;
+      thumbnail: {
+        publicId: string;
+      };
+      thumbailAltText: string;
     }[];
   }[];
 };
@@ -73,7 +82,9 @@ export default function Studio({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { toggle, currentSemester } = useStore((state) => state);
-
+  const selectedSemester = item?.semesters.find(
+    (semester) => semester.key === currentSemester
+  );
   const router = useRouter();
 
   // Alter URL on semester change
@@ -104,7 +115,6 @@ export default function Studio({
       {item && (
         <>
           <h1>{item.name}</h1>
-          {/* {router.query[0]?.toString()} */}
           {item.semesters.map((se) => {
             return (
               <a
@@ -120,29 +130,68 @@ export default function Studio({
               </a>
             );
           })}
-          {currentSemester}
-          {currentSemester !== '' && (
+          {selectedSemester && (
             <div className="content-container container w-full mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
               <h2 className="uppercase text-blue">Course Information</h2>
-              <p>NUMBER: {item.semesters[0].courseNumber}</p>
+              <p>NUMBER: {selectedSemester.courseNumber}</p>
               <p>
                 INSTRUCTOR:&nbsp;
-                {item.semesters[0].instructors.map((i) => i.name).join(', ')}
+                {selectedSemester.instructors.map((i) => i.name).join(', ')}
               </p>
-              <p>{item.semesters[0].description}</p>
+              <p>{selectedSemester.description}</p>
               <h2 className="uppercase text-blue">
-                {item.semesters[0].name} Partners
+                {selectedSemester.name} Partners
               </h2>
               {/* <Logos
-              partners={item.semesters[0].partners.map(
+              partners={selectedSemester.partners.map(
                 (i: string) => i as unknown as Partner
               )}
             /> */}
               <DocumentRenderer
-                document={item?.semesters[0].coCreation.document}
+                document={selectedSemester.coCreation.document}
                 componentBlocks={Blocks()}
                 renderers={Doc()}
               />
+              <Divider color="bg-[#E3BFFF]" />
+
+              <DocumentRenderer
+                document={selectedSemester.impact.document}
+                componentBlocks={Blocks()}
+                renderers={Doc()}
+              />
+              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2">
+                {selectedSemester.projects.map((project) => (
+                  <div className="w-full">
+                    <Link
+                      href={`/studios/projects/${project.key}`}
+                      passHref
+                      className="group"
+                    >
+                      {project.thumbnail ? (
+                        <Image
+                          id={`thumb-${project.key}`}
+                          alt={project.thumbailAltText}
+                          imgId={project.thumbnail.publicId}
+                          maxWidth={800}
+                          className="w-full"
+                        />
+                      ) : (
+                        <ImagePlaceholder
+                          imageLabel="Project"
+                          width={335}
+                          height={200}
+                        />
+                      )}
+                      <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                        {project.name}
+                      </h3>
+                    </Link>
+                    <div className="mt-2 mb-20">
+                      <p className="m-0">{project.shortDescription}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </>
@@ -200,9 +249,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             projects {
                 name
                 key
+                shortDescription
+                thumbnail {
+                    publicId
+                }
+                thumbailAltText
             }
         }
-          }`
+    }`
   );
   if (itemResult.error) {
     return {

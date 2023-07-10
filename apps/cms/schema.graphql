@@ -826,6 +826,9 @@ type StudioProject {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  thumbnail: CloudinaryImage_File
+  thumbailAltText: String
+  shortDescription: String
   blurb: String
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
@@ -878,6 +881,8 @@ input StudioProjectWhereInput {
   key: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
+  thumbailAltText: StringFilter
+  shortDescription: StringFilter
   blurb: StringFilter
   filters: FilterManyRelationFilter
   initiative: StudioProjectInitiativeTypeNullableFilter
@@ -904,6 +909,8 @@ input StudioProjectOrderByInput {
   key: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
+  thumbailAltText: OrderDirection
+  shortDescription: OrderDirection
   blurb: OrderDirection
   initiative: OrderDirection
 }
@@ -913,6 +920,9 @@ input StudioProjectUpdateInput {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  thumbnail: Upload
+  thumbailAltText: String
+  shortDescription: String
   blurb: String
   filters: FilterRelateToManyForUpdateInput
   initiative: StudioProjectInitiativeType
@@ -940,6 +950,9 @@ input StudioProjectCreateInput {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  thumbnail: Upload
+  thumbailAltText: String
+  shortDescription: String
   blurb: String
   filters: FilterRelateToManyForCreateInput
   initiative: StudioProjectInitiativeType

@@ -104,19 +104,22 @@ model Studio {
 }
 
 model StudioProject {
-  id          String                      @id @default(cuid())
-  name        String                      @default("")
-  key         String                      @unique @default("")
-  createdDate DateTime?
-  enabled     Boolean                     @default(true)
-  blurb       String                      @default("")
-  filters     Filter[]                    @relation("StudioProject_filters")
-  initiative  StudioProjectInitiativeType @default(GunViolence)
-  partners    Json                        @default("[]")
-  coCreation  Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  impact      Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  team        Person[]                    @relation("Person_projectTeam")
-  semester    Semester[]                  @relation("Semester_projects")
+  id               String                      @id @default(cuid())
+  name             String                      @default("")
+  key              String                      @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean                     @default(true)
+  thumbnail        Json?
+  thumbailAltText  String                      @default("")
+  shortDescription String                      @default("")
+  blurb            String                      @default("")
+  filters          Filter[]                    @relation("StudioProject_filters")
+  initiative       StudioProjectInitiativeType @default(GunViolence)
+  partners         Json                        @default("[]")
+  coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  team             Person[]                    @relation("Person_projectTeam")
+  semester         Semester[]                  @relation("Semester_projects")
 }
 
 enum FilterTypeType {

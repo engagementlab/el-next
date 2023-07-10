@@ -42,6 +42,26 @@ const StudioProject: Lists.MediaItem = list({
     enabled: checkbox({
       defaultValue: true,
     }),
+    thumbnail: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'elab-home-v3.x/studios/projects',
+      },
+    }),
+    thumbailAltText: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Thumbail Alt Text ♿',
+    }),
+    shortDescription: text({
+      validation: {
+        isRequired: true,
+      },
+      ui: { description: 'Displays in project listing under thumbnail.' },
+    }),
     blurb: text({
       validation: {
         isRequired: true,

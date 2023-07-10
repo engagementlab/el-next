@@ -37,7 +37,7 @@ const Slide: Lists.Slide = list({
       iconType: HelperIcon.info,
     }),
     altText: text({
-      label: 'Describe appearance of image (alt text)',
+      label: 'Describe appearance of image (alt text) ♿',
       ui: {
         description:
           'This must be defined and is not a caption, but for accessibility purposes.',

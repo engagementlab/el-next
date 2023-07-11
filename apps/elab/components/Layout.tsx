@@ -71,7 +71,11 @@ const Layout = ({
               </svg>
               {breadcrumbs?.map((breadcrumb) => {
                 return (
-                  <Link href={breadcrumb.href} className="text-lg">
+                  <Link
+                    href={breadcrumb.href}
+                    key={breadcrumb.href}
+                    className="text-lg"
+                  >
                     {breadcrumb.label}
                   </Link>
                 );

@@ -6,7 +6,7 @@ import {
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Image, Query, Video } from '@el-next/components';
+import { Button, Image, Query, Video } from '@el-next/components';
 
 import _ from 'lodash';
 import { create } from 'zustand';
@@ -32,16 +32,15 @@ type Studio = {
     name: string;
     type: string;
     courseNumber: string;
-    instructors: {
-      name: string;
-      key: string;
-    }[];
     description: string;
     partners: string[];
     coCreation: {
       document: any;
     };
-    impact: any;
+    impact: {
+      document: any;
+    };
+
     projects: {
       name: string;
       key: string;
@@ -50,6 +49,39 @@ type Studio = {
         publicId: string;
       };
       thumbailAltText: string;
+    }[];
+
+    instructors: {
+      name: string;
+      key: string;
+      title: string;
+      image: {
+        publicId: string;
+      };
+    }[];
+    learningPartners: {
+      name: string;
+      key: string;
+      title: string;
+      image: {
+        publicId: string;
+      };
+    }[];
+    studioStudents: {
+      name: string;
+      key: string;
+      title: string;
+      image: {
+        publicId: string;
+      };
+    }[];
+    studioStaff: {
+      name: string;
+      key: string;
+      title: string;
+      image: {
+        publicId: string;
+      };
     }[];
   }[];
 };
@@ -124,14 +156,33 @@ export default function Studio({
                   e.preventDefault();
                 }}
                 key={se.key}
-                // theme={Theme.gunviolence}
               >
                 {se.name}
               </a>
             );
           })}
           {selectedSemester && (
-            <div className="content-container container w-full mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
+            <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <div className="flex flex-wrap my-4">
+                {selectedSemester.learningPartners.map((person) => (
+                  <div
+                    className="flex flex-col w-1/5 ml-3"
+                    key={`thumb-${person.key}`}
+                  >
+                    <Image
+                      id={`thumb-${person.key}`}
+                      alt={`Photo of ${person.name}`}
+                      imgId={person.image.publicId}
+                      width={230}
+                      // aspectDefault={true}
+                      transforms="f_auto,dpr_auto,c_fit,g_face,r_max,h_230,w_230"
+                      className="rounded-full border-4 border-purple"
+                    />
+                    <p>{person.name}</p>
+                    <p>{person.title}</p>
+                  </div>
+                ))}
+              </div>
               <h2 className="uppercase text-blue">Course Information</h2>
               <p>NUMBER: {selectedSemester.courseNumber}</p>
               <p>
@@ -147,52 +198,79 @@ export default function Studio({
                 (i: string) => i as unknown as Partner
               )}
             /> */}
-              <DocumentRenderer
-                document={selectedSemester.coCreation.document}
-                componentBlocks={Blocks()}
-                renderers={Doc()}
-              />
+              <div className="w-3/4 lg:w-full mt-6">
+                <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
+                  Jump to:
+                </p>
+                <Button
+                  label="A Look Inside the Co-Creation Process"
+                  anchorId="cocreation"
+                  className="border-purple text-purple fill-purple text-sm"
+                />
+                <Button
+                  label="Impact Beyond the Studio"
+                  anchorId="impact"
+                  className="border-green-blue text-green-blue fill-green-blue"
+                />
+                <Button
+                  label="Studio Participants"
+                  anchorId="impact"
+                  className="border-green-blue text-green-blue fill-green-blue"
+                />
+              </div>
+              <div id="cocreation">
+                <DocumentRenderer
+                  document={selectedSemester.coCreation.document}
+                  componentBlocks={Blocks()}
+                  renderers={Doc()}
+                />
+              </div>
+
               <Divider color="bg-[#E3BFFF]" />
 
-              <DocumentRenderer
-                document={selectedSemester.impact.document}
-                componentBlocks={Blocks()}
-                renderers={Doc()}
-              />
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2">
+              <div id="impact">
+                <DocumentRenderer
+                  document={selectedSemester.impact.document}
+                  componentBlocks={Blocks()}
+                  renderers={Doc()}
+                />
+              </div>
+
+              <div className="grid lg:ml-5 lg:grid-cols-2 xl:grid-cols-3 lg:gap-2 xl:gap-3">
                 {selectedSemester.projects.map((project) => (
-                  <div className="w-full">
-                    <Link
-                      href={`/studios/projects/${project.key}`}
-                      passHref
-                      className="group"
-                    >
-                      {project.thumbnail ? (
-                        <Image
-                          id={`thumb-${project.key}`}
-                          alt={project.thumbailAltText}
-                          imgId={project.thumbnail.publicId}
-                          maxWidth={800}
-                          className="w-full"
-                        />
-                      ) : (
-                        <ImagePlaceholder
-                          imageLabel="Project"
-                          width={335}
-                          height={200}
-                        />
-                      )}
-                      <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-                        {project.name}
-                      </h3>
-                    </Link>
+                  <Link
+                    href={`/studios/projects/${project.key}`}
+                    passHref
+                    className="group"
+                    key={project.key}
+                  >
+                    {project.thumbnail ? (
+                      <Image
+                        id={`thumb-${project.key}`}
+                        alt={project.thumbailAltText}
+                        imgId={project.thumbnail.publicId}
+                        maxWidth={800}
+                        className="w-full"
+                      />
+                    ) : (
+                      <ImagePlaceholder
+                        imageLabel="Project"
+                        width={335}
+                        height={200}
+                      />
+                    )}
+                    <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                      {project.name}
+                    </h3>
                     <div className="mt-2 mb-20">
                       <p className="m-0">{project.shortDescription}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
-            </div>
+
+              <Divider color="bg-[#E3BFFF]" />
+            </motion.div>
           )}
         </>
       )}
@@ -229,15 +307,12 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     `studios(where: { key: { equals: "${params!.key}" } }) {
         name
         blurb
+        initiatives
         semesters {
             key
             name
             type
             courseNumber
-            instructors {
-                name
-                key
-            }
             description
             partners
             coCreation {
@@ -254,6 +329,38 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
                     publicId
                 }
                 thumbailAltText
+            }
+            instructors {
+              name
+              key
+              title
+              image {
+                  publicId
+              }
+            }
+            learningPartners {
+              name
+              key
+              title
+              image {
+                  publicId
+              }
+            }
+            studioStudents {
+              name
+              key
+              title
+              image {
+                  publicId
+              }  
+            }
+            studioStaff {
+              name
+              key
+              title
+              image {
+                  publicId
+              }  
             }
         }
     }`

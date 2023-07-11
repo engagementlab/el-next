@@ -270,15 +270,20 @@ type Person {
   id: ID!
   name: String
   key: String
-  title: String
   createdDate: DateTime
   enabled: Boolean
+  title: String
+  category: String
   image: CloudinaryImage_File
   content: Person_content_Document
   studioInstructors(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   studioInstructorsCount(where: SemesterWhereInput! = {}): Int
-  studioParticipants(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  studioParticipantsCount(where: SemesterWhereInput! = {}): Int
+  learningPartners(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  learningPartnersCount(where: SemesterWhereInput! = {}): Int
+  studioStudents(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  studioStudentsCount(where: SemesterWhereInput! = {}): Int
+  studioStaff(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  studioStaffCount(where: SemesterWhereInput! = {}): Int
   projectTeam(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectTeamCount(where: StudioProjectWhereInput! = {}): Int
 }
@@ -340,6 +345,7 @@ type Person_content_Document {
 
 input PersonWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input PersonWhereInput {
@@ -349,11 +355,14 @@ input PersonWhereInput {
   id: IDFilter
   name: StringFilter
   key: StringFilter
-  title: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
+  title: StringFilter
+  category: StringNullableFilter
   studioInstructors: SemesterManyRelationFilter
-  studioParticipants: SemesterManyRelationFilter
+  learningPartners: SemesterManyRelationFilter
+  studioStudents: SemesterManyRelationFilter
+  studioStaff: SemesterManyRelationFilter
   projectTeam: StudioProjectManyRelationFilter
 }
 
@@ -366,6 +375,21 @@ input DateTimeNullableFilter {
   gt: DateTime
   gte: DateTime
   not: DateTimeNullableFilter
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: StringNullableFilter
 }
 
 input SemesterManyRelationFilter {
@@ -384,21 +408,25 @@ input PersonOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
-  title: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
+  title: OrderDirection
+  category: OrderDirection
 }
 
 input PersonUpdateInput {
   name: String
   key: String
-  title: String
   createdDate: DateTime
   enabled: Boolean
+  title: String
+  category: String
   image: Upload
   content: JSON
   studioInstructors: SemesterRelateToManyForUpdateInput
-  studioParticipants: SemesterRelateToManyForUpdateInput
+  learningPartners: SemesterRelateToManyForUpdateInput
+  studioStudents: SemesterRelateToManyForUpdateInput
+  studioStaff: SemesterRelateToManyForUpdateInput
   projectTeam: StudioProjectRelateToManyForUpdateInput
 }
 
@@ -427,13 +455,16 @@ input PersonUpdateArgs {
 input PersonCreateInput {
   name: String
   key: String
-  title: String
   createdDate: DateTime
   enabled: Boolean
+  title: String
+  category: String
   image: Upload
   content: JSON
   studioInstructors: SemesterRelateToManyForCreateInput
-  studioParticipants: SemesterRelateToManyForCreateInput
+  learningPartners: SemesterRelateToManyForCreateInput
+  studioStudents: SemesterRelateToManyForCreateInput
+  studioStaff: SemesterRelateToManyForCreateInput
   projectTeam: StudioProjectRelateToManyForCreateInput
 }
 
@@ -464,8 +495,13 @@ type Semester {
   impact: Semester_impact_Document
   projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectsCount(where: StudioProjectWhereInput! = {}): Int
-  participants(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  participantsCount(where: PersonWhereInput! = {}): Int
+  learningPartners(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  learningPartnersCount(where: PersonWhereInput! = {}): Int
+  studioStudents(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  studioStudentsCount(where: PersonWhereInput! = {}): Int
+  studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  studioStaffCount(where: PersonWhereInput! = {}): Int
+  contact: String
 }
 
 enum SemesterTypeType {
@@ -513,7 +549,10 @@ input SemesterWhereInput {
   instructors: PersonManyRelationFilter
   description: StringFilter
   projects: StudioProjectManyRelationFilter
-  participants: PersonManyRelationFilter
+  learningPartners: PersonManyRelationFilter
+  studioStudents: PersonManyRelationFilter
+  studioStaff: PersonManyRelationFilter
+  contact: StringFilter
 }
 
 input SemesterTypeTypeNullableFilter {
@@ -538,6 +577,7 @@ input SemesterOrderByInput {
   type: OrderDirection
   courseNumber: OrderDirection
   description: OrderDirection
+  contact: OrderDirection
 }
 
 input SemesterUpdateInput {
@@ -554,7 +594,10 @@ input SemesterUpdateInput {
   coCreation: JSON
   impact: JSON
   projects: StudioProjectRelateToManyForUpdateInput
-  participants: PersonRelateToManyForUpdateInput
+  learningPartners: PersonRelateToManyForUpdateInput
+  studioStudents: PersonRelateToManyForUpdateInput
+  studioStaff: PersonRelateToManyForUpdateInput
+  contact: String
 }
 
 input StudioRelateToOneForUpdateInput {
@@ -589,7 +632,10 @@ input SemesterCreateInput {
   coCreation: JSON
   impact: JSON
   projects: StudioProjectRelateToManyForCreateInput
-  participants: PersonRelateToManyForCreateInput
+  learningPartners: PersonRelateToManyForCreateInput
+  studioStudents: PersonRelateToManyForCreateInput
+  studioStaff: PersonRelateToManyForCreateInput
+  contact: String
 }
 
 input StudioRelateToOneForCreateInput {

@@ -125,15 +125,28 @@ const Semester: Lists.Semester = list({
       ref: 'StudioProject.semester',
       many: true,
     }),
-    participants: relationship({
-      ref: 'Person.studioParticipants',
+    learningPartners: relationship({
+      ref: 'Person.learningPartners',
       many: true,
-      ui: {
-        displayMode: 'cards',
-        cardFields: ['name', 'title'],
-        inlineConnect: true,
-        // linkToItem: true,
+    }),
+    studioStudents: relationship({
+      ref: 'Person.studioStudents',
+      many: true,
+    }),
+    studioStaff: relationship({
+      ref: 'Person.studioStaff',
+      many: true,
+    }),
+    contact: text({
+      validation: {
+        isRequired: true,
+        match: {
+          regex:
+            /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/gm,
+          explanation: 'Not a valid email address',
+        },
       },
+      label: 'Semester Contact Email',
     }),
   },
   ui: {

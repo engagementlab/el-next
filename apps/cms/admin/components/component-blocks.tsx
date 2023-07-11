@@ -600,6 +600,10 @@ export const componentBlocks = {
           },
         },
       }),
+      caption: fields.text({
+        label: 'Caption',
+        defaultValue: 'Optional',
+      }),
     },
   }),
   video: component({

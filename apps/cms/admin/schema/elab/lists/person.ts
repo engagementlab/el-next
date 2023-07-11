@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { checkbox, relationship, text } from '@keystone-6/core/fields';
+import { checkbox, relationship, select, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -10,6 +10,7 @@ const Person: Lists.Person = list({
   access: allowAll,
   fields: {
     name: text({
+      isIndexed: 'unique',
       validation: {
         isRequired: true,
       },
@@ -26,15 +27,23 @@ const Person: Lists.Person = list({
         },
       },
     }),
+    createdDate: CreatedTimestamp,
+    enabled: checkbox({
+      defaultValue: true,
+    }),
     title: text({
       label: 'Title/Role',
       validation: {
         isRequired: true,
       },
     }),
-    createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
+    category: select({
+      type: 'string',
+      options: [
+        { label: 'Core Team', value: 'core' },
+        { label: 'Student Staff', value: 'studentstaff' },
+        { label: 'Fellow', value: 'fellow' },
+      ],
     }),
     image: cloudinaryImage({
       cloudinary: {
@@ -60,14 +69,48 @@ const Person: Lists.Person = list({
       ref: 'Semester.instructors',
       many: true,
       ui: {
-        hideCreate: true,
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
       },
     }),
-    studioParticipants: relationship({
-      ref: 'Semester.participants',
+    learningPartners: relationship({
+      ref: 'Semester.learningPartners',
       many: true,
       ui: {
-        hideCreate: true,
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+    studioStudents: relationship({
+      ref: 'Semester.studioStudents',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+    studioStaff: relationship({
+      ref: 'Semester.studioStaff',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
       },
     }),
     projectTeam: relationship({

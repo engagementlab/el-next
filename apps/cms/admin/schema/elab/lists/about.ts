@@ -62,7 +62,7 @@ const About: Lists.About = list({
     }),
   },
   ui: {
-    // hideCreate: true,
+    hideCreate: true,
     hideDelete: true,
     listView: {
       initialColumns: ['name'],

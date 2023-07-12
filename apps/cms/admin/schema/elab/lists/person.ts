@@ -117,7 +117,12 @@ const Person: Lists.Person = list({
       ref: 'StudioProject.team',
       many: true,
       ui: {
-        hideCreate: true,
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
       },
     }),
     /*     semesters: relationship({

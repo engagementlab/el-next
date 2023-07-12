@@ -94,32 +94,106 @@ input AboutCreateInput {
   content: JSON
 }
 
-type Filter {
+type Event {
   id: ID!
   name: String
   key: String
+  createdDate: DateTime
   enabled: Boolean
-  type: FilterTypeType
+  thumbnail: CloudinaryImage_File
+  thumbAltText: String
+  eventDate: DateTime
+  registrationLink: String
+  address: String
+  blurb: String
+  content: Event_content_Document
 }
 
-enum FilterTypeType {
-  media
-  studio
-}
+scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
-input FilterWhereUniqueInput {
+type CloudinaryImage_File {
   id: ID
+  filename: String
+  originalFilename: String
+  mimetype: String
+  encoding: String
+  publicId: String
+  publicUrl: String
+  publicUrlTransformed(transformation: CloudinaryImageFormat): String
 }
 
-input FilterWhereInput {
-  AND: [FilterWhereInput!]
-  OR: [FilterWhereInput!]
-  NOT: [FilterWhereInput!]
+"""
+Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
+All options are strings as they ultimately end up in a URL.
+"""
+input CloudinaryImageFormat {
+  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  """
+  prettyName: String
+  width: String
+  height: String
+  crop: String
+  aspect_ratio: String
+  gravity: String
+  zoom: String
+  x: String
+  y: String
+  format: String
+  fetch_format: String
+  quality: String
+  radius: String
+  angle: String
+  effect: String
+  opacity: String
+  border: String
+  background: String
+  overlay: String
+  underlay: String
+  default_image: String
+  delay: String
+  color: String
+  color_space: String
+  dpr: String
+  page: String
+  density: String
+  flags: String
+  transformation: String
+}
+
+type Event_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input EventWhereUniqueInput {
+  id: ID
+  key: String
+}
+
+input EventWhereInput {
+  AND: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  NOT: [EventWhereInput!]
   id: IDFilter
   name: StringFilter
   key: StringFilter
+  createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
-  type: FilterTypeTypeNullableFilter
+  thumbAltText: StringFilter
+  eventDate: DateTimeFilter
+  registrationLink: StringFilter
+  address: StringFilter
+  blurb: StringFilter
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
 }
 
 input BooleanFilter {
@@ -127,38 +201,64 @@ input BooleanFilter {
   not: BooleanFilter
 }
 
-input FilterTypeTypeNullableFilter {
-  equals: FilterTypeType
-  in: [FilterTypeType!]
-  notIn: [FilterTypeType!]
-  not: FilterTypeTypeNullableFilter
+input DateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeFilter
 }
 
-input FilterOrderByInput {
+input EventOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
+  createdDate: OrderDirection
   enabled: OrderDirection
-  type: OrderDirection
+  thumbAltText: OrderDirection
+  eventDate: OrderDirection
+  registrationLink: OrderDirection
+  address: OrderDirection
+  blurb: OrderDirection
 }
 
-input FilterUpdateInput {
+input EventUpdateInput {
   name: String
   key: String
+  createdDate: DateTime
   enabled: Boolean
-  type: FilterTypeType
+  thumbnail: Upload
+  thumbAltText: String
+  eventDate: DateTime
+  registrationLink: String
+  address: String
+  blurb: String
+  content: JSON
 }
 
-input FilterUpdateArgs {
-  where: FilterWhereUniqueInput!
-  data: FilterUpdateInput!
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input EventUpdateArgs {
+  where: EventWhereUniqueInput!
+  data: EventUpdateInput!
 }
 
-input FilterCreateInput {
+input EventCreateInput {
   name: String
   key: String
+  createdDate: DateTime
   enabled: Boolean
-  type: FilterTypeType
+  thumbnail: Upload
+  thumbAltText: String
+  eventDate: DateTime
+  registrationLink: String
+  address: String
+  blurb: String
+  content: JSON
 }
 
 type Initiative {
@@ -266,6 +366,105 @@ input InitiativesLandingCreateInput {
   description: String
 }
 
+type NewsItem {
+  id: ID!
+  title: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  thumbnail: CloudinaryImage_File
+  thumbAltText: String
+  publishDate: DateTime
+  source: String
+  linkHelper: HelperFieldOutput
+  externalLink: String
+  blurb: String
+  body: NewsItem_body_Document
+}
+
+type HelperFieldOutput {
+  html: String
+  iconType: String
+}
+
+type NewsItem_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input NewsItemWhereUniqueInput {
+  id: ID
+  key: String
+}
+
+input NewsItemWhereInput {
+  AND: [NewsItemWhereInput!]
+  OR: [NewsItemWhereInput!]
+  NOT: [NewsItemWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  key: StringFilter
+  createdDate: DateTimeNullableFilter
+  enabled: BooleanFilter
+  thumbAltText: StringFilter
+  publishDate: DateTimeFilter
+  source: StringFilter
+  externalLink: StringFilter
+  blurb: StringFilter
+}
+
+input NewsItemOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  key: OrderDirection
+  createdDate: OrderDirection
+  enabled: OrderDirection
+  thumbAltText: OrderDirection
+  publishDate: OrderDirection
+  source: OrderDirection
+  externalLink: OrderDirection
+  blurb: OrderDirection
+}
+
+input NewsItemUpdateInput {
+  title: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  thumbnail: Upload
+  thumbAltText: String
+  publishDate: DateTime
+  source: String
+  linkHelper: HelperFieldInput
+  externalLink: String
+  blurb: String
+  body: JSON
+}
+
+input HelperFieldInput {
+  html: String
+  iconType: String
+}
+
+input NewsItemUpdateArgs {
+  where: NewsItemWhereUniqueInput!
+  data: NewsItemUpdateInput!
+}
+
+input NewsItemCreateInput {
+  title: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  thumbnail: Upload
+  thumbAltText: String
+  publishDate: DateTime
+  source: String
+  linkHelper: HelperFieldInput
+  externalLink: String
+  blurb: String
+  body: JSON
+}
+
 type Person {
   id: ID!
   name: String
@@ -286,57 +485,6 @@ type Person {
   studioStaffCount(where: SemesterWhereInput! = {}): Int
   projectTeam(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectTeamCount(where: StudioProjectWhereInput! = {}): Int
-}
-
-scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
-
-type CloudinaryImage_File {
-  id: ID
-  filename: String
-  originalFilename: String
-  mimetype: String
-  encoding: String
-  publicId: String
-  publicUrl: String
-  publicUrlTransformed(transformation: CloudinaryImageFormat): String
-}
-
-"""
-Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
-All options are strings as they ultimately end up in a URL.
-"""
-input CloudinaryImageFormat {
-  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
-  """
-  prettyName: String
-  width: String
-  height: String
-  crop: String
-  aspect_ratio: String
-  gravity: String
-  zoom: String
-  x: String
-  y: String
-  format: String
-  fetch_format: String
-  quality: String
-  radius: String
-  angle: String
-  effect: String
-  opacity: String
-  border: String
-  background: String
-  overlay: String
-  underlay: String
-  default_image: String
-  delay: String
-  color: String
-  color_space: String
-  dpr: String
-  page: String
-  density: String
-  flags: String
-  transformation: String
 }
 
 type Person_content_Document {
@@ -364,17 +512,6 @@ input PersonWhereInput {
   studioStudents: SemesterManyRelationFilter
   studioStaff: SemesterManyRelationFilter
   projectTeam: StudioProjectManyRelationFilter
-}
-
-input DateTimeNullableFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeNullableFilter
 }
 
 input StringNullableFilter {
@@ -429,9 +566,6 @@ input PersonUpdateInput {
   studioStaff: SemesterRelateToManyForUpdateInput
   projectTeam: StudioProjectRelateToManyForUpdateInput
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input SemesterRelateToManyForUpdateInput {
   disconnect: [SemesterWhereUniqueInput!]
@@ -661,11 +795,6 @@ type Slide {
   videoId: String
 }
 
-type HelperFieldOutput {
-  html: String
-  iconType: String
-}
-
 input SlideWhereUniqueInput {
   id: ID
 }
@@ -723,11 +852,6 @@ input InitiativeRelateToManyForUpdateInput {
   set: [InitiativeWhereUniqueInput!]
   create: [InitiativeCreateInput!]
   connect: [InitiativeWhereUniqueInput!]
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
 }
 
 input SlideUpdateArgs {
@@ -876,8 +1000,6 @@ type StudioProject {
   thumbailAltText: String
   shortDescription: String
   blurb: String
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
   initiative: StudioProjectInitiativeType
   partners: [StudioProjectPartnerType!]
   coCreation: StudioProject_coCreation_Document
@@ -930,16 +1052,9 @@ input StudioProjectWhereInput {
   thumbailAltText: StringFilter
   shortDescription: StringFilter
   blurb: StringFilter
-  filters: FilterManyRelationFilter
   initiative: StudioProjectInitiativeTypeNullableFilter
   team: PersonManyRelationFilter
   semester: SemesterManyRelationFilter
-}
-
-input FilterManyRelationFilter {
-  every: FilterWhereInput
-  some: FilterWhereInput
-  none: FilterWhereInput
 }
 
 input StudioProjectInitiativeTypeNullableFilter {
@@ -970,20 +1085,12 @@ input StudioProjectUpdateInput {
   thumbailAltText: String
   shortDescription: String
   blurb: String
-  filters: FilterRelateToManyForUpdateInput
   initiative: StudioProjectInitiativeType
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
   team: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
-}
-
-input FilterRelateToManyForUpdateInput {
-  disconnect: [FilterWhereUniqueInput!]
-  set: [FilterWhereUniqueInput!]
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
 }
 
 input StudioProjectUpdateArgs {
@@ -1000,18 +1107,12 @@ input StudioProjectCreateInput {
   thumbailAltText: String
   shortDescription: String
   blurb: String
-  filters: FilterRelateToManyForCreateInput
   initiative: StudioProjectInitiativeType
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
   team: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
-}
-
-input FilterRelateToManyForCreateInput {
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
 }
 
 """
@@ -1026,12 +1127,12 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
-  createFilter(data: FilterCreateInput!): Filter
-  createFilters(data: [FilterCreateInput!]!): [Filter]
-  updateFilter(where: FilterWhereUniqueInput!, data: FilterUpdateInput!): Filter
-  updateFilters(data: [FilterUpdateArgs!]!): [Filter]
-  deleteFilter(where: FilterWhereUniqueInput!): Filter
-  deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
+  createEvent(data: EventCreateInput!): Event
+  createEvents(data: [EventCreateInput!]!): [Event]
+  updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
+  updateEvents(data: [EventUpdateArgs!]!): [Event]
+  deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
   createInitiative(data: InitiativeCreateInput!): Initiative
   createInitiatives(data: [InitiativeCreateInput!]!): [Initiative]
   updateInitiative(where: InitiativeWhereUniqueInput!, data: InitiativeUpdateInput!): Initiative
@@ -1044,6 +1145,12 @@ type Mutation {
   updateInitiativesLandings(data: [InitiativesLandingUpdateArgs!]!): [InitiativesLanding]
   deleteInitiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
   deleteInitiativesLandings(where: [InitiativesLandingWhereUniqueInput!]!): [InitiativesLanding]
+  createNewsItem(data: NewsItemCreateInput!): NewsItem
+  createNewsItems(data: [NewsItemCreateInput!]!): [NewsItem]
+  updateNewsItem(where: NewsItemWhereUniqueInput!, data: NewsItemUpdateInput!): NewsItem
+  updateNewsItems(data: [NewsItemUpdateArgs!]!): [NewsItem]
+  deleteNewsItem(where: NewsItemWhereUniqueInput!): NewsItem
+  deleteNewsItems(where: [NewsItemWhereUniqueInput!]!): [NewsItem]
   createPerson(data: PersonCreateInput!): Person
   createPeople(data: [PersonCreateInput!]!): [Person]
   updatePerson(where: PersonWhereUniqueInput!, data: PersonUpdateInput!): Person
@@ -1086,15 +1193,18 @@ type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AboutWhereUniqueInput): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filter(where: FilterWhereUniqueInput!): Filter
-  filtersCount(where: FilterWhereInput! = {}): Int
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
+  event(where: EventWhereUniqueInput!): Event
+  eventsCount(where: EventWhereInput! = {}): Int
   initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiative(where: InitiativeWhereUniqueInput!): Initiative
   initiativesCount(where: InitiativeWhereInput! = {}): Int
   initiativesLandings(where: InitiativesLandingWhereInput! = {}, orderBy: [InitiativesLandingOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativesLandingWhereUniqueInput): [InitiativesLanding!]
   initiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
   initiativesLandingsCount(where: InitiativesLandingWhereInput! = {}): Int
+  newsItems(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
+  newsItem(where: NewsItemWhereUniqueInput!): NewsItem
+  newsItemsCount(where: NewsItemWhereInput! = {}): Int
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int

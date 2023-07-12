@@ -53,6 +53,7 @@ const Slideshow: Lists.Slideshow = list({
     listView: {
       initialColumns: ['name'],
     },
+    description: 'Create slideshows here for use in any document.',
   },
   hooks: {
     resolveInput: async ({

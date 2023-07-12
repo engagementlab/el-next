@@ -29,11 +29,12 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
     }),
   },
   ui: {
-    // hideCreate: true,
+    hideCreate: true,
     hideDelete: true,
     listView: {
       initialColumns: ['name'],
     },
+    label: 'Initiatives Landing',
   },
 });
 export default InitiativesLanding;

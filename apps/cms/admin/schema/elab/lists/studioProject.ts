@@ -68,14 +68,6 @@ const StudioProject: Lists.MediaItem = list({
       },
       ui: { displayMode: 'textarea' },
     }),
-    filters: relationship({
-      ref: 'Filter',
-      isFilterable: true,
-      many: true,
-      ui: {
-        displayMode: 'select',
-      },
-    }),
     initiative: select({
       type: 'enum',
       options: [

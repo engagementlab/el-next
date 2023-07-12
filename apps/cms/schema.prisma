@@ -17,13 +17,19 @@ model About {
   content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
-model Filter {
-  id                         String          @id @default(cuid())
-  name                       String          @default("")
-  key                        String          @default("")
-  enabled                    Boolean         @default(true)
-  type                       FilterTypeType?
-  from_StudioProject_filters StudioProject[] @relation("StudioProject_filters")
+model Event {
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  key              String    @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean   @default(true)
+  thumbnail        Json?
+  thumbAltText     String    @default("")
+  eventDate        DateTime
+  registrationLink String    @default("")
+  address          String    @default("")
+  blurb            String    @default("")
+  content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Initiative {
@@ -37,6 +43,23 @@ model InitiativesLanding {
   id          String @id @default(cuid())
   name        String @unique @default("Initiatives Landing Page")
   description String @default("")
+}
+
+model NewsItem {
+  id                  String    @id @default(cuid())
+  title               String    @default("")
+  key                 String    @unique @default("")
+  createdDate         DateTime?
+  enabled             Boolean   @default(true)
+  thumbnail           Json?
+  thumbAltText        String    @default("")
+  publishDate         DateTime
+  source              String    @default("")
+  linkHelper_html     String    @default("<p>Need HTML!</p>")
+  linkHelper_iconType icon      @default(help)
+  externalLink        String    @default("")
+  blurb               String    @default("")
+  body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Person {
@@ -119,7 +142,6 @@ model StudioProject {
   thumbailAltText  String                      @default("")
   shortDescription String                      @default("")
   blurb            String                      @default("")
-  filters          Filter[]                    @relation("StudioProject_filters")
   initiative       StudioProjectInitiativeType @default(GunViolence)
   partners         Json                        @default("[]")
   coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
@@ -128,19 +150,14 @@ model StudioProject {
   semester         Semester[]                  @relation("Semester_projects")
 }
 
-enum FilterTypeType {
-  media
-  studio
+enum icon {
+  help
+  info
 }
 
 enum SemesterTypeType {
   current
   upcoming
-}
-
-enum icon {
-  help
-  info
 }
 
 enum StudioProjectInitiativeType {

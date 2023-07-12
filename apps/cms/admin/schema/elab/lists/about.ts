@@ -67,6 +67,7 @@ const About: Lists.About = list({
     listView: {
       initialColumns: ['name'],
     },
+    label: 'About Section',
   },
 });
 export default About;

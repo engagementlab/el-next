@@ -152,14 +152,16 @@ const useStore = create<NavState>((set) => ({
 
 const ActiveLink = (href: string | undefined) => {
   const router = useRouter();
-  return router.asPath === `${href}/`;
+
+  return router.asPath === href;
 };
 
 const Header = ({ theme }: Props): JSX.Element => {
   const customEase =
     'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600';
   const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
-  const navSubClass = 'absolute flex flex-col text-stone text-sm mt-1 p-3';
+  const navSubClass =
+    'absolute flex flex-col text-stone text-sm border-t-2 border-t-white p-3';
 
   const router = useRouter();
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
@@ -176,11 +178,24 @@ const Header = ({ theme }: Props): JSX.Element => {
 
   const { navOpen, toggleNavOpen } = useStore();
 
+  const NavLink = ({ label, href }): JSX.Element =>
+    ActiveLink(href) ? (
+      <span
+        onClick={() => {
+          toggleNavOpen(false);
+        }}
+        className="opacity-40"
+      >
+        {label}
+      </span>
+    ) : (
+      <Link href={href} className="mt-3 xl:my-1">
+        {label}
+      </Link>
+    );
   const aboutLinks = (
     <>
-      <Link href="/" className="mt-3 xl:my-1">
-        Mission & Values
-      </Link>
+      <NavLink href="/" label="Mission & Values" />
       <Link href="/" className="mt-3 xl:my-1">
         Our Approach
       </Link>
@@ -200,9 +215,12 @@ const Header = ({ theme }: Props): JSX.Element => {
   );
   const siiLinks = (
     <>
-      <Link href="/initiatives/gunviolence" className="mt-3 xl:my-1">
-        Transforming Narratives of Gun Violence
-      </Link>
+      <NavLink
+        href="/initiatives/gunviolence"
+        label="
+        Transforming Narratives of Gun Violence"
+      />
+
       <Link href="/" className="mt-3 xl:my-1">
         Transforming Narratives for Climate Justice
       </Link>
@@ -284,6 +302,10 @@ const Header = ({ theme }: Props): JSX.Element => {
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
       toggleNavOpen(false);
+      toggleHoverAbout(0);
+      toggleHoverSII(0);
+      toggleHoverResearch(0);
+      toggleHoverNews(0);
     });
     // isMobile = /Android|iPhone|iPad|webOS/i.test(navigator.userAgent);
   });
@@ -544,7 +566,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           >
             <Link href="/initiatives" className="block w-56 text-center">
               <span className={`w-[183px] border-red ${navHeaderClass}`}>
-                Social Impact Initiatives
+                Social Impact Initiatives{hoverSII}
               </span>
             </Link>
             <motion.div

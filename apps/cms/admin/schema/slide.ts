@@ -4,8 +4,8 @@ import { allowAll } from '@keystone-6/core/access';
 
 import { Lists } from '.keystone/types';
 
-import { cloudinaryImage } from '../../../components/cloudinary';
-import { helper, HelperIcon } from '../../../components/helper';
+import { cloudinaryImage } from '../components/cloudinary';
+import { helper, HelperIcon } from '../components/helper';
 
 const Slide: Lists.Slide = list({
   access: allowAll,

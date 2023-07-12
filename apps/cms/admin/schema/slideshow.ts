@@ -4,9 +4,9 @@ import { allowAll } from '@keystone-6/core/access';
 
 import { Lists } from '.keystone/types';
 
-import { cloudinaryImage } from '../../../components/cloudinary';
+import { cloudinaryImage } from '../components/cloudinary';
 import { AccordionDetails } from '@mui/material';
-import { CreateKey } from '../../hooks';
+import { CreateKey } from './hooks';
 
 const Slideshow: Lists.Slideshow = list({
   access: allowAll,

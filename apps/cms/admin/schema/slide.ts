@@ -14,10 +14,10 @@ const Slide: Lists.Slide = list({
       ref: 'Slideshow.slides',
       many: true,
     }),
-    initiativeSlides: relationship({
-      ref: 'Initiative.slides',
-      many: true,
-    }),
+    // initiativeSlides: relationship({
+    //   ref: 'Initiative.slides',
+    //   many: true,
+    // }),
     image: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,

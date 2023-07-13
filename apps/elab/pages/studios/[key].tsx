@@ -163,26 +163,6 @@ export default function Studio({
           })}
           {selectedSemester && (
             <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <div className="flex flex-wrap my-4">
-                {selectedSemester.learningPartners.map((person) => (
-                  <div
-                    className="flex flex-col w-1/5 ml-3"
-                    key={`thumb-${person.key}`}
-                  >
-                    <Image
-                      id={`thumb-${person.key}`}
-                      alt={`Photo of ${person.name}`}
-                      imgId={person.image.publicId}
-                      width={230}
-                      // aspectDefault={true}
-                      transforms="f_auto,dpr_auto,c_fit,g_face,r_max,h_230,w_230"
-                      className="rounded-full border-4 border-purple"
-                    />
-                    <p>{person.name}</p>
-                    <p>{person.title}</p>
-                  </div>
-                ))}
-              </div>
               <h2 className="uppercase text-blue">Course Information</h2>
               <p>NUMBER: {selectedSemester.courseNumber}</p>
               <p>
@@ -270,6 +250,26 @@ export default function Studio({
               </div>
 
               <Divider color="bg-[#E3BFFF]" />
+              <div className="flex flex-wrap my-4">
+                {selectedSemester.learningPartners.map((person) => (
+                  <div
+                    className="flex flex-col w-1/5 ml-3"
+                    key={`thumb-${person.key}`}
+                  >
+                    <Image
+                      id={`thumb-${person.key}`}
+                      alt={`Photo of ${person.name}`}
+                      imgId={person.image.publicId}
+                      width={230}
+                      // aspectDefault={true}
+                      transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
+                      className="rounded-full border-4 border-purple"
+                    />
+                    <p>{person.name}</p>
+                    <p>{person.title}</p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           )}
         </>

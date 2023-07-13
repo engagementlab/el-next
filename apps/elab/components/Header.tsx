@@ -15,7 +15,6 @@ import {
   motion,
   useCycle,
 } from 'framer-motion';
-import { useDimensions } from './use-dimensions';
 
 import { MenuToggle } from './MenuToggle';
 import { useScrollBlock } from './scrollBlock';
@@ -178,7 +177,7 @@ const Header = ({ theme }: Props): JSX.Element => {
 
   const { navOpen, toggleNavOpen } = useStore();
 
-  const NavLink = ({ label, href }): JSX.Element =>
+  const NavLink = ({ label, href, disabled = false }): JSX.Element =>
     ActiveLink(href) ? (
       <span
         onClick={() => {
@@ -188,6 +187,8 @@ const Header = ({ theme }: Props): JSX.Element => {
       >
         {label}
       </span>
+    ) : disabled ? (
+      <span className="opacity-50 mt-3 xl:my-1">{label}</span>
     ) : (
       <Link href={href} className="mt-3 xl:my-1">
         {label}
@@ -195,22 +196,12 @@ const Header = ({ theme }: Props): JSX.Element => {
     );
   const aboutLinks = (
     <>
-      <NavLink href="/" label="Mission & Values" />
-      <Link href="/" className="mt-3 xl:my-1">
-        Our Approach
-      </Link>
-      <Link href="/" className="mt-3 xl:my-1">
-        People
-      </Link>
-      <Link href="/" className="mt-3 xl:my-1">
-        Jobs
-      </Link>
-      <Link href="/" className="mt-3 xl:my-1">
-        Get Involved
-      </Link>
-      <Link href="/" className="mt-3 xl:my-1">
-        Donate
-      </Link>
+      <NavLink href="/about/mission-values" label="Mission & Values" />
+      <NavLink href="/about/our-approach" label="Our Approach" />
+      <NavLink href="/about/people" label="People" />
+      <NavLink href="/about/jobs" label="Jobs" />
+      <NavLink href="/about/get-involved" label="Get Involved" />
+      <NavLink href="/about/donate" label="Donate" />
     </>
   );
   const siiLinks = (
@@ -220,42 +211,27 @@ const Header = ({ theme }: Props): JSX.Element => {
         label="
         Transforming Narratives of Gun Violence"
       />
-
-      <Link href="/" className="mt-3 xl:my-1">
-        Transforming Narratives for Climate Justice
-      </Link>
-      <Link href="/studios" className="mt-3 xl:my-1">
-        Social Impact Studios
-      </Link>
-      <Link href="/studios/projects" className="mt-3 xl:my-1">
-        Studio Projects
-      </Link>
+      <NavLink
+        href="/initiatives/climate"
+        label="Transforming Narratives for Climate Justice"
+        disabled={true}
+      />
+      <NavLink href="/studios" label="Social Impact Studios" />
+      <NavLink href="/studios/projects" label="Studio Projects" />
     </>
   );
   const researchLinks = (
     <>
-      <Link href="/" className="mt-3 xl:my-1">
-        Research Projects
-      </Link>
-      <Link href="/" className="mt-3 xl:my-1">
-        Publications
-      </Link>
+      <NavLink href="/projects" label="Research Projects" disabled={true} />
+      <NavLink href="/publications" label="Publications" disabled={true} />
     </>
   );
   const whatsNewLinks = (
     <>
-      <Link href="/news" className="mt-3 xl:my-1">
-        News
-      </Link>
-      <Link href="/events" className="mt-3 xl:my-1">
-        Events
-      </Link>
-      <Link href="/press" className="mt-3 xl:my-1">
-        Press Room
-      </Link>
-      <Link href="/newsletter" className="mt-3 xl:my-1">
-        Join Newsletter
-      </Link>
+      <NavLink href="/news" label="News" disabled={true} />
+      <NavLink href="/events" label="Events" disabled={true} />
+      <NavLink href="/press" label="Press Room" disabled={true} />
+      <NavLink href="/newsletter" label="Join Newsletter" disabled={true} />
     </>
   );
   const MobileAccordion = ({
@@ -588,11 +564,11 @@ const Header = ({ theme }: Props): JSX.Element => {
               toggleHoverResearch();
             }}
           >
-            <Link href="/initiatives" className="block w-40 text-center">
+            <div className="w-40 text-center cursor-`pointer`">
               <span className={`w-[70px] border-green-blue ${navHeaderClass}`}>
                 Research
               </span>
-            </Link>
+            </div>
             <motion.div
               className={`bg-[#BBEBE7] w-40 ${navSubClass}`}
               initial="exit"

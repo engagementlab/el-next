@@ -6,6 +6,7 @@ import { Layout as SuperLayout } from '@el-next/components';
 import { Breadcrumb, Theme } from '@/types';
 import Header from './Header';
 import { ParallaxProvider } from 'react-scroll-parallax';
+import Footer from './Footer';
 
 type Props = {
   children: ReactNode;
@@ -111,6 +112,7 @@ const Layout = ({
             </div>
           </ParallaxProvider>
         </SuperLayout>
+        <Footer />
       </div>
       <span
         className={`fixed top-0 bottom-0 right-0 w-1 md:w-16 ${currentBg} shadow-[inset_14px_0_9px_-6px_rgba(0,0,0,0.1)]`}

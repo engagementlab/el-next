@@ -4,6 +4,7 @@
 type About {
   id: ID!
   name: String
+  key: String
   content: About_content_Document
 }
 
@@ -22,6 +23,7 @@ input AboutWhereInput {
   NOT: [AboutWhereInput!]
   id: IDFilter
   name: StringFilter
+  key: StringFilter
 }
 
 input IDFilter {
@@ -72,6 +74,7 @@ input NestedStringFilter {
 input AboutOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  key: OrderDirection
 }
 
 enum OrderDirection {
@@ -81,6 +84,7 @@ enum OrderDirection {
 
 input AboutUpdateInput {
   name: String
+  key: String
   content: JSON
 }
 
@@ -91,6 +95,7 @@ input AboutUpdateArgs {
 
 input AboutCreateInput {
   name: String
+  key: String
   content: JSON
 }
 

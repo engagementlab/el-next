@@ -5,7 +5,7 @@ import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
-import { FixButtons } from '../../hooks';
+import { CreateKey, FixButtons } from '../../hooks';
 
 const About: Lists.About = list({
   access: allowAll,
@@ -20,6 +20,17 @@ const About: Lists.About = list({
         },
         itemView: {
           fieldMode: 'read',
+        },
+      },
+    }),
+    key: text({
+      isFilterable: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
         },
       },
     }),
@@ -68,6 +79,24 @@ const About: Lists.About = list({
       initialColumns: ['name'],
     },
     label: 'About Section',
+  },
+  hooks: {
+    resolveInput: async ({
+      listKey,
+      operation,
+      inputData,
+      item,
+      resolvedData,
+      context,
+    }) => {
+      if (resolvedData.name) {
+        resolvedData = {
+          ...resolvedData,
+          key: CreateKey(resolvedData.name),
+        };
+      }
+      return resolvedData;
+    },
   },
 });
 export default About;

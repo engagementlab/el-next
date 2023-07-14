@@ -121,9 +121,9 @@ services:
     restart: on-failure
     labels:
       - "traefik.http.routers.qa-elab-http.entrypoints=web"
-      - "traefik.http.routers.qa-elab-http.rule=Host(`qa.elab.works`)"
+      - "traefik.http.routers.qa-elab-http.rule=Host(`qa-elab.transformnarratives.org`)"
       - "traefik.http.routers.qa-elab.entrypoints=websecure"
-      - "traefik.http.routers.qa-elab.rule=Host(`qa.elab.works`)"
+      - "traefik.http.routers.qa-elab.rule=Host(`qa-elab.transformnarratives.org`)"
       - "traefik.http.routers.qa-elab.tls=true"
       - "traefik.http.routers.qa-elab.service=qa-elab-el-next"
       - "traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083"

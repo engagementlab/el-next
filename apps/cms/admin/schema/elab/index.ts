@@ -1,5 +1,5 @@
 export { default as About } from './lists/about';
-// export { default as Filter } from './lists/filter';
+export { default as Filter } from './lists/filter';
 export { default as Event } from './lists/event';
 export { default as Initiative } from './lists/initiative';
 export { default as InitiativesLanding } from './lists/initiativesLanding';

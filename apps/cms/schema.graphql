@@ -266,6 +266,74 @@ input EventCreateInput {
   content: JSON
 }
 
+type Filter {
+  id: ID!
+  name: String
+  key: String
+  enabled: Boolean
+  studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
+}
+
+input FilterWhereUniqueInput {
+  id: ID
+}
+
+input FilterWhereInput {
+  AND: [FilterWhereInput!]
+  OR: [FilterWhereInput!]
+  NOT: [FilterWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+  enabled: BooleanFilter
+  studioProjects: StudioProjectManyRelationFilter
+}
+
+input StudioProjectManyRelationFilter {
+  every: StudioProjectWhereInput
+  some: StudioProjectWhereInput
+  none: StudioProjectWhereInput
+}
+
+input FilterOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+  enabled: OrderDirection
+}
+
+input FilterUpdateInput {
+  name: String
+  key: String
+  enabled: Boolean
+  studioProjects: StudioProjectRelateToManyForUpdateInput
+}
+
+input StudioProjectRelateToManyForUpdateInput {
+  disconnect: [StudioProjectWhereUniqueInput!]
+  set: [StudioProjectWhereUniqueInput!]
+  create: [StudioProjectCreateInput!]
+  connect: [StudioProjectWhereUniqueInput!]
+}
+
+input FilterUpdateArgs {
+  where: FilterWhereUniqueInput!
+  data: FilterUpdateInput!
+}
+
+input FilterCreateInput {
+  name: String
+  key: String
+  enabled: Boolean
+  studioProjects: StudioProjectRelateToManyForCreateInput
+}
+
+input StudioProjectRelateToManyForCreateInput {
+  create: [StudioProjectCreateInput!]
+  connect: [StudioProjectWhereUniqueInput!]
+}
+
 type Initiative {
   id: ID!
   name: String
@@ -540,12 +608,6 @@ input SemesterManyRelationFilter {
   none: SemesterWhereInput
 }
 
-input StudioProjectManyRelationFilter {
-  every: StudioProjectWhereInput
-  some: StudioProjectWhereInput
-  none: StudioProjectWhereInput
-}
-
 input PersonOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -579,13 +641,6 @@ input SemesterRelateToManyForUpdateInput {
   connect: [SemesterWhereUniqueInput!]
 }
 
-input StudioProjectRelateToManyForUpdateInput {
-  disconnect: [StudioProjectWhereUniqueInput!]
-  set: [StudioProjectWhereUniqueInput!]
-  create: [StudioProjectCreateInput!]
-  connect: [StudioProjectWhereUniqueInput!]
-}
-
 input PersonUpdateArgs {
   where: PersonWhereUniqueInput!
   data: PersonUpdateInput!
@@ -610,11 +665,6 @@ input PersonCreateInput {
 input SemesterRelateToManyForCreateInput {
   create: [SemesterCreateInput!]
   connect: [SemesterWhereUniqueInput!]
-}
-
-input StudioProjectRelateToManyForCreateInput {
-  create: [StudioProjectCreateInput!]
-  connect: [StudioProjectWhereUniqueInput!]
 }
 
 type Semester {
@@ -1006,6 +1056,8 @@ type StudioProject {
   shortDescription: String
   blurb: String
   initiative: StudioProjectInitiativeType
+  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
+  filtersCount(where: FilterWhereInput! = {}): Int
   partners: [StudioProjectPartnerType!]
   coCreation: StudioProject_coCreation_Document
   impact: StudioProject_impact_Document
@@ -1058,6 +1110,7 @@ input StudioProjectWhereInput {
   shortDescription: StringFilter
   blurb: StringFilter
   initiative: StudioProjectInitiativeTypeNullableFilter
+  filters: FilterManyRelationFilter
   team: PersonManyRelationFilter
   semester: SemesterManyRelationFilter
 }
@@ -1067,6 +1120,12 @@ input StudioProjectInitiativeTypeNullableFilter {
   in: [StudioProjectInitiativeType!]
   notIn: [StudioProjectInitiativeType!]
   not: StudioProjectInitiativeTypeNullableFilter
+}
+
+input FilterManyRelationFilter {
+  every: FilterWhereInput
+  some: FilterWhereInput
+  none: FilterWhereInput
 }
 
 input StudioProjectOrderByInput {
@@ -1091,11 +1150,19 @@ input StudioProjectUpdateInput {
   shortDescription: String
   blurb: String
   initiative: StudioProjectInitiativeType
+  filters: FilterRelateToManyForUpdateInput
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
   team: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
+}
+
+input FilterRelateToManyForUpdateInput {
+  disconnect: [FilterWhereUniqueInput!]
+  set: [FilterWhereUniqueInput!]
+  create: [FilterCreateInput!]
+  connect: [FilterWhereUniqueInput!]
 }
 
 input StudioProjectUpdateArgs {
@@ -1113,11 +1180,17 @@ input StudioProjectCreateInput {
   shortDescription: String
   blurb: String
   initiative: StudioProjectInitiativeType
+  filters: FilterRelateToManyForCreateInput
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
   team: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
+}
+
+input FilterRelateToManyForCreateInput {
+  create: [FilterCreateInput!]
+  connect: [FilterWhereUniqueInput!]
 }
 
 """
@@ -1138,6 +1211,12 @@ type Mutation {
   updateEvents(data: [EventUpdateArgs!]!): [Event]
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
+  createFilter(data: FilterCreateInput!): Filter
+  createFilters(data: [FilterCreateInput!]!): [Filter]
+  updateFilter(where: FilterWhereUniqueInput!, data: FilterUpdateInput!): Filter
+  updateFilters(data: [FilterUpdateArgs!]!): [Filter]
+  deleteFilter(where: FilterWhereUniqueInput!): Filter
+  deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
   createInitiative(data: InitiativeCreateInput!): Initiative
   createInitiatives(data: [InitiativeCreateInput!]!): [Initiative]
   updateInitiative(where: InitiativeWhereUniqueInput!, data: InitiativeUpdateInput!): Initiative
@@ -1201,6 +1280,9 @@ type Query {
   events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
+  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
+  filter(where: FilterWhereUniqueInput!): Filter
+  filtersCount(where: FilterWhereInput! = {}): Int
   initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiative(where: InitiativeWhereUniqueInput!): Initiative
   initiativesCount(where: InitiativeWhereInput! = {}): Int

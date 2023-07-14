@@ -79,6 +79,14 @@ const StudioProject: Lists.MediaItem = list({
       ui: { displayMode: 'select' },
       defaultValue: 'GunViolence',
     }),
+    filters: relationship({
+      ref: 'Filter.studioProjects',
+      isFilterable: true,
+      many: true,
+      ui: {
+        displayMode: 'select',
+      },
+    }),
     partners: Partners,
     coCreation: document({
       formatting: true,

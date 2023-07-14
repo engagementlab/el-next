@@ -33,6 +33,14 @@ model Event {
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model Filter {
+  id             String          @id @default(cuid())
+  name           String          @default("")
+  key            String          @default("")
+  enabled        Boolean         @default(true)
+  studioProjects StudioProject[] @relation("Filter_studioProjects")
+}
+
 model Initiative {
   id     String  @id @default(cuid())
   name   String  @unique @default("Initiative Name")
@@ -144,6 +152,7 @@ model StudioProject {
   shortDescription String                      @default("")
   blurb            String                      @default("")
   initiative       StudioProjectInitiativeType @default(GunViolence)
+  filters          Filter[]                    @relation("Filter_studioProjects")
   partners         Json                        @default("[]")
   coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

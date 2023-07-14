@@ -4,21 +4,21 @@ import { Button, Image } from '@el-next/components';
 
 type Props = {
   all?: boolean;
-  partners: Partner[];
+  partners: string[];
 };
 export const Logos = ({ all = false, partners }: Props): JSX.Element => {
   return (
     <div className="grid grid-flow-row grid-cols-6">
-      {Object.keys(partners)}
-      {(all || partners.includes(Partner.ldbpi)) && (
-        <Image
-          id="ldpni-logo"
-          alt="Louis D. Brown Peace Institute (LDBPI) logo"
-          imgId="tngvi/logos/ldpi"
-          width={86}
-        />
-      )}
-      {(all || partners.includes(Partner.mgh)) && (
+      {all ||
+        (partners.includes('ldbpi') && (
+          <Image
+            id="ldpni-logo"
+            alt="Louis D. Brown Peace Institute (LDBPI) logo"
+            imgId="tngvi/logos/ldpi"
+            width={86}
+          />
+        ))}
+      {(all || partners.includes('mgh')) && (
         <Image
           id="mgh-logo"
           alt="MGH Center for Gun Violence Prevention logo"
@@ -27,7 +27,7 @@ export const Logos = ({ all = false, partners }: Props): JSX.Element => {
           className="aspect-[3/2]"
         />
       )}
-      {(all || partners.includes(Partner.magv)) && (
+      {(all || partners.includes('magv')) && (
         <Image
           id="magv-logo"
           alt="Massachusetts Coalition to Prevent Gun Violence logo"
@@ -35,7 +35,7 @@ export const Logos = ({ all = false, partners }: Props): JSX.Element => {
           width={174}
         />
       )}
-      {(all || partners.includes(Partner.teenempowerment)) && (
+      {(all || partners.includes('teenempowerment')) && (
         <Image
           id="teenempowerment-logo"
           alt="The Center for Teen Empowerment logo"
@@ -43,7 +43,7 @@ export const Logos = ({ all = false, partners }: Props): JSX.Element => {
           width={130}
         />
       )}
-      {(all || partners.includes(Partner.uncornered)) && (
+      {(all || partners.includes('uncornered')) && (
         <svg viewBox="0 0 715.59 440.94" className="w-[90px]">
           <title>Boston Uncornered logo</title>
           <linearGradient

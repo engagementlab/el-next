@@ -171,13 +171,19 @@ const Header = ({ theme }: Props): JSX.Element => {
 
   const [expanded, setExpanded] = useState<false | number>(-1);
 
-  // const containerRef = useRef(null);
-  // const { height } = useDimensions(containerRef);
   const [blockScroll, allowScroll] = useScrollBlock();
 
   const { navOpen, toggleNavOpen } = useStore();
 
-  const NavLink = ({ label, href, disabled = false }): JSX.Element =>
+  const NavLink = ({
+    label,
+    href,
+    disabled = false,
+  }: {
+    label: string;
+    href: string;
+    disabled?: boolean;
+  }): JSX.Element =>
     ActiveLink(href) ? (
       <span
         onClick={() => {
@@ -297,7 +303,6 @@ const Header = ({ theme }: Props): JSX.Element => {
             height="58.741"
             aria-label="Engagement Lab logo"
             whileHover={{ scale: 1.023 }}
-            // className="w-full xl:w-auto"
           >
             <g
               id="logo-group"

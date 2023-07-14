@@ -118,13 +118,7 @@ export default function GunViolence({
           Collaborative Leadership Team
         </h2>
         <Logos
-          partners={[
-            Partner.ldbpi,
-            Partner.mgh,
-            Partner.magv,
-            Partner.teenempowerment,
-            Partner.uncornered,
-          ]}
+          partners={['ldbpi', 'mgh', 'magv', 'teenempowerment', 'uncornered']}
         />
       </div>
       <Divider color="bg-blue" />

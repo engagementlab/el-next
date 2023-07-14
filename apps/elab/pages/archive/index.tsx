@@ -28,7 +28,7 @@ interface FilterState {
 }
 
 type MediaItem = {
-  title: string;
+  name: string;
   key: string;
   shortDescription: string;
   filters: { key: string; name: string }[];
@@ -59,8 +59,9 @@ const ItemRenderer = (props: { item: MediaItem }) => {
             // <ImagePlaceholder imageLabel="Media" width={335} height={200} />
           )} */}
         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-          ITEM {props.item.initiative}
+          {props.item.name}
         </h3>
+        <p>{props.item.shortDescription}</p>
       </Link>
       <div className="mt-2 mb-20">
         <p className="m-0">{props.item.shortDescription}</p>
@@ -71,7 +72,7 @@ const ItemRenderer = (props: { item: MediaItem }) => {
 
 export default function MediaArchive({
   filters,
-  mediaItems,
+  studioProjects,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
@@ -165,7 +166,7 @@ export default function MediaArchive({
 
     // Call group-specific filters from the router path after the "?/" symbol
     if (router.asPath.split('?')[1] && router.asPath.split('?')[1].length > 0) {
-      const params = router.asPath.split('?/')[1].split('/');
+      const params = router.asPath.split('?')[1].split('/');
       preSelectedFilters = params as never[];
       useStore.setState({ currentFilters: preSelectedFilters });
     }
@@ -311,9 +312,7 @@ export default function MediaArchive({
         </div>
       );
     };
-    // const haveGroupOpen = (key: string) => {
-    //   return filterGroupOpen === key;
-    // };
+
     let selectedFilters = useStore((state) => state.currentFilters);
 
     // const haveFilters = selectedFilters.length > 0;
@@ -367,31 +366,31 @@ export default function MediaArchive({
     );
   };
 
-  return <FilteredItems items={mediaItems} />;
+  return <FilteredItems items={studioProjects} />;
 }
 
 export async function getStaticProps() {
   const filters = await Query(
     'filters',
-    `filters { 
+    `filters {
             key
             name
         }`
   );
-  // console.log(filters);
+
   if (filters.error) {
     return {
       props: {
         error: filters.error,
-        mediaItems: null,
+        studioProjects: null,
         filtersGrouped: null,
       },
     };
   }
 
-  const mediaItems = await Query(
-    'mediaItems',
-    `mediaItems(
+  const studioProjects = await Query(
+    'studioProjects',
+    `studioProjects(
 			where: {
 				enabled: {
 					equals: true
@@ -401,13 +400,9 @@ export async function getStaticProps() {
 				createdDate: desc
 			}		
 		) {
-			title
+			name
 			key
 			shortDescription 
-			filters {
-				key
-				name
-			}
 			initiative
 			thumbnail { 
 				publicId
@@ -415,11 +410,11 @@ export async function getStaticProps() {
 		}`
   );
 
-  if (mediaItems.error) {
+  if (studioProjects.error) {
     return {
       props: {
-        error: mediaItems.error,
-        mediaItems: null,
+        error: studioProjects.error,
+        studioProjects: null,
         filtersGrouped: null,
       },
     };
@@ -428,7 +423,7 @@ export async function getStaticProps() {
   return {
     props: {
       filters,
-      mediaItems: mediaItems as MediaItem[],
+      studioProjects: studioProjects as MediaItem[],
     },
   };
 }

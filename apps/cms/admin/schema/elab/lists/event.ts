@@ -7,6 +7,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { Flags } from '../flags';
 
 const Event: Lists.Event = list({
   access: allowAll,
@@ -32,6 +33,7 @@ const Event: Lists.Event = list({
     enabled: checkbox({
       defaultValue: true,
     }),
+    flags: Flags,
     thumbnail: cloudinaryImage({
       label: 'Thumbnail/Header Image',
       cloudinary: {
@@ -45,7 +47,8 @@ const Event: Lists.Event = list({
       validation: {
         isRequired: true,
       },
-      label: 'Describe appearance of Thumbnail/Header Image',
+      label: 'Thumbail Alt Text ♿',
+      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
     }),
     eventDate: timestamp({
       validation: {

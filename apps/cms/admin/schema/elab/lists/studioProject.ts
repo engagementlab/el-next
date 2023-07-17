@@ -55,6 +55,7 @@ const StudioProject: Lists.MediaItem = list({
         isRequired: true,
       },
       label: 'Thumbail Alt Text ♿',
+      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
     }),
     shortDescription: text({
       validation: {

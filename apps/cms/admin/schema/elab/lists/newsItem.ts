@@ -18,6 +18,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { helper, HelperIcon } from '../../../components/helper';
+import { Flags } from '../flags';
 
 const NewsItem: Lists.NewsItem = list({
   access: allowAll,
@@ -43,6 +44,7 @@ const NewsItem: Lists.NewsItem = list({
     enabled: checkbox({
       defaultValue: true,
     }),
+    flags: Flags,
     thumbnail: cloudinaryImage({
       label: 'Thumbnail/Header Image',
       cloudinary: {
@@ -56,7 +58,8 @@ const NewsItem: Lists.NewsItem = list({
       validation: {
         isRequired: true,
       },
-      label: 'Describe appearance of Thumbnail/Header Image',
+      label: 'Thumbail Alt Text ♿',
+      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
     }),
     publishDate: timestamp({
       validation: {

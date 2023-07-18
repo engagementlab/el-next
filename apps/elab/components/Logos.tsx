@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Partner, Theme, ThemeColors } from '@/types';
-import { Button, Image } from '@el-next/components';
+import { Image } from '@el-next/components';
 
 type Props = {
   all?: boolean;

@@ -17,6 +17,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
 import { Partners } from '../partners';
+import { Flags } from '../flags';
 
 const StudioProject: Lists.MediaItem = list({
   access: allowAll,
@@ -42,33 +43,6 @@ const StudioProject: Lists.MediaItem = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    thumbnail: cloudinaryImage({
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.x/studios/projects',
-      },
-    }),
-    thumbailAltText: text({
-      validation: {
-        isRequired: true,
-      },
-      label: 'Thumbail Alt Text ♿',
-      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
-    }),
-    shortDescription: text({
-      validation: {
-        isRequired: true,
-      },
-      ui: { description: 'Displays in project listing under thumbnail.' },
-    }),
-    blurb: text({
-      validation: {
-        isRequired: true,
-      },
-      ui: { displayMode: 'textarea' },
-    }),
     initiative: select({
       type: 'enum',
       options: [
@@ -87,6 +61,34 @@ const StudioProject: Lists.MediaItem = list({
       ui: {
         displayMode: 'select',
       },
+    }),
+    flags: Flags,
+    thumbnail: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'elab-home-v3.x/studios/projects',
+      },
+    }),
+    thumbAltText: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Thumbail Alt Text ♿',
+      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
+    }),
+    shortDescription: text({
+      validation: {
+        isRequired: true,
+      },
+      ui: { description: 'Displays in project listing under thumbnail.' },
+    }),
+    blurb: text({
+      validation: {
+        isRequired: true,
+      },
+      ui: { displayMode: 'textarea' },
     }),
     partners: Partners,
     coCreation: document({
@@ -160,10 +162,10 @@ const StudioProject: Lists.MediaItem = list({
       resolvedData,
       context,
     }) => {
-      if (resolvedData.title) {
+      if (resolvedData.name) {
         resolvedData = {
           ...resolvedData,
-          key: CreateKey(resolvedData.title as string),
+          key: CreateKey(resolvedData.name as string),
         };
       }
       return resolvedData;

@@ -23,6 +23,40 @@ import { create } from 'zustand';
 
 const apps = [
   {
+    key: 'elab',
+    name: 'ELab Home',
+    logo: () => {
+      return (
+        <svg viewBox="0 0 25 25" width="25" height="25">
+          <path
+            fill="#000"
+            fill-rule="evenodd"
+            d="M 25 12.5 C 25 19.404 19.404 25 12.5 25 C 5.596 25 0 19.404 0 12.5 C 0 5.596 5.596 0 12.5 0 C 19.404 0 25 5.596 25 12.5 Z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill="#fff"
+            fill-rule="evenodd"
+            d="M 10.027 6.426 L 10.033 16.495 L 17.263 16.495 L 17.263 18.574 L 7.746 18.574 L 7.746 6.448 L 10.027 6.426 L 10.027 6.426 Z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill="#fff"
+            fill-rule="evenodd"
+            d="M 10.027 11.493 L 10.027 13.589 L 17.263 13.589 L 17.263 11.51 L 10.027 11.493 L 10.027 11.493 Z"
+            clip-rule="evenodd"
+          ></path>
+          <path
+            fill="#fff"
+            fill-rule="evenodd"
+            d="M 10.027 6.426 L 10.027 8.521 L 17.263 8.521 L 17.263 6.443 L 10.027 6.426 L 10.027 6.426 Z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      );
+    },
+  },
+  {
     key: 'tngvi',
     name: 'TNGVI',
     apexUrl: 'transformnarratives.org',
@@ -73,40 +107,6 @@ const apps = [
               style={{ fill: 'rgb(141, 51, 210)' }}
             ></path>
           </g>
-        </svg>
-      );
-    },
-  },
-  {
-    key: 'elab',
-    name: 'ELab Home',
-    logo: () => {
-      return (
-        <svg viewBox="0 0 25 25" width="25" height="25">
-          <path
-            fill="#000"
-            fill-rule="evenodd"
-            d="M 25 12.5 C 25 19.404 19.404 25 12.5 25 C 5.596 25 0 19.404 0 12.5 C 0 5.596 5.596 0 12.5 0 C 19.404 0 25 5.596 25 12.5 Z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill="#fff"
-            fill-rule="evenodd"
-            d="M 10.027 6.426 L 10.033 16.495 L 17.263 16.495 L 17.263 18.574 L 7.746 18.574 L 7.746 6.448 L 10.027 6.426 L 10.027 6.426 Z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill="#fff"
-            fill-rule="evenodd"
-            d="M 10.027 11.493 L 10.027 13.589 L 17.263 13.589 L 17.263 11.51 L 10.027 11.493 L 10.027 11.493 Z"
-            clip-rule="evenodd"
-          ></path>
-          <path
-            fill="#fff"
-            fill-rule="evenodd"
-            d="M 10.027 6.426 L 10.027 8.521 L 17.263 8.521 L 17.263 6.443 L 10.027 6.426 L 10.027 6.426 Z"
-            clip-rule="evenodd"
-          ></path>
         </svg>
       );
     },

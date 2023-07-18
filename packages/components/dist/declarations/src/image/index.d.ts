@@ -1,11 +1,11 @@
 /// <reference types="react" />
 interface ImageProps {
     /**
-     * The image's ID attribute
+     * The image's alt text
      */
     alt: string;
     /**
-     * The image's alt text
+     * The image's ID attribute
      */
     id: string;
     /**
@@ -30,6 +30,7 @@ interface ImageProps {
      *  The largest optional width for responsive steps
      */
     maxWidth?: number;
+    maxWidthDisable?: boolean;
     /**
      * @defaultValue true
      *  - If set to false, the image will not be lazily-loaded
@@ -67,7 +68,7 @@ interface ImageUrlProps {
  *
  * @extends {Component<Props>}
  */
-declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, lazy, aspectDefault, }: ImageProps) => JSX.Element;
+declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, maxWidthDisable, lazy, aspectDefault, }: ImageProps) => JSX.Element;
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL

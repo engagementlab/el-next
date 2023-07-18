@@ -149,12 +149,13 @@ model StudioProject {
   key              String                      @unique @default("")
   createdDate      DateTime?
   enabled          Boolean                     @default(true)
-  thumbnail        Json?
-  thumbailAltText  String                      @default("")
-  shortDescription String                      @default("")
-  blurb            String                      @default("")
   initiative       StudioProjectInitiativeType @default(GunViolence)
   filters          Filter[]                    @relation("Filter_studioProjects")
+  flags            Json                        @default("[]")
+  thumbnail        Json?
+  thumbAltText     String                      @default("")
+  shortDescription String                      @default("")
+  blurb            String                      @default("")
   partners         Json                        @default("[]")
   coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

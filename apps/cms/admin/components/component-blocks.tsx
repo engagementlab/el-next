@@ -332,15 +332,20 @@ function imageSelect({
         const app =
           window.location.protocol === 'https:'
             ? window.location.pathname.replace('/', '').split('/')[0]
-            : 'tngvi';
+            : 'elab';
         const endpointPrefix =
           window.location.protocol === 'https:'
             ? '/api'
             : 'http://localhost:8000';
         if (data && data.length > 1) return;
+
         // Get CDN data
         axios
-          .get(`${endpointPrefix}/media/get/${app}/upload`)
+          .get(
+            `${endpointPrefix}/media/get/${
+              app === 'elab' ? 'elab-home-v3.x' : app
+            }/upload`
+          )
           .then((response: { data: any }) => {
             let data = response.data.imgs;
             // If image pre-selected, move it to the front of array

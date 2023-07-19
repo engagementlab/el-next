@@ -118,7 +118,7 @@ export default function Media() {
   const app =
     window.location.protocol === 'https:'
       ? window.location.pathname.replace('/', '').split('/')[0]
-      : 'tngvi';
+      : 'elab';
 
   const endpointPrefix =
     window.location.protocol === 'https:' ? '/api' : 'http://localhost:8000';
@@ -259,10 +259,16 @@ export default function Media() {
   const endIndex = beginIndex + 30;
 
   const refreshMedia = () => {
-    axios.get(`${endpointPrefix}/media/get/${app}/upload`).then((response) => {
-      setData(response.data.imgs, response.data.folders);
-      toggleWaiting();
-    });
+    axios
+      .get(
+        `${endpointPrefix}/media/get/${
+          app === 'elab' ? 'elab-home-v3.x' : app
+        }/upload`
+      )
+      .then((response) => {
+        setData(response.data.imgs, response.data.folders);
+        toggleWaiting();
+      });
   };
 
   const upload = () => {

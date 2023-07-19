@@ -90,14 +90,11 @@ const NewsItem: Lists.NewsItem = list({
     externalLink: text({
       label: 'External link',
     }),
-    blurb: text({
-      label: 'Blurb',
-      validation: {
-        isRequired: true,
-      },
+
+    blurb: document({
+      links: true,
       ui: {
-        displayMode: 'textarea',
-        description: 'Appears on News index page.',
+        description: 'Appears when item is featured.',
       },
     }),
     body: document({

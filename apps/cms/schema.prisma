@@ -30,7 +30,7 @@ model Event {
   eventDate        DateTime
   registrationLink String    @default("")
   address          String    @default("")
-  blurb            String    @default("")
+  blurb            Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   content          Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
@@ -69,25 +69,48 @@ model NewsItem {
   linkHelper_html     String    @default("<p>Need HTML!</p>")
   linkHelper_iconType icon      @default(help)
   externalLink        String    @default("")
-  blurb               String    @default("")
+  blurb               Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Person {
-  id                String          @id @default(cuid())
-  name              String          @unique @default("")
-  key               String          @default("")
+  id                String            @id @default(cuid())
+  name              String            @unique @default("")
+  key               String            @default("")
   createdDate       DateTime?
-  enabled           Boolean         @default(true)
-  title             String          @default("")
+  enabled           Boolean           @default(true)
+  title             String            @default("")
   category          String?
   image             Json?
-  content           Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studioInstructors Semester[]      @relation("Person_studioInstructors")
-  learningPartners  Semester[]      @relation("Person_learningPartners")
-  studioStudents    Semester[]      @relation("Person_studioStudents")
-  studioStaff       Semester[]      @relation("Person_studioStaff")
-  projectTeam       StudioProject[] @relation("Person_projectTeam")
+  content           Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studioInstructors Semester[]        @relation("Person_studioInstructors")
+  learningPartners  Semester[]        @relation("Person_learningPartners")
+  studioStudents    Semester[]        @relation("Person_studioStudents")
+  studioStaff       Semester[]        @relation("Person_studioStaff")
+  projectTeam       StudioProject[]   @relation("Person_projectTeam")
+  researchLeads     ResearchProject[] @relation("Person_researchLeads")
+}
+
+model ResearchProject {
+  id                  String    @id @default(cuid())
+  name                String    @default("")
+  key                 String    @unique @default("")
+  createdDate         DateTime?
+  enabled             Boolean   @default(true)
+  flags               Json      @default("[]")
+  thumbnail           Json?
+  thumbAltText        String    @default("")
+  shortDescription    String    @default("")
+  headingImage        Json?
+  headingImageAltText String    @default("")
+  headingText         String    @default("")
+  blurb               Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  websiteURL          String    @default("")
+  content             Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  partners            Json      @default("[]")
+  projectLeads        Person[]  @relation("Person_researchLeads")
+  contact             String    @default("")
+  tools               String    @default("Coming soon!")
 }
 
 model Semester {
@@ -134,13 +157,17 @@ model Slideshow {
 }
 
 model Studio {
-  id          String     @id @default(cuid())
-  name        String     @default("")
-  key         String     @unique @default("")
-  createdDate DateTime?
-  blurb       String     @default("")
-  semesters   Semester[] @relation("Semester_studio")
-  initiatives Json       @default("[]")
+  id               String     @id @default(cuid())
+  name             String     @default("")
+  key              String     @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean    @default(true)
+  thumbnail        Json?
+  thumbAltText     String     @default("")
+  shortDescription String     @default("")
+  blurb            String     @default("")
+  semesters        Semester[] @relation("Semester_studio")
+  initiatives      Json       @default("[]")
 }
 
 model StudioProject {
@@ -155,7 +182,7 @@ model StudioProject {
   thumbnail        Json?
   thumbAltText     String                      @default("")
   shortDescription String                      @default("")
-  blurb            String                      @default("")
+  blurb            Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   partners         Json                        @default("[]")
   coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

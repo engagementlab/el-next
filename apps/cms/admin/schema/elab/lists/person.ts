@@ -125,6 +125,18 @@ const Person: Lists.Person = list({
         },
       },
     }),
+    researchLeads: relationship({
+      ref: 'ResearchProject.projectLeads',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
     /*     semesters: relationship({
       ref: 'Semester.associatedPeople',
       many: true,

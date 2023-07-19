@@ -18,5 +18,6 @@ export const Partners = multiselect({
       value: 'swbcdc',
     },
     { label: 'Teen Empowerment', value: 'teenempowerment' },
+    { label: 'City of Boston', value: 'boston' },
   ],
 });

@@ -39,6 +39,30 @@ const Studio: Lists.Studio = list({
       },
     }),
     createdDate: CreatedTimestamp,
+    enabled: checkbox({
+      defaultValue: true,
+    }),
+    thumbnail: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'elab-home-v3.x/studios',
+      },
+    }),
+    thumbAltText: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Thumbail Alt Text ♿',
+      ui: { description: 'Describe appearance of Thumbnail Image' },
+    }),
+    shortDescription: text({
+      validation: {
+        isRequired: true,
+      },
+      ui: { description: 'Displays in studios listing under thumbnail.' },
+    }),
     blurb: text({
       label: 'Blurb (appears on Semesters index page)',
       validation: {

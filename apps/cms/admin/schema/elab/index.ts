@@ -4,6 +4,7 @@ export { default as Event } from './lists/event';
 export { default as Initiative } from './lists/initiative';
 export { default as InitiativesLanding } from './lists/initiativesLanding';
 export { default as NewsItem } from './lists/newsItem';
+export { default as ResearchProject } from './lists/researchProject';
 export { default as StudioProject } from './lists/studioProject';
 export { default as Slide } from './lists/slide';
 export { default as Slideshow } from '../slideshow';

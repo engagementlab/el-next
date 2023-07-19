@@ -69,12 +69,10 @@ const Event: Lists.Event = list({
         displayMode: 'textarea',
       },
     }),
-    blurb: text({
-      validation: {
-        isRequired: true,
-      },
+    blurb: document({
+      links: true,
       ui: {
-        displayMode: 'textarea',
+        description: 'Appears when item is featured.',
       },
     }),
     content: document({

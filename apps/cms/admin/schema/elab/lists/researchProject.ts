@@ -19,7 +19,7 @@ import { azConfig } from '../../azure';
 import { Partners } from '../partners';
 import { Flags } from '../flags';
 
-const StudioProject: Lists.MediaItem = list({
+const ResearchProject: Lists.ResearchProject = list({
   access: allowAll,
   fields: {
     name: text({
@@ -43,32 +43,13 @@ const StudioProject: Lists.MediaItem = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    initiative: select({
-      type: 'enum',
-      options: [
-        { label: 'Gun Violence', value: 'GunViolence' },
-        { label: 'Climate', value: 'Climate' },
-        // { label: 'Studio Dept', value: 'Departments' },
-      ],
-      validation: { isRequired: true },
-      ui: { displayMode: 'select' },
-      defaultValue: 'GunViolence',
-    }),
-    filters: relationship({
-      ref: 'Filter.studioProjects',
-      isFilterable: true,
-      many: true,
-      ui: {
-        displayMode: 'select',
-      },
-    }),
     flags: Flags,
     thumbnail: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
         apiKey: `${process.env.CLOUDINARY_KEY}`,
         apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.x/studios/projects',
+        folder: 'elab-home-v3.x/research/projects',
       },
     }),
     thumbAltText: text({
@@ -76,7 +57,7 @@ const StudioProject: Lists.MediaItem = list({
         isRequired: true,
       },
       label: 'Thumbail Alt Text ♿',
-      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
+      ui: { description: 'Describe appearance of Thumbnail Image' },
     }),
     shortDescription: text({
       validation: {
@@ -84,63 +65,65 @@ const StudioProject: Lists.MediaItem = list({
       },
       ui: { description: 'Displays in project listing under thumbnail.' },
     }),
+    headingImage: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'elab-home-v3.x/research/projects',
+      },
+    }),
+    headingImageAltText: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Heading Image Alt Text ♿',
+      ui: { description: 'Describe appearance of Heading Image.' },
+    }),
+    headingText: text({
+      validation: {
+        isRequired: true,
+      },
+      ui: {
+        description: 'Text appearing next to heading image.',
+        displayMode: 'textarea',
+      },
+    }),
+
     blurb: document({
       links: true,
       ui: {
         description: 'Appears when item is featured.',
       },
     }),
+    websiteURL: text({
+      // validation: {
+      //   match: {
+      //     regex:
+      //       /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
+      //     explanation: 'Not a valid URL',
+      //   },
+      // },
+    }),
+    content: document({
+      formatting: true,
+      dividers: true,
+      links: true,
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+        [2, 1],
+        [1, 2],
+        [1, 2, 1],
+      ],
+      ui: {
+        views: './admin/components/component-blocks',
+      },
+      componentBlocks,
+    }),
     partners: Partners,
-    coCreation: document({
-      formatting: true,
-      dividers: true,
-      links: true,
-      layouts: [
-        [1, 1],
-        [1, 1, 1],
-        [2, 1],
-        [1, 2],
-        [1, 2, 1],
-      ],
-      ui: {
-        views: './admin/components/component-blocks',
-      },
-      label: 'Co-Creation Process',
-
-      componentBlocks,
-    }),
-    impact: document({
-      formatting: true,
-      dividers: true,
-      links: true,
-      layouts: [
-        [1, 1],
-        [1, 1, 1],
-        [2, 1],
-        [1, 2],
-        [1, 2, 1],
-      ],
-      ui: {
-        views: './admin/components/component-blocks',
-      },
-      label: 'Impact Beyond the Studio',
-      componentBlocks,
-    }),
-    // videos: json({
-    //   ui: {
-    //     views: path.join(
-    //       process.cwd(),
-    //       '/admin/components/video/components.tsx'
-    //     ),
-    //     // createView: { fieldMode: 'edit' },
-    //     // listView: { fieldMode: 'hidden' },
-    //     // itemView: { fieldMode: 'edit' },
-    //   },
-    // }),
-    // file: azureStorageFile({ azureStorageConfig: azConfig, label: 'PDF' }),
-
-    team: relationship({
-      ref: 'Person.projectTeam',
+    projectLeads: relationship({
+      ref: 'Person.researchLeads',
       many: true,
       ui: {
         displayMode: 'cards',
@@ -148,9 +131,18 @@ const StudioProject: Lists.MediaItem = list({
         inlineConnect: true,
       },
     }),
-    semester: relationship({
-      ref: 'Semester.projects',
-      many: true,
+    contact: text({
+      // validation: {
+      //   match: {
+      //     regex:
+      //       /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/gm,
+      //     explanation: 'Not a valid email address',
+      //   },
+      // },
+      label: 'Contact Email',
+    }),
+    tools: text({
+      defaultValue: 'Coming soon!',
     }),
   },
   hooks: {
@@ -172,4 +164,4 @@ const StudioProject: Lists.MediaItem = list({
     },
   },
 });
-export default StudioProject;
+export default ResearchProject;

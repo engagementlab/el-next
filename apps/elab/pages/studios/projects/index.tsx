@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Image, Filtering, Query } from '@el-next/components';
 
 import { Theme } from '@/types';
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 import { useEffect, useState } from 'react';
 
 // import ImagePlaceholder from '../../components/';

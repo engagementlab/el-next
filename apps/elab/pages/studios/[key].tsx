@@ -328,7 +328,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
                 thumbnail {
                     publicId
                 }
-                thumbailAltText
+                thumbAltText
             }
             instructors {
               name

@@ -1,4 +1,6 @@
 import { Variants, motion } from 'framer-motion';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+
 import Layout from '../components/Layout';
 import { CTAButton } from '@/components/Buttons';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
@@ -17,8 +19,11 @@ type News = {
   key: string;
   flags: string[];
   filters?: { key: string }[];
+  eventDate?: string;
   publishDate: string;
-  blurb: string;
+  blurb: {
+    document: any;
+  };
   thumbnail: {
     publicId: string;
   };
@@ -134,6 +139,47 @@ export default function Home({
           Featured
         </h1>
 
+        {/* Featured event */}
+        {event && (
+          <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
+            <div className="flex fill-grey lg:w-4/5 px-5">
+              <div className="w-2/5 sm:w-14 mr-3">
+                <Icons icons={['event']} />
+              </div>
+              <div className="flex flex-col home-center text-grey">
+                <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
+                  {event.name}
+                </h2>
+                {event.eventDate &&
+                  `${new Date(event.eventDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                  })} ${new Date(event.eventDate).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                  })}`}
+
+                <DocumentRenderer document={event.blurb.document} />
+
+                <div className="mt-8">
+                  <CTAButton
+                    label="Learn more"
+                    link={`/events/${event.key}`}
+                    theme={Theme.climate}
+                  />
+                </div>
+              </div>
+            </div>
+            <BleedImage
+              id={`thumb-${event.key}`}
+              alt={event.thumbAltText}
+              imgId={event.thumbnail.publicId}
+              width={700}
+              transforms="c_fill,g_faces,h_650,w_650"
+              className="mb-6 lg:mb-0"
+            />
+          </div>
+        )}
+
         {/* Featured studio project */}
         {studioProject && (
           <div className="flex flex-col justify-between items-center lg:flex-row my-7">
@@ -157,10 +203,11 @@ export default function Home({
                 <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
                   {studioProject.name}
                 </h2>
-                {studioProject.blurb}
+                <DocumentRenderer document={studioProject.blurb.document} />
+
                 <div className="mt-8">
                   <CTAButton
-                    label="Read news"
+                    label="Learn more"
                     link={`/news/${studioProject.key}`}
                     theme={Theme.gunviolence}
                   />
@@ -181,7 +228,8 @@ export default function Home({
                 <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
                   {newsItem.title}
                 </h2>
-                {newsItem.blurb}
+                <DocumentRenderer document={newsItem.blurb.document} />
+
                 <div className="mt-8">
                   <CTAButton
                     label="Read news"
@@ -217,7 +265,10 @@ export async function getStaticProps() {
         ) { 
             name
             key
-            blurb
+            eventDate
+            blurb {
+              document
+            }
             flags
             thumbnail { 
               publicId
@@ -246,7 +297,9 @@ export async function getStaticProps() {
         ) { 
             name
             key
-            blurb
+            blurb {
+              document
+            }
             flags
             thumbnail { 
               publicId
@@ -278,7 +331,9 @@ export async function getStaticProps() {
         ) { 
             title
             key
-            blurb
+            blurb {
+              document
+            }
             flags
             thumbnail { 
                 publicId

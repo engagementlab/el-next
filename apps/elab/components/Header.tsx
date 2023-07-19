@@ -228,7 +228,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   );
   const researchLinks = (
     <>
-      <NavLink href="/projects" label="Research Projects" disabled={true} />
+      <NavLink href="/research/projects" label="Research Projects" />
       <NavLink href="/publications" label="Publications" disabled={true} />
     </>
   );

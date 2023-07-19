@@ -29,11 +29,11 @@ const cld = new Cloudinary({
 
 interface ImageProps {
   /**
-   * The image's ID attribute
+   * The image's alt text
    */
   alt: string;
   /**
-   * The image's alt text
+   * The image's ID attribute
    */
   id: string;
   /**
@@ -58,6 +58,7 @@ interface ImageProps {
    *  The largest optional width for responsive steps
    */
   maxWidth?: number;
+  maxWidthDisable?: boolean;
   /**
    * @defaultValue true
    *  - If set to false, the image will not be lazily-loaded
@@ -105,11 +106,12 @@ const Image = ({
   transforms,
   width,
   maxWidth,
+  maxWidthDisable,
   lazy,
   aspectDefault = true,
 }: ImageProps) => {
   // Instantiate a CloudinaryImage object for the image with public ID
-  const cloudImage = cld.image(`${imgId}`);
+  const cloudImage = cld.image(imgId);
   // If maxWidth is defined, ensure that the image steps don't exceed it
   let plugins: Plugins = [
     responsive({
@@ -152,7 +154,7 @@ const Image = ({
       cldImg={cloudImage}
       alt={alt}
       plugins={plugins}
-      style={{ maxWidth: width + `px` }}
+      style={!maxWidthDisable ? { maxWidth: `${width}px` } : {}}
     />
   );
 };

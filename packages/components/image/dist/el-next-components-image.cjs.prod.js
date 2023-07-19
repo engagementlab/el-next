@@ -38,11 +38,12 @@ var Image = function Image(_ref) {
     transforms = _ref.transforms,
     width = _ref.width,
     maxWidth = _ref.maxWidth,
+    maxWidthDisable = _ref.maxWidthDisable,
     lazy = _ref.lazy,
     _ref$aspectDefault = _ref.aspectDefault,
     aspectDefault = _ref$aspectDefault === void 0 ? true : _ref$aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID
-  var cloudImage = cld.image("".concat(imgId));
+  var cloudImage = cld.image(imgId);
   // If maxWidth is defined, ensure that the image steps don't exceed it
   var plugins = [react.responsive({
     steps: [800, 1000, 1400, 1800, 2200].filter(function (step) {
@@ -68,9 +69,9 @@ var Image = function Image(_ref) {
     cldImg: cloudImage,
     alt: alt,
     plugins: plugins,
-    style: {
-      maxWidth: width + "px"
-    }
+    style: !maxWidthDisable ? {
+      maxWidth: "".concat(width, "px")
+    } : {}
   });
 };
 

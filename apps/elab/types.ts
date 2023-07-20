@@ -2,7 +2,19 @@ export interface Breadcrumb {
   href: string;
   label: string;
 }
-export const enum Partner {
+// export enum Partner {
+//   all = 'all',
+//   ficdc = 'Fairmount Indigo CDC Collaborative',
+//   greenroots = 'GreenRoots',
+//   ldbpi = 'LDBPI',
+//   mgh = 'MGH Center for Gun Violence Prevention',
+//   magv = 'MA Coalition to Prevent Gun Violence',
+//   sftt = 'Speak for the Trees',
+//   swbcdc = 'Southwest Boston Community Development Corporation',
+//   teenempowerment = 'Teen Empowerment',
+//   uncornered = 'Boston Uncornered',
+// }
+export enum Partner {
   all,
   ficdc,
   greenroots,

@@ -36,7 +36,8 @@ import { create } from 'zustand';
 
 import { Image } from '@el-next/components';
 import VideoSelector, { RelatedVideoField } from './video/selector';
-import { EmbedMetadata } from '../../types';
+import { EmbedMetadata, EmbedState } from '../../types';
+import Link from 'next/link';
 
 const axios = require('axios').default;
 const _ = require('underscore');
@@ -516,9 +517,7 @@ function embedField({
   label,
   current,
   defaultValue = {
-    embed: {
-      title: '',
-    },
+    title: '',
   },
 }: {
   label: string;
@@ -529,6 +528,25 @@ function embedField({
     kind: 'form',
 
     Input({ value, onChange, autoFocus }) {
+      // Create store with Zustand
+      const [useStore] = useState(() =>
+        create<EmbedState>((set) => ({
+          waiting: false,
+          dataError: false,
+          toggleWaiting: () =>
+            set((state) => {
+              return { waiting: !state.waiting };
+            }),
+        }))
+      );
+
+      const toggleWaiting = useStore((state) => state.toggleWaiting);
+      const snackbarClose = () => {
+        useStore.setState({
+          dataError: false,
+        });
+      };
+      const { dataError, waiting } = useStore((state) => state);
       const endpointPrefix =
         window.location.protocol === 'https:'
           ? '/api'
@@ -540,20 +558,41 @@ function embedField({
             multiline
             fullWidth
             rows={1}
-            label="Alt Text"
+            label="Paste URL to Embed here."
             variant="standard"
-            // value={alt}
+            value={value ? value.open_graph?.url : null}
             onChange={(e) => {
+              toggleWaiting();
               axios
                 .post(`${endpointPrefix}/embed`, { url: e.target.value })
                 .then((response: { data: any }) => {
                   let data = response.data;
-
+                  toggleWaiting();
                   onChange(data);
                 })
-                .catch((error: any) => {});
+                .catch((error: any) => {
+                  toggleWaiting();
+                  useStore.setState({
+                    dataError: true,
+                  });
+                });
             }}
           />
+          {waiting && (
+            <Box>
+              <LinearProgress />
+            </Box>
+          )}
+          <Snackbar
+            open={dataError}
+            autoHideDuration={10000}
+            onClose={snackbarClose}
+          >
+            <Alert severity="error">
+              Unable to retrieve embed data. It is possible that this URL does
+              not support it.
+            </Alert>
+          </Snackbar>
         </FieldContainer>
       );
     },
@@ -845,21 +884,32 @@ export const componentBlocks = {
         );
       else if (
         props.fields.embed &&
-        props.fields.embed.value.twitter_card?.players?.length > 0
+        props.fields.embed.twitter_card?.players?.length > 0
       )
         return (
           <iframe
-            src={(props.fields.embed.value.twitter_card?.players[0] as any).url}
+            src={(props.fields.embed.twitter_card?.players[0] as any).url}
           />
         );
-      else if (props.fields.embed && props.fields.embed.value)
+      else if (
+        props.fields.embed['value'] &&
+        props.fields.embed['value']['open_graph']['images']
+      )
         return (
           <>
-            {/* {Object.keys(props.fields.embed.value).join('; ')}{' '} */}
-            {props.fields.embed.value['title']}
+            <img
+              width={50}
+              src={
+                (props.fields.embed['value'] as EmbedMetadata).open_graph
+                  ?.images[0].url
+              }
+            />
           </>
         );
-      else return <div></div>;
+      else if (props.fields.embed && props.fields.embed['value']['title'])
+        return <>{props.fields.embed['value']['title']}</>;
+      else
+        return <div>{Object.keys(props.fields.embed.value).join('; ')} </div>;
       // <div>{props.fields.embed.value[0].embed.title}</div>;
     },
     label: 'Embed a URL',
@@ -867,8 +917,74 @@ export const componentBlocks = {
       embed: embedField({
         label: 'Embed a URL',
         defaultValue: {
-          embed: { title: 'Embed a URL' },
+          title: 'Embed a URL',
         },
+      }),
+    },
+  }),
+  iconLink: component({
+    label: 'Link with Icon',
+    preview: (props) => {
+      return (
+        <>
+          <NotEditable>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              {props.fields.icon.value === 'article' && (
+                <svg height="20" width="20" viewBox="0 -960 960 960">
+                  <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h462l198 198v462q0 24-18 42t-42 18H180Zm0-60h600v-428.571H609V-780H180v600Zm99-111h402v-60H279v60Zm0-318h201v-60H279v60Zm0 159h402v-60H279v60Zm-99-330v171.429V-780v600-600Z" />
+                </svg>
+              )}
+              {props.fields.icon.value === 'action' && (
+                <svg height="20" width="20" viewBox="0 -960 960 960">
+                  <path d="m438-441 192-192-43-43-149 149-65-65-43 43 108 108Zm42 282q133-121 196.5-219.5T740-552q0-118-75.5-193T480-820q-109 0-184.5 75T220-552q0 75 65 173.5T480-159Zm0 79Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z" />
+                </svg>
+              )}
+              {props.fields.icon.value === 'website' && (
+                <svg height="20" viewBox="0 -960 960 960" width="20">
+                  <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h279v60H180v600h600v-279h60v279q0 24-18 42t-42 18H180Zm202-219-42-43 398-398H519v-60h321v321h-60v-218L382-339Z" />
+                </svg>
+              )}
+              {props.fields.icon.value === 'app' && (
+                <svg height="20" viewBox="0 -960 960 960" width="20">
+                  <path d="M480-313 287-506l43-43 120 120v-371h60v371l120-120 43 43-193 193ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
+                </svg>
+              )}
+              {props.fields.icon.value === 'video' && (
+                <svg height="20" width="20" viewBox="0 -960 960 960">
+                  <path d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z" />
+                </svg>
+              )}
+              <Link
+                href={props.fields.url.value}
+                target="_blank"
+                style={{ color: '#5EB89E' }}
+              >
+                {props.fields.label.value}
+              </Link>
+            </div>
+          </NotEditable>
+        </>
+      );
+    },
+    schema: {
+      label: fields.text({ defaultValue: 'Label', label: 'Label' }),
+      url: fields.text({ defaultValue: 'https://org.org', label: 'URL' }),
+      icon: fields.select({
+        label: 'Icon',
+        options: [
+          { label: 'Article', value: 'article' },
+          { label: 'Action', value: 'action' },
+          { label: 'Website', value: 'website' },
+          { label: 'App', value: 'app' },
+          { label: 'Video', value: 'video' },
+        ],
+        defaultValue: 'article',
       }),
     },
   }),

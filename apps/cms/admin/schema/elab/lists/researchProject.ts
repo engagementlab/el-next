@@ -141,8 +141,14 @@ const ResearchProject: Lists.ResearchProject = list({
       // },
       label: 'Contact Email',
     }),
-    tools: text({
-      defaultValue: 'Coming soon!',
+    tools: json({
+      label: 'Project Tools',
+      ui: {
+        views: path.join(process.cwd(), '/admin/components/tools.tsx'),
+        // createView: { fieldMode: 'edit' },
+        // listView: { fieldMode: 'hidden' },
+        // itemView: { fieldMode: 'edit' },
+      },
     }),
   },
   hooks: {

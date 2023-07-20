@@ -10,5 +10,5 @@ export { default as Slide } from './lists/slide';
 export { default as Slideshow } from '../slideshow';
 export { default as Studio } from './lists/studio';
 export { default as Semester } from './lists/semester';
-
+export { default as Partner } from './lists/partners';
 export { default as Person } from './lists/person';

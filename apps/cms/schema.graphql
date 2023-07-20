@@ -283,6 +283,8 @@ type Filter {
   enabled: Boolean
   studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
+  researchProjects(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
+  researchProjectsCount(where: ResearchProjectWhereInput! = {}): Int
 }
 
 input FilterWhereUniqueInput {
@@ -298,12 +300,19 @@ input FilterWhereInput {
   key: StringFilter
   enabled: BooleanFilter
   studioProjects: StudioProjectManyRelationFilter
+  researchProjects: ResearchProjectManyRelationFilter
 }
 
 input StudioProjectManyRelationFilter {
   every: StudioProjectWhereInput
   some: StudioProjectWhereInput
   none: StudioProjectWhereInput
+}
+
+input ResearchProjectManyRelationFilter {
+  every: ResearchProjectWhereInput
+  some: ResearchProjectWhereInput
+  none: ResearchProjectWhereInput
 }
 
 input FilterOrderByInput {
@@ -318,6 +327,7 @@ input FilterUpdateInput {
   key: String
   enabled: Boolean
   studioProjects: StudioProjectRelateToManyForUpdateInput
+  researchProjects: ResearchProjectRelateToManyForUpdateInput
 }
 
 input StudioProjectRelateToManyForUpdateInput {
@@ -325,6 +335,13 @@ input StudioProjectRelateToManyForUpdateInput {
   set: [StudioProjectWhereUniqueInput!]
   create: [StudioProjectCreateInput!]
   connect: [StudioProjectWhereUniqueInput!]
+}
+
+input ResearchProjectRelateToManyForUpdateInput {
+  disconnect: [ResearchProjectWhereUniqueInput!]
+  set: [ResearchProjectWhereUniqueInput!]
+  create: [ResearchProjectCreateInput!]
+  connect: [ResearchProjectWhereUniqueInput!]
 }
 
 input FilterUpdateArgs {
@@ -337,11 +354,17 @@ input FilterCreateInput {
   key: String
   enabled: Boolean
   studioProjects: StudioProjectRelateToManyForCreateInput
+  researchProjects: ResearchProjectRelateToManyForCreateInput
 }
 
 input StudioProjectRelateToManyForCreateInput {
   create: [StudioProjectCreateInput!]
   connect: [StudioProjectWhereUniqueInput!]
+}
+
+input ResearchProjectRelateToManyForCreateInput {
+  create: [ResearchProjectCreateInput!]
+  connect: [ResearchProjectWhereUniqueInput!]
 }
 
 type Initiative {
@@ -558,6 +581,54 @@ input NewsItemCreateInput {
   body: JSON
 }
 
+type Partner {
+  id: ID!
+  name: String
+  url: String
+  logo: CloudinaryImage_File
+  researchProject(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
+  researchProjectCount(where: ResearchProjectWhereInput! = {}): Int
+}
+
+input PartnerWhereUniqueInput {
+  id: ID
+}
+
+input PartnerWhereInput {
+  AND: [PartnerWhereInput!]
+  OR: [PartnerWhereInput!]
+  NOT: [PartnerWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  url: StringFilter
+  researchProject: ResearchProjectManyRelationFilter
+}
+
+input PartnerOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  url: OrderDirection
+}
+
+input PartnerUpdateInput {
+  name: String
+  url: String
+  logo: Upload
+  researchProject: ResearchProjectRelateToManyForUpdateInput
+}
+
+input PartnerUpdateArgs {
+  where: PartnerWhereUniqueInput!
+  data: PartnerUpdateInput!
+}
+
+input PartnerCreateInput {
+  name: String
+  url: String
+  logo: Upload
+  researchProject: ResearchProjectRelateToManyForCreateInput
+}
+
 type Person {
   id: ID!
   name: String
@@ -565,8 +636,9 @@ type Person {
   createdDate: DateTime
   enabled: Boolean
   title: String
-  category: String
   image: CloudinaryImage_File
+  category: String
+  orderInSection: Int
   content: Person_content_Document
   studioInstructors(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   studioInstructorsCount(where: SemesterWhereInput! = {}): Int
@@ -602,6 +674,7 @@ input PersonWhereInput {
   enabled: BooleanFilter
   title: StringFilter
   category: StringNullableFilter
+  orderInSection: IntNullableFilter
   studioInstructors: SemesterManyRelationFilter
   learningPartners: SemesterManyRelationFilter
   studioStudents: SemesterManyRelationFilter
@@ -625,16 +698,21 @@ input StringNullableFilter {
   not: StringNullableFilter
 }
 
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
 input SemesterManyRelationFilter {
   every: SemesterWhereInput
   some: SemesterWhereInput
   none: SemesterWhereInput
-}
-
-input ResearchProjectManyRelationFilter {
-  every: ResearchProjectWhereInput
-  some: ResearchProjectWhereInput
-  none: ResearchProjectWhereInput
 }
 
 input PersonOrderByInput {
@@ -645,6 +723,7 @@ input PersonOrderByInput {
   enabled: OrderDirection
   title: OrderDirection
   category: OrderDirection
+  orderInSection: OrderDirection
 }
 
 input PersonUpdateInput {
@@ -653,8 +732,9 @@ input PersonUpdateInput {
   createdDate: DateTime
   enabled: Boolean
   title: String
-  category: String
   image: Upload
+  category: String
+  orderInSection: Int
   content: JSON
   studioInstructors: SemesterRelateToManyForUpdateInput
   learningPartners: SemesterRelateToManyForUpdateInput
@@ -671,13 +751,6 @@ input SemesterRelateToManyForUpdateInput {
   connect: [SemesterWhereUniqueInput!]
 }
 
-input ResearchProjectRelateToManyForUpdateInput {
-  disconnect: [ResearchProjectWhereUniqueInput!]
-  set: [ResearchProjectWhereUniqueInput!]
-  create: [ResearchProjectCreateInput!]
-  connect: [ResearchProjectWhereUniqueInput!]
-}
-
 input PersonUpdateArgs {
   where: PersonWhereUniqueInput!
   data: PersonUpdateInput!
@@ -689,8 +762,9 @@ input PersonCreateInput {
   createdDate: DateTime
   enabled: Boolean
   title: String
-  category: String
   image: Upload
+  category: String
+  orderInSection: Int
   content: JSON
   studioInstructors: SemesterRelateToManyForCreateInput
   learningPartners: SemesterRelateToManyForCreateInput
@@ -705,11 +779,6 @@ input SemesterRelateToManyForCreateInput {
   connect: [SemesterWhereUniqueInput!]
 }
 
-input ResearchProjectRelateToManyForCreateInput {
-  create: [ResearchProjectCreateInput!]
-  connect: [ResearchProjectWhereUniqueInput!]
-}
-
 type ResearchProject {
   id: ID!
   name: String
@@ -717,20 +786,24 @@ type ResearchProject {
   createdDate: DateTime
   enabled: Boolean
   flags: [ResearchProjectFlagType!]
+  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
+  filtersCount(where: FilterWhereInput! = {}): Int
   thumbnail: CloudinaryImage_File
   thumbAltText: String
-  shortDescription: String
   headingImage: CloudinaryImage_File
   headingImageAltText: String
   headingText: String
+  buttons: JSON
+  shortDescription: String
   blurb: ResearchProject_blurb_Document
   websiteURL: String
   content: ResearchProject_content_Document
-  partners: [ResearchProjectPartnerType!]
+  partners(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
+  partnersCount(where: PartnerWhereInput! = {}): Int
   projectLeads(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   projectLeadsCount(where: PersonWhereInput! = {}): Int
   contact: String
-  tools: String
+  tools: JSON
 }
 
 enum ResearchProjectFlagType {
@@ -744,19 +817,6 @@ type ResearchProject_blurb_Document {
 
 type ResearchProject_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-enum ResearchProjectPartnerType {
-  uncornered
-  ficdc
-  greenroots
-  ldbpi
-  mgh
-  magv
-  sftt
-  swbcdc
-  teenempowerment
-  boston
 }
 
 input ResearchProjectWhereUniqueInput {
@@ -773,14 +833,27 @@ input ResearchProjectWhereInput {
   key: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
+  filters: FilterManyRelationFilter
   thumbAltText: StringFilter
-  shortDescription: StringFilter
   headingImageAltText: StringFilter
   headingText: StringFilter
+  shortDescription: StringFilter
   websiteURL: StringFilter
+  partners: PartnerManyRelationFilter
   projectLeads: PersonManyRelationFilter
   contact: StringFilter
-  tools: StringFilter
+}
+
+input FilterManyRelationFilter {
+  every: FilterWhereInput
+  some: FilterWhereInput
+  none: FilterWhereInput
+}
+
+input PartnerManyRelationFilter {
+  every: PartnerWhereInput
+  some: PartnerWhereInput
+  none: PartnerWhereInput
 }
 
 input PersonManyRelationFilter {
@@ -796,12 +869,11 @@ input ResearchProjectOrderByInput {
   createdDate: OrderDirection
   enabled: OrderDirection
   thumbAltText: OrderDirection
-  shortDescription: OrderDirection
   headingImageAltText: OrderDirection
   headingText: OrderDirection
+  shortDescription: OrderDirection
   websiteURL: OrderDirection
   contact: OrderDirection
-  tools: OrderDirection
 }
 
 input ResearchProjectUpdateInput {
@@ -810,19 +882,35 @@ input ResearchProjectUpdateInput {
   createdDate: DateTime
   enabled: Boolean
   flags: [ResearchProjectFlagType!]
+  filters: FilterRelateToManyForUpdateInput
   thumbnail: Upload
   thumbAltText: String
-  shortDescription: String
   headingImage: Upload
   headingImageAltText: String
   headingText: String
+  buttons: JSON
+  shortDescription: String
   blurb: JSON
   websiteURL: String
   content: JSON
-  partners: [ResearchProjectPartnerType!]
+  partners: PartnerRelateToManyForUpdateInput
   projectLeads: PersonRelateToManyForUpdateInput
   contact: String
-  tools: String
+  tools: JSON
+}
+
+input FilterRelateToManyForUpdateInput {
+  disconnect: [FilterWhereUniqueInput!]
+  set: [FilterWhereUniqueInput!]
+  create: [FilterCreateInput!]
+  connect: [FilterWhereUniqueInput!]
+}
+
+input PartnerRelateToManyForUpdateInput {
+  disconnect: [PartnerWhereUniqueInput!]
+  set: [PartnerWhereUniqueInput!]
+  create: [PartnerCreateInput!]
+  connect: [PartnerWhereUniqueInput!]
 }
 
 input PersonRelateToManyForUpdateInput {
@@ -843,19 +931,31 @@ input ResearchProjectCreateInput {
   createdDate: DateTime
   enabled: Boolean
   flags: [ResearchProjectFlagType!]
+  filters: FilterRelateToManyForCreateInput
   thumbnail: Upload
   thumbAltText: String
-  shortDescription: String
   headingImage: Upload
   headingImageAltText: String
   headingText: String
+  buttons: JSON
+  shortDescription: String
   blurb: JSON
   websiteURL: String
   content: JSON
-  partners: [ResearchProjectPartnerType!]
+  partners: PartnerRelateToManyForCreateInput
   projectLeads: PersonRelateToManyForCreateInput
   contact: String
-  tools: String
+  tools: JSON
+}
+
+input FilterRelateToManyForCreateInput {
+  create: [FilterCreateInput!]
+  connect: [FilterWhereUniqueInput!]
+}
+
+input PartnerRelateToManyForCreateInput {
+  create: [PartnerCreateInput!]
+  connect: [PartnerWhereUniqueInput!]
 }
 
 input PersonRelateToManyForCreateInput {
@@ -1255,10 +1355,12 @@ type StudioProject {
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   shortDescription: String
+  buttons: JSON
   blurb: StudioProject_blurb_Document
   partners: [StudioProjectPartnerType!]
   coCreation: StudioProject_coCreation_Document
   impact: StudioProject_impact_Document
+  videos: JSON
   team(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   teamCount(where: PersonWhereInput! = {}): Int
   semester(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
@@ -1329,12 +1431,6 @@ input StudioProjectInitiativeTypeNullableFilter {
   not: StudioProjectInitiativeTypeNullableFilter
 }
 
-input FilterManyRelationFilter {
-  every: FilterWhereInput
-  some: FilterWhereInput
-  none: FilterWhereInput
-}
-
 input StudioProjectOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -1357,19 +1453,14 @@ input StudioProjectUpdateInput {
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
+  buttons: JSON
   blurb: JSON
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
+  videos: JSON
   team: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
-}
-
-input FilterRelateToManyForUpdateInput {
-  disconnect: [FilterWhereUniqueInput!]
-  set: [FilterWhereUniqueInput!]
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
 }
 
 input StudioProjectUpdateArgs {
@@ -1388,17 +1479,14 @@ input StudioProjectCreateInput {
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
+  buttons: JSON
   blurb: JSON
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
+  videos: JSON
   team: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
-}
-
-input FilterRelateToManyForCreateInput {
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
 }
 
 """
@@ -1443,6 +1531,12 @@ type Mutation {
   updateNewsItems(data: [NewsItemUpdateArgs!]!): [NewsItem]
   deleteNewsItem(where: NewsItemWhereUniqueInput!): NewsItem
   deleteNewsItems(where: [NewsItemWhereUniqueInput!]!): [NewsItem]
+  createPartner(data: PartnerCreateInput!): Partner
+  createPartners(data: [PartnerCreateInput!]!): [Partner]
+  updatePartner(where: PartnerWhereUniqueInput!, data: PartnerUpdateInput!): Partner
+  updatePartners(data: [PartnerUpdateArgs!]!): [Partner]
+  deletePartner(where: PartnerWhereUniqueInput!): Partner
+  deletePartners(where: [PartnerWhereUniqueInput!]!): [Partner]
   createPerson(data: PersonCreateInput!): Person
   createPeople(data: [PersonCreateInput!]!): [Person]
   updatePerson(where: PersonWhereUniqueInput!, data: PersonUpdateInput!): Person
@@ -1506,6 +1600,9 @@ type Query {
   newsItems(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   newsItem(where: NewsItemWhereUniqueInput!): NewsItem
   newsItemsCount(where: NewsItemWhereInput! = {}): Int
+  partners(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
+  partner(where: PartnerWhereUniqueInput!): Partner
+  partnersCount(where: PartnerWhereInput! = {}): Int
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int

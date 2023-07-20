@@ -26,6 +26,10 @@ const Filter: Lists.Filter = list({
       defaultValue: true,
     }),
     studioProjects: relationship({ ref: 'StudioProject.filters', many: true }),
+    researchProjects: relationship({
+      ref: 'ResearchProject.filters',
+      many: true,
+    }),
     // order: integer(),
   },
   hooks: {

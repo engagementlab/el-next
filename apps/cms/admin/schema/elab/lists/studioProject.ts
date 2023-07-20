@@ -16,7 +16,8 @@ import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
-import { Partners } from '../partners';
+import { PartnersSelect } from './partners';
+
 import { Flags } from '../flags';
 
 const StudioProject: Lists.MediaItem = list({
@@ -84,13 +85,19 @@ const StudioProject: Lists.MediaItem = list({
       },
       ui: { description: 'Displays in project listing under thumbnail.' },
     }),
+    buttons: json({
+      label: 'Call to Action Buttons',
+      ui: {
+        views: path.join(process.cwd(), '/admin/components/callToAction.tsx'),
+      },
+    }),
     blurb: document({
       links: true,
       ui: {
         description: 'Appears when item is featured.',
       },
     }),
-    partners: Partners,
+    partners: PartnersSelect,
     coCreation: document({
       formatting: true,
       dividers: true,
@@ -126,17 +133,17 @@ const StudioProject: Lists.MediaItem = list({
       label: 'Impact Beyond the Studio',
       componentBlocks,
     }),
-    // videos: json({
-    //   ui: {
-    //     views: path.join(
-    //       process.cwd(),
-    //       '/admin/components/video/components.tsx'
-    //     ),
-    //     // createView: { fieldMode: 'edit' },
-    //     // listView: { fieldMode: 'hidden' },
-    //     // itemView: { fieldMode: 'edit' },
-    //   },
-    // }),
+    videos: json({
+      ui: {
+        views: path.join(
+          process.cwd(),
+          '/admin/components/video/components.tsx'
+        ),
+        // createView: { fieldMode: 'edit' },
+        // listView: { fieldMode: 'hidden' },
+        // itemView: { fieldMode: 'edit' },
+      },
+    }),
     // file: azureStorageFile({ azureStorageConfig: azConfig, label: 'PDF' }),
 
     team: relationship({

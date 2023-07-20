@@ -35,11 +35,12 @@ model Event {
 }
 
 model Filter {
-  id             String          @id @default(cuid())
-  name           String          @default("")
-  key            String          @default("")
-  enabled        Boolean         @default(true)
-  studioProjects StudioProject[] @relation("Filter_studioProjects")
+  id               String            @id @default(cuid())
+  name             String            @default("")
+  key              String            @default("")
+  enabled          Boolean           @default(true)
+  studioProjects   StudioProject[]   @relation("Filter_studioProjects")
+  researchProjects ResearchProject[] @relation("Filter_researchProjects")
 }
 
 model Initiative {
@@ -73,6 +74,14 @@ model NewsItem {
   body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
+model Partner {
+  id              String            @id @default(cuid())
+  name            String            @default("")
+  url             String            @default("")
+  logo            Json?
+  researchProject ResearchProject[] @relation("Partner_researchProject")
+}
+
 model Person {
   id                String            @id @default(cuid())
   name              String            @unique @default("")
@@ -80,8 +89,9 @@ model Person {
   createdDate       DateTime?
   enabled           Boolean           @default(true)
   title             String            @default("")
-  category          String?
   image             Json?
+  category          String?
+  orderInSection    Int?              @default(0)
   content           Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   studioInstructors Semester[]        @relation("Person_studioInstructors")
   learningPartners  Semester[]        @relation("Person_learningPartners")
@@ -98,19 +108,21 @@ model ResearchProject {
   createdDate         DateTime?
   enabled             Boolean   @default(true)
   flags               Json      @default("[]")
+  filters             Filter[]  @relation("Filter_researchProjects")
   thumbnail           Json?
   thumbAltText        String    @default("")
-  shortDescription    String    @default("")
   headingImage        Json?
   headingImageAltText String    @default("")
   headingText         String    @default("")
+  buttons             Json?
+  shortDescription    String    @default("")
   blurb               Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   websiteURL          String    @default("")
   content             Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  partners            Json      @default("[]")
+  partners            Partner[] @relation("Partner_researchProject")
   projectLeads        Person[]  @relation("Person_researchLeads")
   contact             String    @default("")
-  tools               String    @default("Coming soon!")
+  tools               Json?
 }
 
 model Semester {
@@ -182,10 +194,12 @@ model StudioProject {
   thumbnail        Json?
   thumbAltText     String                      @default("")
   shortDescription String                      @default("")
+  buttons          Json?
   blurb            Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   partners         Json                        @default("[]")
   coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  videos           Json?
   team             Person[]                    @relation("Person_projectTeam")
   semester         Semester[]                  @relation("Semester_projects")
 }

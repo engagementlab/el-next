@@ -1,4 +1,4 @@
-import { list } from '@keystone-6/core';
+import { list, group } from '@keystone-6/core';
 import {
   checkbox,
   json,
@@ -16,7 +16,7 @@ import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
-import { Partners } from '../partners';
+import { Partners, PartnersRelationship } from './partners';
 import { Flags } from '../flags';
 
 const ResearchProject: Lists.ResearchProject = list({
@@ -44,41 +44,49 @@ const ResearchProject: Lists.ResearchProject = list({
       defaultValue: true,
     }),
     flags: Flags,
-    thumbnail: cloudinaryImage({
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.x/research/projects',
+    filters: relationship({
+      ref: 'Filter.researchProjects',
+      isFilterable: true,
+      many: true,
+      ui: {
+        displayMode: 'select',
       },
     }),
-    thumbAltText: text({
-      validation: {
-        isRequired: true,
+    ...group({
+      label: 'Images',
+      description: 'Project thumbnail and header image',
+      fields: {
+        thumbnail: cloudinaryImage({
+          cloudinary: {
+            cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+            apiKey: `${process.env.CLOUDINARY_KEY}`,
+            apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+            folder: 'elab-home-v3.x/research/projects',
+          },
+        }),
+        thumbAltText: text({
+          validation: {
+            isRequired: true,
+          },
+          label: 'Thumbail Alt Text ♿',
+          ui: { description: 'Describe appearance of Thumbnail Image' },
+        }),
+        headingImage: cloudinaryImage({
+          cloudinary: {
+            cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+            apiKey: `${process.env.CLOUDINARY_KEY}`,
+            apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+            folder: 'elab-home-v3.x/research/projects',
+          },
+        }),
+        headingImageAltText: text({
+          validation: {
+            isRequired: true,
+          },
+          label: 'Heading Image Alt Text ♿',
+          ui: { description: 'Describe appearance of Heading Image.' },
+        }),
       },
-      label: 'Thumbail Alt Text ♿',
-      ui: { description: 'Describe appearance of Thumbnail Image' },
-    }),
-    shortDescription: text({
-      validation: {
-        isRequired: true,
-      },
-      ui: { description: 'Displays in project listing under thumbnail.' },
-    }),
-    headingImage: cloudinaryImage({
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.x/research/projects',
-      },
-    }),
-    headingImageAltText: text({
-      validation: {
-        isRequired: true,
-      },
-      label: 'Heading Image Alt Text ♿',
-      ui: { description: 'Describe appearance of Heading Image.' },
     }),
     headingText: text({
       validation: {
@@ -89,7 +97,18 @@ const ResearchProject: Lists.ResearchProject = list({
         displayMode: 'textarea',
       },
     }),
-
+    buttons: json({
+      label: 'Call to Action Buttons',
+      ui: {
+        views: path.join(process.cwd(), '/admin/components/callToAction.tsx'),
+      },
+    }),
+    shortDescription: text({
+      validation: {
+        isRequired: true,
+      },
+      ui: { description: 'Displays in project listing under thumbnail.' },
+    }),
     blurb: document({
       links: true,
       ui: {
@@ -121,7 +140,16 @@ const ResearchProject: Lists.ResearchProject = list({
       },
       componentBlocks,
     }),
-    partners: Partners,
+    partners: relationship({
+      ref: 'Partner.researchProject',
+      many: true,
+      label: 'Partners',
+      ui: {
+        displayMode: 'cards',
+        cardFields: ['name', 'logo'],
+        inlineCreate: { fields: ['name', 'url', 'logo'] },
+      },
+    }),
     projectLeads: relationship({
       ref: 'Person.researchLeads',
       many: true,
@@ -145,9 +173,6 @@ const ResearchProject: Lists.ResearchProject = list({
       label: 'Project Tools',
       ui: {
         views: path.join(process.cwd(), '/admin/components/tools.tsx'),
-        // createView: { fieldMode: 'edit' },
-        // listView: { fieldMode: 'hidden' },
-        // itemView: { fieldMode: 'edit' },
       },
     }),
   },

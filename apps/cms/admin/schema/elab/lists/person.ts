@@ -1,5 +1,11 @@
-import { list } from '@keystone-6/core';
-import { checkbox, relationship, select, text } from '@keystone-6/core/fields';
+import { group, list } from '@keystone-6/core';
+import {
+  checkbox,
+  integer,
+  relationship,
+  select,
+  text,
+} from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -37,14 +43,6 @@ const Person: Lists.Person = list({
         isRequired: true,
       },
     }),
-    category: select({
-      type: 'string',
-      options: [
-        { label: 'Core Team', value: 'core' },
-        { label: 'Student Staff', value: 'studentstaff' },
-        { label: 'Fellow', value: 'fellow' },
-      ],
-    }),
     image: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
@@ -53,6 +51,27 @@ const Person: Lists.Person = list({
         folder: 'elab-home-v3.x/people',
       },
       label: 'Bio Image',
+    }),
+    ...group({
+      label: 'People Page',
+      fields: {
+        category: select({
+          type: 'string',
+          label: 'People Page Section',
+          options: [
+            { label: 'Core Team', value: 'core' },
+            { label: 'Student Staff', value: 'studentstaff' },
+            { label: 'Fellow', value: 'fellow' },
+          ],
+          ui: {
+            description:
+              'Specify only for people that will appear on the People page',
+          },
+        }),
+        orderInSection: integer({
+          defaultValue: 0,
+        }),
+      },
     }),
     content: document({
       formatting: true,

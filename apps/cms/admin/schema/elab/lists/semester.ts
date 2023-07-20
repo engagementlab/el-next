@@ -12,10 +12,10 @@ import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
-import { cloudinaryImage } from '../../../components/cloudinary';
+
 import { CreatedTimestamp, CreateKey } from '../../hooks';
-import { HelperIcon, helper } from '../../../components/helper';
-import { Partners } from '../partners';
+
+import { PartnersSelect } from './partners';
 
 const Semester: Lists.Semester = list({
   access: allowAll,
@@ -86,7 +86,7 @@ const Semester: Lists.Semester = list({
     //   },
     //   iconType: HelperIcon.info,
     // }),
-    partners: Partners,
+    partners: PartnersSelect,
     coCreation: document({
       formatting: true,
       dividers: true,

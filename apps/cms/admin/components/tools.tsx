@@ -3,12 +3,11 @@
 import { FieldProps } from '@keystone-6/core/types';
 import { Button } from '@keystone-ui/button';
 import { controller } from '@keystone-6/core/fields/types/json/views';
-import { FieldContainer, FieldLabel, TextInput } from '@keystone-ui/fields';
+import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
 import { MinusCircleIcon, EditIcon } from '@keystone-ui/icons';
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { css } from '@emotion/css';
-import _ from 'lodash';
 import {
   FormControl,
   InputLabel,
@@ -92,7 +91,7 @@ export const Field = ({
     if (onChange) {
       const relatedToolsCopy = [
         ...relatedTools,
-        { label: labelValue, url: urlValue, description },
+        { label: labelValue, url: urlValue, description, type },
       ];
       onChange(JSON.stringify(relatedToolsCopy));
       onCancelRelatedTool();
@@ -148,35 +147,35 @@ export const Field = ({
       <FieldLabel>{field.label}</FieldLabel>
       {onChange && (
         <Fragment>
-          <div className={styles.form.field}>
-            <TextField
-              label="Label/Name"
-              variant="outlined"
-              onChange={(event) => setLabelValue(event.target.value)}
-              value={labelValue}
-            />
-          </div>
-          <div className={styles.form.field}>
-            <TextField
-              label="URL"
-              variant="outlined"
-              onChange={(event) => setUrlValue(event.target.value)}
-              value={urlValue}
-            />
-          </div>
-          <div className={styles.form.field}>
-            <TextField
-              label="Description"
-              multiline
-              maxRows={3}
-              rows={3}
-              variant="outlined"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-            />
-
+          <div style={{ backgroundColor: '#eff3f6', padding: '1rem' }}>
             <div className={styles.form.field}>
-              <FormControl style={{ minWidth: '100px' }}>
+              <TextField
+                label="Label/Name"
+                variant="outlined"
+                onChange={(event) => setLabelValue(event.target.value)}
+                value={labelValue}
+              />
+
+              <TextField
+                label="URL"
+                variant="outlined"
+                onChange={(event) => setUrlValue(event.target.value)}
+                value={urlValue}
+                style={{ marginLeft: '.5rem' }}
+              />
+            </div>
+            <div className={styles.form.field}>
+              <TextField
+                label="Description"
+                multiline
+                maxRows={3}
+                rows={3}
+                variant="outlined"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+
+              <FormControl style={{ minWidth: '100px', marginLeft: '.5rem' }}>
                 <InputLabel id="type-select-label">Type</InputLabel>
                 <Select
                   value={type}
@@ -216,26 +215,26 @@ export const Field = ({
         </Fragment>
       )}
       <ul className={styles.list.ul}>
-        {relatedTools.map((relatedLink: RelatedTool, i: number) => {
+        {relatedTools.map((relatedTool: RelatedTool, i: number) => {
           return (
             <li key={`related-link-${i}`} className={styles.list.li}>
               <div className={styles.list.data}>
-                <div className={styles.list.dataLabel}>{relatedLink.label}</div>
+                <div className={styles.list.dataLabel}>{relatedTool.label}</div>
                 <div className={styles.list.dataHref}>
-                  <Link href={relatedLink.url} target="_blank">
-                    {relatedLink.url}
+                  <Link href={relatedTool.url} target="_blank">
+                    {relatedTool.url}
                   </Link>
                 </div>
                 <div className={styles.list.dataLabel}>
-                  {relatedLink.description.slice(0, 10) + '...'}
+                  {relatedTool.description.slice(0, 10) + '...'}
                 </div>
                 <div className={styles.list.dataLabel}>
-                  {relatedLink.type === 'url' && (
+                  {relatedTool.type === 'url' && (
                     <svg height="20" viewBox="0 -960 960 960" width="20">
                       <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h279v60H180v600h600v-279h60v279q0 24-18 42t-42 18H180Zm202-219-42-43 398-398H519v-60h321v321h-60v-218L382-339Z" />
                     </svg>
                   )}
-                  {relatedLink.type === 'file' && (
+                  {relatedTool.type === 'file' && (
                     <svg height="20" viewBox="0 -960 960 960" width="20">
                       <path d="M480-313 287-506l43-43 120 120v-371h60v371l120-120 43 43-193 193ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
                     </svg>

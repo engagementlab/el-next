@@ -195,7 +195,7 @@ function videoSelect({
           setGridOpen(false);
         }
       });
-      // console.log('val',selectedVideo)
+
       let videoField: RelatedVideoField = {};
       if (value) videoField = value;
       else videoField = defaultValue;
@@ -215,8 +215,6 @@ function videoSelect({
                 thumb: item.thumb,
                 thumbSm: item.thumbSm,
               });
-              // setSelectedVideo({'video':item});
-              // setData(item.value);
             }}
             done={() => setGridOpen(false)}
           />
@@ -517,7 +515,9 @@ function embedField({
   label,
   current,
   defaultValue = {
-    title: '',
+    embed: {
+      title: '',
+    },
   },
 }: {
   label: string;
@@ -533,6 +533,7 @@ function embedField({
         create<EmbedState>((set) => ({
           waiting: false,
           dataError: false,
+          editUrl: false,
           toggleWaiting: () =>
             set((state) => {
               return { waiting: !state.waiting };
@@ -546,7 +547,7 @@ function embedField({
           dataError: false,
         });
       };
-      const { dataError, waiting } = useStore((state) => state);
+      const { dataError, waiting, editUrl } = useStore((state) => state);
       const endpointPrefix =
         window.location.protocol === 'https:'
           ? '/api'
@@ -560,8 +561,11 @@ function embedField({
             rows={1}
             label="Paste URL to Embed here."
             variant="standard"
-            value={value ? value.open_graph?.url : null}
+            value={value && !editUrl ? value.open_graph?.url : null}
             onChange={(e) => {
+              useStore.setState({
+                editUrl: true,
+              });
               toggleWaiting();
               axios
                 .post(`${endpointPrefix}/embed`, { url: e.target.value })
@@ -874,36 +878,27 @@ export const componentBlocks = {
   }),
   embed: component({
     preview: (props) => {
-      if (props.fields.embed && props.fields.embed.value.oEmbed)
+      const embed = props.fields.embed.value as EmbedMetadata[0];
+      if (embed.oEmbed)
         return (
           <div
             dangerouslySetInnerHTML={{
-              __html: props.fields.embed.value.oEmbed.html as string,
+              __html: embed.oEmbed.html as string,
             }}
           />
         );
       else if (
-        props.fields.embed &&
-        props.fields.embed.twitter_card?.players?.length > 0
+        embed.twitter_card?.players &&
+        embed.twitter_card?.players?.length > 0
       )
-        return (
-          <iframe
-            src={(props.fields.embed.twitter_card?.players[0] as any).url}
-          />
-        );
-      else if (
-        props.fields.embed['value'] &&
-        props.fields.embed['value']['open_graph']['images']
-      )
+        return <iframe src={(embed.twitter_card?.players[0] as any).url} />;
+      else if (embed.open_graph?.images)
         return (
           <>
-            <img
-              width={50}
-              src={
-                (props.fields.embed['value'] as EmbedMetadata).open_graph
-                  ?.images[0].url
-              }
-            />
+            <p>
+              <strong>{embed.open_graph.title}</strong>
+            </p>
+            <img width={80} src={embed.open_graph.images[0].url} />
           </>
         );
       else if (props.fields.embed && props.fields.embed['value']['title'])
@@ -917,7 +912,9 @@ export const componentBlocks = {
       embed: embedField({
         label: 'Embed a URL',
         defaultValue: {
-          title: 'Embed a URL',
+          embed: {
+            title: 'Embed a URL',
+          },
         },
       }),
     },

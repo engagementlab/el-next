@@ -179,10 +179,12 @@ const Header = ({ theme }: Props): JSX.Element => {
     label,
     href,
     disabled = false,
+    subLink = false,
   }: {
     label: string;
     href: string;
     disabled?: boolean;
+    subLink?: boolean;
   }): JSX.Element =>
     ActiveLink(href) ? (
       <span
@@ -191,12 +193,44 @@ const Header = ({ theme }: Props): JSX.Element => {
         }}
         className="opacity-40"
       >
+        {subLink && (
+          <svg
+            height="20"
+            viewBox="0 -960 960 960"
+            width="20"
+            className="inline"
+          >
+            <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+          </svg>
+        )}{' '}
         {label}
       </span>
     ) : disabled ? (
-      <span className="opacity-50 mt-3 xl:my-1">{label}</span>
+      <span className="opacity-50 mt-3 xl:my-1">
+        {subLink && (
+          <svg
+            height="20"
+            viewBox="0 -960 960 960"
+            width="20"
+            className="inline"
+          >
+            <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+          </svg>
+        )}{' '}
+        {label}
+      </span>
     ) : (
       <Link href={href} className="mt-3 xl:my-1">
+        {subLink && (
+          <svg
+            height="20"
+            viewBox="0 -960 960 960"
+            width="20"
+            className="inline"
+          >
+            <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+          </svg>
+        )}{' '}
         {label}
       </Link>
     );
@@ -215,15 +249,35 @@ const Header = ({ theme }: Props): JSX.Element => {
       <NavLink
         href="/initiatives/gunviolence"
         label="
-        Transforming Narratives of Gun Violence"
+        Transforming Narratives of Gun Violence (TNGV)"
+      />
+      <NavLink
+        href="/studios?initiative=gunviolence"
+        label="TNGV Studios"
+        subLink={true}
+      />
+      <NavLink
+        href="/studios/projects?initiative=gunviolence"
+        label="TNGV Projects"
+        subLink={true}
       />
       <NavLink
         href="/initiatives/climate"
-        label="Transforming Narratives for Climate Justice"
+        label="Transforming Narratives for Environmental Justice (TN4EJ)"
         disabled={true}
       />
-      <NavLink href="/studios" label="Social Impact Studios" />
-      <NavLink href="/studios/projects" label="Studio Projects" />
+      <NavLink
+        href="/studios?initiative=climate"
+        label="TN4EJ Studios"
+        disabled={true}
+        subLink={true}
+      />
+      <NavLink
+        href="/projects?initiative=climate"
+        label="TN4EJ Projects"
+        disabled={true}
+        subLink={true}
+      />
     </>
   );
   const researchLinks = (

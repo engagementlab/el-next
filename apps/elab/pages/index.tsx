@@ -55,6 +55,7 @@ export default function Home({
     const player = new Player('video-bg', {
       id: 846665267,
       width: 1640,
+      height: 566,
       controls: false,
       autoplay: true,
       autopause: true,
@@ -147,7 +148,7 @@ export default function Home({
           </motion.div>
         </div>
       </div>
-      <div className="flex flex-col home-center mt-14 mb-10 xl:mt-16 md:px-20xl:px-24 w-full">
+      <div className="flex flex-col home-center mb-10 xl:mt-16 md:px-20xl:px-24 w-full">
         <Divider />
         <h1 className="text-3xl lg:text-7xl text-grey font-bold mt-5">
           Featured

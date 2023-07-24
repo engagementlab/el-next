@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Variants, motion } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
@@ -6,12 +7,12 @@ import { CTAButton } from '@/components/Buttons';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { Theme } from '@/types';
 import { Parallax } from 'react-scroll-parallax';
-import { useState, useRef, useEffect } from 'react';
 import { Image, Query } from '@el-next/components';
 import Divider from '@/components/Divider';
 import { InferGetStaticPropsType } from 'next';
 import BleedImage from '@/components/BleedImage';
 import { Icons } from '@/components/Icons';
+import Player from '@vimeo/player';
 
 type News = {
   title: string;
@@ -30,7 +31,7 @@ type News = {
   thumbAltText: string;
 };
 type Home = {
-  newsItem: News;
+  newsItem?: News;
 };
 
 export default function Home({
@@ -40,10 +41,29 @@ export default function Home({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [targetElement, setTarget] = useState();
+  const [bgTargetElement, setBgVideo] = useState();
   const targetRef = useRef();
+  const bgVideoRef = useRef();
   useEffect(() => {
     setTarget(targetRef.current);
   }, [targetRef]);
+
+  useEffect(() => {
+    setBgVideo(bgVideoRef.current);
+    // debugger;
+    // if (bgVideoRef.current) {
+    const player = new Player('video-bg', {
+      id: 846665267,
+      width: 1640,
+      controls: false,
+      autoplay: true,
+      autopause: true,
+      muted: true,
+      loop: true,
+      responsive: true,
+    });
+    // }
+  }, [bgVideoRef]);
 
   const cardVariants: Variants = {
     offscreen: {
@@ -65,15 +85,12 @@ export default function Home({
     <Layout
       topBgElement={
         <div className="relative md:mx-16">
-          <Image
-            id="home-top-bg"
-            alt="Photo of Boston skyline"
-            imgId="elab-home-v3.x/home.jpg"
-            width={1640}
+          <div
+            id="video-bg"
+            ref={bgTargetElement}
             className="absolute top-0 h-screen w-full"
-            transforms="o_30"
-          />
-          <div className="absolute top-0 h-screen w-full bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]"></div>
+          ></div>
+          <div className="absolute top-0 h-screen w-full bg-gradient-to-b from-[#EFC3C0] via-[#CDE6E1] to-[#F4E3C5] opacity-80"></div>
         </div>
       }
       error={error}
@@ -81,10 +98,7 @@ export default function Home({
       <div
         className={`flex flex-col max-h-screen home-center overflow-y-scroll no-scrollbar`}
       >
-        <div
-          className=" min-h-[300vh] w-full relative text-3xl"
-          ref={targetElement}
-        >
+        <div className="w-full relative text-3xl" ref={targetElement}>
           <motion.div
             className=" flex home-center"
             // initial="offscreen"

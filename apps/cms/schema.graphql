@@ -796,7 +796,6 @@ type ResearchProject {
   buttons: JSON
   shortDescription: String
   blurb: ResearchProject_blurb_Document
-  websiteURL: String
   content: ResearchProject_content_Document
   partners(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
   partnersCount(where: PartnerWhereInput! = {}): Int
@@ -838,7 +837,6 @@ input ResearchProjectWhereInput {
   headingImageAltText: StringFilter
   headingText: StringFilter
   shortDescription: StringFilter
-  websiteURL: StringFilter
   partners: PartnerManyRelationFilter
   projectLeads: PersonManyRelationFilter
   contact: StringFilter
@@ -872,7 +870,6 @@ input ResearchProjectOrderByInput {
   headingImageAltText: OrderDirection
   headingText: OrderDirection
   shortDescription: OrderDirection
-  websiteURL: OrderDirection
   contact: OrderDirection
 }
 
@@ -891,7 +888,6 @@ input ResearchProjectUpdateInput {
   buttons: JSON
   shortDescription: String
   blurb: JSON
-  websiteURL: String
   content: JSON
   partners: PartnerRelateToManyForUpdateInput
   projectLeads: PersonRelateToManyForUpdateInput
@@ -940,7 +936,6 @@ input ResearchProjectCreateInput {
   buttons: JSON
   shortDescription: String
   blurb: JSON
-  websiteURL: String
   content: JSON
   partners: PartnerRelateToManyForCreateInput
   projectLeads: PersonRelateToManyForCreateInput

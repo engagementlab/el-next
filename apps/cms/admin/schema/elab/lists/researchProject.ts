@@ -115,15 +115,6 @@ const ResearchProject: Lists.ResearchProject = list({
         description: 'Appears when item is featured.',
       },
     }),
-    websiteURL: text({
-      // validation: {
-      //   match: {
-      //     regex:
-      //       /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
-      //     explanation: 'Not a valid URL',
-      //   },
-      // },
-    }),
     content: document({
       formatting: true,
       dividers: true,

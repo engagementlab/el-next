@@ -552,6 +552,7 @@ function embedField({
         window.location.protocol === 'https:'
           ? '/api'
           : 'http://localhost:8000';
+      const embedValue = value as EmbedMetadata[0];
       return (
         <FieldContainer>
           <TextField
@@ -561,7 +562,7 @@ function embedField({
             rows={1}
             label="Paste URL to Embed here."
             variant="standard"
-            value={value && !editUrl ? value.open_graph?.url : null}
+            value={embedValue && !editUrl ? embedValue.open_graph?.url : null}
             onChange={(e) => {
               useStore.setState({
                 editUrl: true,
@@ -607,6 +608,8 @@ function embedField({
     },
   };
 }
+
+const defaultHtmlEmbedValue = 'Use this instead of embedding URL';
 
 export const componentBlocks = {
   image: component({
@@ -879,15 +882,24 @@ export const componentBlocks = {
   embed: component({
     preview: (props) => {
       const embed = props.fields.embed.value as EmbedMetadata[0];
-      if (embed.oEmbed)
+      if (embed.oEmbed || props.fields.html.value) {
+        const html =
+          embed.oEmbed?.html ||
+          (props.fields.html.value === defaultHtmlEmbedValue
+            ? ''
+            : props.fields.html.value.replace(
+                '"></iframe>',
+                "\" style='max-width: 150px;'></iframe>"
+              ));
         return (
           <div
+            style={{ maxWidth: '150px' }}
             dangerouslySetInnerHTML={{
-              __html: embed.oEmbed.html as string,
+              __html: html as string,
             }}
           />
         );
-      else if (
+      } else if (
         embed.twitter_card?.players &&
         embed.twitter_card?.players?.length > 0
       )
@@ -907,7 +919,7 @@ export const componentBlocks = {
         return <div>{Object.keys(props.fields.embed.value).join('; ')} </div>;
       // <div>{props.fields.embed.value[0].embed.title}</div>;
     },
-    label: 'Embed a URL',
+    label: 'Embed',
     schema: {
       embed: embedField({
         label: 'Embed a URL',
@@ -916,6 +928,10 @@ export const componentBlocks = {
             title: 'Embed a URL',
           },
         },
+      }),
+      html: fields.text({
+        label: 'Embed HTML',
+        defaultValue: defaultHtmlEmbedValue,
       }),
     },
   }),

@@ -4,7 +4,6 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { useRouter } from 'next/router';
-import { useSearchParams } from 'next/navigation';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Button, Image, Query, Video } from '@el-next/components';
 
@@ -20,7 +19,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { Logos } from '@/components/Logos';
 import { useEffect } from 'react';
 import Divider from '@/components/Divider';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion, useCycle } from 'framer-motion';
 import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 
@@ -114,9 +113,11 @@ export default function Studio({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { toggle, currentSemester } = useStore((state) => state);
+
   const selectedSemester = item?.semesters.find(
     (semester) => semester.key === currentSemester
   );
+  const [semestersNavOpen, toggleMenuHover] = useCycle(false, true);
   const router = useRouter();
 
   // Alter URL on semester change
@@ -136,8 +137,10 @@ export default function Studio({
       Object.keys(router.query).length === 2
         ? Object.keys(router.query)[1]
         : '';
-    if (preSelectedSemester !== '' && currentSemester === '')
-      toggle(preSelectedSemester);
+    if (currentSemester === '') {
+      if (item?.semesters.length === 1) toggle(item?.semesters[0].key);
+      else if (preSelectedSemester !== '') toggle(preSelectedSemester);
+    }
   });
   return (
     <Layout
@@ -147,20 +150,75 @@ export default function Studio({
       {item && (
         <>
           <h1>{item.name}</h1>
-          {item.semesters.map((se) => {
-            return (
-              <a
-                href="#"
-                onClick={(e) => {
-                  toggle(se.key);
-                  e.preventDefault();
+          <div>
+            <div
+              className={`relative z-10 border-l-[1px] border-r-[1px] border-t-[1px] border-purple w-4/5 h-[67px] ${
+                !semestersNavOpen && 'border-b-[1px]'
+              }`}
+            >
+              <button
+                className={`absolute z-10 mt-2 ml-2 mr-2 pb-2 pr-2 w-full uppercase text-purple font-extrabold border-l-[1px] border-r-[1px] border-t-[1px] border-purple ${
+                  !semestersNavOpen && 'border-b-[1px]'
+                }`}
+                onClick={() => {
+                  toggleMenuHover();
                 }}
-                key={se.key}
               >
-                {se.name}
-              </a>
-            );
-          })}
+                <div className="flex items-center justify-between bg-gradient-to-b from-[#E2BDFE] to-[#ecd0fe] p-2 w-full">
+                  <span>Show options</span>
+                  <svg
+                    className={`fill-purple transition-transform ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
+                      semestersNavOpen && 'rotate-180'
+                    }`}
+                    height="40"
+                    viewBox="0 -960 960 960"
+                    width="40"
+                  >
+                    <path d="M480-360 280-559h400L480-360Z" />
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {semestersNavOpen && (
+                <motion.div
+                  className="relative border-l-[1px] border-r-[1px] border-b-[1px] border-purple w-4/5 -top-1/2 opacity-0"
+                  animate={{
+                    opacity: 1,
+                    top: 0,
+                    transition: { ease: 'easeOut', duration: 0.3 },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    top: -40,
+                    transition: { duration: 0.3 },
+                  }}
+                >
+                  <ul className="w-full uppercase text-purple border-l-[1px] border-r-[1px] border-b-[1px] border-purple ml-2 mb-2">
+                    {item.semesters.map((se) => {
+                      return (
+                        <li>
+                          <p className="p-2 block text-black hover:bg-grey-light cursor-pointer">
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                toggle(se.key);
+                                e.preventDefault();
+                              }}
+                              key={se.key}
+                            >
+                              {se.name}
+                            </a>
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           {selectedSemester && (
             <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <h2 className="uppercase text-blue">Course Information</h2>

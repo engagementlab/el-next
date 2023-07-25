@@ -1,8 +1,8 @@
 ## Static configuration
-log:
+# log:
   # level: WARN
   # level: INFO
-  level: DEBUG
+  # level: DEBUG
 accessLog: {}
 
 entryPoints:

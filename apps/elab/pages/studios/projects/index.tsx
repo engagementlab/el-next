@@ -383,7 +383,7 @@ export async function getStaticProps() {
       props: {
         error: filters.error,
         studioProjects: null,
-        filtersGrouped: null,
+        filters: null,
       },
     };
   }
@@ -415,7 +415,7 @@ export async function getStaticProps() {
       props: {
         error: studioProjects.error,
         studioProjects: null,
-        filtersGrouped: null,
+        filters: null,
       },
     };
   }

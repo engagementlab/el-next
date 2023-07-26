@@ -34,6 +34,7 @@ module.exports = {
       slate: '#444444',
       white: '#FFF',
       yellow: '#F6A536',
+      teal: '#00A494',
     },
   },
 

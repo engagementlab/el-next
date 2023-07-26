@@ -372,13 +372,14 @@ function imageSelect({
             <Script src="https://cdn.tailwindcss.com/3.3.0" />
             <Script>
               {`
-          if(tailwind) {
-            tailwind.config = {
-              corePlugins: {
-                preflight: false,
-              },        
-            }
-        }`}
+                if(typeof tailwind !== "undefined") {
+                  tailwind.config = {
+                    corePlugins: {
+                      preflight: false,
+                    },        
+                  }
+                }
+              `}
             </Script>
           </>
           Click <em>Done</em> for image preview.
@@ -915,8 +916,7 @@ export const componentBlocks = {
         );
       else if (props.fields.embed && props.fields.embed['value']['title'])
         return <>{props.fields.embed['value']['title']}</>;
-      else
-        return <div>{Object.keys(props.fields.embed.value).join('; ')} </div>;
+      else return <div>No data! </div>;
       // <div>{props.fields.embed.value[0].embed.title}</div>;
     },
     label: 'Embed',

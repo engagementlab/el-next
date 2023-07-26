@@ -198,7 +198,6 @@ model StudioProject {
   partners         Json                        @default("[]")
   coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  videos           Json?
   team             Person[]                    @relation("Person_projectTeam")
   semester         Semester[]                  @relation("Semester_projects")
 }

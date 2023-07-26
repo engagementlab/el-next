@@ -1355,7 +1355,6 @@ type StudioProject {
   partners: [StudioProjectPartnerType!]
   coCreation: StudioProject_coCreation_Document
   impact: StudioProject_impact_Document
-  videos: JSON
   team(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   teamCount(where: PersonWhereInput! = {}): Int
   semester(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
@@ -1453,7 +1452,6 @@ input StudioProjectUpdateInput {
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
-  videos: JSON
   team: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
 }
@@ -1479,7 +1477,6 @@ input StudioProjectCreateInput {
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
-  videos: JSON
   team: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
 }

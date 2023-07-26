@@ -78,13 +78,13 @@ const TailwindCdnScript = () => {
       <Script src="https://cdn.tailwindcss.com/3.3.0" />
       <Script>
         {`
-              if(tailwind) {
-                tailwind.config = {
-                  corePlugins: {
-                    preflight: false,
-                  },        
-                }
-              }`}
+          if(typeof tailwind !== "undefined") {
+            tailwind.config = {
+              corePlugins: {
+                preflight: false,
+              },        
+            }
+          }`}
       </Script>
     </>
   );

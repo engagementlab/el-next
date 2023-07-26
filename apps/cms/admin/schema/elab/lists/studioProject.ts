@@ -1,4 +1,4 @@
-import { list } from '@keystone-6/core';
+import { group, list } from '@keystone-6/core';
 import {
   checkbox,
   json,
@@ -133,19 +133,15 @@ const StudioProject: Lists.MediaItem = list({
       label: 'Impact Beyond the Studio',
       componentBlocks,
     }),
-    videos: json({
-      ui: {
-        views: path.join(
-          process.cwd(),
-          '/admin/components/video/components.tsx'
-        ),
-        // createView: { fieldMode: 'edit' },
-        // listView: { fieldMode: 'hidden' },
-        // itemView: { fieldMode: 'edit' },
-      },
-    }),
-    // file: azureStorageFile({ azureStorageConfig: azConfig, label: 'PDF' }),
-
+    // ...group({
+    //   label: 'Images',
+    //   description: 'Project thumbnail and header image',
+    //   fields: { impactLinks: json({
+    //   ui: {
+    //     views: path.join(
+    //       process.cwd(),
+    //       '/admin/components/video/components.tsx'
+    //     ),}})}}),
     team: relationship({
       ref: 'Person.projectTeam',
       many: true,

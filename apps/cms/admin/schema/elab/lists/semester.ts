@@ -52,7 +52,7 @@ const Semester: Lists.Semester = list({
       type: 'enum',
       options: [
         { label: 'Current', value: 'current' },
-        { label: 'upcoming', value: 'upcoming' },
+        { label: 'Upcoming', value: 'upcoming' },
       ],
       ui: {
         displayMode: 'segmented-control',

@@ -18,6 +18,7 @@ model About {
   intro               String @default("")
   headingImage        Json?
   headingImageAltText String @default("")
+  headingImageCaption String @default("")
   content             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 

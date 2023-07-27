@@ -8,6 +8,7 @@ type About {
   intro: String
   headingImage: CloudinaryImage_File
   headingImageAltText: String
+  headingImageCaption: String
   content: About_content_Document
 }
 
@@ -78,6 +79,7 @@ input AboutWhereInput {
   key: StringFilter
   intro: StringFilter
   headingImageAltText: StringFilter
+  headingImageCaption: StringFilter
 }
 
 input IDFilter {
@@ -131,6 +133,7 @@ input AboutOrderByInput {
   key: OrderDirection
   intro: OrderDirection
   headingImageAltText: OrderDirection
+  headingImageCaption: OrderDirection
 }
 
 enum OrderDirection {
@@ -144,6 +147,7 @@ input AboutUpdateInput {
   intro: String
   headingImage: Upload
   headingImageAltText: String
+  headingImageCaption: String
   content: JSON
 }
 
@@ -161,6 +165,7 @@ input AboutCreateInput {
   intro: String
   headingImage: Upload
   headingImageAltText: String
+  headingImageCaption: String
   content: JSON
 }
 

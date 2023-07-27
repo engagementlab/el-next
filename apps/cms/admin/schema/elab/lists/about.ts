@@ -55,9 +55,10 @@ const About: Lists.About = list({
       label: 'Heading Image Alt Text ♿',
       ui: { description: 'Describe appearance of Heading Image.' },
     }),
+    headingImageCaption: text(),
     content: document({
       formatting: {
-        headingLevels: [3, 4],
+        headingLevels: [2, 3],
         inlineMarks: true,
         listTypes: true,
         alignment: true,
@@ -74,6 +75,7 @@ const About: Lists.About = list({
         [1, 2, 1],
       ],
       ui: {
+        description: 'For section headers, please use the Heading 2 style.',
         views: './admin/components/component-blocks',
       },
       componentBlocks,

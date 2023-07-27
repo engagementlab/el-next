@@ -7,14 +7,10 @@ var flexLayout = require('@el-next/components/flexLayout');
 var headingStyle = require('@el-next/components/headingStyle');
 var jsxRuntime = require('react/jsx-runtime');
 
-/**
- * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022-2023
- *
- * @author Johnny Richardson
- * KeystoneJS document field renderers
- * ==========
- */
+function _objectDestructuringEmpty(obj) {
+  if (obj == null) throw new TypeError("Cannot destructure " + obj);
+}
+
 var DocRenderers = function DocRenderers(styles) {
   /**
    * @see https://keystonejs.com/docs/guides/document-fields#overriding-the-default-renderers
@@ -69,6 +65,18 @@ var DocRenderers = function DocRenderers(styles) {
         blockquote: function blockquote(_ref5) {
           var children = _ref5.children;
           return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.quote ? renderOverrides.quote(children) : /*#__PURE__*/jsxRuntime.jsx("p", {
+            children: children
+          });
+        },
+        divider: function divider(_ref6) {
+          _objectDestructuringEmpty(_ref6);
+          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.divider ? renderOverrides.divider() : /*#__PURE__*/jsxRuntime.jsx("hr", {
+            className: "border-black"
+          });
+        },
+        paragraph: function paragraph(_ref7) {
+          var children = _ref7.children;
+          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.paragraph ? renderOverrides.paragraph(children) : /*#__PURE__*/jsxRuntime.jsx("p", {
             children: children
           });
         }

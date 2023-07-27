@@ -26,17 +26,18 @@ export const BlockRenderers = (styles?: { buttonClass?: string }) => {
    * @param {JSX.Element} [imageOveride] - optional app-globalized tailwindcss classes to all blocks
    * @returns {function}
    */
-  return (
-    imageOveride?: { (props: any): JSX.Element },
-    peopleOveride?: { (peopleProps: any): JSX.Element }
-  ) => {
+  return (blockOverrides: {
+    imageOverride?: { (props: any): JSX.Element };
+    peopleOverride?: { (peopleProps: any): JSX.Element };
+    buttonOverride?: { (props: any): JSX.Element };
+  }) => {
     let blocks = {
       image: (props: any) => {
         const publicId = props.image.publicId || props.image.image.publicId;
         const alt = props.image.alt || props.image.image?.alt;
 
-        return imageOveride ? (
-          imageOveride(props)
+        return blockOverrides.imageOverride ? (
+          blockOverrides.imageOverride(props)
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Image
@@ -59,7 +60,9 @@ export const BlockRenderers = (styles?: { buttonClass?: string }) => {
         );
       },
       button: (props: any) => {
-        return (
+        return blockOverrides.buttonOverride ? (
+          blockOverrides.buttonOverride(props)
+        ) : (
           <Link href={props.link.props.node.children[0].text} passHref>
             <button
               className={`block lg:inline-block transition-all uppercase whitespace-nowrap ${
@@ -77,8 +80,8 @@ export const BlockRenderers = (styles?: { buttonClass?: string }) => {
         return <span id={props.anchorId.props.node.children[0].text}></span>;
       },
       associatedPeople: (props: any) => {
-        return peopleOveride ? (
-          peopleOveride(props)
+        return blockOverrides.peopleOverride ? (
+          blockOverrides.peopleOverride(props)
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p>ppl</p>

@@ -16,7 +16,11 @@
  */
 export declare const BlockRenderers: (styles?: {
     buttonClass?: string;
-}) => (imageOveride?: (props: any) => JSX.Element, peopleOveride?: (peopleProps: any) => JSX.Element) => {
+}) => (blockOverrides: {
+    imageOverride?: (props: any) => JSX.Element;
+    peopleOverride?: (peopleProps: any) => JSX.Element;
+    buttonOverride?: (props: any) => JSX.Element;
+}) => {
     image: (props: any) => JSX.Element;
     video: (props: any) => JSX.Element;
     button: (props: any) => JSX.Element;

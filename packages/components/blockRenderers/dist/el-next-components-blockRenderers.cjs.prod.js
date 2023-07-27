@@ -31,13 +31,13 @@ var BlockRenderers = function BlockRenderers(styles) {
    * @param {JSX.Element} [imageOveride] - optional app-globalized tailwindcss classes to all blocks
    * @returns {function}
    */
-  return function (imageOveride, peopleOveride) {
+  return function (blockOverrides) {
     var blocks = {
       image: function image(props) {
         var _props$image$image;
         var publicId = props.image.publicId || props.image.image.publicId;
         var alt = props.image.alt || ((_props$image$image = props.image.image) === null || _props$image$image === void 0 ? void 0 : _props$image$image.alt);
-        return imageOveride ? imageOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
+        return blockOverrides.imageOverride ? blockOverrides.imageOverride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
           style: {
             display: 'flex',
             flexDirection: 'column'
@@ -58,7 +58,7 @@ var BlockRenderers = function BlockRenderers(styles) {
         });
       },
       button: function button(props) {
-        return /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
+        return blockOverrides.buttonOverride ? blockOverrides.buttonOverride(props) : /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
           href: props.link.props.node.children[0].text,
           passHref: true,
           children: /*#__PURE__*/jsxRuntime.jsx("button", {
@@ -73,7 +73,7 @@ var BlockRenderers = function BlockRenderers(styles) {
         });
       },
       associatedPeople: function associatedPeople(props) {
-        return peopleOveride ? peopleOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
+        return blockOverrides.peopleOverride ? blockOverrides.peopleOverride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
           style: {
             display: 'flex',
             flexDirection: 'column'

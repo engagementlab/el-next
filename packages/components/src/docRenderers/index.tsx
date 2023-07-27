@@ -30,6 +30,8 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
     link?: Function;
     bold?: Function;
     quote?: Function;
+    divider?: Function;
+    paragraph?: Function;
   }): DocumentRendererProps['renderers'] => {
     let blocks: DocumentRendererProps['renderers'] = {
       inline: {
@@ -83,6 +85,20 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
         blockquote: ({ children }) => {
           return renderOverrides?.quote ? (
             renderOverrides.quote(children)
+          ) : (
+            <p>{children}</p>
+          );
+        },
+        divider: ({}) => {
+          return renderOverrides?.divider ? (
+            renderOverrides.divider()
+          ) : (
+            <hr className="border-black" />
+          );
+        },
+        paragraph: ({ children }) => {
+          return renderOverrides?.paragraph ? (
+            renderOverrides.paragraph(children)
           ) : (
             <p>{children}</p>
           );

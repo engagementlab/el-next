@@ -4,6 +4,16 @@ import { Global, css } from '@emotion/core';
 
 // admin/config.tsx
 function CustomLogo() {
+  // @ts-ignore
+  if (typeof tailwind !== 'undefined') {
+    // @ts-ignore
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      },
+    };
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <Global

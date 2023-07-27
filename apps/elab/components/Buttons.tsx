@@ -16,7 +16,11 @@ type Props = {
   theme?: Theme;
 };
 const themeConfig = [
-  {},
+  {
+    arrow: '#00A494',
+    hover:
+      'drop-shadow-[2px_3px_0px_#BBEBE7] text-teal border-teal drop-shadow-teal hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
+  },
   {
     arrow: ThemeColors[1].primaryHex,
     hover:

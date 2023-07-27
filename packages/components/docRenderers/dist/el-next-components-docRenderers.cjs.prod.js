@@ -65,6 +65,12 @@ var DocRenderers = function DocRenderers(styles) {
             layout: _layout,
             children: children
           });
+        },
+        blockquote: function blockquote(_ref5) {
+          var children = _ref5.children;
+          return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.quote ? renderOverrides.quote(children) : /*#__PURE__*/jsxRuntime.jsx("p", {
+            children: children
+          });
         }
       }
     };

@@ -29,6 +29,7 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
     layout?: Function;
     link?: Function;
     bold?: Function;
+    quote?: Function;
   }): DocumentRendererProps['renderers'] => {
     let blocks: DocumentRendererProps['renderers'] = {
       inline: {
@@ -78,6 +79,13 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
           return renderOverrides?.layout
             ? renderOverrides.layout(layout, children)
             : FlexLayout({ layout, children });
+        },
+        blockquote: ({ children }) => {
+          return renderOverrides?.quote ? (
+            renderOverrides.quote(children)
+          ) : (
+            <p>{children}</p>
+          );
         },
       },
     };

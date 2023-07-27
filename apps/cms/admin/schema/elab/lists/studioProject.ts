@@ -85,6 +85,12 @@ const StudioProject: Lists.MediaItem = list({
       },
       ui: { description: 'Displays in project listing under thumbnail.' },
     }),
+    about: document({
+      links: true,
+      ui: {
+        description: 'Appears above Call to Action.',
+      },
+    }),
     buttons: json({
       label: 'Call to Action Buttons',
       ui: {

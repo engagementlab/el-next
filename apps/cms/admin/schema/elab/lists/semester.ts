@@ -151,7 +151,7 @@ const Semester: Lists.Semester = list({
   },
   ui: {
     listView: {
-      initialColumns: ['name'],
+      initialColumns: ['name', 'studio'],
       // initialSort: { field: 'order', direction: 'ASC' },
     },
     label: 'Studio Semester',

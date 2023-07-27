@@ -12,10 +12,13 @@ generator client {
 }
 
 model About {
-  id      String @id @default(cuid())
-  name    String @unique @default("About Page")
-  key     String @default("")
-  content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                  String @id @default(cuid())
+  name                String @unique @default("About Page")
+  key                 String @default("")
+  intro               String @default("")
+  headingImage        Json?
+  headingImageAltText String @default("")
+  content             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model Event {
@@ -193,6 +196,7 @@ model StudioProject {
   thumbnail        Json?
   thumbAltText     String                      @default("")
   shortDescription String                      @default("")
+  about            Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   buttons          Json?
   blurb            Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   partners         Json                        @default("[]")

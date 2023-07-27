@@ -6,6 +6,7 @@ import { Lists } from '.keystone/types';
 import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
 import { CreateKey, FixButtons } from '../../hooks';
+import { cloudinaryImage } from '../../../components/cloudinary';
 
 const About: Lists.About = list({
   access: allowAll,
@@ -33,6 +34,26 @@ const About: Lists.About = list({
           fieldMode: 'hidden',
         },
       },
+    }),
+    intro: text({
+      ui: {
+        displayMode: 'textarea',
+      },
+    }),
+    headingImage: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'elab-home-v3.x/about',
+      },
+    }),
+    headingImageAltText: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Heading Image Alt Text ♿',
+      ui: { description: 'Describe appearance of Heading Image.' },
     }),
     content: document({
       formatting: {

@@ -5,7 +5,59 @@ type About {
   id: ID!
   name: String
   key: String
+  intro: String
+  headingImage: CloudinaryImage_File
+  headingImageAltText: String
   content: About_content_Document
+}
+
+type CloudinaryImage_File {
+  id: ID
+  filename: String
+  originalFilename: String
+  mimetype: String
+  encoding: String
+  publicId: String
+  publicUrl: String
+  publicUrlTransformed(transformation: CloudinaryImageFormat): String
+}
+
+"""
+Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
+All options are strings as they ultimately end up in a URL.
+"""
+input CloudinaryImageFormat {
+  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
+  """
+  prettyName: String
+  width: String
+  height: String
+  crop: String
+  aspect_ratio: String
+  gravity: String
+  zoom: String
+  x: String
+  y: String
+  format: String
+  fetch_format: String
+  quality: String
+  radius: String
+  angle: String
+  effect: String
+  opacity: String
+  border: String
+  background: String
+  overlay: String
+  underlay: String
+  default_image: String
+  delay: String
+  color: String
+  color_space: String
+  dpr: String
+  page: String
+  density: String
+  flags: String
+  transformation: String
 }
 
 type About_content_Document {
@@ -24,6 +76,8 @@ input AboutWhereInput {
   id: IDFilter
   name: StringFilter
   key: StringFilter
+  intro: StringFilter
+  headingImageAltText: StringFilter
 }
 
 input IDFilter {
@@ -75,6 +129,8 @@ input AboutOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
+  intro: OrderDirection
+  headingImageAltText: OrderDirection
 }
 
 enum OrderDirection {
@@ -85,8 +141,14 @@ enum OrderDirection {
 input AboutUpdateInput {
   name: String
   key: String
+  intro: String
+  headingImage: Upload
+  headingImageAltText: String
   content: JSON
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input AboutUpdateArgs {
   where: AboutWhereUniqueInput!
@@ -96,6 +158,9 @@ input AboutUpdateArgs {
 input AboutCreateInput {
   name: String
   key: String
+  intro: String
+  headingImage: Upload
+  headingImageAltText: String
   content: JSON
 }
 
@@ -120,55 +185,6 @@ scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339
 enum EventFlagType {
   home
   section
-}
-
-type CloudinaryImage_File {
-  id: ID
-  filename: String
-  originalFilename: String
-  mimetype: String
-  encoding: String
-  publicId: String
-  publicUrl: String
-  publicUrlTransformed(transformation: CloudinaryImageFormat): String
-}
-
-"""
-Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
-All options are strings as they ultimately end up in a URL.
-"""
-input CloudinaryImageFormat {
-  """ Rewrites the filename to be this pretty string. Do not include `/` or `.`
-  """
-  prettyName: String
-  width: String
-  height: String
-  crop: String
-  aspect_ratio: String
-  gravity: String
-  zoom: String
-  x: String
-  y: String
-  format: String
-  fetch_format: String
-  quality: String
-  radius: String
-  angle: String
-  effect: String
-  opacity: String
-  border: String
-  background: String
-  overlay: String
-  underlay: String
-  default_image: String
-  delay: String
-  color: String
-  color_space: String
-  dpr: String
-  page: String
-  density: String
-  flags: String
-  transformation: String
 }
 
 type Event_blurb_Document {
@@ -252,9 +268,6 @@ input EventUpdateInput {
   blurb: JSON
   content: JSON
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input EventUpdateArgs {
   where: EventWhereUniqueInput!
@@ -1350,6 +1363,7 @@ type StudioProject {
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   shortDescription: String
+  about: StudioProject_about_Document
   buttons: JSON
   blurb: StudioProject_blurb_Document
   partners: [StudioProjectPartnerType!]
@@ -1369,6 +1383,10 @@ enum StudioProjectInitiativeType {
 enum StudioProjectFlagType {
   home
   section
+}
+
+type StudioProject_about_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 type StudioProject_blurb_Document {
@@ -1447,6 +1465,7 @@ input StudioProjectUpdateInput {
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
+  about: JSON
   buttons: JSON
   blurb: JSON
   partners: [StudioProjectPartnerType!]
@@ -1472,6 +1491,7 @@ input StudioProjectCreateInput {
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
+  about: JSON
   buttons: JSON
   blurb: JSON
   partners: [StudioProjectPartnerType!]

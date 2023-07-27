@@ -7,7 +7,7 @@ type Props = {
 };
 export const Logos = ({ all = false, partners }: Props): JSX.Element => {
   return (
-    <div className="grid grid-flow-row grid-cols-6">
+    <div className="flex flex-col w-full items-center">
       {all ||
         (partners.includes('ldbpi') && (
           <Image
@@ -23,7 +23,7 @@ export const Logos = ({ all = false, partners }: Props): JSX.Element => {
           alt="MGH Center for Gun Violence Prevention logo"
           imgId="tngvi/logos/mgh-cgvp"
           width={89}
-          className="aspect-[3/2]"
+          className="aspect-[3/2] mt-1"
         />
       )}
       {(all || partners.includes('magv')) && (
@@ -32,6 +32,7 @@ export const Logos = ({ all = false, partners }: Props): JSX.Element => {
           alt="Massachusetts Coalition to Prevent Gun Violence logo"
           imgId="elab-home-v3.x/logos/magv"
           width={174}
+          className="mt-1"
         />
       )}
       {(all || partners.includes('teenempowerment')) && (

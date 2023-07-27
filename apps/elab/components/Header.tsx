@@ -358,11 +358,6 @@ const Header = ({ theme }: Props): JSX.Element => {
             aria-label="Engagement Lab logo"
             whileHover={{ scale: 1.023 }}
           >
-            {/* <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-    style="enable-background:new 0 0 940.5 447.2;" xml:space="preserve"> */}
-
-            {/* <style type="text/css"> */}
-            {/* .st0{fill:#F72923;} */}
             <g>
               <g>
                 <path

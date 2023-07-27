@@ -5,7 +5,7 @@ import {
 } from 'next';
 import { useRouter } from 'next/router';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, Image, Query, Video } from '@el-next/components';
+import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 
 import _ from 'lodash';
 import { create } from 'zustand';
@@ -17,7 +17,7 @@ import { CTAButton } from '@/components/Buttons';
 import { Partner, Theme } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { Logos } from '@/components/Logos';
-import { useEffect } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import Divider from '@/components/Divider';
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
 import Link from 'next/link';
@@ -90,6 +90,8 @@ type Studio = {
 interface SemestersState {
   currentSemester: string;
   toggle: (semester: string) => void;
+  peopleOpen: boolean[];
+  togglePeople: (i: number) => void;
 }
 let preSelectedSemester = '';
 let preSelectedTheme = Theme.none;
@@ -108,6 +110,18 @@ const useStore = create<SemestersState>()(
           currentSemester: semester,
         };
       }),
+    peopleOpen: [false, false, false, false],
+    togglePeople: (i: number) =>
+      set((state) => {
+        // debugger;
+        return {
+          ...state,
+          peopleOpen: state.peopleOpen.flatMap((section, ind) => {
+            if (ind === i) return !section;
+            return section;
+          }),
+        };
+      }),
   }))
 );
 
@@ -115,7 +129,9 @@ export default function Studio({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { toggle, currentSemester } = useStore((state) => state);
+  const { toggle, currentSemester, togglePeople, peopleOpen } = useStore(
+    (state) => state
+  );
 
   const selectedSemester = item?.semesters.find(
     (semester) => semester.key === currentSemester
@@ -192,7 +208,53 @@ export default function Studio({
       theme: Theme.gunviolence,
     },
   };
-  if (item)
+
+  if (item) {
+    const rendererOverrides = {
+      heading: (level: number, children: ReactNode, textAlign: any) => {
+        const customRenderers = {
+          3: `text-xl font-extrabold uppercase my-4 ${
+            theming[item.initiatives[0]].heading
+          }`,
+        };
+        return HeadingStyle({ level, children, textAlign, customRenderers });
+      },
+      quote: (children: ReactElement[]) => {
+        if (
+          children.length === 2 &&
+          children[0].props.node.type === 'paragraph' &&
+          children[1].props.node.type === 'paragraph'
+        )
+          return (
+            <div className="my-4">
+              <p
+                className={`italic text-sm ${
+                  theming[item.initiatives[0]].text
+                }`}
+              >
+                {children[0].props.node.children[0].text}
+              </p>
+              <p className="text-right">
+                {children[1].props.node.children[0].text}
+              </p>
+            </div>
+          );
+        else
+          return (
+            <p className="bg-red text-white font-bold text-2xl p-4">
+              Quote block error: quotes need to be followed by a full line break
+              before attribution. Example:
+              <br />
+              <code>
+                “This is a long quote.”
+                <br />
+                <br />
+                Name, Title
+              </code>
+            </p>
+          );
+      },
+    };
     return (
       <Layout
         error={error}
@@ -241,9 +303,9 @@ export default function Studio({
                       className={`transition-transform ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
                         semestersNavOpen && 'rotate-180'
                       } ${theming[item.initiatives[0]].fill}`}
-                      height="40"
                       viewBox="0 -960 960 960"
                       width="40"
+                      height="40"
                     >
                       <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
                     </svg>
@@ -254,7 +316,7 @@ export default function Studio({
               <AnimatePresence>
                 {semestersNavOpen && (
                   <motion.div
-                    className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-4/5 -top-1/2 opacity-0 ${
+                    className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full -top-1/2 opacity-0 ${
                       theming[item.initiatives[0]].border
                     }`}
                     animate={{
@@ -382,7 +444,7 @@ export default function Studio({
                       {selectedSemester.courseNumber}
                     </p>
 
-                    <p>
+                    <p className="my-2">
                       <span className="font-bold tracking-wider">
                         INSTRUCTOR:
                       </span>
@@ -392,18 +454,6 @@ export default function Studio({
                         .join(', ')}
                     </p>
                     <p className="my-2">{selectedSemester.description}</p>
-                    <h2
-                      className={`uppercase font-extrabold ${
-                        theming[item.initiatives[0]].heading
-                      }`}
-                    >
-                      {selectedSemester.name} Partners
-                    </h2>
-                    {/* <Logos
-              partners={selectedSemester.partners.map(
-                (i: string) => i as unknown as Partner
-                )}
-              /> */}
                   </div>
                   <div className="w-3/4 lg:w-full mt-6 p-6">
                     <h2
@@ -438,25 +488,39 @@ export default function Studio({
                       `}
                     />
                   </div>
-                  <div id="cocreation">
+                  <div id="cocreation" className="p-6">
+                    <h2 className="font-bold text-2xl my-3">
+                      A Look Inside the Co-Creation Process
+                    </h2>
                     <DocumentRenderer
                       document={selectedSemester.coCreation.document}
                       componentBlocks={Blocks()}
-                      renderers={Doc()}
+                      renderers={Doc(rendererOverrides)}
                     />
                   </div>
 
                   <Divider color={theming[item.initiatives[0]].secodary} />
 
-                  <div id="impact">
+                  <div id="impact" className="p-6">
+                    <h2 className="font-bold text-2xl my-3">
+                      Impact Beyond the Studio
+                    </h2>
                     <DocumentRenderer
                       document={selectedSemester.impact.document}
                       componentBlocks={Blocks()}
-                      renderers={Doc()}
+                      renderers={Doc(rendererOverrides)}
                     />
                   </div>
 
-                  <div className="grid lg:ml-5 lg:grid-cols-2 xl:grid-cols-3 lg:gap-2 xl:gap-3">
+                  <div className="grid lg:ml-5 lg:grid-cols-2 xl:grid-cols-3 lg:gap-2 xl:gap-3 p-6">
+                    <h2
+                      className={`uppercase font-extrabold ${
+                        theming[item.initiatives[0]].heading
+                      }`}
+                    >
+                      {selectedSemester.name} {selectedSemester.type} Studio
+                      Projects
+                    </h2>
                     {selectedSemester.projects.map((project) => (
                       <Link
                         href={`/studios/projects/${project.key}`}
@@ -489,26 +553,100 @@ export default function Studio({
                     ))}
                   </div>
 
-                  <Divider color="bg-[#E3BFFF]" />
-                  <div className="flex flex-wrap my-4">
-                    {selectedSemester.learningPartners.map((person) => (
-                      <div
-                        className="flex flex-col w-1/5 ml-3"
-                        key={`thumb-${person.key}`}
+                  <Divider color={theming[item.initiatives[0]].secodary} />
+                  <div className="p-6">
+                    <h2 className="font-bold text-2xl my-3">
+                      {selectedSemester.name} Studio Participants
+                    </h2>
+                    <div className="flex flex-col flex-wrap my-4">
+                      <hr
+                        className={`border-1 ${
+                          theming[item.initiatives[0]].heading
+                        }`}
+                      />
+                      <h3
+                        className={`text-lg font-medium uppercase my-4 ${
+                          theming[item.initiatives[0]].heading
+                        }`}
                       >
-                        <Image
-                          id={`thumb-${person.key}`}
-                          alt={`Photo of ${person.name}`}
-                          imgId={person.image.publicId}
-                          width={230}
-                          // aspectDefault={true}
-                          transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
-                          className="rounded-full border-4 border-purple"
+                        <button
+                          className="flex items-center uppercase mb-2"
+                          onClick={() => {
+                            togglePeople(0);
+                          }}
+                        >
+                          <p className="uppercase">Learning Partners</p>
+
+                          <svg
+                            className={`transition-transform ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
+                              peopleOpen[0] && 'rotate-180'
+                            }`}
+                            height="40"
+                            viewBox="0 -960 960 960"
+                            width="40"
+                          >
+                            <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
+                          </svg>
+                        </button>
+                        <hr
+                          className={`border-1 ${
+                            theming[item.initiatives[0]].heading
+                          }`}
                         />
-                        <p>{person.name}</p>
-                        <p>{person.title}</p>
-                      </div>
-                    ))}
+                      </h3>
+
+                      <AnimatePresence>
+                        {peopleOpen[0] && (
+                          <motion.div
+                            animate={{
+                              opacity: 1,
+                              top: 0,
+                              transition: { ease: 'easeOut', duration: 0.3 },
+                            }}
+                            exit={{
+                              opacity: 0,
+                              top: -40,
+                              transition: { duration: 0.3 },
+                            }}
+                          >
+                            {selectedSemester.learningPartners.map((person) => (
+                              <div
+                                className="flex flex-col w-full items-center text-center xl:w-1/5 ml-0 xl:ml-3"
+                                key={`thumb-${person.key}`}
+                              >
+                                <Image
+                                  id={`thumb-${person.key}`}
+                                  alt={`Photo of ${person.name}`}
+                                  imgId={person.image.publicId}
+                                  width={230}
+                                  transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
+                                  className={`rounded-full border-4 mt-2 ${
+                                    theming[item.initiatives[0]].border
+                                  }`}
+                                />
+                                <p
+                                  className={`text-lg ${
+                                    theming[item.initiatives[0]].text
+                                  }`}
+                                >
+                                  {person.name}
+                                </p>
+                                <p className="text-sm">{person.title}</p>
+                              </div>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <h2
+                      className={`text-xl font-extrabold uppercase ${
+                        theming[item.initiatives[0]].heading
+                      }`}
+                    >
+                      {selectedSemester.name} Partners
+                    </h2>
+                    <Logos partners={selectedSemester.partners} />
                   </div>
                 </motion.div>
               )}
@@ -517,6 +655,7 @@ export default function Studio({
         )}
       </Layout>
     );
+  }
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {

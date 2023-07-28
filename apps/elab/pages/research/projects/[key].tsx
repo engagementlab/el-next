@@ -17,7 +17,7 @@ import { Blocks, Doc } from '../../../components/Renderers';
 import { CTAButton } from '@/components/Buttons';
 import { Partner, Theme } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { Logos } from '@/components/Logos';
+import Logos from '@/components/Logos';
 import { useEffect } from 'react';
 import Divider from '@/components/Divider';
 import { motion } from 'framer-motion';

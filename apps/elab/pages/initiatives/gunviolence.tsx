@@ -9,7 +9,7 @@ import { CTAButton, MoreButton } from '@/components/Buttons';
 import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
 import Link from 'next/link';
-import { Logos } from '@/components/Logos';
+import Logos from '@/components/Logos';
 
 type AboutPage = {
   intro: string;

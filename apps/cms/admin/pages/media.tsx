@@ -118,7 +118,7 @@ export default function Media() {
   const app =
     window.location.protocol === 'https:'
       ? window.location.pathname.replace('/', '').split('/')[0]
-      : 'elab';
+      : 'elab-home-v3.x';
 
   const endpointPrefix =
     window.location.protocol === 'https:' ? '/api' : 'http://localhost:8000';
@@ -285,7 +285,7 @@ export default function Media() {
         try {
           var formData = new FormData();
           formData.append('img', reader.result as string);
-          formData.append('app', app);
+          formData.append('app', app === 'elab' ? 'elab-home-v3.x' : app);
           formData.append('folder', selectedTargetFolder as string);
 
           var xhr = new XMLHttpRequest();

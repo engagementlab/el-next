@@ -198,12 +198,20 @@ export default function AboutPage({
                 </div>
               </div>
               <div className="max-w-lg">
-                <CaptionedImage
-                  imgId={item.headingImage.publicId}
-                  alt={item.headingImageAltText}
-                  caption={item.headingImageCaption}
-                  themeColor="bg-teal"
-                />
+                {item.headingImage ? (
+                  <CaptionedImage
+                    imgId={item.headingImage.publicId}
+                    alt={item.headingImageAltText}
+                    caption={item.headingImageCaption}
+                    themeColor="bg-teal"
+                  />
+                ) : (
+                  <ImagePlaceholder
+                    imageLabel="Header"
+                    width={800}
+                    height={800}
+                  />
+                )}
               </div>
             </div>
 

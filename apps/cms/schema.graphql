@@ -5,11 +5,15 @@ type About {
   id: ID!
   name: String
   key: String
-  intro: String
+  intro: About_intro_Document
   headingImage: CloudinaryImage_File
   headingImageAltText: String
   headingImageCaption: String
   content: About_content_Document
+}
+
+type About_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 type CloudinaryImage_File {
@@ -77,7 +81,6 @@ input AboutWhereInput {
   id: IDFilter
   name: StringFilter
   key: StringFilter
-  intro: StringFilter
   headingImageAltText: StringFilter
   headingImageCaption: StringFilter
 }
@@ -131,7 +134,6 @@ input AboutOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
-  intro: OrderDirection
   headingImageAltText: OrderDirection
   headingImageCaption: OrderDirection
 }
@@ -144,7 +146,7 @@ enum OrderDirection {
 input AboutUpdateInput {
   name: String
   key: String
-  intro: String
+  intro: JSON
   headingImage: Upload
   headingImageAltText: String
   headingImageCaption: String
@@ -162,7 +164,7 @@ input AboutUpdateArgs {
 input AboutCreateInput {
   name: String
   key: String
-  intro: String
+  intro: JSON
   headingImage: Upload
   headingImageAltText: String
   headingImageCaption: String

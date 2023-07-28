@@ -15,7 +15,7 @@ model About {
   id                  String @id @default(cuid())
   name                String @unique @default("About Page")
   key                 String @default("")
-  intro               String @default("")
+  intro               Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   headingImage        Json?
   headingImageAltText String @default("")
   headingImageCaption String @default("")

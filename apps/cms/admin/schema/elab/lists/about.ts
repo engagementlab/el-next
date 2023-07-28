@@ -35,10 +35,8 @@ const About: Lists.About = list({
         },
       },
     }),
-    intro: text({
-      ui: {
-        displayMode: 'textarea',
-      },
+    intro: document({
+      links: true,
     }),
     headingImage: cloudinaryImage({
       cloudinary: {

@@ -5,18 +5,17 @@ type Props = {
   all?: boolean;
   partners: string[];
 };
-export const Logos = ({ all = false, partners }: Props): JSX.Element => {
+const Logos = ({ all = false, partners }: Props): JSX.Element => {
   return (
-    <div className="flex flex-col w-full items-center">
-      {all ||
-        (partners.includes('ldbpi') && (
-          <Image
-            id="ldpni-logo"
-            alt="Louis D. Brown Peace Institute (LDBPI) logo"
-            imgId="tngvi/logos/ldpi"
-            width={86}
-          />
-        ))}
+    <div className="flex flex-col lg:flex-row w-full items-center">
+      {(all || partners.includes('ldbpi')) && (
+        <Image
+          id="ldpni-logo"
+          alt="Louis D. Brown Peace Institute (LDBPI) logo"
+          imgId="tngvi/logos/ldpi"
+          width={86}
+        />
+      )}
       {(all || partners.includes('mgh')) && (
         <Image
           id="mgh-logo"
@@ -77,3 +76,4 @@ export const Logos = ({ all = false, partners }: Props): JSX.Element => {
     </div>
   );
 };
+export default Logos;

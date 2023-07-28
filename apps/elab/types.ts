@@ -33,7 +33,12 @@ export const enum Theme {
   incarceration,
 }
 export const ThemeColors = [
-  {},
+  {
+    primary: 'text-purple border-purple',
+    primaryHex: '#7C4E9F',
+    secondary: 'text-teal fill-teal',
+    secondaryHex: '#00a494',
+  },
   {
     primary: 'text-purple border-purple',
     primaryHex: '#7C4E9F',

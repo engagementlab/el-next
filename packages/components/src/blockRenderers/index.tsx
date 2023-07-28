@@ -39,15 +39,12 @@ export const BlockRenderers = (styles?: { buttonClass?: string }) => {
         return blockOverrides.imageOverride ? (
           blockOverrides.imageOverride(props)
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Image
-              id={'img-' + publicId}
-              alt={alt || ''}
-              imgId={publicId}
-              aspectDefault={true}
-            />
-            {/* <p>{props.image.data.caption}</p> */}
-          </div>
+          <Image
+            id={'img-' + publicId}
+            alt={alt || ''}
+            imgId={publicId}
+            aspectDefault={true}
+          />
         );
       },
       video: (props: any) => {

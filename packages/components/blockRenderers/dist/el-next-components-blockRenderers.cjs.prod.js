@@ -37,17 +37,11 @@ var BlockRenderers = function BlockRenderers(styles) {
         var _props$image$image;
         var publicId = props.image.publicId || props.image.image.publicId;
         var alt = props.image.alt || ((_props$image$image = props.image.image) === null || _props$image$image === void 0 ? void 0 : _props$image$image.alt);
-        return blockOverrides.imageOverride ? blockOverrides.imageOverride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
-          style: {
-            display: 'flex',
-            flexDirection: 'column'
-          },
-          children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
-            id: 'img-' + publicId,
-            alt: alt || '',
-            imgId: publicId,
-            aspectDefault: true
-          })
+        return blockOverrides.imageOverride ? blockOverrides.imageOverride(props) : /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
+          id: 'img-' + publicId,
+          alt: alt || '',
+          imgId: publicId,
+          aspectDefault: true
         });
       },
       video: function video(props) {

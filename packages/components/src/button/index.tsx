@@ -66,14 +66,14 @@ export const Button = ({
   const classStr = `${margin ? margin : `my-10`} hover:bg-[${
     hoverColor ? hoverColor : '#ab45f8'
   }] hover:scale-105 inline-block rounded-full px-10 py-7 uppercase bg-purple text-white transition-all duration-700 ${className}`;
-  const anchorClassStr = `inline-flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-sm lg:text-lg mt-3 font-semibold ${className}`;
+  const anchorClassStr = `flex items-start transition-all font-bold duration-700 group text-sm lg:text-lg mt-3 font-semibold ${className}`;
   if (anchorId) {
     return (
       <button
         className={classOverride || anchorClassStr}
         onClick={() => scrollTo(anchorId)}
       >
-        <div className="lg:flex items-center">
+        <div className="lg:inline-flex items-center overflow-hidden">
           <svg
             width="17"
             height="17"
@@ -82,9 +82,11 @@ export const Button = ({
           >
             <path d="M24 22h-24l12-20z" />
           </svg>
-          <span>{label}</span>
+          <span className="">
+            {label}
+            <hr className="transition-all w-[150%] border-b-2  group-hover:-translate-x-[25px] hidden lg:block" />
+          </span>
         </div>
-        <hr className="transition-all w-full border-b-2 translate-x-[25px] group-hover:translate-x-0 hidden lg:block" />
       </button>
     );
   }

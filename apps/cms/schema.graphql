@@ -668,8 +668,14 @@ type Person {
   studioStudentsCount(where: SemesterWhereInput! = {}): Int
   studioStaff(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   studioStaffCount(where: SemesterWhereInput! = {}): Int
-  projectTeam(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectTeamCount(where: StudioProjectWhereInput! = {}): Int
+  projectStudents(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectStudentsCount(where: StudioProjectWhereInput! = {}): Int
+  projectPartners(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectPartnersCount(where: StudioProjectWhereInput! = {}): Int
+  projectInstructors(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectInstructorsCount(where: StudioProjectWhereInput! = {}): Int
+  projectStaff(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectStaffCount(where: StudioProjectWhereInput! = {}): Int
   researchLeads(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchLeadsCount(where: ResearchProjectWhereInput! = {}): Int
 }
@@ -699,7 +705,10 @@ input PersonWhereInput {
   learningPartners: SemesterManyRelationFilter
   studioStudents: SemesterManyRelationFilter
   studioStaff: SemesterManyRelationFilter
-  projectTeam: StudioProjectManyRelationFilter
+  projectStudents: StudioProjectManyRelationFilter
+  projectPartners: StudioProjectManyRelationFilter
+  projectInstructors: StudioProjectManyRelationFilter
+  projectStaff: StudioProjectManyRelationFilter
   researchLeads: ResearchProjectManyRelationFilter
 }
 
@@ -760,7 +769,10 @@ input PersonUpdateInput {
   learningPartners: SemesterRelateToManyForUpdateInput
   studioStudents: SemesterRelateToManyForUpdateInput
   studioStaff: SemesterRelateToManyForUpdateInput
-  projectTeam: StudioProjectRelateToManyForUpdateInput
+  projectStudents: StudioProjectRelateToManyForUpdateInput
+  projectPartners: StudioProjectRelateToManyForUpdateInput
+  projectInstructors: StudioProjectRelateToManyForUpdateInput
+  projectStaff: StudioProjectRelateToManyForUpdateInput
   researchLeads: ResearchProjectRelateToManyForUpdateInput
 }
 
@@ -790,7 +802,10 @@ input PersonCreateInput {
   learningPartners: SemesterRelateToManyForCreateInput
   studioStudents: SemesterRelateToManyForCreateInput
   studioStaff: SemesterRelateToManyForCreateInput
-  projectTeam: StudioProjectRelateToManyForCreateInput
+  projectStudents: StudioProjectRelateToManyForCreateInput
+  projectPartners: StudioProjectRelateToManyForCreateInput
+  projectInstructors: StudioProjectRelateToManyForCreateInput
+  projectStaff: StudioProjectRelateToManyForCreateInput
   researchLeads: ResearchProjectRelateToManyForCreateInput
 }
 
@@ -1370,21 +1385,31 @@ type StudioProject {
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   shortDescription: String
+  videoId: String
+  trailerId: String
+  trailerThumbnail: CloudinaryImage_File
+  trailerThumbAltText: String
   about: StudioProject_about_Document
   buttons: JSON
   blurb: StudioProject_blurb_Document
   partners: [StudioProjectPartnerType!]
   coCreation: StudioProject_coCreation_Document
   impact: StudioProject_impact_Document
-  team(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  teamCount(where: PersonWhereInput! = {}): Int
+  learningPartners(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  learningPartnersCount(where: PersonWhereInput! = {}): Int
+  studioStudents(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  studioStudentsCount(where: PersonWhereInput! = {}): Int
+  studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  studioStaffCount(where: PersonWhereInput! = {}): Int
+  instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  instructorsCount(where: PersonWhereInput! = {}): Int
   semester(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   semesterCount(where: SemesterWhereInput! = {}): Int
 }
 
 enum StudioProjectInitiativeType {
-  GunViolence
-  Climate
+  gunviolence
+  climate
 }
 
 enum StudioProjectFlagType {
@@ -1439,7 +1464,13 @@ input StudioProjectWhereInput {
   filters: FilterManyRelationFilter
   thumbAltText: StringFilter
   shortDescription: StringFilter
-  team: PersonManyRelationFilter
+  videoId: StringFilter
+  trailerId: StringFilter
+  trailerThumbAltText: StringFilter
+  learningPartners: PersonManyRelationFilter
+  studioStudents: PersonManyRelationFilter
+  studioStaff: PersonManyRelationFilter
+  instructors: PersonManyRelationFilter
   semester: SemesterManyRelationFilter
 }
 
@@ -1459,6 +1490,9 @@ input StudioProjectOrderByInput {
   initiative: OrderDirection
   thumbAltText: OrderDirection
   shortDescription: OrderDirection
+  videoId: OrderDirection
+  trailerId: OrderDirection
+  trailerThumbAltText: OrderDirection
 }
 
 input StudioProjectUpdateInput {
@@ -1472,13 +1506,20 @@ input StudioProjectUpdateInput {
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
+  videoId: String
+  trailerId: String
+  trailerThumbnail: Upload
+  trailerThumbAltText: String
   about: JSON
   buttons: JSON
   blurb: JSON
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
-  team: PersonRelateToManyForUpdateInput
+  learningPartners: PersonRelateToManyForUpdateInput
+  studioStudents: PersonRelateToManyForUpdateInput
+  studioStaff: PersonRelateToManyForUpdateInput
+  instructors: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
 }
 
@@ -1498,13 +1539,20 @@ input StudioProjectCreateInput {
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
+  videoId: String
+  trailerId: String
+  trailerThumbnail: Upload
+  trailerThumbAltText: String
   about: JSON
   buttons: JSON
   blurb: JSON
   partners: [StudioProjectPartnerType!]
   coCreation: JSON
   impact: JSON
-  team: PersonRelateToManyForCreateInput
+  learningPartners: PersonRelateToManyForCreateInput
+  studioStudents: PersonRelateToManyForCreateInput
+  studioStaff: PersonRelateToManyForCreateInput
+  instructors: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
 }
 

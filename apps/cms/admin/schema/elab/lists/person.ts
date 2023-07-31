@@ -132,8 +132,8 @@ const Person: Lists.Person = list({
         },
       },
     }),
-    projectTeam: relationship({
-      ref: 'StudioProject.team',
+    projectStudents: relationship({
+      ref: 'StudioProject.studioStudents',
       many: true,
       ui: {
         createView: {
@@ -144,6 +144,43 @@ const Person: Lists.Person = list({
         },
       },
     }),
+    projectPartners: relationship({
+      ref: 'StudioProject.learningPartners',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+    projectInstructors: relationship({
+      ref: 'StudioProject.instructors',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+    projectStaff: relationship({
+      ref: 'StudioProject.studioStaff',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+
     researchLeads: relationship({
       ref: 'ResearchProject.projectLeads',
       many: true,

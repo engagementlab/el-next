@@ -87,22 +87,25 @@ model Partner {
 }
 
 model Person {
-  id                String            @id @default(cuid())
-  name              String            @unique @default("")
-  key               String            @default("")
-  createdDate       DateTime?
-  enabled           Boolean           @default(true)
-  title             String            @default("")
-  image             Json?
-  category          String?
-  orderInSection    Int?              @default(0)
-  content           Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studioInstructors Semester[]        @relation("Person_studioInstructors")
-  learningPartners  Semester[]        @relation("Person_learningPartners")
-  studioStudents    Semester[]        @relation("Person_studioStudents")
-  studioStaff       Semester[]        @relation("Person_studioStaff")
-  projectTeam       StudioProject[]   @relation("Person_projectTeam")
-  researchLeads     ResearchProject[] @relation("Person_researchLeads")
+  id                 String            @id @default(cuid())
+  name               String            @unique @default("")
+  key                String            @default("")
+  createdDate        DateTime?
+  enabled            Boolean           @default(true)
+  title              String            @default("")
+  image              Json?
+  category           String?
+  orderInSection     Int?              @default(0)
+  content            Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studioInstructors  Semester[]        @relation("Person_studioInstructors")
+  learningPartners   Semester[]        @relation("Person_learningPartners")
+  studioStudents     Semester[]        @relation("Person_studioStudents")
+  studioStaff        Semester[]        @relation("Person_studioStaff")
+  projectStudents    StudioProject[]   @relation("Person_projectStudents")
+  projectPartners    StudioProject[]   @relation("Person_projectPartners")
+  projectInstructors StudioProject[]   @relation("Person_projectInstructors")
+  projectStaff       StudioProject[]   @relation("Person_projectStaff")
+  researchLeads      ResearchProject[] @relation("Person_researchLeads")
 }
 
 model ResearchProject {
@@ -186,25 +189,32 @@ model Studio {
 }
 
 model StudioProject {
-  id               String                      @id @default(cuid())
-  name             String                      @default("")
-  key              String                      @unique @default("")
-  createdDate      DateTime?
-  enabled          Boolean                     @default(true)
-  initiative       StudioProjectInitiativeType @default(GunViolence)
-  filters          Filter[]                    @relation("Filter_studioProjects")
-  flags            Json                        @default("[]")
-  thumbnail        Json?
-  thumbAltText     String                      @default("")
-  shortDescription String                      @default("")
-  about            Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  buttons          Json?
-  blurb            Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  partners         Json                        @default("[]")
-  coCreation       Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  impact           Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  team             Person[]                    @relation("Person_projectTeam")
-  semester         Semester[]                  @relation("Semester_projects")
+  id                  String                      @id @default(cuid())
+  name                String                      @default("")
+  key                 String                      @unique @default("")
+  createdDate         DateTime?
+  enabled             Boolean                     @default(true)
+  initiative          StudioProjectInitiativeType @default(gunviolence)
+  filters             Filter[]                    @relation("Filter_studioProjects")
+  flags               Json                        @default("[]")
+  thumbnail           Json?
+  thumbAltText        String                      @default("")
+  shortDescription    String                      @default("")
+  videoId             String                      @default("")
+  trailerId           String                      @default("")
+  trailerThumbnail    Json?
+  trailerThumbAltText String                      @default("")
+  about               Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  buttons             Json?
+  blurb               Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  partners            Json                        @default("[]")
+  coCreation          Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact              Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  learningPartners    Person[]                    @relation("Person_projectPartners")
+  studioStudents      Person[]                    @relation("Person_projectStudents")
+  studioStaff         Person[]                    @relation("Person_projectStaff")
+  instructors         Person[]                    @relation("Person_projectInstructors")
+  semester            Semester[]                  @relation("Semester_projects")
 }
 
 enum icon {
@@ -218,6 +228,6 @@ enum SemesterTypeType {
 }
 
 enum StudioProjectInitiativeType {
-  GunViolence
-  Climate
+  gunviolence
+  climate
 }

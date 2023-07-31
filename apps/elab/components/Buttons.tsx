@@ -3,6 +3,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { Theme, ThemeColors } from '@/types';
 import { Button } from '@el-next/components';
+import { Icons } from './Icons';
 
 type Props = {
   /**
@@ -14,6 +15,7 @@ type Props = {
    */
   label: string;
   theme?: Theme;
+  icon?: string;
 };
 const themeConfig = [
   {
@@ -33,7 +35,7 @@ const themeConfig = [
   },
 ];
 
-const CTAButton = ({ link, label, theme = 0 }: Props): JSX.Element => {
+const CTAButton = ({ link, label, theme = 0, icon }: Props): JSX.Element => {
   const buttonClass = clsx(
     'inline-block px-3 py-3 border-2 bg-white transition-all duration-200',
     themeConfig[theme].hover
@@ -44,19 +46,23 @@ const CTAButton = ({ link, label, theme = 0 }: Props): JSX.Element => {
       label={label}
       link={link}
       icon={
-        <svg
-          className="h-4 w-6 inline-block group-hover:translate-x-1 transition-transform"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke={themeConfig[theme].arrow}
-          strokeWidth="2"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          />
-        </svg>
+        icon ? (
+          <Icons icons={[icon]} />
+        ) : (
+          <svg
+            className="h-4 w-6 inline-block group-hover:translate-x-1 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke={themeConfig[theme].arrow}
+            strokeWidth="2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+        )
       }
       classOverride={buttonClass}
     />

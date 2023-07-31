@@ -2,6 +2,8 @@ import { BlockRenderers, DocRenderers, Image } from '@el-next/components';
 import { CTAButton } from './Buttons';
 import { Theme } from '@/types';
 import CaptionedImage from './CaptionedImage';
+import Slideshow from './Slideshow';
+
 const blockOverrides = {
   buttonOverride: (props: { label: string }) => {
     return (
@@ -31,9 +33,27 @@ const blockOverrides = {
     );
   },
 };
+let AppBlocks = (color: string | null) => {
+  return {
+    slideshow: (props: any) => {
+      return (
+        <Slideshow
+          slides={props.slideshow.data.slides}
+          themeColor={color ? color : 'bg-green'}
+        />
+      );
+    },
+  };
+};
 const SuperBlocks = BlockRenderers();
-const Blocks = () => {
-  return SuperBlocks(blockOverrides);
+const Blocks = (color?: string) => {
+  // return SuperBlocks(blockOverrides);
+  return {
+    button: SuperBlocks(blockOverrides).button,
+    image: SuperBlocks(blockOverrides).image,
+    video: SuperBlocks(blockOverrides).video,
+    slideshow: AppBlocks(color ? color : null).slideshow,
+  };
 };
 
 const Doc: any = DocRenderers();

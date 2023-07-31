@@ -45,7 +45,11 @@ const ItemRenderer = (props: { item: MediaItem }) => {
       exit={{ opacity: 0 }}
       className="w-full"
     >
-      <Link href={`/archive/${props.item.key}`} passHref className="group">
+      <Link
+        href={`/studios/projects/${props.item.key}`}
+        passHref
+        className="group"
+      >
         {/* {props.item.thumbnail ? (
             <Image
               id={`thumb-${props.item.key}`}

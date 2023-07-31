@@ -36,6 +36,11 @@ export const Icons = ({ icons }: Props): JSX.Element => {
           <path d="M160-120v-720h60v60h120v-60h280v60h120v-60h60v720h-60v-60H620v60H340v-60H220v60h-60Zm60-120h120v-120H220v120Zm0-180h120v-120H220v120Zm0-180h120v-120H220v120Zm400 360h120v-120H620v120Zm0-180h120v-120H620v120Zm0-180h120v-120H620v120ZM400-180h160v-600H400v600Zm0-600h160-160Z" />
         </svg>
       )}
+      {icons?.includes('play') && (
+        <svg height="48" width="48" viewBox="0 -960 960 960">
+          <path d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z" />
+        </svg>
+      )}
     </>
   );
 };

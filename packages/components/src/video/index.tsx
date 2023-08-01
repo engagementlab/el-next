@@ -9,6 +9,8 @@ interface VideoProps {
   videoLabel: string;
   isSlide?: boolean;
   themeColor?: string;
+  noUi?: boolean;
+  play?: boolean;
 }
 interface VideoState {
   videoOpen: boolean;
@@ -24,6 +26,8 @@ export const Video = ({
   videoLabel,
   isSlide,
   themeColor,
+  noUi,
+  play,
 }: VideoProps) => {
   // Create store with Zustand
   const [useStore] = useState(() =>
@@ -37,7 +41,7 @@ export const Video = ({
   const buttonSize = isSlide ? 75 : 150;
   return (
     <div className="relative video w-full h-full lg:mb-8">
-      {videoOpen ? (
+      {videoOpen || play ? (
         ''
       ) : (
         <button
@@ -57,48 +61,49 @@ export const Video = ({
             unoptimized={true}
             draggable="true"
           />
-
-          <span
-            className="absolute"
-            style={{
-              top: `calc(50% - ${buttonSize / 2}px)`,
-              left: `calc(50% - ${buttonSize / 2}px)`,
-            }}
-          >
-            <svg
-              viewBox="0 0 151 151"
-              width={buttonSize}
-              height={buttonSize}
-              className="transition-all group-hover:scale-110"
+          {!noUi && (
+            <span
+              className="absolute"
+              style={{
+                top: `calc(50% - ${buttonSize / 2}px)`,
+                left: `calc(50% - ${buttonSize / 2}px)`,
+              }}
             >
-              <circle
-                style={{
-                  strokeWidth: '0.8px',
-                  stroke: '#B571E9',
-                  fill: 'rgba(141, 51, 210, .6)',
-                }}
-                cx="49.467"
-                cy="49.467"
-                r="49.467"
-                transform="matrix(1.521806, 0, 0, 1.510012, 0, 0)"
-              ></circle>
-              <path
-                style={{
-                  strokeWidth: '0.8px',
-                  stroke: '#B571E9',
-                  fill: 'rgba(237, 234, 229, .8)',
-                }}
-                d="M 214.012 155.256 L 252.117 221.256 L 175.907 221.256 L 214.012 155.256 Z"
-                data-bx-shape="triangle 175.907 155.256 76.21 66 0.5 0 1@b1f3cbc1"
-                transform="matrix(-0.000024, 1, -1, -0.000024, 268.262054, -141.660278)"
-                data-bx-origin="0.53481 0.565042"
-              ></path>
-            </svg>
-          </span>
+              <svg
+                viewBox="0 0 151 151"
+                width={buttonSize}
+                height={buttonSize}
+                className="transition-all group-hover:scale-110"
+              >
+                <circle
+                  style={{
+                    strokeWidth: '0.8px',
+                    stroke: '#B571E9',
+                    fill: 'rgba(141, 51, 210, .6)',
+                  }}
+                  cx="49.467"
+                  cy="49.467"
+                  r="49.467"
+                  transform="matrix(1.521806, 0, 0, 1.510012, 0, 0)"
+                ></circle>
+                <path
+                  style={{
+                    strokeWidth: '0.8px',
+                    stroke: '#B571E9',
+                    fill: 'rgba(237, 234, 229, .8)',
+                  }}
+                  d="M 214.012 155.256 L 252.117 221.256 L 175.907 221.256 L 214.012 155.256 Z"
+                  data-bx-shape="triangle 175.907 155.256 76.21 66 0.5 0 1@b1f3cbc1"
+                  transform="matrix(-0.000024, 1, -1, -0.000024, 268.262054, -141.660278)"
+                  data-bx-origin="0.53481 0.565042"
+                ></path>
+              </svg>
+            </span>
+          )}
         </button>
       )}
 
-      {!videoOpen ? (
+      {!videoOpen && !play ? (
         ''
       ) : (
         <div id="video-embed" className="w-full">

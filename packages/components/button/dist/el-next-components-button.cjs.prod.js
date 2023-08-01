@@ -23,7 +23,8 @@ var Button = function Button(_ref) {
     margin = _ref.margin,
     anchorId = _ref.anchorId,
     classOverride = _ref.classOverride,
-    icon = _ref.icon;
+    icon = _ref.icon,
+    onClick = _ref.onClick;
   var scrollTo = function scrollTo(element) {
     reactScroll.scroller.scrollTo(element, {
       duration: 800,
@@ -58,6 +59,11 @@ var Button = function Button(_ref) {
       })
     });
   }
+  if (onClick) return /*#__PURE__*/jsxRuntime.jsxs("button", {
+    className: "group ".concat(classOverride || classStr),
+    onClick: onClick,
+    children: [label, " ", icon]
+  });
   return /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
     href: link,
     passHref: true,

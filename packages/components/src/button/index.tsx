@@ -39,6 +39,7 @@ interface ButtonProps {
   anchorId?: string;
   classOverride?: string;
   icon?: JSX.Element;
+  onClick?(): void;
 }
 
 /**
@@ -54,6 +55,7 @@ export const Button = ({
   anchorId,
   classOverride,
   icon,
+  onClick,
 }: ButtonProps) => {
   const scrollTo = (element: string) => {
     scroller.scrollTo(element, {
@@ -90,6 +92,15 @@ export const Button = ({
       </button>
     );
   }
+  if (onClick)
+    return (
+      <button
+        className={`group ${classOverride || classStr}`}
+        onClick={onClick}
+      >
+        {label} {icon}
+      </button>
+    );
   return (
     <Link href={link} passHref>
       <button className={`group ${classOverride || classStr}`}>

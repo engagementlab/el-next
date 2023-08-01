@@ -59,6 +59,8 @@ var Video = function Video(_ref2) {
     videoLabel = _ref2.videoLabel,
     isSlide = _ref2.isSlide;
     _ref2.themeColor;
+    var noUi = _ref2.noUi,
+    play = _ref2.play;
   // Create store with Zustand
   var _useState = react.useState(function () {
       return create__default["default"](function (set) {
@@ -83,7 +85,7 @@ var Video = function Video(_ref2) {
   var buttonSize = isSlide ? 75 : 150;
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
     className: "relative video w-full h-full lg:mb-8",
-    children: [videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
+    children: [videoOpen || play ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
       onClick: function onClick(e) {
         toggleOpen(true);
         e.preventDefault();
@@ -99,7 +101,7 @@ var Video = function Video(_ref2) {
         ,
         unoptimized: true,
         draggable: "true"
-      }), /*#__PURE__*/jsxRuntime.jsx("span", {
+      }), !noUi && /*#__PURE__*/jsxRuntime.jsx("span", {
         className: "absolute",
         style: {
           top: "calc(50% - ".concat(buttonSize / 2, "px)"),
@@ -133,7 +135,7 @@ var Video = function Video(_ref2) {
           })]
         })
       })]
-    }), !videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
+    }), !videoOpen && !play ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
       id: "video-embed",
       className: "w-full",
       children: /*#__PURE__*/jsxRuntime.jsx("div", {

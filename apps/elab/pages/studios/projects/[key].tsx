@@ -14,7 +14,7 @@ import { create } from 'zustand';
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 
-import { Theme } from '@/types';
+import { Theme, ThemeConfig } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
 import { ReactElement, ReactNode, useEffect } from 'react';
@@ -93,6 +93,10 @@ type StudioProject = {
 interface SemestersState {
   peopleOpen: boolean[];
   togglePeople: (i: number) => void;
+  trailerOpen: boolean;
+  toggleTrailerVideo: () => void;
+  videoOpen: boolean;
+  toggleVideo: () => void;
 }
 
 // Create store with Zustand
@@ -110,6 +114,24 @@ const useStore = create<SemestersState>()(
           }),
         };
       }),
+    trailerOpen: false,
+    toggleTrailerVideo: () =>
+      set((state) => {
+        // debugger;
+        return {
+          ...state,
+          trailerOpen: !state.trailerOpen,
+        };
+      }),
+    videoOpen: false,
+    toggleVideo: () =>
+      set((state) => {
+        // debugger;
+        return {
+          ...state,
+          videoOpen: !state.videoOpen,
+        };
+      }),
   }))
 );
 
@@ -117,27 +139,22 @@ export default function Studio({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { togglePeople, peopleOpen } = useStore((state) => state);
+  const {
+    togglePeople,
+    peopleOpen,
+    toggleTrailerVideo,
+    trailerOpen,
+    toggleVideo,
+    videoOpen,
+  } = useStore((state) => state);
 
-  interface ThemeConfig {
-    [key: string]: {
-      text: string;
-      heading: string;
-      bg: string;
-      border: string;
-      fill: string;
-      gradient: string;
-      secodaryBg: string;
-      secodary: string;
-      theme: Theme;
-    };
-  }
-
-  const theming: ThemeConfig = {
+  const theming: { [key: string]: ThemeConfig } = {
     gunviolence: {
+      arrow: '#7C4E9F',
       text: 'text-purple',
       heading: 'text-green',
       border: 'border-purple',
+      borderLight: 'border-[#E3BFFF]',
       bg: 'bg-purple',
       fill: 'fill-purple',
       gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
@@ -146,9 +163,11 @@ export default function Studio({
       theme: Theme.gunviolence,
     },
     climate: {
+      arrow: '#00A494',
       text: 'text-leaf',
       heading: 'text-yellow',
       border: 'border-leaf',
+      borderLight: 'border-purple',
       bg: 'group-hover:bg-leaf/40',
       fill: 'fill-leaf',
       secodary: 'bg-#D7EFC1',
@@ -161,8 +180,32 @@ export default function Studio({
   if (item) {
     const rendererOverrides = {
       layout: (layout: number[], children: any[]) => {
-        const flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row mx-6';
-        if (layout[0] === 1 && layout[1] === 1) {
+        const flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row';
+        ('flex gap-x-5 flex-col-reverse md:flex-row');
+        // [  ][ ]
+        if (layout[0] === 2 && layout[1] === 1) {
+          return (
+            <div className={flexClass}>
+              {children.map((element, i) => (
+                <div key={i} className={`${i === 0 ? 'w-full lg:w-3/4' : ''}`}>
+                  {element}
+                </div>
+              ))}
+            </div>
+          );
+        }
+        // [ ][  ]
+        else if (layout[0] === 1 && layout[1] === 2) {
+          return (
+            <div className={flexClass}>
+              {children.map((element, i) => (
+                <div key={i} className="w-full lg:w-3/4">
+                  {element}
+                </div>
+              ))}
+            </div>
+          );
+        } else if (layout[0] === 1 && layout[1] === 1) {
           return (
             <div className={flexClass}>
               {children.map((element: any, i: number | null | undefined) => (
@@ -219,46 +262,97 @@ export default function Studio({
           );
       },
     };
+    const Gutter = ({ children }: { children: ReactNode }) => {
+      return <div className="md:px-20 xl:px-24 my-6 xl:my-12">{children}</div>;
+    };
     return (
       <Layout
         error={error}
         breadcrumbs={[{ label: 'Studio Projects', href: '/studio/projects' }]}
         theme={theming[item.initiative].theme}
+        fullBleed={true}
       >
         {item && (
-          <div className="mx-6 text-grey">
-            <h1 className="font-extrabold text-4xl text-slate">{item.name}</h1>
-            <div className="flex flex-col xl:flex-row gap-x-7">
-              <div className="max-w-xl min-w-[450px] min-h-[300px]">
-                {item.trailerId && (
-                  <Video
-                    videoLabel={`Trailer for ${item.name} `}
-                    videoUrl={`https://player.vimeo.com/video/${item.trailerId}`}
-                    thumbUrl={item.trailerThumbnail.publicUrl}
-                  />
-                )}
-              </div>
-              <div>
-                <h2
-                  className={`uppercase text-xl lg:text-3xl font-extrabold ${
-                    theming[item.initiative].heading
+          <div className="text-grey">
+            <Gutter>
+              <h1 className="font-extrabold text-4xl text-slate">
+                {item.name}
+              </h1>
+              <div className="flex flex-col flex-wrap xl:flex-row gap-x-7">
+                <div
+                  className={`relative transition-all duration-500 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] ${
+                    videoOpen
+                      ? 'w-full basis-full'
+                      : 'max-w-xl min-w-[450px] min-h-[300px] basis-2/5'
                   }`}
                 >
-                  About
-                </h2>
-                <p className="my-6">{item.shortDescription}</p>
-                <CTAButton
-                  label="Watch the film"
-                  link="/"
-                  icon="play"
-                  theme={theming[item.initiative].theme}
-                />
-              </div>
-            </div>
-
-            <AnimatePresence>
-              <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <div className="w-3/4 lg:w-full p-6">
+                  {item.trailerId && (
+                    <div className="group w-full h-full">
+                      <div
+                        className={
+                          videoOpen ? 'relative' : `absolute w-full h-full`
+                        }
+                      >
+                        <Video
+                          videoLabel={`Trailer for ${item.name} `}
+                          videoUrl={`https://player.vimeo.com/video/${item.trailerId}`}
+                          thumbUrl={item.trailerThumbnail.publicUrl}
+                          play={trailerOpen || videoOpen}
+                          noUi={true}
+                        />
+                      </div>
+                      {!videoOpen && !trailerOpen && (
+                        <button
+                          className="absolute bottom-14 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
+                          onClick={() => toggleTrailerVideo()}
+                        >
+                          <svg
+                            height="48"
+                            width="48"
+                            viewBox="0 -960 960 960"
+                            className="inline transition-all duration-200 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] group-hover:scale-125"
+                          >
+                            <path
+                              d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
+                              fill="white"
+                              className={`group-hover:${
+                                theming[item.initiative].fill
+                              }`}
+                            />
+                          </svg>
+                          <h4 className="text-white font-semibold text-3xl">
+                            Watch the trailer
+                          </h4>
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className=" basis-1/2">
+                  <h2
+                    className={`uppercase text-xl lg:text-3xl font-extrabold ${
+                      theming[item.initiative].heading
+                    }`}
+                  >
+                    About
+                  </h2>
+                  <div className="flex flex-col items-center">
+                    <p className="my-6">{item.shortDescription}</p>
+                    {!videoOpen && (
+                      <CTAButton
+                        label="Watch the film"
+                        link="/"
+                        icon="play"
+                        theme={theming[item.initiative].theme}
+                        className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
+                          theming[item.initiative].fill
+                        }`}
+                        onClick={() => toggleVideo()}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="w-3/4 lg:w-full">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${
                       theming[item.initiative].heading
@@ -298,36 +392,83 @@ export default function Studio({
                     }`}
                   />
                 </div>
-                <div id="cocreation" className="p-6">
-                  <h2 className="font-bold text-2xl my-3">
-                    A Look Inside the Co-Creation Process
-                  </h2>
-                  <DocumentRenderer
-                    document={item.coCreation.document}
-                    componentBlocks={Blocks(theming[item.initiative].bg)}
-                    renderers={Doc(rendererOverrides)}
-                  />
-                </div>
+              </div>
+            </Gutter>
+            <Divider color="bg-green" />
+            <AnimatePresence>
+              <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Gutter>
+                  <div id="cocreation">
+                    <h2 className="font-bold text-5xl my-3">
+                      A Look Inside the Co-Creation Process
+                    </h2>
+                    <DocumentRenderer
+                      document={item.coCreation.document}
+                      componentBlocks={Blocks(theming[item.initiative])}
+                      renderers={Doc(rendererOverrides)}
+                    />
+                  </div>
 
-                <Divider color={theming[item.initiative].heading} />
-
-                <div id="impact" className="p-6">
-                  <h2 className="font-bold text-2xl my-3">
-                    Impact Beyond the Studio
+                  <h2
+                    className={`text-xl font-extrabold uppercase ${
+                      theming[item.initiative].heading
+                    }`}
+                  >
+                    Partners
                   </h2>
-                  <DocumentRenderer
-                    document={item.impact.document}
-                    componentBlocks={Blocks(theming[item.initiative].bg)}
-                    renderers={Doc(rendererOverrides)}
-                  />
-                </div>
+                  <Logos partners={item.partners} />
+                </Gutter>
+                <Divider color="bg-green" />
 
-                <Divider color={theming[item.initiative].secodary} />
-                <div className="p-6">
-                  <h2 className="font-bold text-2xl my-3">
-                    {item.name} Studio Participants
-                  </h2>
-                  <div className="flex flex-col flex-wrap my-4">
+                <Gutter>
+                  <div id="impact">
+                    <h2 className="font-bold text-5xl my-3">Impact</h2>
+                    <DocumentRenderer
+                      document={item.impact.document}
+                      componentBlocks={Blocks(theming[item.initiative])}
+                      renderers={Doc(rendererOverrides)}
+                    />
+                  </div>
+                </Gutter>
+
+                <Divider color="bg-green" />
+                <Gutter>
+                  <h2 className="font-bold text-5xl my-3">Project Team</h2>
+                  <h3
+                    className={`text-lg font-medium uppercase mt-10 mb-4 ${
+                      theming[item.initiative].heading
+                    }`}
+                  >
+                    Learning Partners
+                  </h3>
+                  <div className="hidden flex-wrap my-4 gap-x-8 lg:flex">
+                    {item.learningPartners.map((person) => (
+                      <div
+                        className="flex flex-col w-full items-center text-center xl:w-1/5 ml-0 xl:ml-3 group cursor-pointer"
+                        key={`thumb-${person.key}`}
+                      >
+                        <Image
+                          id={`thumb-${person.key}`}
+                          alt={`Photo of ${person.name}`}
+                          imgId={person.image.publicId}
+                          width={230}
+                          transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
+                          className={`rounded-full border-4 mt-2 transition-all group-hover:border-8 ${
+                            theming[item.initiative].borderLight
+                          }`}
+                        />
+                        <p
+                          className={`text-lg ${
+                            theming[item.initiative].text
+                          } border-b-2`}
+                        >
+                          {person.name}
+                        </p>
+                        <p className="text-sm mt-1">{person.title}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-col flex-wrap my-4 lg:hidden">
                     <hr
                       className={`border-1 ${theming[item.initiative].heading}`}
                     />
@@ -405,16 +546,7 @@ export default function Studio({
                       )}
                     </AnimatePresence>
                   </div>
-
-                  <h2
-                    className={`text-xl font-extrabold uppercase ${
-                      theming[item.initiative].heading
-                    }`}
-                  >
-                    {item.name} Partners
-                  </h2>
-                  <Logos partners={item.partners} />
-                </div>
+                </Gutter>
               </motion.div>
             </AnimatePresence>
           </div>

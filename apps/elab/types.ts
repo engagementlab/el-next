@@ -14,6 +14,21 @@ export interface Breadcrumb {
 //   teenempowerment = 'Teen Empowerment',
 //   uncornered = 'Boston Uncornered',
 // }
+
+export interface ThemeConfig {
+  arrow: string;
+  text: string;
+  heading: string;
+  bg: string;
+  border: string;
+  borderLight: string;
+  fill: string;
+  gradient: string;
+  secodaryBg: string;
+  secodary: string;
+  theme: Theme;
+}
+
 export enum Partner {
   all,
   ficdc,

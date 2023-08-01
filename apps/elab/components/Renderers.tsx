@@ -1,8 +1,10 @@
 import { BlockRenderers, DocRenderers, Image } from '@el-next/components';
 import { CTAButton } from './Buttons';
-import { Theme } from '@/types';
+import { Theme, ThemeConfig } from '@/types';
 import CaptionedImage from './CaptionedImage';
 import Slideshow from './Slideshow';
+import Link from 'next/link';
+import { Icons } from './Icons';
 
 const blockOverrides = {
   buttonOverride: (props: { label: string }) => {
@@ -33,26 +35,44 @@ const blockOverrides = {
     );
   },
 };
-let AppBlocks = (color: string | null) => {
+let AppBlocks = (theme: ThemeConfig | null) => {
   return {
     slideshow: (props: any) => {
       return (
         <Slideshow
           slides={props.slideshow.data.slides}
-          themeColor={color ? color : 'bg-green'}
+          themeColor={theme ? theme.bg : 'bg-green'}
         />
+      );
+    },
+    iconLink: (props: any) => {
+      return (
+        <Link href={props.url}>
+          <button className={`${theme?.text} flex flex-row gap-x-2 my-2 group`}>
+            <Icons icons={[props.icon]} />
+            <span
+              className={`font-bold ${theme?.text} border-b-2 ${theme?.border}`}
+            >
+              {props.label}
+            </span>
+            <span className="group-hover:translate-x-1 transition-transform">
+              ➝
+            </span>
+          </button>
+        </Link>
       );
     },
   };
 };
 const SuperBlocks = BlockRenderers();
-const Blocks = (color?: string) => {
+const Blocks = (theme?: ThemeConfig) => {
   // return SuperBlocks(blockOverrides);
   return {
     button: SuperBlocks(blockOverrides).button,
     image: SuperBlocks(blockOverrides).image,
     video: SuperBlocks(blockOverrides).video,
-    slideshow: AppBlocks(color ? color : null).slideshow,
+    slideshow: AppBlocks(theme ? theme : null).slideshow,
+    iconLink: AppBlocks(theme ? theme : null).iconLink,
   };
 };
 

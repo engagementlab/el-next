@@ -16,35 +16,46 @@ type Props = {
   label: string;
   theme?: Theme;
   icon?: string;
+  className?: string;
+  onClick?(): void;
 };
-const themeConfig = [
-  {
-    arrow: '#00A494',
-    hover:
-      'drop-shadow-[2px_3px_0px_#BBEBE7] text-teal border-teal drop-shadow-teal hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
-  },
-  {
-    arrow: ThemeColors[1].primaryHex,
-    hover:
-      'purple text-purple border-purple drop-shadow-purple hover:bg-[#E3BFFF] hover:drop-shadow-[3px_5px_0px_#7C4E9F]',
-  },
-  {
-    arrow: '#00A494',
-    hover:
-      'green-blue text-green-blue border-green-blue drop-shadow-green-blue hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
-  },
-];
 
-const CTAButton = ({ link, label, theme = 0, icon }: Props): JSX.Element => {
+const CTAButton = ({
+  link,
+  label,
+  theme = 0,
+  icon,
+  className,
+  onClick,
+}: Props): JSX.Element => {
+  const themeConfig = [
+    {
+      arrow: '#00A494',
+      hover:
+        'drop-shadow-[2px_3px_0px_#BBEBE7] text-teal border-teal drop-shadow-teal hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
+    },
+    {
+      arrow: ThemeColors[1].primaryHex,
+      hover:
+        'purple text-purple border-purple drop-shadow-purple hover:bg-[#E3BFFF] hover:drop-shadow-[3px_5px_0px_#7C4E9F]',
+    },
+    {
+      arrow: '#00A494',
+      hover:
+        'green-blue text-green-blue border-green-blue drop-shadow-green-blue hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
+    },
+  ];
   const buttonClass = clsx(
     'inline-block px-3 py-3 border-2 bg-white transition-all duration-200',
-    themeConfig[theme].hover
+    themeConfig[theme].hover,
+    className
   );
 
   return (
     <Button
       label={label}
       link={link}
+      onClick={onClick}
       icon={
         icon ? (
           <Icons icons={[icon]} />
@@ -58,6 +69,7 @@ const CTAButton = ({ link, label, theme = 0, icon }: Props): JSX.Element => {
           >
             <path
               strokeLinecap="round"
+              fill={themeConfig[theme].arrow}
               strokeLinejoin="round"
               d="M14 5l7 7m0 0l-7 7m7-7H3"
             />

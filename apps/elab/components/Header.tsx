@@ -357,6 +357,7 @@ const Header = ({ theme }: Props): JSX.Element => {
             height="82"
             aria-label="Engagement Lab logo"
             whileHover={{ scale: 1.023 }}
+            className="max-w-[100%]"
           >
             <g>
               <g>

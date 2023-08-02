@@ -48,10 +48,14 @@ let AppBlocks = (theme: ThemeConfig | null) => {
     iconLink: (props: any) => {
       return (
         <Link href={props.url}>
-          <button className={`${theme?.text} flex flex-row gap-x-2 my-2 group`}>
-            <Icons icons={[props.icon]} />
+          <button
+            className={`flex flex-row gap-x-2 my-2 group items-center ${theme?.text} `}
+          >
+            <span className="basis-5">
+              <Icons icons={[props.icon]} />
+            </span>
             <span
-              className={`font-bold ${theme?.text} border-b-2 ${theme?.border}`}
+              className={`font-bold border-b-2 text-left ${theme?.text} ${theme?.border}`}
             >
               {props.label}
             </span>

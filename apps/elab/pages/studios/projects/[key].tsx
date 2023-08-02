@@ -17,9 +17,16 @@ import { Blocks, Doc } from '../../../components/Renderers';
 import { Theme, ThemeConfig } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
-import { ReactElement, ReactNode, useEffect } from 'react';
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactNode,
+  ReactPortal,
+  useEffect,
+} from 'react';
 import Divider from '@/components/Divider';
-import { AnimatePresence, motion, useCycle } from 'framer-motion';
+import { AnimatePresence, Variants, motion, useCycle } from 'framer-motion';
 import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { CTAButton } from '@/components/Buttons';
@@ -134,6 +141,29 @@ const useStore = create<SemestersState>()(
       }),
   }))
 );
+
+const subMenuAnimate: Variants = {
+  enter: {
+    opacity: 1,
+    y: 0,
+    height: 'auto',
+    transition: {
+      ease: 'easeOut',
+      duration: 0.3,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -40,
+    height: 0,
+    transition: {
+      duration: 0.15,
+    },
+    transitionEnd: {
+      display: 'none',
+    },
+  },
+};
 
 export default function Studio({
   item,
@@ -263,12 +293,130 @@ export default function Studio({
       },
     };
     const Gutter = ({ children }: { children: ReactNode }) => {
-      return <div className="md:px-20 xl:px-24 my-6 xl:my-12">{children}</div>;
+      return (
+        <div className="md:px-20 xl:px-24 my-6 xl:my-12 mt-14 mb-24 xl:mt-16 px-5 w-full">
+          {children}
+        </div>
+      );
+    };
+    const Person = ({
+      person,
+      theme,
+    }: {
+      person: {
+        key: any;
+        name: string;
+        image: { publicId: string };
+        title: string;
+      };
+      theme: ThemeConfig;
+    }): JSX.Element => {
+      return (
+        <div
+          className="flex flex-col w-full items-center text-center xl:basis-1/5 ml-0 group"
+          // key={`thumb-${person.key}`}
+        >
+          {person.image ? (
+            <Image
+              id={`thumb-${person.key}`}
+              alt={`Photo of ${person.name}`}
+              imgId={person.image.publicId}
+              width={230}
+              transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
+              className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight}`}
+              // ` group-hover:border-8 `
+            />
+          ) : (
+            <ImagePlaceholder imageLabel="Person" width={230} height={230} />
+          )}
+          <p className={`text-lg border-b-2 mt-3 ${theme.text}`}>
+            {person.name}
+          </p>
+          <p className="text-sm mt-1">{person.title}</p>
+        </div>
+      );
+    };
+    const PeopleList = ({
+      heading,
+      list,
+      theme,
+      index,
+    }: {
+      heading: any;
+      list: any;
+      theme: ThemeConfig;
+      index: any;
+    }): JSX.Element => {
+      return (
+        <>
+          <h3
+            className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${theme.heading}`}
+          >
+            {heading}
+          </h3>
+          <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+            {list.map(
+              (person: {
+                key: any;
+                name: string;
+                image: { publicId: string };
+                title: string;
+              }) => (
+                <Person key={person.key} person={person} theme={theme} />
+              )
+            )}
+          </div>
+          <div className="flex flex-col flex-wrap my-4 lg:hidden">
+            <hr className={`border-1 ${theme.heading}`} />
+            <h3
+              className={`text-lg font-medium uppercase my-4 ${theme.heading}`}
+            >
+              <button
+                className="flex items-center uppercase mb-2"
+                onClick={() => {
+                  togglePeople(index);
+                }}
+              >
+                <p className="uppercase">{heading}</p>
+
+                <svg
+                  className={`transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
+                    peopleOpen[index] ? 'rotate-180' : 'rotate-0'
+                  }`}
+                  height="40"
+                  viewBox="0 -960 960 960"
+                  width="40"
+                >
+                  <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
+                </svg>
+              </button>
+              {/* <hr className={`border-1 ${theme.heading}`} /> */}
+            </h3>
+
+            <motion.div
+              initial="exit"
+              animate={peopleOpen[index] ? 'enter' : 'exit'}
+              variants={subMenuAnimate}
+            >
+              {list.map(
+                (person: {
+                  key: any;
+                  name: string;
+                  image: { publicId: string };
+                  title: string;
+                }) => (
+                  <Person key={person.key} person={person} theme={theme} />
+                )
+              )}
+            </motion.div>
+          </div>
+        </>
+      );
     };
     return (
       <Layout
         error={error}
-        breadcrumbs={[{ label: 'Studio Projects', href: '/studio/projects' }]}
+        breadcrumbs={[{ label: 'Studio Projects', href: '/studios/projects' }]}
         theme={theming[item.initiative].theme}
         fullBleed={true}
       >
@@ -278,24 +426,25 @@ export default function Studio({
               <h1 className="font-extrabold text-4xl text-slate">
                 {item.name}
               </h1>
-              <div className="flex flex-col flex-wrap xl:flex-row gap-x-7">
+              <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7">
                 <div
                   className={`relative transition-all duration-500 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] ${
                     videoOpen
                       ? 'w-full basis-full'
-                      : 'max-w-xl min-w-[450px] min-h-[300px] basis-2/5'
+                      : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
                   }`}
                 >
                   {item.trailerId && (
                     <div className="group w-full h-full">
                       <div
-                        className={
-                          videoOpen ? 'relative' : `absolute w-full h-full`
-                        }
+                        id="video"
+                        className={videoOpen ? 'relative mb-5' : ``}
                       >
                         <Video
                           videoLabel={`Trailer for ${item.name} `}
-                          videoUrl={`https://player.vimeo.com/video/${item.trailerId}`}
+                          videoUrl={`https://player.vimeo.com/video/${
+                            videoOpen ? item.videoId : item.trailerId
+                          }`}
                           thumbUrl={item.trailerThumbnail.publicUrl}
                           play={trailerOpen || videoOpen}
                           noUi={true}
@@ -303,7 +452,7 @@ export default function Studio({
                       </div>
                       {!videoOpen && !trailerOpen && (
                         <button
-                          className="absolute bottom-14 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
+                          className="absolute bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
                           onClick={() => toggleTrailerVideo()}
                         >
                           <svg
@@ -328,7 +477,7 @@ export default function Studio({
                     </div>
                   )}
                 </div>
-                <div className=" basis-1/2">
+                <div className="basis-1/3 xl:basis-1/2">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${
                       theming[item.initiative].heading
@@ -352,7 +501,7 @@ export default function Studio({
                     )}
                   </div>
                 </div>
-                <div className="w-3/4 lg:w-full">
+                <div className="hidden lg:block w-3/4 lg:w-full">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${
                       theming[item.initiative].heading
@@ -395,160 +544,82 @@ export default function Studio({
               </div>
             </Gutter>
             <Divider color="bg-green" />
-            <AnimatePresence>
-              <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Gutter>
-                  <div id="cocreation">
-                    <h2 className="font-bold text-5xl my-3">
-                      A Look Inside the Co-Creation Process
-                    </h2>
-                    <DocumentRenderer
-                      document={item.coCreation.document}
-                      componentBlocks={Blocks(theming[item.initiative])}
-                      renderers={Doc(rendererOverrides)}
+            <Gutter>
+              <div id="cocreation">
+                <h2 className="font-bold text-5xl my-3">
+                  A Look Inside the Co-Creation Process
+                </h2>
+                <DocumentRenderer
+                  document={item.coCreation.document}
+                  componentBlocks={Blocks(theming[item.initiative])}
+                  renderers={Doc(rendererOverrides)}
+                />
+              </div>
+
+              <h2
+                className={`text-xl font-extrabold uppercase ${
+                  theming[item.initiative].heading
+                }`}
+              >
+                Partners
+              </h2>
+              <Logos partners={item.partners} />
+            </Gutter>
+            <Divider color="bg-green" />
+
+            <Gutter>
+              <div id="impact">
+                <h2 className="font-bold text-5xl my-3">Impact</h2>
+                <DocumentRenderer
+                  document={item.impact.document}
+                  componentBlocks={Blocks(theming[item.initiative])}
+                  renderers={Doc(rendererOverrides)}
+                />
+              </div>
+            </Gutter>
+
+            <Divider color="bg-green" />
+            <Gutter>
+              <h2 className="font-bold text-5xl my-3">Project Team</h2>
+              {item.studioStudents && item.studioStudents.length > 0 && (
+                <PeopleList
+                  list={item.studioStudents}
+                  heading="Students"
+                  theme={theming[item.initiative]}
+                  index={0}
+                />
+              )}
+              {item.learningPartners && item.learningPartners.length > 0 && (
+                <PeopleList
+                  list={item.learningPartners}
+                  heading="Learning Partners"
+                  theme={theming[item.initiative]}
+                  index={1}
+                />
+              )}
+              <div className="flex flex-col xl:flex-row gap-x-7">
+                <div>
+                  {item.instructors && item.instructors.length > 0 && (
+                    <PeopleList
+                      list={item.instructors}
+                      heading="Studio Instructors"
+                      theme={theming[item.initiative]}
+                      index={2}
                     />
-                  </div>
-
-                  <h2
-                    className={`text-xl font-extrabold uppercase ${
-                      theming[item.initiative].heading
-                    }`}
-                  >
-                    Partners
-                  </h2>
-                  <Logos partners={item.partners} />
-                </Gutter>
-                <Divider color="bg-green" />
-
-                <Gutter>
-                  <div id="impact">
-                    <h2 className="font-bold text-5xl my-3">Impact</h2>
-                    <DocumentRenderer
-                      document={item.impact.document}
-                      componentBlocks={Blocks(theming[item.initiative])}
-                      renderers={Doc(rendererOverrides)}
+                  )}
+                </div>
+                <div>
+                  {item.studioStaff && item.studioStaff.length > 0 && (
+                    <PeopleList
+                      list={item.studioStaff}
+                      heading="Engagement Lab Staff"
+                      theme={theming[item.initiative]}
+                      index={3}
                     />
-                  </div>
-                </Gutter>
-
-                <Divider color="bg-green" />
-                <Gutter>
-                  <h2 className="font-bold text-5xl my-3">Project Team</h2>
-                  <h3
-                    className={`text-lg font-medium uppercase mt-10 mb-4 ${
-                      theming[item.initiative].heading
-                    }`}
-                  >
-                    Learning Partners
-                  </h3>
-                  <div className="hidden flex-wrap my-4 gap-x-8 lg:flex">
-                    {item.learningPartners.map((person) => (
-                      <div
-                        className="flex flex-col w-full items-center text-center xl:w-1/5 ml-0 xl:ml-3 group cursor-pointer"
-                        key={`thumb-${person.key}`}
-                      >
-                        <Image
-                          id={`thumb-${person.key}`}
-                          alt={`Photo of ${person.name}`}
-                          imgId={person.image.publicId}
-                          width={230}
-                          transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
-                          className={`rounded-full border-4 mt-2 transition-all group-hover:border-8 ${
-                            theming[item.initiative].borderLight
-                          }`}
-                        />
-                        <p
-                          className={`text-lg ${
-                            theming[item.initiative].text
-                          } border-b-2`}
-                        >
-                          {person.name}
-                        </p>
-                        <p className="text-sm mt-1">{person.title}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-col flex-wrap my-4 lg:hidden">
-                    <hr
-                      className={`border-1 ${theming[item.initiative].heading}`}
-                    />
-                    <h3
-                      className={`text-lg font-medium uppercase my-4 ${
-                        theming[item.initiative].heading
-                      }`}
-                    >
-                      <button
-                        className="flex items-center uppercase mb-2"
-                        onClick={() => {
-                          togglePeople(0);
-                        }}
-                      >
-                        <p className="uppercase">Learning Partners</p>
-
-                        <svg
-                          className={`transition-transform ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
-                            peopleOpen[0] && 'rotate-180'
-                          }`}
-                          height="40"
-                          viewBox="0 -960 960 960"
-                          width="40"
-                        >
-                          <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
-                        </svg>
-                      </button>
-                      <hr
-                        className={`border-1 ${
-                          theming[item.initiative].heading
-                        }`}
-                      />
-                    </h3>
-
-                    <AnimatePresence>
-                      {peopleOpen[0] && (
-                        <motion.div
-                          animate={{
-                            opacity: 1,
-                            top: 0,
-                            transition: { ease: 'easeOut', duration: 0.3 },
-                          }}
-                          exit={{
-                            opacity: 0,
-                            top: -40,
-                            transition: { duration: 0.3 },
-                          }}
-                        >
-                          {item.learningPartners.map((person) => (
-                            <div
-                              className="flex flex-col w-full items-center text-center xl:w-1/5 ml-0 xl:ml-3"
-                              key={`thumb-${person.key}`}
-                            >
-                              <Image
-                                id={`thumb-${person.key}`}
-                                alt={`Photo of ${person.name}`}
-                                imgId={person.image.publicId}
-                                width={230}
-                                transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
-                                className={`rounded-full border-4 mt-2 ${
-                                  theming[item.initiative].border
-                                }`}
-                              />
-                              <p
-                                className={`text-lg ${
-                                  theming[item.initiative].text
-                                }`}
-                              >
-                                {person.name}
-                              </p>
-                              <p className="text-sm">{person.title}</p>
-                            </div>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </Gutter>
-              </motion.div>
-            </AnimatePresence>
+                  )}
+                </div>{' '}
+              </div>
+            </Gutter>
           </div>
         )}
       </Layout>

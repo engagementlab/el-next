@@ -30,6 +30,7 @@ import { AnimatePresence, Variants, motion, useCycle } from 'framer-motion';
 import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { CTAButton } from '@/components/Buttons';
+import { PeopleList } from '@/components/People';
 
 type StudioProject = {
   name: string;
@@ -141,29 +142,6 @@ const useStore = create<SemestersState>()(
       }),
   }))
 );
-
-const subMenuAnimate: Variants = {
-  enter: {
-    opacity: 1,
-    y: 0,
-    height: 'auto',
-    transition: {
-      ease: 'easeOut',
-      duration: 0.3,
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: -40,
-    height: 0,
-    transition: {
-      duration: 0.15,
-    },
-    transitionEnd: {
-      display: 'none',
-    },
-  },
-};
 
 export default function Studio({
   item,
@@ -297,120 +275,6 @@ export default function Studio({
         <div className="md:px-20 xl:px-24 my-6 xl:my-12 mt-14 mb-24 xl:mt-16 px-5 w-full">
           {children}
         </div>
-      );
-    };
-    const Person = ({
-      person,
-      theme,
-    }: {
-      person: {
-        key: any;
-        name: string;
-        image: { publicId: string };
-        title: string;
-      };
-      theme: ThemeConfig;
-    }): JSX.Element => {
-      return (
-        <div
-          className="flex flex-col w-full items-center text-center xl:basis-1/5 ml-0 group"
-          // key={`thumb-${person.key}`}
-        >
-          {person.image ? (
-            <Image
-              id={`thumb-${person.key}`}
-              alt={`Photo of ${person.name}`}
-              imgId={person.image.publicId}
-              width={230}
-              transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
-              className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight}`}
-              // ` group-hover:border-8 `
-            />
-          ) : (
-            <ImagePlaceholder imageLabel="Person" width={230} height={230} />
-          )}
-          <p className={`text-lg border-b-2 mt-3 ${theme.text}`}>
-            {person.name}
-          </p>
-          <p className="text-sm mt-1">{person.title}</p>
-        </div>
-      );
-    };
-    const PeopleList = ({
-      heading,
-      list,
-      theme,
-      index,
-    }: {
-      heading: any;
-      list: any;
-      theme: ThemeConfig;
-      index: any;
-    }): JSX.Element => {
-      return (
-        <>
-          <h3
-            className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${theme.heading}`}
-          >
-            {heading}
-          </h3>
-          <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
-            {list.map(
-              (person: {
-                key: any;
-                name: string;
-                image: { publicId: string };
-                title: string;
-              }) => (
-                <Person key={person.key} person={person} theme={theme} />
-              )
-            )}
-          </div>
-          <div className="flex flex-col flex-wrap my-4 lg:hidden">
-            <hr className={`border-1 ${theme.heading}`} />
-            <h3
-              className={`text-lg font-medium uppercase my-4 ${theme.heading}`}
-            >
-              <button
-                className="flex items-center uppercase mb-2"
-                onClick={() => {
-                  togglePeople(index);
-                }}
-              >
-                <p className="uppercase">{heading}</p>
-
-                <svg
-                  className={`transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
-                    peopleOpen[index] ? 'rotate-180' : 'rotate-0'
-                  }`}
-                  height="40"
-                  viewBox="0 -960 960 960"
-                  width="40"
-                >
-                  <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
-                </svg>
-              </button>
-              {/* <hr className={`border-1 ${theme.heading}`} /> */}
-            </h3>
-
-            <motion.div
-              initial="exit"
-              animate={peopleOpen[index] ? 'enter' : 'exit'}
-              variants={subMenuAnimate}
-            >
-              {list.map(
-                (person: {
-                  key: any;
-                  name: string;
-                  image: { publicId: string };
-                  title: string;
-                }) => (
-                  <Person key={person.key} person={person} theme={theme} />
-                )
-              )}
-            </motion.div>
-          </div>
-        </>
       );
     };
     return (

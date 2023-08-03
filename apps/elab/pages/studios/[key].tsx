@@ -269,11 +269,7 @@ export default function Studio({
                     toggleMenuHover();
                   }}
                 >
-                  <div
-                    className={`flex items-center justify-between bg-gradient-to-b p-2 w-full ${
-                      Theming[item.initiatives[0]].gradient
-                    }`}
-                  >
+                  <div className="flex items-center justify-between p-2 w-full">
                     <span>
                       {selectedSemester ? GetLabel(selectedSemester) : 'Select'}
                     </span>
@@ -319,7 +315,7 @@ export default function Studio({
                             <p
                               className={`p-2 cursor-pointer font-semibold ${
                                 se.type
-                                  ? 'text-teal'
+                                  ? Theming[item.initiatives[0]].heading
                                   : Theming[item.initiatives[0]].text
                               }`}
                             >

@@ -51,13 +51,13 @@ export const Theming: { [key: string]: ThemeConfig } = {
     text: 'text-leaf',
     heading: 'text-yellow',
     border: 'border-leaf',
-    borderLight: 'border-purple',
-    bg: 'group-hover:bg-leaf/40',
+    borderLight: 'border-leaf',
+    bg: 'bg-leaf',
     fill: 'fill-leaf',
     secodary: 'bg-#D7EFC1',
     secodaryBg: 'bg-#D7EFC1/40',
     gradient: 'from-[#D7EFC1] to-leaf',
-    theme: Theme.gunviolence,
+    theme: Theme.climate,
   },
 };
 

@@ -578,6 +578,10 @@ const Header = ({ theme }: Props): JSX.Element => {
             </g>
           </motion.svg>
         )}
+        {/* TN4EJ logo */}
+        {theme === Theme.climate && (
+          <h1 className="text-leaf font-extrabold text-3xl ml-4">TN4EJ</h1>
+        )}
       </div>
       {/* Desktop+ */}
       <div className="hidden xl:block flex-grow">

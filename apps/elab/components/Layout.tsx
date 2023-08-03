@@ -37,7 +37,7 @@ const Layout = ({
   if (theme === Theme.gunviolence)
     currentBg = 'bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]';
   if (theme === Theme.climate)
-    currentBg = 'bg-gradient-to-b from-white to-green-blue';
+    currentBg = 'bg-gradient-to-b from-[#D7EFC1] to-leaf';
   const BG = topBgElement ? topBgElement : <></>;
 
   return (
@@ -53,7 +53,7 @@ const Layout = ({
         {/* Breadcrumbs layout */}
         {breadcrumbs && (
           <motion.div
-            className="relative flex justify-center xl:justify-start mt-3 md:mx-14 lg:mx-16"
+            className="relative flex justify-center xl:justify-start ml-1 md:ml-0 mt-5 lg:mt-12"
             initial={{ opacity: 0 }}
             exit={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -63,7 +63,7 @@ const Layout = ({
               <rect y={11} width="100%" height="2" fill="#cbdce8" />
               <rect y={16} width="100%" height="2" fill="#cbdce8" />
             </svg>
-            <div className="absolute flex justify-center items-center px-6 xl:ml-6 bg-white">
+            <div className="absolute flex justify-center items-center px-6 xl:ml-12 bg-white">
               <svg viewBox="0 0 20 20" width="20" height="20" className="mr-1">
                 <path
                   d="M 0 10 C 0 15.52 4.48 20 10 20 C 15.52 20 20 15.52 20 10 C 20 4.48 15.52 0 10 0 C 4.48 0 0 4.48 0 10 Z M 6.22 8.48 C 6.22 8.48 7.72 6.98 9.48 5.22 C 9.62 5.08 9.82 5 10 5 C 10.2 5 10.38 5.08 10.54 5.22 C 12.28 6.98 13.8 8.48 13.8 8.48 C 13.94 8.62 14 8.82 14 9 C 14 9.2 13.94 9.38 13.78 9.54 C 13.5 9.82 13.02 9.82 12.74 9.54 L 10.76 7.56 L 10.76 14.26 C 10.76 14.66 10.42 15 10 15 C 9.58 15 9.26 14.66 9.26 14.26 L 9.26 7.56 L 7.28 9.54 C 6.98 9.82 6.52 9.82 6.22 9.54 C 6.08 9.38 6 9.2 6 9 C 6 8.82 6.06 8.62 6.22 8.48 Z"
@@ -75,7 +75,7 @@ const Layout = ({
                   <Link
                     href={breadcrumb.href}
                     key={breadcrumb.href}
-                    className="text-lg"
+                    className="text-lg opacity-40 font-extrabold"
                   >
                     {breadcrumb.label}
                   </Link>

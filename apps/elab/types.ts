@@ -15,6 +15,27 @@ export interface Breadcrumb {
 //   uncornered = 'Boston Uncornered',
 // }
 
+export const enum Theme {
+  none,
+  gunviolence,
+  climate,
+  incarceration,
+}
+export const ThemeColors = [
+  {
+    primary: 'text-purple border-purple',
+    primaryHex: '#7C4E9F',
+    secondary: 'text-teal fill-teal',
+    secondaryHex: '#00a494',
+  },
+  {
+    primary: 'text-purple border-purple',
+    primaryHex: '#7C4E9F',
+    secondary: 'text-green fill-green',
+    secondaryHex: '#00a494',
+  },
+];
+
 export interface ThemeConfig {
   arrow: string;
   secodaryArrow: string;
@@ -73,23 +94,3 @@ export enum Partner {
   teenempowerment,
   uncornered,
 }
-export const enum Theme {
-  none,
-  gunviolence,
-  climate,
-  incarceration,
-}
-export const ThemeColors = [
-  {
-    primary: 'text-purple border-purple',
-    primaryHex: '#7C4E9F',
-    secondary: 'text-teal fill-teal',
-    secondaryHex: '#00a494',
-  },
-  {
-    primary: 'text-purple border-purple',
-    primaryHex: '#7C4E9F',
-    secondary: 'text-green fill-green',
-    secondaryHex: '#00a494',
-  },
-];

@@ -14,7 +14,7 @@ import { create } from 'zustand';
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 
-import { Theme, ThemeConfig } from '@/types';
+import { Theme, ThemeConfig, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
 import {
@@ -156,35 +156,6 @@ export default function Studio({
     videoOpen,
   } = useStore((state) => state);
 
-  const theming: { [key: string]: ThemeConfig } = {
-    gunviolence: {
-      arrow: '#7C4E9F',
-      text: 'text-purple',
-      heading: 'text-green',
-      border: 'border-purple',
-      borderLight: 'border-[#E3BFFF]',
-      bg: 'bg-purple',
-      fill: 'fill-purple',
-      gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
-      secodary: 'bg-[#E2BDFE]',
-      secodaryBg: 'bg-[#E2BDFE]/40',
-      theme: Theme.gunviolence,
-    },
-    climate: {
-      arrow: '#00A494',
-      text: 'text-leaf',
-      heading: 'text-yellow',
-      border: 'border-leaf',
-      borderLight: 'border-purple',
-      bg: 'group-hover:bg-leaf/40',
-      fill: 'fill-leaf',
-      secodary: 'bg-#D7EFC1',
-      secodaryBg: 'bg-#D7EFC1/40',
-      gradient: 'from-[#D7EFC1] to-leaf',
-      theme: Theme.gunviolence,
-    },
-  };
-
   if (item) {
     const rendererOverrides = {
       layout: (layout: number[], children: any[]) => {
@@ -231,7 +202,7 @@ export default function Studio({
       heading: (level: number, children: ReactNode, textAlign: any) => {
         const customRenderers = {
           3: `text-xl font-extrabold uppercase my-4 ${
-            theming[item.initiative].heading
+            Theming[item.initiative].heading
           }`,
         };
         return HeadingStyle({ level, children, textAlign, customRenderers });
@@ -246,7 +217,7 @@ export default function Studio({
             <div className="my-4">
               <p
                 className={`italic text-lg font-bold ${
-                  theming[item.initiative].text
+                  Theming[item.initiative].text
                 }`}
               >
                 {children[0].props.node.children[0].text}
@@ -281,7 +252,7 @@ export default function Studio({
       <Layout
         error={error}
         breadcrumbs={[{ label: 'Studio Projects', href: '/studios/projects' }]}
-        theme={theming[item.initiative].theme}
+        theme={Theming[item.initiative].theme}
         fullBleed={true}
       >
         {item && (
@@ -329,7 +300,7 @@ export default function Studio({
                               d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
                               fill="white"
                               className={`group-hover:${
-                                theming[item.initiative].fill
+                                Theming[item.initiative].fill
                               }`}
                             />
                           </svg>
@@ -344,7 +315,7 @@ export default function Studio({
                 <div className="basis-1/3 xl:basis-1/2">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${
-                      theming[item.initiative].heading
+                      Theming[item.initiative].heading
                     }`}
                   >
                     About
@@ -356,9 +327,9 @@ export default function Studio({
                         label="Watch the film"
                         link="/"
                         icon="play"
-                        theme={theming[item.initiative].theme}
+                        theme={Theming[item.initiative].theme}
                         className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
-                          theming[item.initiative].fill
+                          Theming[item.initiative].fill
                         }`}
                         onClick={() => toggleVideo()}
                       />
@@ -368,7 +339,7 @@ export default function Studio({
                 <div className="hidden lg:block w-3/4 lg:w-full">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${
-                      theming[item.initiative].heading
+                      Theming[item.initiative].heading
                     }`}
                   >
                     Jump to:
@@ -376,34 +347,36 @@ export default function Studio({
                   <Button
                     label="A Look Inside the Co-Creation Process"
                     anchorId="cocreation"
-                    className={`text-sm ${theming[item.initiative].text} ${
-                      theming[item.initiative].fill
+                    className={`text-sm ${Theming[item.initiative].text} ${
+                      Theming[item.initiative].fill
                     }
                       `}
                   />
-                  <Button
-                    label="Impact"
-                    anchorId="impact"
-                    className={`text-sm ${theming[item.initiative].text} ${
-                      theming[item.initiative].fill
-                    }
-                      `}
-                  />
-                  <Button
-                    label="Team"
-                    anchorId="team"
-                    className={`text-sm ${theming[item.initiative].text} ${
-                      theming[item.initiative].fill
-                    }
-                      `}
-                  />
-                  <Button
-                    label="Related Projects"
-                    anchorId="related"
-                    className={`text-sm ${theming[item.initiative].text} ${
-                      theming[item.initiative].fill
-                    }`}
-                  />
+                  <div className="flex flex-row gap-x-5">
+                    <Button
+                      label="Impact"
+                      anchorId="impact"
+                      className={`text-sm ${Theming[item.initiative].text} ${
+                        Theming[item.initiative].fill
+                      }
+                    `}
+                    />
+                    <Button
+                      label="Team"
+                      anchorId="team"
+                      className={`text-sm ${Theming[item.initiative].text} ${
+                        Theming[item.initiative].fill
+                      }
+                    `}
+                    />
+                    <Button
+                      label="Related Projects"
+                      anchorId="related"
+                      className={`text-sm ${Theming[item.initiative].text} ${
+                        Theming[item.initiative].fill
+                      }`}
+                    />
+                  </div>
                 </div>
               </div>
             </Gutter>
@@ -415,14 +388,14 @@ export default function Studio({
                 </h2>
                 <DocumentRenderer
                   document={item.coCreation.document}
-                  componentBlocks={Blocks(theming[item.initiative])}
+                  componentBlocks={Blocks(Theming[item.initiative])}
                   renderers={Doc(rendererOverrides)}
                 />
               </div>
 
               <h2
                 className={`text-xl font-extrabold uppercase ${
-                  theming[item.initiative].heading
+                  Theming[item.initiative].heading
                 }`}
               >
                 Partners
@@ -436,7 +409,7 @@ export default function Studio({
                 <h2 className="font-bold text-5xl my-3">Impact</h2>
                 <DocumentRenderer
                   document={item.impact.document}
-                  componentBlocks={Blocks(theming[item.initiative])}
+                  componentBlocks={Blocks(Theming[item.initiative])}
                   renderers={Doc(rendererOverrides)}
                 />
               </div>
@@ -449,7 +422,7 @@ export default function Studio({
                 <PeopleList
                   list={item.studioStudents}
                   heading="Students"
-                  theme={theming[item.initiative]}
+                  theme={Theming[item.initiative]}
                   index={0}
                 />
               )}
@@ -457,17 +430,17 @@ export default function Studio({
                 <PeopleList
                   list={item.learningPartners}
                   heading="Learning Partners"
-                  theme={theming[item.initiative]}
+                  theme={Theming[item.initiative]}
                   index={1}
                 />
               )}
-              <div className="flex flex-col xl:flex-row gap-x-7">
+              <div className="flex flex-col lg:flex-row gap-x-7">
                 <div>
                   {item.instructors && item.instructors.length > 0 && (
                     <PeopleList
                       list={item.instructors}
                       heading="Studio Instructors"
-                      theme={theming[item.initiative]}
+                      theme={Theming[item.initiative]}
                       index={2}
                     />
                   )}
@@ -477,7 +450,7 @@ export default function Studio({
                     <PeopleList
                       list={item.studioStaff}
                       heading="Engagement Lab Staff"
-                      theme={theming[item.initiative]}
+                      theme={Theming[item.initiative]}
                       index={3}
                     />
                   )}

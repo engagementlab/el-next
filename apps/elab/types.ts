@@ -17,6 +17,7 @@ export interface Breadcrumb {
 
 export interface ThemeConfig {
   arrow: string;
+  secodaryArrow: string;
   text: string;
   heading: string;
   bg: string;
@@ -28,6 +29,37 @@ export interface ThemeConfig {
   secodary: string;
   theme: Theme;
 }
+
+export const Theming: { [key: string]: ThemeConfig } = {
+  gunviolence: {
+    arrow: '#7C4E9F',
+    secodaryArrow: '#00A494',
+    text: 'text-purple',
+    heading: 'text-green',
+    border: 'border-purple',
+    borderLight: 'border-[#E3BFFF]',
+    bg: 'bg-purple',
+    fill: 'fill-purple',
+    gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
+    secodary: 'bg-[#E2BDFE]',
+    secodaryBg: 'bg-[#E2BDFE]/40',
+    theme: Theme.gunviolence,
+  },
+  climate: {
+    arrow: '#00A494',
+    secodaryArrow: 'fill-green',
+    text: 'text-leaf',
+    heading: 'text-yellow',
+    border: 'border-leaf',
+    borderLight: 'border-purple',
+    bg: 'group-hover:bg-leaf/40',
+    fill: 'fill-leaf',
+    secodary: 'bg-#D7EFC1',
+    secodaryBg: 'bg-#D7EFC1/40',
+    gradient: 'from-[#D7EFC1] to-leaf',
+    theme: Theme.gunviolence,
+  },
+};
 
 export enum Partner {
   all,

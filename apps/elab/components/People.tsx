@@ -64,7 +64,7 @@ const Person = ({
 }): JSX.Element => {
   return (
     <div
-      className="flex flex-col w-full items-center text-center xl:basis-1/5 ml-0 group"
+      className="flex flex-col items-center text-center lg:basis-1/4 xl:basis-1/5 ml-0 group"
       // key={`thumb-${person.key}`}
     >
       {person.image ? (
@@ -72,13 +72,13 @@ const Person = ({
           id={`thumb-${person.key}`}
           alt={`Photo of ${person.name}`}
           imgId={person.image.publicId}
-          width={230}
-          transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
+          width={150}
+          transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_150,w_150"
           className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight}`}
           // ` group-hover:border-8 `
         />
       ) : (
-        <ImagePlaceholder imageLabel="Person" width={230} height={230} />
+        <ImagePlaceholder imageLabel="Person" width={150} height={150} />
       )}
       <p className={`text-lg border-b-2 mt-3 ${theme.text}`}>{person.name}</p>
       <p className="text-sm mt-1">{person.title}</p>
@@ -98,7 +98,7 @@ export const PeopleList = ({
 }): JSX.Element => {
   const { togglePeople, peopleOpen } = useStore((state) => state);
   return (
-    <>
+    <div className="flex flex-col">
       <h3
         className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${theme.heading}`}
       >
@@ -135,7 +135,10 @@ export const PeopleList = ({
               viewBox="0 -960 960 960"
               width="40"
             >
-              <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
+              <path
+                fill={theme.secodaryArrow}
+                d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"
+              ></path>
             </svg>
           </button>
           {/* <hr className={`border-1 ${theme.heading}`} /> */}
@@ -158,6 +161,6 @@ export const PeopleList = ({
           )}
         </motion.div>
       </div>
-    </>
+    </div>
   );
 };

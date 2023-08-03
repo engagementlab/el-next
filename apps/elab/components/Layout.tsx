@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -53,7 +53,7 @@ const Layout = ({
         {/* Breadcrumbs layout */}
         {breadcrumbs && (
           <motion.div
-            className="relative flex justify-center xl:justify-start ml-1 md:ml-0 mt-5 lg:mt-12"
+            className="relative flex justify-center xl:justify-start ml-1 md:ml-0 mt-5 lg:mt-6 lg:mb-20"
             initial={{ opacity: 0 }}
             exit={{ opacity: 0 }}
             animate={{ opacity: 1 }}

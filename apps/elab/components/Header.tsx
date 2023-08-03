@@ -24,8 +24,9 @@ interface NavLink {
   enabled?: boolean;
   label: string;
   url?: string;
-  href?: string;
-  subLinks?: NavLink[];
+  href: string;
+  subLink?: boolean;
+  disabled?: boolean;
 }
 
 type Props = {
@@ -180,12 +181,7 @@ const Header = ({ theme }: Props): JSX.Element => {
     href,
     disabled = false,
     subLink = false,
-  }: {
-    label: string;
-    href: string;
-    disabled?: boolean;
-    subLink?: boolean;
-  }): JSX.Element =>
+  }: NavLink): JSX.Element =>
     ActiveLink(href) ? (
       <span
         onClick={() => {
@@ -202,8 +198,8 @@ const Header = ({ theme }: Props): JSX.Element => {
           >
             <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
           </svg>
-        )}{' '}
-        {label}
+        )}
+        &nbsp;{label}
       </span>
     ) : disabled ? (
       <span className="opacity-50 mt-3 xl:my-1">
@@ -216,7 +212,8 @@ const Header = ({ theme }: Props): JSX.Element => {
           >
             <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
           </svg>
-        )}{' '}
+        )}
+        &nbsp;
         {label}
       </span>
     ) : (
@@ -230,7 +227,8 @@ const Header = ({ theme }: Props): JSX.Element => {
           >
             <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
           </svg>
-        )}{' '}
+        )}
+        &nbsp;
         {label}
       </Link>
     );
@@ -288,9 +286,9 @@ const Header = ({ theme }: Props): JSX.Element => {
   );
   const whatsNewLinks = (
     <>
-      <NavLink href="/news" label="News" disabled={true} />
-      <NavLink href="/events" label="Events" disabled={true} />
-      <NavLink href="/press" label="Press Room" disabled={true} />
+      <NavLink href="/news" label="News" />
+      <NavLink href="/events" label="Events" />
+      {/* <NavLink href="/press" label="Press Room" disabled={true} /> */}
       <NavLink href="/newsletter" label="Join Newsletter" disabled={true} />
     </>
   );

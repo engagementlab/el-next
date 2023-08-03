@@ -76,7 +76,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     bg: 'bg-leaf',
     fill: 'fill-leaf',
     secodary: 'bg-#D7EFC1',
-    secodaryBg: 'bg-#D7EFC1/40',
+    secodaryBg: 'bg-[#D7EFC1]',
     gradient: 'from-[#D7EFC1] to-leaf',
     theme: Theme.climate,
   },

@@ -45,6 +45,17 @@ const NewsItem: Lists.NewsItem = list({
       defaultValue: true,
     }),
     flags: Flags,
+    initiatives: multiselect({
+      type: 'enum',
+      options: [
+        { label: 'Gun Violence', value: 'gunviolence' },
+        { label: 'Climate', value: 'climate' },
+        // { label: 'Incarceration', value: 'incarceration' },
+      ],
+      ui: {
+        description: 'If applicable.',
+      },
+    }),
     thumbnail: cloudinaryImage({
       label: 'Thumbnail/Header Image',
       cloudinary: {
@@ -60,6 +71,9 @@ const NewsItem: Lists.NewsItem = list({
       },
       label: 'Thumbail Alt Text ♿',
       ui: { description: 'Describe appearance of Thumbnail/Header Image' },
+    }),
+    summary: text({
+      ui: { displayMode: 'textarea', description: 'Appears below thumbnail.' },
     }),
     publishDate: timestamp({
       validation: {
@@ -90,7 +104,6 @@ const NewsItem: Lists.NewsItem = list({
     externalLink: text({
       label: 'External link',
     }),
-
     blurb: document({
       links: true,
       ui: {

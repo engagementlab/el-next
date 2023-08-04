@@ -1,5 +1,10 @@
 import { list } from '@keystone-6/core';
-import { checkbox, text, timestamp } from '@keystone-6/core/fields';
+import {
+  checkbox,
+  multiselect,
+  text,
+  timestamp,
+} from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -34,6 +39,17 @@ const Event: Lists.Event = list({
       defaultValue: true,
     }),
     flags: Flags,
+    initiatives: multiselect({
+      type: 'enum',
+      options: [
+        { label: 'Gun Violence', value: 'gunviolence' },
+        { label: 'Climate', value: 'climate' },
+        // { label: 'Incarceration', value: 'incarceration' },
+      ],
+      ui: {
+        description: 'If applicable',
+      },
+    }),
     thumbnail: cloudinaryImage({
       label: 'Thumbnail/Header Image',
       cloudinary: {
@@ -49,6 +65,9 @@ const Event: Lists.Event = list({
       },
       label: 'Thumbail Alt Text ♿',
       ui: { description: 'Describe appearance of Thumbnail/Header Image' },
+    }),
+    summary: text({
+      ui: { displayMode: 'textarea', description: 'Appears below thumbnail.' },
     }),
     eventDate: timestamp({
       validation: {

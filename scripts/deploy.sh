@@ -3,6 +3,9 @@
 cd /srv/apps/el-next/
 git pull
 
+# Prune build cache
+docker buildx prune --filter=until=48h -f
+
 # Pull swarm down
 docker compose down
 

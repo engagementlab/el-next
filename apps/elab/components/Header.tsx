@@ -157,8 +157,6 @@ const ActiveLink = (href: string | undefined) => {
 };
 
 const Header = ({ theme }: Props): JSX.Element => {
-  const customEase =
-    'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600';
   const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
   const navSubClass =
     'absolute flex flex-col text-stone text-sm border-t-2 border-t-white p-3';
@@ -286,7 +284,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   );
   const whatsNewLinks = (
     <>
-      <NavLink href="/news" label="News" />
+      <NavLink href="/whats-new?news" label="News" />
       <NavLink href="/events" label="Events" />
       {/* <NavLink href="/press" label="Press Room" disabled={true} /> */}
       <NavLink href="/newsletter" label="Join Newsletter" disabled={true} />

@@ -70,9 +70,15 @@ model Initiative {
 }
 
 model InitiativesLanding {
-  id          String @id @default(cuid())
-  name        String @unique @default("Initiatives Landing Page")
-  description String @default("")
+  id                String @id @default(cuid())
+  name              String @unique @default("Initiatives Landing Page")
+  intro             String @default("")
+  introImage        Json?
+  introImageAltText String @default("")
+  introImageCaption String @default("")
+  tngvi             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  tn4ej             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  everythingElse    Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model LearningPartners {

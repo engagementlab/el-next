@@ -567,7 +567,25 @@ input SlideRelateToManyForCreateInput {
 type InitiativesLanding {
   id: ID!
   name: String
-  description: String
+  intro: String
+  introImage: CloudinaryImage_File
+  introImageAltText: String
+  introImageCaption: String
+  tngvi: InitiativesLanding_tngvi_Document
+  tn4ej: InitiativesLanding_tn4ej_Document
+  everythingElse: InitiativesLanding_everythingElse_Document
+}
+
+type InitiativesLanding_tngvi_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type InitiativesLanding_tn4ej_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type InitiativesLanding_everythingElse_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input InitiativesLandingWhereUniqueInput {
@@ -581,18 +599,28 @@ input InitiativesLandingWhereInput {
   NOT: [InitiativesLandingWhereInput!]
   id: IDFilter
   name: StringFilter
-  description: StringFilter
+  intro: StringFilter
+  introImageAltText: StringFilter
+  introImageCaption: StringFilter
 }
 
 input InitiativesLandingOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  description: OrderDirection
+  intro: OrderDirection
+  introImageAltText: OrderDirection
+  introImageCaption: OrderDirection
 }
 
 input InitiativesLandingUpdateInput {
   name: String
-  description: String
+  intro: String
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  tngvi: JSON
+  tn4ej: JSON
+  everythingElse: JSON
 }
 
 input InitiativesLandingUpdateArgs {
@@ -602,7 +630,13 @@ input InitiativesLandingUpdateArgs {
 
 input InitiativesLandingCreateInput {
   name: String
-  description: String
+  intro: String
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  tngvi: JSON
+  tn4ej: JSON
+  everythingElse: JSON
 }
 
 type LearningPartners {

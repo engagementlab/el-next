@@ -5,6 +5,7 @@ import { graphql, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
+  relationship,
   text,
   timestamp,
   virtual,
@@ -132,6 +133,30 @@ const NewsItem: Lists.NewsItem = list({
         views: './admin/components/component-blocks',
       },
       componentBlocks,
+    }),
+    alumni: relationship({
+      ref: 'Graduate.alumniSpotlight',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+    learningPartners: relationship({
+      ref: 'LearningPartners.spotlight',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
     }),
   },
   hooks: {

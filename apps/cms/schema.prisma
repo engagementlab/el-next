@@ -49,6 +49,19 @@ model Filter {
   researchProjects ResearchProject[] @relation("Filter_researchProjects")
 }
 
+model Graduate {
+  id                String     @id @default(cuid())
+  name              String     @unique @default("Graduate Landing Page")
+  intro             Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage        Json?
+  introImageAltText String     @default("")
+  introImageCaption String     @default("")
+  mediaDesign       Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  symposium         Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  salzburg          Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  alumniSpotlight   NewsItem[] @relation("Graduate_alumniSpotlight")
+}
+
 model Initiative {
   id     String  @id @default(cuid())
   name   String  @unique @default("Initiative Name")
@@ -62,24 +75,38 @@ model InitiativesLanding {
   description String @default("")
 }
 
+model LearningPartners {
+  id                String     @id @default(cuid())
+  name              String     @unique @default("Learning Partners Landing Page")
+  intro             Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage        Json?
+  introImageAltText String     @default("")
+  introImageCaption String     @default("")
+  what              Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  benefits          Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  spotlight         NewsItem[] @relation("LearningPartners_spotlight")
+}
+
 model NewsItem {
-  id                  String    @id @default(cuid())
-  title               String    @default("")
-  key                 String    @unique @default("")
+  id                  String             @id @default(cuid())
+  title               String             @default("")
+  key                 String             @unique @default("")
   createdDate         DateTime?
-  enabled             Boolean   @default(true)
-  flags               Json      @default("[]")
-  initiatives         Json      @default("[]")
+  enabled             Boolean            @default(true)
+  flags               Json               @default("[]")
+  initiatives         Json               @default("[]")
   thumbnail           Json?
-  thumbAltText        String    @default("")
-  summary             String    @default("")
+  thumbAltText        String             @default("")
+  summary             String             @default("")
   publishDate         DateTime
-  source              String    @default("")
-  linkHelper_html     String    @default("<p>Need HTML!</p>")
-  linkHelper_iconType icon      @default(help)
-  externalLink        String    @default("")
-  blurb               Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  body                Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  source              String             @default("")
+  linkHelper_html     String             @default("<p>Need HTML!</p>")
+  linkHelper_iconType icon               @default(help)
+  externalLink        String             @default("")
+  blurb               Json               @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  body                Json               @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  alumni              Graduate[]         @relation("Graduate_alumniSpotlight")
+  learningPartners    LearningPartners[] @relation("LearningPartners_spotlight")
 }
 
 model Partner {
@@ -219,6 +246,18 @@ model StudioProject {
   studioStaff         Person[]                    @relation("Person_projectStaff")
   instructors         Person[]                    @relation("Person_projectInstructors")
   semester            Semester[]                  @relation("Semester_projects")
+  undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
+}
+
+model Undergraduate {
+  id                 String          @id @default(cuid())
+  name               String          @unique @default("Undergraduate Landing Page")
+  intro              Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage         Json?
+  introImageAltText  String          @default("")
+  introImageCaption  String          @default("")
+  socialImpactDesign Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projectSpotlight   StudioProject[] @relation("StudioProject_undergrad")
 }
 
 enum icon {

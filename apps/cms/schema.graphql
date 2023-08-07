@@ -400,6 +400,106 @@ input ResearchProjectRelateToManyForCreateInput {
   connect: [ResearchProjectWhereUniqueInput!]
 }
 
+type Graduate {
+  id: ID!
+  name: String
+  intro: Graduate_intro_Document
+  introImage: CloudinaryImage_File
+  introImageAltText: String
+  introImageCaption: String
+  mediaDesign: Graduate_mediaDesign_Document
+  symposium: Graduate_symposium_Document
+  salzburg: Graduate_salzburg_Document
+  alumniSpotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
+  alumniSpotlightCount(where: NewsItemWhereInput! = {}): Int
+}
+
+type Graduate_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Graduate_mediaDesign_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Graduate_symposium_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Graduate_salzburg_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input GraduateWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input GraduateWhereInput {
+  AND: [GraduateWhereInput!]
+  OR: [GraduateWhereInput!]
+  NOT: [GraduateWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  introImageAltText: StringFilter
+  introImageCaption: StringFilter
+  alumniSpotlight: NewsItemManyRelationFilter
+}
+
+input NewsItemManyRelationFilter {
+  every: NewsItemWhereInput
+  some: NewsItemWhereInput
+  none: NewsItemWhereInput
+}
+
+input GraduateOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  introImageAltText: OrderDirection
+  introImageCaption: OrderDirection
+}
+
+input GraduateUpdateInput {
+  name: String
+  intro: JSON
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  mediaDesign: JSON
+  symposium: JSON
+  salzburg: JSON
+  alumniSpotlight: NewsItemRelateToManyForUpdateInput
+}
+
+input NewsItemRelateToManyForUpdateInput {
+  disconnect: [NewsItemWhereUniqueInput!]
+  set: [NewsItemWhereUniqueInput!]
+  create: [NewsItemCreateInput!]
+  connect: [NewsItemWhereUniqueInput!]
+}
+
+input GraduateUpdateArgs {
+  where: GraduateWhereUniqueInput!
+  data: GraduateUpdateInput!
+}
+
+input GraduateCreateInput {
+  name: String
+  intro: JSON
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  mediaDesign: JSON
+  symposium: JSON
+  salzburg: JSON
+  alumniSpotlight: NewsItemRelateToManyForCreateInput
+}
+
+input NewsItemRelateToManyForCreateInput {
+  create: [NewsItemCreateInput!]
+  connect: [NewsItemWhereUniqueInput!]
+}
+
 type Initiative {
   id: ID!
   name: String
@@ -505,6 +605,81 @@ input InitiativesLandingCreateInput {
   description: String
 }
 
+type LearningPartners {
+  id: ID!
+  name: String
+  intro: LearningPartners_intro_Document
+  introImage: CloudinaryImage_File
+  introImageAltText: String
+  introImageCaption: String
+  what: LearningPartners_what_Document
+  benefits: LearningPartners_benefits_Document
+  spotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
+  spotlightCount(where: NewsItemWhereInput! = {}): Int
+}
+
+type LearningPartners_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type LearningPartners_what_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type LearningPartners_benefits_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input LearningPartnersWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input LearningPartnersWhereInput {
+  AND: [LearningPartnersWhereInput!]
+  OR: [LearningPartnersWhereInput!]
+  NOT: [LearningPartnersWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  introImageAltText: StringFilter
+  introImageCaption: StringFilter
+  spotlight: NewsItemManyRelationFilter
+}
+
+input LearningPartnersOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  introImageAltText: OrderDirection
+  introImageCaption: OrderDirection
+}
+
+input LearningPartnersUpdateInput {
+  name: String
+  intro: JSON
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  what: JSON
+  benefits: JSON
+  spotlight: NewsItemRelateToManyForUpdateInput
+}
+
+input LearningPartnersUpdateArgs {
+  where: LearningPartnersWhereUniqueInput!
+  data: LearningPartnersUpdateInput!
+}
+
+input LearningPartnersCreateInput {
+  name: String
+  intro: JSON
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  what: JSON
+  benefits: JSON
+  spotlight: NewsItemRelateToManyForCreateInput
+}
+
 type NewsItem {
   id: ID!
   title: String
@@ -522,6 +697,10 @@ type NewsItem {
   externalLink: String
   blurb: NewsItem_blurb_Document
   body: NewsItem_body_Document
+  alumni(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
+  alumniCount(where: GraduateWhereInput! = {}): Int
+  learningPartners(where: LearningPartnersWhereInput! = {}, orderBy: [LearningPartnersOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LearningPartnersWhereUniqueInput): [LearningPartners!]
+  learningPartnersCount(where: LearningPartnersWhereInput! = {}): Int
 }
 
 enum NewsItemFlagType {
@@ -566,6 +745,20 @@ input NewsItemWhereInput {
   publishDate: DateTimeFilter
   source: StringFilter
   externalLink: StringFilter
+  alumni: GraduateManyRelationFilter
+  learningPartners: LearningPartnersManyRelationFilter
+}
+
+input GraduateManyRelationFilter {
+  every: GraduateWhereInput
+  some: GraduateWhereInput
+  none: GraduateWhereInput
+}
+
+input LearningPartnersManyRelationFilter {
+  every: LearningPartnersWhereInput
+  some: LearningPartnersWhereInput
+  none: LearningPartnersWhereInput
 }
 
 input NewsItemOrderByInput {
@@ -597,11 +790,27 @@ input NewsItemUpdateInput {
   externalLink: String
   blurb: JSON
   body: JSON
+  alumni: GraduateRelateToManyForUpdateInput
+  learningPartners: LearningPartnersRelateToManyForUpdateInput
 }
 
 input HelperFieldInput {
   html: String
   iconType: String
+}
+
+input GraduateRelateToManyForUpdateInput {
+  disconnect: [GraduateWhereUniqueInput!]
+  set: [GraduateWhereUniqueInput!]
+  create: [GraduateCreateInput!]
+  connect: [GraduateWhereUniqueInput!]
+}
+
+input LearningPartnersRelateToManyForUpdateInput {
+  disconnect: [LearningPartnersWhereUniqueInput!]
+  set: [LearningPartnersWhereUniqueInput!]
+  create: [LearningPartnersCreateInput!]
+  connect: [LearningPartnersWhereUniqueInput!]
 }
 
 input NewsItemUpdateArgs {
@@ -625,6 +834,18 @@ input NewsItemCreateInput {
   externalLink: String
   blurb: JSON
   body: JSON
+  alumni: GraduateRelateToManyForCreateInput
+  learningPartners: LearningPartnersRelateToManyForCreateInput
+}
+
+input GraduateRelateToManyForCreateInput {
+  create: [GraduateCreateInput!]
+  connect: [GraduateWhereUniqueInput!]
+}
+
+input LearningPartnersRelateToManyForCreateInput {
+  create: [LearningPartnersCreateInput!]
+  connect: [LearningPartnersWhereUniqueInput!]
 }
 
 type Partner {
@@ -1431,6 +1652,8 @@ type StudioProject {
   instructorsCount(where: PersonWhereInput! = {}): Int
   semester(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   semesterCount(where: SemesterWhereInput! = {}): Int
+  undergrad(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
+  undergradCount(where: UndergraduateWhereInput! = {}): Int
 }
 
 enum StudioProjectInitiativeType {
@@ -1498,6 +1721,7 @@ input StudioProjectWhereInput {
   studioStaff: PersonManyRelationFilter
   instructors: PersonManyRelationFilter
   semester: SemesterManyRelationFilter
+  undergrad: UndergraduateManyRelationFilter
 }
 
 input StudioProjectInitiativeTypeNullableFilter {
@@ -1505,6 +1729,12 @@ input StudioProjectInitiativeTypeNullableFilter {
   in: [StudioProjectInitiativeType!]
   notIn: [StudioProjectInitiativeType!]
   not: StudioProjectInitiativeTypeNullableFilter
+}
+
+input UndergraduateManyRelationFilter {
+  every: UndergraduateWhereInput
+  some: UndergraduateWhereInput
+  none: UndergraduateWhereInput
 }
 
 input StudioProjectOrderByInput {
@@ -1547,6 +1777,14 @@ input StudioProjectUpdateInput {
   studioStaff: PersonRelateToManyForUpdateInput
   instructors: PersonRelateToManyForUpdateInput
   semester: SemesterRelateToManyForUpdateInput
+  undergrad: UndergraduateRelateToManyForUpdateInput
+}
+
+input UndergraduateRelateToManyForUpdateInput {
+  disconnect: [UndergraduateWhereUniqueInput!]
+  set: [UndergraduateWhereUniqueInput!]
+  create: [UndergraduateCreateInput!]
+  connect: [UndergraduateWhereUniqueInput!]
 }
 
 input StudioProjectUpdateArgs {
@@ -1580,6 +1818,80 @@ input StudioProjectCreateInput {
   studioStaff: PersonRelateToManyForCreateInput
   instructors: PersonRelateToManyForCreateInput
   semester: SemesterRelateToManyForCreateInput
+  undergrad: UndergraduateRelateToManyForCreateInput
+}
+
+input UndergraduateRelateToManyForCreateInput {
+  create: [UndergraduateCreateInput!]
+  connect: [UndergraduateWhereUniqueInput!]
+}
+
+type Undergraduate {
+  id: ID!
+  name: String
+  intro: Undergraduate_intro_Document
+  introImage: CloudinaryImage_File
+  introImageAltText: String
+  introImageCaption: String
+  socialImpactDesign: Undergraduate_socialImpactDesign_Document
+  projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
+}
+
+type Undergraduate_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Undergraduate_socialImpactDesign_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input UndergraduateWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input UndergraduateWhereInput {
+  AND: [UndergraduateWhereInput!]
+  OR: [UndergraduateWhereInput!]
+  NOT: [UndergraduateWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  introImageAltText: StringFilter
+  introImageCaption: StringFilter
+  projectSpotlight: StudioProjectManyRelationFilter
+}
+
+input UndergraduateOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  introImageAltText: OrderDirection
+  introImageCaption: OrderDirection
+}
+
+input UndergraduateUpdateInput {
+  name: String
+  intro: JSON
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  socialImpactDesign: JSON
+  projectSpotlight: StudioProjectRelateToManyForUpdateInput
+}
+
+input UndergraduateUpdateArgs {
+  where: UndergraduateWhereUniqueInput!
+  data: UndergraduateUpdateInput!
+}
+
+input UndergraduateCreateInput {
+  name: String
+  intro: JSON
+  introImage: Upload
+  introImageAltText: String
+  introImageCaption: String
+  socialImpactDesign: JSON
+  projectSpotlight: StudioProjectRelateToManyForCreateInput
 }
 
 """
@@ -1606,6 +1918,12 @@ type Mutation {
   updateFilters(data: [FilterUpdateArgs!]!): [Filter]
   deleteFilter(where: FilterWhereUniqueInput!): Filter
   deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
+  createGraduate(data: GraduateCreateInput!): Graduate
+  createGraduates(data: [GraduateCreateInput!]!): [Graduate]
+  updateGraduate(where: GraduateWhereUniqueInput!, data: GraduateUpdateInput!): Graduate
+  updateGraduates(data: [GraduateUpdateArgs!]!): [Graduate]
+  deleteGraduate(where: GraduateWhereUniqueInput!): Graduate
+  deleteGraduates(where: [GraduateWhereUniqueInput!]!): [Graduate]
   createInitiative(data: InitiativeCreateInput!): Initiative
   createInitiatives(data: [InitiativeCreateInput!]!): [Initiative]
   updateInitiative(where: InitiativeWhereUniqueInput!, data: InitiativeUpdateInput!): Initiative
@@ -1618,6 +1936,12 @@ type Mutation {
   updateInitiativesLandings(data: [InitiativesLandingUpdateArgs!]!): [InitiativesLanding]
   deleteInitiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
   deleteInitiativesLandings(where: [InitiativesLandingWhereUniqueInput!]!): [InitiativesLanding]
+  createLearningPartners(data: LearningPartnersCreateInput!): LearningPartners
+  createLearningPartner(data: [LearningPartnersCreateInput!]!): [LearningPartners]
+  updateLearningPartners(where: LearningPartnersWhereUniqueInput!, data: LearningPartnersUpdateInput!): LearningPartners
+  updateLearningPartner(data: [LearningPartnersUpdateArgs!]!): [LearningPartners]
+  deleteLearningPartners(where: LearningPartnersWhereUniqueInput!): LearningPartners
+  deleteLearningPartner(where: [LearningPartnersWhereUniqueInput!]!): [LearningPartners]
   createNewsItem(data: NewsItemCreateInput!): NewsItem
   createNewsItems(data: [NewsItemCreateInput!]!): [NewsItem]
   updateNewsItem(where: NewsItemWhereUniqueInput!, data: NewsItemUpdateInput!): NewsItem
@@ -1672,6 +1996,12 @@ type Mutation {
   updateStudioProjects(data: [StudioProjectUpdateArgs!]!): [StudioProject]
   deleteStudioProject(where: StudioProjectWhereUniqueInput!): StudioProject
   deleteStudioProjects(where: [StudioProjectWhereUniqueInput!]!): [StudioProject]
+  createUndergraduate(data: UndergraduateCreateInput!): Undergraduate
+  createUndergraduates(data: [UndergraduateCreateInput!]!): [Undergraduate]
+  updateUndergraduate(where: UndergraduateWhereUniqueInput!, data: UndergraduateUpdateInput!): Undergraduate
+  updateUndergraduates(data: [UndergraduateUpdateArgs!]!): [Undergraduate]
+  deleteUndergraduate(where: UndergraduateWhereUniqueInput!): Undergraduate
+  deleteUndergraduates(where: [UndergraduateWhereUniqueInput!]!): [Undergraduate]
 }
 
 type Query {
@@ -1684,12 +2014,18 @@ type Query {
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filter(where: FilterWhereUniqueInput!): Filter
   filtersCount(where: FilterWhereInput! = {}): Int
+  graduates(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
+  graduate(where: GraduateWhereUniqueInput!): Graduate
+  graduatesCount(where: GraduateWhereInput! = {}): Int
   initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiative(where: InitiativeWhereUniqueInput!): Initiative
   initiativesCount(where: InitiativeWhereInput! = {}): Int
   initiativesLandings(where: InitiativesLandingWhereInput! = {}, orderBy: [InitiativesLandingOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativesLandingWhereUniqueInput): [InitiativesLanding!]
   initiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
   initiativesLandingsCount(where: InitiativesLandingWhereInput! = {}): Int
+  learningPartner(where: LearningPartnersWhereInput! = {}, orderBy: [LearningPartnersOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LearningPartnersWhereUniqueInput): [LearningPartners!]
+  learningPartners(where: LearningPartnersWhereUniqueInput!): LearningPartners
+  learningPartnerCount(where: LearningPartnersWhereInput! = {}): Int
   newsItems(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   newsItem(where: NewsItemWhereUniqueInput!): NewsItem
   newsItemsCount(where: NewsItemWhereInput! = {}): Int
@@ -1717,6 +2053,9 @@ type Query {
   studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   studioProject(where: StudioProjectWhereUniqueInput!): StudioProject
   studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
+  undergraduates(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
+  undergraduate(where: UndergraduateWhereUniqueInput!): Undergraduate
+  undergraduatesCount(where: UndergraduateWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 

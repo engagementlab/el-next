@@ -1,8 +1,10 @@
 export { default as About } from './lists/about';
 export { default as Filter } from './lists/filter';
 export { default as Event } from './lists/event';
+export { default as Graduate } from './lists/graduate';
 export { default as Initiative } from './lists/initiative';
 export { default as InitiativesLanding } from './lists/initiativesLanding';
+export { default as LearningPartners } from './lists/learningPartners';
 export { default as NewsItem } from './lists/newsItem';
 export { default as ResearchProject } from './lists/researchProject';
 export { default as StudioProject } from './lists/studioProject';
@@ -12,3 +14,4 @@ export { default as Studio } from './lists/studio';
 export { default as Semester } from './lists/semester';
 export { default as Partner } from './lists/partners';
 export { default as Person } from './lists/person';
+export { default as Undergraduate } from './lists/undergraduate';

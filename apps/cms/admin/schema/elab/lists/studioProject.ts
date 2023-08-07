@@ -203,6 +203,18 @@ const StudioProject: Lists.StudioProject = list({
         },
       },
     }),
+    undergrad: relationship({
+      ref: 'Undergraduate.projectSpotlight',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   hooks: {
     resolveInput: async ({

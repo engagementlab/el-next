@@ -31,6 +31,7 @@ import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
+import { Gutter } from '@/components/Gutter';
 
 type StudioProject = {
   name: string;
@@ -240,13 +241,6 @@ export default function Studio({
             </p>
           );
       },
-    };
-    const Gutter = ({ children }: { children: ReactNode }) => {
-      return (
-        <div className="md:px-20 xl:px-24 my-6 xl:my-12 mt-14 mb-24 xl:mt-16 px-5 w-full">
-          {children}
-        </div>
-      );
     };
     return (
       <Layout

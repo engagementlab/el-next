@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Button, HeadingStyle, Query } from '@el-next/components';
 
@@ -9,9 +10,19 @@ import Divider from '../../components/Divider';
 import { CTAButton } from '@/components/Buttons';
 import { Theme } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
+import { Blocks, Doc } from '@/components/Renderers';
+import { Gutter } from '@/components/Gutter';
 
 type AboutPage = {
-  description: string;
+  intro: string;
+  introImage: {
+    publicId: string;
+  };
+  introImageAltText: string;
+  introImageCaption: string;
+  tngvi: { document: any };
+  tn4ej: { document: any };
+  everythingElse: { document: any };
 };
 
 const rendererOverrides = {
@@ -49,7 +60,7 @@ export default function Initiatives({
         <h1 className="">Social Impact Initiatives</h1>
         <div className="flex flex-col lg:flex-row justify-center">
           <h3 className="flex flex-col items-center w-full lg:w-3/5">
-            {page?.description}
+            {page?.intro}
             <div className="w-3/4 lg:w-full mt-6">
               <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
                 Jump to:
@@ -75,36 +86,41 @@ export default function Initiatives({
         </div>
       </div>
       <Divider />
-      <div
-        id="tngvi"
-        className="flex flex-col items-center mt-14 mb-10 xl:mt-16 md:px-20xl:px-24 w-full"
-      >
-        <svg viewBox="0 0.081 202 123.988" width="202" height="123.988">
-          <g transform="matrix(0.39456, 0, 0, 0.39456, 0, 0.0491)">
-            <path
-              style={{ fill: '#8d33d2' }}
-              d="M149,61.7V17.8H0v43.9h32.2c3.9,0,11.1-0.8,14.4,0.2v132.7H102V74.4c0-3.5-0.7-9.8,0.2-12.7H149z"
-            ></path>
-            <path
-              style={{ fill: '#8d33d2' }}
-              d="M362.4,163.7v-28.1c0-3.6,0.8-10-0.2-13h-59.8c-2,0-4.7-0.3-6.2,0.2v19.5c0,2.8-0.5,6.8,0.2,9.1h21.8
-                                  c3.1,0,7.5-0.6,10.1,0.2c-0.7,2.1-3.1,3.8-4.8,5c-1.9,1.4-3.7,3.1-6,4.1c-6,2.6-17.4,2.6-24,0.5c-9.3-3.1-13.6-9.7-16.1-19.7
-                                  c-0.7-2.6-0.5-5.5-0.5-8.6c0-13.5,4.6-22.9,13.9-26.9c9.7-4.2,24-1.3,27.8,6.2h29.6c3.7,0,10.4,0.8,13.4-0.2
-                                  c-2.5-20.2-14.7-32.3-30-39.8c-3.9-1.9-8.7-2.9-13-4.1c-6.7-1.9-15.9-1.6-24.2-1.4c-7.7,0.9-5.4,0.4-7.7,0.9
-                                  c-3.5,0.7-6.9,1.6-10.3,2.6c-16,5.9-28.4,16.7-35,31.9c-2.1,4.9-3.4,10.4-4.8,16.1c-2.1,8.2-1.5,21.9,0.5,29.5
-                                  c0.8,3.2,0.8,5.9,1.9,8.9c7.1,19.4,19.4,31.9,39.4,38.4c10.7,3.5,28.5,5.3,40.8,1.7c8.1-2.4,15.7-5.3,21.8-9.6c2.1-1.4,4-3.5,6-5
-                                  c2.4-1.7,4.6-3.7,6.5-6c1.9-2.5,4-4.9,5.8-7.4C360.4,167.2,361,165.1,362.4,163.7z"
-            ></path>
-            <path
-              style={{ fill: '#8d33d2' }}
-              d="M202.8,67.7c-3.7,0-9.3-0.8-12.5,0.2v64.2h-0.5c-2.8-5.4-6.9-10.3-10.1-15.4c-7-11.1-14.1-22-21.1-33.1
-                                  c-2.3-3.6-4.8-7.3-7.2-11c-1-1.5-2.8-3.1-3.4-5h-27.6c-3.7,0-9.3-0.8-12.5,0.2v127.2h40.1l0-63.3c1.6,0.8,2.4,3.4,3.4,4.8
-                                  c2.4,3.7,4.9,7.5,7.4,11.3c7.2,10.7,14.2,21.6,21.4,32.4c2.4,3.5,4.7,6.9,7,10.6c0.9,1.4,2.4,2.6,2.9,4.3h27.6
-                                  c3.5,0,9.8,0.8,12.7-0.2v-115c0-3.7,0.8-9.1-0.2-12.2H202.8z"
-            ></path>
-            <path
-              style={{ fill: '#8d33d2' }}
-              d="M509.3,171c1.5-2.9,3.2-6.1,2.5-9.6c-1.1-6-3.6-10.3-7.4-12.5c-3.6-2.1-8-2.2-13.2-0.3l-1.2,0.4l-0.4,0.1
+      <div id="tngvi">
+        <Gutter>
+          <div className="flex flex-col">
+            <h2 className="text-6xl text-purple font-bold flex flex-row self-center items-center">
+              <svg
+                viewBox="0 0.081 202 123.988"
+                width="202"
+                height="123.988"
+                className="mr-6 "
+              >
+                <g transform="matrix(0.39456, 0, 0, 0.39456, 0, 0.0491)">
+                  <path
+                    style={{ fill: '#7C4E9F' }}
+                    d="M149,61.7V17.8H0v43.9h32.2c3.9,0,11.1-0.8,14.4,0.2v132.7H102V74.4c0-3.5-0.7-9.8,0.2-12.7H149z"
+                  ></path>
+                  <path
+                    style={{ fill: '#7C4E9F' }}
+                    d="M362.4,163.7v-28.1c0-3.6,0.8-10-0.2-13h-59.8c-2,0-4.7-0.3-6.2,0.2v19.5c0,2.8-0.5,6.8,0.2,9.1h21.8
+                    c3.1,0,7.5-0.6,10.1,0.2c-0.7,2.1-3.1,3.8-4.8,5c-1.9,1.4-3.7,3.1-6,4.1c-6,2.6-17.4,2.6-24,0.5c-9.3-3.1-13.6-9.7-16.1-19.7
+                    c-0.7-2.6-0.5-5.5-0.5-8.6c0-13.5,4.6-22.9,13.9-26.9c9.7-4.2,24-1.3,27.8,6.2h29.6c3.7,0,10.4,0.8,13.4-0.2
+                    c-2.5-20.2-14.7-32.3-30-39.8c-3.9-1.9-8.7-2.9-13-4.1c-6.7-1.9-15.9-1.6-24.2-1.4c-7.7,0.9-5.4,0.4-7.7,0.9
+                    c-3.5,0.7-6.9,1.6-10.3,2.6c-16,5.9-28.4,16.7-35,31.9c-2.1,4.9-3.4,10.4-4.8,16.1c-2.1,8.2-1.5,21.9,0.5,29.5
+                    c0.8,3.2,0.8,5.9,1.9,8.9c7.1,19.4,19.4,31.9,39.4,38.4c10.7,3.5,28.5,5.3,40.8,1.7c8.1-2.4,15.7-5.3,21.8-9.6c2.1-1.4,4-3.5,6-5
+                    c2.4-1.7,4.6-3.7,6.5-6c1.9-2.5,4-4.9,5.8-7.4C360.4,167.2,361,165.1,362.4,163.7z"
+                  ></path>
+                  <path
+                    style={{ fill: '#7C4E9F' }}
+                    d="M202.8,67.7c-3.7,0-9.3-0.8-12.5,0.2v64.2h-0.5c-2.8-5.4-6.9-10.3-10.1-15.4c-7-11.1-14.1-22-21.1-33.1
+                    c-2.3-3.6-4.8-7.3-7.2-11c-1-1.5-2.8-3.1-3.4-5h-27.6c-3.7,0-9.3-0.8-12.5,0.2v127.2h40.1l0-63.3c1.6,0.8,2.4,3.4,3.4,4.8
+                    c2.4,3.7,4.9,7.5,7.4,11.3c7.2,10.7,14.2,21.6,21.4,32.4c2.4,3.5,4.7,6.9,7,10.6c0.9,1.4,2.4,2.6,2.9,4.3h27.6
+                    c3.5,0,9.8,0.8,12.7-0.2v-115c0-3.7,0.8-9.1-0.2-12.2H202.8z"
+                  ></path>
+                  <path
+                    style={{ fill: '#7C4E9F' }}
+                    d="M509.3,171c1.5-2.9,3.2-6.1,2.5-9.6c-1.1-6-3.6-10.3-7.4-12.5c-3.6-2.1-8-2.2-13.2-0.3l-1.2,0.4l-0.4,0.1
                                   c0.1-0.4,0.3-0.7,0.4-1.1c0.6-1.6,1.3-3.3,1.8-5.1c0.9-3.4,0.9-6.9,0.3-10.3c-0.1-0.5-0.2-1.1-0.2-1.6c0-0.9-0.1-1.8-0.4-2.7
                                   c-2-5.9-7.2-7.9-11.5-9c-2.3-0.7-4.8-0.9-7.2-0.5l-1.2,0.3c-1.3,0.3-2.5,0.6-3.7,1c0.3-1.1,0.8-2.3,1.2-3.2s0.8-1.9,1.1-2.9l1-4.9
                                   c0.5-1.6,1-3.3,1.5-5c0.7-2.4,1.5-4.9,2.2-7.1c1.2-3.6,2.1-7.3,2.7-11c0.6-3.3,1.4-6.6,2.3-9.9c2.3-7.2,4.5-14.6,6.5-21.8
@@ -161,42 +177,21 @@ export default function Initiatives({
                                   c0.5-0.3,1-0.7,1.5-0.9c0.8-0.4,1.5-0.8,2.1-1.4c4-3.8,7.4-8.2,10-13.1c0.8-1.7,1.3-3.5,1.6-5.4c0.3-2.4,1.2-4.7,2.5-6.8
                                   c1.2-1.8,2-3.7,2.5-5.8c0.4-1.8,0-3.7-1-5.3c-0.3-0.5-0.5-1-0.6-1.6c0.4-3,3.4-7.9,5.2-10.4c1.7-2.2,4-4,6.6-5.1
                                   c0.5-0.2,1-0.3,1.5-0.3c0.9-0.1,1.9-0.3,2.8-0.7c2.7,0,4.5,0.6,5.5,1.6s1.6,2.9,1.6,5.5C503.1,163.7,502.8,165.6,502.2,167.5z"
-            ></path>
-          </g>
-        </svg>
-        <div className="flex flex-col lg:flex-row-reverse text-grey">
-          <div className="lg:w-1/2 lg:ml-14 px-5">
-            <h2 className="text-3xl font-bold">
-              Transforming Narratives of Gun Violence
+                  ></path>
+                </g>
+              </svg>
+              Transforming <br />
+              Narratives
+              <br /> of Gun Violence
             </h2>
-            <div className="flex flex-col items-center">
-              Transforming Narratives of Gun Violence (TNGV) is a collaborative
-              initiative which seeks to understand the impact of dominant
-              narratives of gun violence on individuals, families, and
-              communities most impacted, and aims to co-create interventions to
-              change these narratives. TNGV is facilitated by the Engagement Lab
-              at Emerson College in partnership with the Louis D. Brown Peace
-              Institute, Massachusetts General Hospital’s Gun Violence
-              Prevention Center, and a growing cohort of grassroots
-              organizations.
-              <div className="mt-8">
-                <CTAButton
-                  label="Learn more"
-                  link="/initiatives/gunviolence"
-                  theme={Theme.gunviolence}
-                />
-              </div>
-            </div>
-          </div>
 
-          <CaptionedImage
-            alt=""
-            caption="Ruth Rollins, LeeAnn Taylor, and Dr. Cornelia Griggs at TNGV
-          documentary screening and panel discussion, hosted by Brigham and
-          Women’s Hospital on April 11, 2023"
-            themeColor="purple"
-          />
-        </div>
+            <DocumentRenderer
+              document={page?.tngvi.document}
+              componentBlocks={Blocks()}
+              renderers={Doc()}
+            />
+          </div>
+        </Gutter>
       </div>
       <Divider />
       <div
@@ -205,31 +200,16 @@ export default function Initiatives({
       md:px-20 xl:px-24 w-full"
       >
         <div className="lg:w-1/2 px-5">
-          <h2 className="text-3xl text-grey font-bold">
+          <h2 className="text-6xl text-leaf font-bold">
             Transforming Narratives for Environmental Justice
           </h2>
-          <div className="flex flex-col items-center text-grey">
-            Fusce fermentum. Praesent vestibulum dapibus nibh. Pellentesque
-            habitant morbi tristique senectus et netus et malesuada fames ac
-            turpis egestas. Fusce risus nisl, viverra et, tempor et, pretium in,
-            sapien. Pellentesque posuere. Fusce pharetra convallis urna.
-            Suspendisse pulvinar, augue ac venenatis condimentum, sem libero
-            volutpat nibh, nec pellentesque velit pede quis nunc. Ut varius
-            tincidunt libero.
-            <div className="mt-4">
-              <CTAButton
-                label="Learn more"
-                link="/initiatives/climate"
-                theme={Theme.climate}
-              />
-            </div>
-          </div>
+
+          <DocumentRenderer
+            document={page?.tn4ej.document}
+            componentBlocks={Blocks()}
+            renderers={Doc()}
+          />
         </div>
-        <CaptionedImage
-          alt=""
-          caption="Emerson College students at workshop led by GreenRoots’ Environmental Chelsea Organizers (ECO) youth corps during Emerson’s Teach-In on Sustainability on March 29, 2023"
-          themeColor="green-blue"
-        />
       </div>
     </Layout>
   );
@@ -239,7 +219,15 @@ export async function getStaticProps() {
   const result = await Query(
     'initiativesLanding',
     `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
-        description
+        intro
+        introImage {
+          publicId
+        }
+        introImageAltText
+        introImageCaption
+        tngvi { document }
+        tn4ej { document }
+        everythingElse { document }
       }`
   );
   if (result.error) {

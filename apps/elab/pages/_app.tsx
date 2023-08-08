@@ -3,21 +3,13 @@ import type { AppProps } from 'next/app';
 
 import localFont from 'next/font/local';
 
-const overpassFont = localFont({
+const Font = localFont({
   src: '../public/overpass.ttf',
   variable: '--font-base',
-  //     style: 'normal',
-  //   },
-  //   {
-  //     path: './overpass-italic.ttf',
-  //     style: 'italic',
-  //   },
-  // ],
 });
-1;
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={`${overpassFont.variable} font-sans`}>
+    <div className={`${Font.variable} font-sans`}>
       <Component {...pageProps} />
     </div>
   );

@@ -37,7 +37,6 @@ export const Layout = ({
   let errorHelper =
     "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
-    console.log(error);
     if (error.class === ErrorClass.noconnection)
       errorHelper +=
         '🔌 It is most likely that the CMS is currently unavailable. Please try again.';

@@ -28,7 +28,7 @@ interface FlexProps {
  * This is a renderer component that overrides KeystoneJS 5.x's default layout DocumentRendererProp to use flex, rather than grid layout, allowing for responsive layout
  */
 export const FlexLayout = ({ layout, children }: FlexProps) => {
-  const flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row';
+  const flexClass = 'flex gap-x-5 flex-col-reverse lg:flex-row';
   // [  ][ ]
   if (layout[0] === 2 && layout[1] === 1) {
     return (
@@ -70,7 +70,12 @@ export const FlexLayout = ({ layout, children }: FlexProps) => {
     return (
       <div className={flexClass}>
         {children.map((element, i) => (
-          <div key={i} className={`${i === 0 ? 'w-full lg:w-1/2' : ''}`}>
+          <div
+            key={i}
+            className={`${
+              i === 0 ? 'w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0' : ''
+            }`}
+          >
             {element}
           </div>
         ))}

@@ -24,7 +24,7 @@ var jsxRuntime = require('react/jsx-runtime');
 var FlexLayout = function FlexLayout(_ref) {
   var layout = _ref.layout,
     children = _ref.children;
-  var flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row';
+  var flexClass = 'flex gap-x-5 flex-col-reverse lg:flex-row';
   // [  ][ ]
   if (layout[0] === 2 && layout[1] === 1) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
@@ -67,7 +67,7 @@ var FlexLayout = function FlexLayout(_ref) {
       className: flexClass,
       children: children.map(function (element, i) {
         return /*#__PURE__*/jsxRuntime.jsx("div", {
-          className: "".concat(i === 0 ? 'w-full lg:w-1/2' : ''),
+          className: "".concat(i === 0 ? 'w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0' : ''),
           children: element
         }, i);
       })

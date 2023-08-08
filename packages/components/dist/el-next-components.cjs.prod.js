@@ -60,7 +60,6 @@ var Layout = function Layout(_ref) {
   };
   var errorHelper = "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
-    console.log(error);
     if (error["class"] === ErrorClass.noconnection) errorHelper += '🔌 It is most likely that the CMS is currently unavailable. Please try again.';else if (error["class"] === ErrorClass.syntax) errorHelper = 'It looks like there is a syntax error in the query. 🐛 This is a bug in code.';else if (error["class"] === ErrorClass.empty) errorHelper = "One or more of the required content fields on this page is missing. \"(".concat(error.message, ")\"");else if (error["class"] === ErrorClass.client) errorHelper = "There is an error on the client query. \uD83D\uDC1B This is a bug in code. \n\n \uD83D\uDCAC The API says: ".concat(error.message, "\"");else errorHelper += '. Please try again.  🤨 ';
   }
   return /*#__PURE__*/jsxRuntime.jsxs(jsxRuntime.Fragment, {

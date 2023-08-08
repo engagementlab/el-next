@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "keystone dev",
     "start": "keystone start",
-    "build": "keystone build",
+    "build": "node build.js",
     "build-export": "npx babel export/src -d export/lib --extensions .ts,.tsx",
     "export": "npm run build-export && node ./export/lib",
     "migrate": "keystone prisma migrate deploy",
@@ -20,7 +20,7 @@
     "@emotion/styled": "^11.8.1",
     "@k6-contrib/fields-azure": "^2.0.0",
     "@keystone-6/auth": "^3.0.0",
-    "@keystone-6/core": "0.0.0-rc-20230512055539",
+    "@keystone-6/core": "^5.4.0",
     "@keystone-6/fields-document": "^8.0.0",
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.81",

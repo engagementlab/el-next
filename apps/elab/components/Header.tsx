@@ -584,7 +584,7 @@ const Header = ({ theme }: Props): JSX.Element => {
         <div className="flex flex-row items-center justify-end mr-3 mb-5 text-sm text-grey">
           <span className="uppercase font-extrabold mr-7">Our Curriculum:</span>
           <Link
-            href="/"
+            href="/undergraduate"
             className="uppercase flex items-center mr-7 font-semibold group"
           >
             <svg
@@ -605,7 +605,7 @@ const Header = ({ theme }: Props): JSX.Element => {
             </span>
           </Link>
           <Link
-            href="/"
+            href="/graduate"
             className="uppercase flex items-center mr-7 font-semibold group"
           >
             <svg
@@ -626,7 +626,7 @@ const Header = ({ theme }: Props): JSX.Element => {
             </span>
           </Link>
           <Link
-            href="/"
+            href="/learning-partners"
             className="uppercase flex items-center mr-7 font-semibold group"
           >
             <svg
@@ -807,7 +807,7 @@ const Header = ({ theme }: Props): JSX.Element => {
                   Our Curriculum:
                 </span>
 
-                <Link href="/" className="uppercase group">
+                <Link href="/undergraduate" className="uppercase group">
                   <svg
                     height="25"
                     viewBox="0 -960 960 960"
@@ -822,7 +822,7 @@ const Header = ({ theme }: Props): JSX.Element => {
                   </svg>
                   <span className="inline-block">Undergraduate</span>
                 </Link>
-                <Link href="/" className="uppercase">
+                <Link href="/graduate" className="uppercase">
                   <svg
                     height="25"
                     viewBox="0 -960 960 960"
@@ -837,7 +837,7 @@ const Header = ({ theme }: Props): JSX.Element => {
                   </svg>
                   <span className="inline-block">Graduate</span>
                 </Link>
-                <Link href="/" className="uppercase">
+                <Link href="/learning-partners" className="uppercase">
                   <svg
                     height="25"
                     viewBox="0 -960 960 960"

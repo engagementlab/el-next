@@ -48,7 +48,7 @@ export interface ThemeConfig {
   gradient: string;
   secodaryBg: string;
   secodary: string;
-  theme: Theme;
+  theme?: Theme;
 }
 
 export const Theming: { [key: string]: ThemeConfig } = {
@@ -80,6 +80,19 @@ export const Theming: { [key: string]: ThemeConfig } = {
     gradient: 'from-[#D7EFC1] to-leaf',
     theme: Theme.climate,
   },
+  teal: {
+    arrow: '#00A494',
+    secodaryArrow: 'fill-teal',
+    text: 'text-teal',
+    heading: 'text-yellow',
+    border: 'border-teal',
+    borderLight: 'border-teal',
+    bg: 'bg-teal',
+    fill: 'fill-teal',
+    secodary: 'bg-#00A494',
+    secodaryBg: 'bg-[#D7EFC1]',
+    gradient: 'from-[#D7EFC1] to-teal',
+  },
 };
 
 export enum Partner {
@@ -94,3 +107,13 @@ export enum Partner {
   teenempowerment,
   uncornered,
 }
+
+export type Studio = {
+  name: string;
+  key: string;
+  shortDescription: string;
+  thumbnail: {
+    publicId: string;
+  };
+  thumbAltText: string;
+};

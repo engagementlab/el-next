@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { Image, Filtering, Query } from '@el-next/components';
 
-import { Theme } from '@/types';
+import { Studio, Theme } from '@/types';
 import Layout from '../../components/Layout';
 import { useEffect, useState } from 'react';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
@@ -28,17 +28,7 @@ interface FilterState {
   reset: () => void;
 }
 
-type MediaItem = {
-  name: string;
-  key: string;
-  shortDescription: string;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-};
-
-const ItemRenderer = (props: { item: MediaItem }) => {
+const ItemRenderer = (props: { item: Studio }) => {
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -119,7 +109,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      studios: studios as MediaItem[],
+      studios: studios as Studio[],
     },
   };
 }

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
@@ -8,7 +8,7 @@ import { Button, HeadingStyle, Query } from '@el-next/components';
 import Layout from '../../components/Layout';
 import Divider from '../../components/Divider';
 import { CTAButton } from '@/components/Buttons';
-import { Theme } from '@/types';
+import { Theme, Theming } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
@@ -25,30 +25,12 @@ type AboutPage = {
   everythingElse: { document: any };
 };
 
+const wrapperClass = 'rmy-0 xl:my-12 mt-14 mb-4 xl:mt-16 px-5 w-full';
 const rendererOverrides = {
-  heading: (level: number, children: ReactNode, textAlign: any) => {
-    return (
-      <p
-        className={`${level === 3 && 'text-2xl text-bluegreen leading-none'} ${
-          level === 4 && 'text-xl text-coated'
-        } font-semibold mb-8`}
-        style={{ textAlign }}
-      >
-        {children}
-      </p>
-    );
+  paragraph: (children: ReactElement[]) => {
+    return <p className={wrapperClass}>{children}</p>;
   },
 };
-const valuesRendererOverrides = {
-  heading: (level: number, children: ReactNode, textAlign: any) => {
-    const customRenderers = {
-      4: 'text-xl font-semibold text-coated my-8',
-      5: 'text-lg font-extrabold text-purple',
-    };
-    return HeadingStyle({ level, children, textAlign, customRenderers });
-  },
-};
-const wrapperClass = 'mt-14 mb-24 xl:mt-16 md:px-20 xl:px-24 w-full';
 
 export default function Initiatives({
   page,
@@ -56,71 +38,82 @@ export default function Initiatives({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout error={error} fullBleed={true}>
-      <div className={wrapperClass}>
-        <h1 className="">Social Impact Initiatives</h1>
-        <div className="flex flex-col lg:flex-row justify-center">
-          <h3 className="flex flex-col items-center w-full lg:w-3/5">
-            {page?.intro}
-            <div className="w-3/4 lg:w-full mt-6">
-              <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
-                Jump to:
-              </p>
-              <Button
-                label="Transforming Narratives of Gun Violence"
-                anchorId="tngvi"
-                className="border-purple text-purple fill-purple text-sm"
-              />
-              <Button
-                label="Transforming Narratives for Environmental Justice"
-                anchorId="tnej"
-                className="border-green-blue text-green-blue fill-green-blue"
+      {/* <Gutter> */}
+      {page && (
+        <div className="text-grey">
+          <div className="flex flex-col lg:flex-row justify-start">
+            <div className="px-4 md:px-20 lg:pl-20 my-0 lg:mt-14 xl:mt-16 xl:mb-20 w-full lg:w-4/6 xl:w-1/2">
+              <h1 className="font-extrabold text-black">
+                Social Impact Initiatives
+              </h1>
+              <p className="flex flex-col items-center w-full">{page?.intro}</p>
+              <div className="hidden lg:block w-full mt-6 mb-12">
+                <p className="text-xl lg:text-3xl font-extrabold uppercase">
+                  Jump to:
+                </p>
+                <Button
+                  label="Transforming Narratives of Gun Violence"
+                  anchorId="tngvi"
+                  className="border-purple text-purple fill-purple text-sm"
+                />
+                <Button
+                  label="Transforming Narratives for Environmental Justice"
+                  anchorId="tnej"
+                  className="border-leaf text-leaf fill-leaf"
+                />
+                <Button
+                  label="Everything Else"
+                  anchorId="else"
+                  className="border-yellow text-yellow fill-yellow"
+                />
+              </div>
+            </div>
+            {/* </Gutter> */}
+            <div className="flex justify-center my-12 xl:max-w-md">
+              <CaptionedImage
+                alt={page.introImageAltText}
+                imgId={page?.introImage.publicId}
+                caption={page?.introImageCaption}
+                themeColor="bg-red"
               />
             </div>
-          </h3>
-          <CaptionedImage
-            alt=""
-            caption="Members of Spring 2023 Social Impact Studio in theatre, participating
-        in March for Our Lives anti-gun violence rally on the Boston Common"
-            themeColor="red"
-          />
-        </div>
-      </div>
-      <Divider />
-      <div id="tngvi">
-        <Gutter>
-          <div className="flex flex-col">
-            <h2 className="text-6xl text-purple font-bold flex flex-row self-center items-center">
-              <svg
-                viewBox="0 0.081 202 123.988"
-                width="202"
-                height="123.988"
-                className="mr-6 "
-              >
-                <g transform="matrix(0.39456, 0, 0, 0.39456, 0, 0.0491)">
-                  <path
-                    style={{ fill: '#7C4E9F' }}
-                    d="M149,61.7V17.8H0v43.9h32.2c3.9,0,11.1-0.8,14.4,0.2v132.7H102V74.4c0-3.5-0.7-9.8,0.2-12.7H149z"
-                  ></path>
-                  <path
-                    style={{ fill: '#7C4E9F' }}
-                    d="M362.4,163.7v-28.1c0-3.6,0.8-10-0.2-13h-59.8c-2,0-4.7-0.3-6.2,0.2v19.5c0,2.8-0.5,6.8,0.2,9.1h21.8
+          </div>
+          <Divider />
+          <div id="tngvi" className="lg:mx-14 xl:mx-24">
+            {/* <Gutter> */}
+            <div className="flex flex-col">
+              <h2 className="text-4xl xl:text-6xl text-purple font-bold flex flex-col sm:flex-row self-center items-center mt-12 mx-6">
+                <svg
+                  viewBox="0 0.081 202 123.988"
+                  width="202"
+                  height="123.988"
+                  className="mr-6 "
+                >
+                  <g transform="matrix(0.39456, 0, 0, 0.39456, 0, 0.0491)">
+                    <path
+                      style={{ fill: '#7C4E9F' }}
+                      d="M149,61.7V17.8H0v43.9h32.2c3.9,0,11.1-0.8,14.4,0.2v132.7H102V74.4c0-3.5-0.7-9.8,0.2-12.7H149z"
+                    ></path>
+                    <path
+                      style={{ fill: '#7C4E9F' }}
+                      d="M362.4,163.7v-28.1c0-3.6,0.8-10-0.2-13h-59.8c-2,0-4.7-0.3-6.2,0.2v19.5c0,2.8-0.5,6.8,0.2,9.1h21.8
                     c3.1,0,7.5-0.6,10.1,0.2c-0.7,2.1-3.1,3.8-4.8,5c-1.9,1.4-3.7,3.1-6,4.1c-6,2.6-17.4,2.6-24,0.5c-9.3-3.1-13.6-9.7-16.1-19.7
                     c-0.7-2.6-0.5-5.5-0.5-8.6c0-13.5,4.6-22.9,13.9-26.9c9.7-4.2,24-1.3,27.8,6.2h29.6c3.7,0,10.4,0.8,13.4-0.2
                     c-2.5-20.2-14.7-32.3-30-39.8c-3.9-1.9-8.7-2.9-13-4.1c-6.7-1.9-15.9-1.6-24.2-1.4c-7.7,0.9-5.4,0.4-7.7,0.9
                     c-3.5,0.7-6.9,1.6-10.3,2.6c-16,5.9-28.4,16.7-35,31.9c-2.1,4.9-3.4,10.4-4.8,16.1c-2.1,8.2-1.5,21.9,0.5,29.5
                     c0.8,3.2,0.8,5.9,1.9,8.9c7.1,19.4,19.4,31.9,39.4,38.4c10.7,3.5,28.5,5.3,40.8,1.7c8.1-2.4,15.7-5.3,21.8-9.6c2.1-1.4,4-3.5,6-5
                     c2.4-1.7,4.6-3.7,6.5-6c1.9-2.5,4-4.9,5.8-7.4C360.4,167.2,361,165.1,362.4,163.7z"
-                  ></path>
-                  <path
-                    style={{ fill: '#7C4E9F' }}
-                    d="M202.8,67.7c-3.7,0-9.3-0.8-12.5,0.2v64.2h-0.5c-2.8-5.4-6.9-10.3-10.1-15.4c-7-11.1-14.1-22-21.1-33.1
+                    ></path>
+                    <path
+                      style={{ fill: '#7C4E9F' }}
+                      d="M202.8,67.7c-3.7,0-9.3-0.8-12.5,0.2v64.2h-0.5c-2.8-5.4-6.9-10.3-10.1-15.4c-7-11.1-14.1-22-21.1-33.1
                     c-2.3-3.6-4.8-7.3-7.2-11c-1-1.5-2.8-3.1-3.4-5h-27.6c-3.7,0-9.3-0.8-12.5,0.2v127.2h40.1l0-63.3c1.6,0.8,2.4,3.4,3.4,4.8
                     c2.4,3.7,4.9,7.5,7.4,11.3c7.2,10.7,14.2,21.6,21.4,32.4c2.4,3.5,4.7,6.9,7,10.6c0.9,1.4,2.4,2.6,2.9,4.3h27.6
                     c3.5,0,9.8,0.8,12.7-0.2v-115c0-3.7,0.8-9.1-0.2-12.2H202.8z"
-                  ></path>
-                  <path
-                    style={{ fill: '#7C4E9F' }}
-                    d="M509.3,171c1.5-2.9,3.2-6.1,2.5-9.6c-1.1-6-3.6-10.3-7.4-12.5c-3.6-2.1-8-2.2-13.2-0.3l-1.2,0.4l-0.4,0.1
+                    ></path>
+                    <path
+                      style={{ fill: '#7C4E9F' }}
+                      d="M509.3,171c1.5-2.9,3.2-6.1,2.5-9.6c-1.1-6-3.6-10.3-7.4-12.5c-3.6-2.1-8-2.2-13.2-0.3l-1.2,0.4l-0.4,0.1
                                   c0.1-0.4,0.3-0.7,0.4-1.1c0.6-1.6,1.3-3.3,1.8-5.1c0.9-3.4,0.9-6.9,0.3-10.3c-0.1-0.5-0.2-1.1-0.2-1.6c0-0.9-0.1-1.8-0.4-2.7
                                   c-2-5.9-7.2-7.9-11.5-9c-2.3-0.7-4.8-0.9-7.2-0.5l-1.2,0.3c-1.3,0.3-2.5,0.6-3.7,1c0.3-1.1,0.8-2.3,1.2-3.2s0.8-1.9,1.1-2.9l1-4.9
                                   c0.5-1.6,1-3.3,1.5-5c0.7-2.4,1.5-4.9,2.2-7.1c1.2-3.6,2.1-7.3,2.7-11c0.6-3.3,1.4-6.6,2.3-9.9c2.3-7.2,4.5-14.6,6.5-21.8
@@ -177,40 +170,53 @@ export default function Initiatives({
                                   c0.5-0.3,1-0.7,1.5-0.9c0.8-0.4,1.5-0.8,2.1-1.4c4-3.8,7.4-8.2,10-13.1c0.8-1.7,1.3-3.5,1.6-5.4c0.3-2.4,1.2-4.7,2.5-6.8
                                   c1.2-1.8,2-3.7,2.5-5.8c0.4-1.8,0-3.7-1-5.3c-0.3-0.5-0.5-1-0.6-1.6c0.4-3,3.4-7.9,5.2-10.4c1.7-2.2,4-4,6.6-5.1
                                   c0.5-0.2,1-0.3,1.5-0.3c0.9-0.1,1.9-0.3,2.8-0.7c2.7,0,4.5,0.6,5.5,1.6s1.6,2.9,1.6,5.5C503.1,163.7,502.8,165.6,502.2,167.5z"
-                  ></path>
-                </g>
-              </svg>
-              Transforming <br />
-              Narratives
-              <br /> of Gun Violence
-            </h2>
+                    ></path>
+                  </g>
+                </svg>
+                Transforming <br />
+                Narratives
+                <br /> of Gun Violence
+              </h2>
 
-            <DocumentRenderer
-              document={page?.tngvi.document}
-              componentBlocks={Blocks()}
-              renderers={Doc()}
-            />
+              <DocumentRenderer
+                document={page?.tngvi.document}
+                componentBlocks={Blocks(Theming['gunviolence'])}
+                renderers={Doc(rendererOverrides)}
+              />
+            </div>
+            {/* </Gutter> */}
           </div>
-        </Gutter>
-      </div>
-      <Divider />
-      <div
-        id="tnej"
-        className="flex flex-col lg:flex-row items-center mt-14 mb-10 xl:mt-16
-      md:px-20 xl:px-24 w-full"
-      >
-        <div className="lg:w-1/2 px-5">
-          <h2 className="text-6xl text-leaf font-bold">
-            Transforming Narratives for Environmental Justice
-          </h2>
-
-          <DocumentRenderer
-            document={page?.tn4ej.document}
-            componentBlocks={Blocks()}
-            renderers={Doc()}
-          />
+          <Divider />
+          <div id="tnej" className="lg:mx-14 xl:mx-24">
+            <div className="flex flex-col">
+              <h2 className="text-4xl xl:text-6xl text-leaf font-bold flex flex-col xl:flex-row self-center items-center mt-12">
+                Transforming
+                <br /> Narratives
+                <br /> for Environmental <br />
+                Justice
+              </h2>
+              <DocumentRenderer
+                document={page?.tn4ej.document}
+                componentBlocks={Blocks(Theming['climate'])}
+                renderers={Doc(rendererOverrides)}
+              />
+            </div>
+          </div>
+          <Divider />
+          <div id="else" className="lg:mx-14 xl:mx-24">
+            <div className="flex flex-col">
+              <h2 className="text-4xl xl:text-6xl text-yellow font-bold flex flex-col xl:flex-row self-center items-center mt-12">
+                Everything Else
+              </h2>
+              <DocumentRenderer
+                document={page?.tn4ej.document}
+                componentBlocks={Blocks()}
+                renderers={Doc(rendererOverrides)}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 }

@@ -31,7 +31,7 @@ const CaptionedImage = ({
               alt={alt}
               imgId={imgId}
               transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
-              className="md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0"
+              className="relative md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0"
             />
           )}
           {caption && (

@@ -1,27 +1,12 @@
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Image, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import { Blocks, Doc } from '@/components/Renderers';
+import { News } from '@/types';
 
-type News = {
-  title: string;
-  key: string;
-  initiatives: string[];
-  publishDate: string;
-  blurb: { document: any };
-  body: any;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-  externalLink?: string;
-  summary: string;
-};
 type Event = {
   name: string;
   key: string;

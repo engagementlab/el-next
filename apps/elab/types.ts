@@ -183,3 +183,17 @@ export type StudioProject = {
     };
   }[];
 };
+export type News = {
+  title: string;
+  key: string;
+  initiatives: string[];
+  publishDate: string;
+  blurb: { document: any };
+  body: any;
+  thumbnail: {
+    publicId: string;
+  };
+  thumbAltText: string;
+  externalLink?: string;
+  summary: string;
+};

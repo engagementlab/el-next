@@ -90,6 +90,15 @@ export default function Initiatives({
           <Divider />
 
           <Gutter>
+            <DocumentRenderer
+              document={page.socialImpactDesign.document}
+              componentBlocks={Blocks()}
+              renderers={Doc()}
+            />
+          </Gutter>
+          <Divider />
+
+          <Gutter>
             {studios && (
               <div id="studios">
                 <h2 className="font-bold text-4xl">Social Impact Studios</h2>
@@ -150,7 +159,7 @@ export default function Initiatives({
                         borderColor = 'border-leaf';
                       return (
                         <Link
-                          href={`/studios/projects${item.key}`}
+                          href={`/studios/projects/${item.key}`}
                           className="group"
                         >
                           {item.thumbnail ? (

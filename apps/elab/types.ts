@@ -111,9 +111,75 @@ export enum Partner {
 export type Studio = {
   name: string;
   key: string;
+  initiatives: string[];
   shortDescription: string;
   thumbnail: {
     publicId: string;
   };
   thumbAltText: string;
+};
+export type StudioProject = {
+  name: string;
+  key: string;
+
+  initiative: string;
+  about: {
+    document: any;
+  };
+
+  trailerId: string;
+  videoId: string;
+  buttons: any[];
+  semester: {
+    name: string;
+  };
+
+  partners: string[];
+  coCreation: {
+    document: any;
+  };
+  impact: {
+    document: any;
+  };
+  shortDescription: string;
+  thumbnail: {
+    publicId: string;
+  };
+  thumbAltText: string;
+  trailerThumbnail: {
+    publicUrl: string;
+  };
+  trailerThumbAltText: string;
+  instructors: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  learningPartners: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  studioStudents: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  studioStaff: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
 };

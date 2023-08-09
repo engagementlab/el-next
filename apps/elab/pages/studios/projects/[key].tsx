@@ -14,7 +14,7 @@ import { create } from 'zustand';
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 
-import { Theme, ThemeConfig, Theming } from '@/types';
+import { StudioProject, Theme, ThemeConfig, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
 import {
@@ -32,72 +32,6 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
 import { Gutter } from '@/components/Gutter';
-
-type StudioProject = {
-  name: string;
-  key: string;
-
-  initiative: string;
-  about: {
-    document: any;
-  };
-
-  trailerId: string;
-  videoId: string;
-  buttons: any[];
-  semester: {
-    name: string;
-  };
-
-  partners: string[];
-  coCreation: {
-    document: any;
-  };
-  impact: {
-    document: any;
-  };
-  shortDescription: string;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-  trailerThumbnail: {
-    publicUrl: string;
-  };
-  trailerThumbAltText: string;
-  instructors: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  learningPartners: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  studioStudents: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  studioStaff: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-};
 
 interface SemestersState {
   peopleOpen: boolean[];

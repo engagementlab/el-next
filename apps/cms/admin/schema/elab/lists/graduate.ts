@@ -100,6 +100,11 @@ const Graduate: Lists.Graduate = list({
       label: 'Salzburg Program',
       componentBlocks,
     }),
+    projectSpotlight: relationship({
+      ref: 'StudioProject.grad',
+      many: true,
+      ui: { hideCreate: true },
+    }),
     alumniSpotlight: relationship({
       ref: 'NewsItem.alumni',
       many: true,

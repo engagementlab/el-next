@@ -50,16 +50,17 @@ model Filter {
 }
 
 model Graduate {
-  id                String     @id @default(cuid())
-  name              String     @unique @default("Graduate Landing Page")
-  intro             Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                String          @id @default(cuid())
+  name              String          @unique @default("Graduate Landing Page")
+  intro             Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   introImage        Json?
-  introImageAltText String     @default("")
-  introImageCaption String     @default("")
-  mediaDesign       Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  symposium         Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  salzburg          Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  alumniSpotlight   NewsItem[] @relation("Graduate_alumniSpotlight")
+  introImageAltText String          @default("")
+  introImageCaption String          @default("")
+  mediaDesign       Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  symposium         Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  salzburg          Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projectSpotlight  StudioProject[] @relation("Graduate_projectSpotlight")
+  alumniSpotlight   NewsItem[]      @relation("Graduate_alumniSpotlight")
 }
 
 model Initiative {
@@ -253,6 +254,7 @@ model StudioProject {
   instructors         Person[]                    @relation("Person_projectInstructors")
   semester            Semester[]                  @relation("Semester_projects")
   undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
+  grad                Graduate[]                  @relation("Graduate_projectSpotlight")
 }
 
 model Undergraduate {

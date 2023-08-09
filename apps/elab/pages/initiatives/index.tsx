@@ -12,6 +12,7 @@ import { Theme, Theming } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
+import ImagePlaceholder from '@/components/ImagePlaceholder';
 
 type AboutPage = {
   intro: string;
@@ -70,12 +71,16 @@ export default function Initiatives({
             </div>
             {/* </Gutter> */}
             <div className="flex justify-center my-12 xl:max-w-md">
-              <CaptionedImage
-                alt={page.introImageAltText}
-                imgId={page?.introImage.publicId}
-                caption={page?.introImageCaption}
-                themeColor="bg-red"
-              />
+              {page.introImage ? (
+                <CaptionedImage
+                  alt={page.introImageAltText}
+                  imgId={page?.introImage.publicId}
+                  caption={page?.introImageCaption}
+                  themeColor="bg-red"
+                />
+              ) : (
+                <ImagePlaceholder imageLabel="Intro" width={335} height={200} />
+              )}
             </div>
           </div>
           <Divider />

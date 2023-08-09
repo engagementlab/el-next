@@ -372,9 +372,10 @@ export async function getStaticProps() {
   const studioProject = (studioProjects as News[]).filter(
     (item) => item.flags && item.flags.includes('home')
   )[0];
-  const event = (events as News[]).filter(
+  const featuredEvents = (events as News[]).filter(
     (item) => item.flags && item.flags.includes('home')
-  )[0];
+  );
+  const event = featuredEvents.length > 0 ? featuredEvents[0] : null;
   return {
     props: {
       event,

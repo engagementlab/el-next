@@ -244,8 +244,7 @@ const Header = ({ theme }: Props): JSX.Element => {
     <>
       <NavLink
         href="/initiatives/gunviolence"
-        label="
-        Transforming Narratives of Gun Violence (TNGV)"
+        label="Transforming Narratives of Gun Violence (TNGV)"
       />
       <NavLink
         href="/studios?initiative=gunviolence"
@@ -258,20 +257,17 @@ const Header = ({ theme }: Props): JSX.Element => {
         subLink={true}
       />
       <NavLink
-        href="/initiatives/climate"
+        href="/initiatives/environment"
         label="Transforming Narratives for Environmental Justice (TN4EJ)"
-        disabled={true}
       />
       <NavLink
-        href="/studios?initiative=climate"
+        href="/studios?initiative=environment"
         label="TN4EJ Studios"
-        disabled={true}
         subLink={true}
       />
       <NavLink
-        href="/projects?initiative=climate"
+        href="/studios/projects?initiative=environment"
         label="TN4EJ Projects"
-        disabled={true}
         subLink={true}
       />
     </>
@@ -730,7 +726,7 @@ const Header = ({ theme }: Props): JSX.Element => {
               toggleHoverNews();
             }}
           >
-            <Link href="/initiatives" className="block w-36 text-center">
+            <Link href="/whats-new" className="block w-36 text-center">
               <span className={`w-[86px] border-green-blue ${navHeaderClass}`}>
                 What’s New
               </span>

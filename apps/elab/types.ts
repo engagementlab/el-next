@@ -197,3 +197,31 @@ export type News = {
   externalLink?: string;
   summary: string;
 };
+export type Event = {
+  name: string;
+  key: string;
+  initiatives: string[];
+  eventDate: string;
+  blurb: { document: any };
+  registrationLink?: string;
+  address?: string;
+  content?: any;
+  thumbnail: {
+    publicId: string;
+  };
+  thumbAltText: string;
+  summary: string;
+};
+export type ResearchProject = {
+  name: string;
+  type: string;
+  partners: string[];
+  content: {
+    document: any;
+  };
+  shortDescription: string;
+  thumbnail: {
+    publicId: string;
+  };
+  thumbnailAltText: string;
+};

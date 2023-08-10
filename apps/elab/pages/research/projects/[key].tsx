@@ -15,7 +15,7 @@ import { create } from 'zustand';
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 import { CTAButton } from '@/components/Buttons';
-import { Partner, Theme } from '@/types';
+import { Partner, ResearchProject, Theme } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
 import { useEffect } from 'react';
@@ -23,20 +23,6 @@ import Divider from '@/components/Divider';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-
-type Studio = {
-  name: string;
-  type: string;
-  partners: string[];
-  content: {
-    document: any;
-  };
-  shortDescription: string;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbnailAltText: string;
-};
 
 export default function Studio({
   item,
@@ -156,7 +142,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       },
     };
   }
-  const item = itemResult[0] as Studio;
+  const item = itemResult[0] as ResearchProject;
   // const relatedItems = (await query.MediaItem.findMany({
   //     where: {
   //         filters: {

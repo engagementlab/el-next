@@ -648,6 +648,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </Link>
         </div>
         <div className="flex flex-row relative z-50">
+          <div className="w-[160px]"></div>
           <motion.div
             className="group relative"
             onMouseEnter={() => {
@@ -696,7 +697,7 @@ const Header = ({ theme }: Props): JSX.Element => {
             </motion.div>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             className="group relative"
             onMouseEnter={() => {
               toggleHoverResearch();
@@ -718,7 +719,7 @@ const Header = ({ theme }: Props): JSX.Element => {
             >
               {researchLinks}
             </motion.div>
-          </motion.div>
+          </motion.div> */}
 
           <motion.div
             className="group relative"
@@ -730,12 +731,12 @@ const Header = ({ theme }: Props): JSX.Element => {
             }}
           >
             <Link href="/initiatives" className="block w-36 text-center">
-              <span className={`w-[86px] border-yellow ${navHeaderClass}`}>
+              <span className={`w-[86px] border-green-blue ${navHeaderClass}`}>
                 What’s New
               </span>
             </Link>
             <motion.div
-              className={`bg-[#FFEACB] w-36 ${navSubClass}`}
+              className={`bg-[#BBEBE7] w-36 ${navSubClass}`}
               initial="exit"
               animate={hoverNews ? 'enter' : 'exit'}
               variants={subMenuAnimate}
@@ -787,13 +788,13 @@ const Header = ({ theme }: Props): JSX.Element => {
                   links={siiLinks}
                   label="Social Impact Initiatives"
                 />
-                <MobileAccordion
+                {/* <MobileAccordion
                   i={2}
                   expanded={expanded}
                   setExpanded={setExpanded}
                   links={researchLinks}
                   label="Research"
-                />
+                /> */}
                 <MobileAccordion
                   i={3}
                   expanded={expanded}

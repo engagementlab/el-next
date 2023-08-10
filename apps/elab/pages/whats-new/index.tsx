@@ -7,22 +7,6 @@ import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { News } from '@/types';
 
-type Event = {
-  name: string;
-  key: string;
-  initiatives: string[];
-  eventDate: string;
-  blurb: { document: any };
-  registrationLink?: string;
-  address?: string;
-  content?: any;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-  summary: string;
-};
-type Item = News & Event;
 export default function News({
   items,
   error,

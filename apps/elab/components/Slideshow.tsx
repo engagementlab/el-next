@@ -8,6 +8,7 @@ type Props = {
   slides: any[];
   className?: HTMLProps<HTMLElement>['className'];
   themeColor?: string;
+  heightOverride?: string;
   ContentRenderer?: React.ComponentType<any>;
 };
 
@@ -40,6 +41,7 @@ const Slideshow = ({
   slides,
   className,
   themeColor,
+  heightOverride,
   ContentRenderer,
 }: Props): JSX.Element => {
   const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-1 rounded-large inline-block transition-all hover:scale-125 cursor-pointer ${
@@ -52,12 +54,17 @@ const Slideshow = ({
     setPage([slide + newDirection, newDirection]);
   };
   return (
-    <div className="flex-grow">
-      <div className={`relative min-h-[465px] overflow-hidden ${className}`}>
+    <div className="flex-grow my-5">
+      <div
+        className={`relative ${
+          heightOverride ? heightOverride : 'min-h-[350px]'
+        } lg:min-h-[465px] overflow-hidden ${className}`}
+      >
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
-            className={`absolute mx-4 max-h-[465px] w-full ${
-              !ContentRenderer && 'flex justify-center'
+            className={`absolute lg:mx-4 w-full ${
+              !ContentRenderer &&
+              'flex justify-center max-h-[350px] lg:max-h-[465px]'
             }`}
             key={slide}
             custom={direction}
@@ -85,17 +92,21 @@ const Slideshow = ({
             }}
           >
             {slides.map((slide, index) => {
-              return ContentRenderer ? (
-                <ContentRenderer slide={slide} />
-              ) : (
-                index === slideIndex &&
-                  (slide.videoId ? (
-                    <Video
-                      videoLabel={'item?.videos[0].label'}
-                      videoUrl={`https://player.vimeo.com/video/${slide.videoId}`}
-                      thumbUrl={slide.image.publicUrl}
-                      isSlide={true}
-                    />
+              return index === slideIndex ? (
+                <div id={`slide-${index}`}>
+                  {ContentRenderer ? (
+                    <ContentRenderer slide={slide} />
+                  ) : slide.videoId ? (
+                    <div
+                      className={`flex items-center min-h-[350px] lg:min-h-[465px] ${themeColor} bg-opacity-50`}
+                    >
+                      <Video
+                        videoLabel={'item?.videos[0].label'}
+                        videoUrl={`https://player.vimeo.com/video/${slide.videoId}`}
+                        thumbUrl={slide.image.publicUrl}
+                        isSlide={true}
+                      />
+                    </div>
                   ) : slide.caption ? (
                     <div className="relative overflow-x-hidden">
                       <Image
@@ -105,10 +116,10 @@ const Slideshow = ({
                         lazy={false}
                         aspectDefault={false}
                         transforms="f_auto,dpr_auto,c_crop,g_center,r_max,h_630,w_630"
-                        className="pointer-events-none max-h-[465px]"
+                        className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
                       />
                       <aside
-                        className={`absolute bottom-0 right-0 p-3 w-3/4 ${themeColor} text-white`}
+                        className={`absolute bottom-0 right-0 p-3 w-full lg:w-3/4 ${themeColor} text-white`}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -131,10 +142,13 @@ const Slideshow = ({
                       alt={slide.altText}
                       imgId={slide.image.publicId}
                       lazy={false}
+                      // width={300}
+                      transforms="c_crop,g_center"
                       className="pointer-events-none"
                     />
-                  ))
-              );
+                  )}
+                </div>
+              ) : null;
             })}
           </motion.div>
         </AnimatePresence>
@@ -143,11 +157,13 @@ const Slideshow = ({
         <li className="flex justify-center mt-3">
           {slides.map((slide, index) => (
             <label
-              htmlFor="img-1"
-              className={`${dotClass} ${index !== slideIndex && 'opacity-50'}`}
-              id="img-dot-1"
+              htmlFor={`slide-${index}`}
+              className={`${dotClass} ${
+                index !== slideIndex ? 'opacity-50' : 'scale-125'
+              }`}
+              id={`slide-dot-${index}`}
               onClick={(event) => {
-                setPage([index, 1]);
+                setPage([index, slideIndex > index ? -1 : 1]);
               }}
             ></label>
           ))}

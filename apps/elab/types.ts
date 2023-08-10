@@ -215,6 +215,7 @@ export type Event = {
 export type ResearchProject = {
   name: string;
   type: string;
+  key: string;
   partners: string[];
   content: {
     document: any;

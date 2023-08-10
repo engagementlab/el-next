@@ -85,7 +85,7 @@ const MoreButton = ({ link, label, theme = 0 }: Props): JSX.Element => {
   return (
     <Link
       href={link}
-      className={`inline-flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-sm lg:text-lg mt-3 ${ThemeColors[theme].secondary}`}
+      className={`inline-flex flex-col items-end overflow-hidden transition-all font-bold duration-700 group text-2xl mt-3 ${ThemeColors[theme].secondary}`}
     >
       <div className="lg:flex items-center">
         <span>{label}</span>
@@ -104,7 +104,7 @@ const MoreButton = ({ link, label, theme = 0 }: Props): JSX.Element => {
           />
         </svg>
       </div>
-      <hr className="transition-all w-full border-b-2 -translate-x-[25px] group-hover:translate-x-0 hidden lg:block" />
+      <hr className="transition-all w-full border-b-2 -translate-x-[25px] group-hover:translate-x-0 " />
     </Link>
   );
 };

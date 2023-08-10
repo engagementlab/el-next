@@ -11,7 +11,11 @@ const blockOverrides = (theme: ThemeConfig | null) => {
     buttonOverride: (props: { label: string }) => {
       return (
         <div className="mx-6 my-6">
-          <CTAButton link="/" label={props.label} theme={Theme.none} />;
+          <CTAButton
+            link="/"
+            label={props.label}
+            theme={theme ? theme.theme : Theme.none}
+          />
         </div>
       );
     },

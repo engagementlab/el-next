@@ -63,8 +63,9 @@ const Slideshow = ({
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             className={`absolute lg:mx-4 w-full ${
-              !ContentRenderer &&
-              'flex justify-center max-h-[350px] lg:max-h-[465px]'
+              !ContentRenderer
+                ? 'flex justify-center max-h-[350px] lg:max-h-[465px]'
+                : ''
             }`}
             key={slide}
             custom={direction}

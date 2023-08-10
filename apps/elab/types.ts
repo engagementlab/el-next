@@ -226,3 +226,5 @@ export type ResearchProject = {
   };
   thumbnailAltText: string;
 };
+
+export type Item = News & Event;

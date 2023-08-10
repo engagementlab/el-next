@@ -5,7 +5,7 @@ import { Image, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import { News } from '@/types';
+import { News, Event, Item } from '@/types';
 
 export default function News({
   items,

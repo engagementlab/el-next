@@ -13,6 +13,7 @@ import {
   StudioProject,
   Theme,
   Theming,
+  Item,
 } from '@/types';
 import { CTAButton, MoreButton } from '@/components/Buttons';
 import Divider from '@/components/Divider';
@@ -34,7 +35,6 @@ type AboutPage = {
   studios: Studio[];
   research: ResearchProject[];
 };
-type Item = News & Event;
 
 const renderSlide = (props: { slide: Item }) => {
   return (

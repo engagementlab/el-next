@@ -1,4 +1,8 @@
-import { InferGetStaticPropsType } from 'next';
+import {
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
@@ -36,96 +40,104 @@ type AboutPage = {
   research: ResearchProject[];
 };
 
-const renderSlide = (props: { slide: Item }) => {
-  return (
-    <div className="flex flex-col lg:flex-row-reverse">
-      <div className="flex-grow w-full lg:w-1/2">
-        {props.slide.thumbnail ? (
-          <Image
-            id={`thumb-${props.slide.key}`}
-            alt={props.slide.thumbAltText}
-            // transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-            imgId={props.slide.thumbnail.publicId}
-            width={460}
-            maxWidthDisable={true}
-            className="w-full"
-          />
-        ) : (
-          <ImagePlaceholder imageLabel="News/Event" width={335} height={200} />
-        )}
-      </div>
-      <div className="lg:basis-1/2">
-        <h3 className="text-bluegreen text-xl font-semibold mt-3 mx-3">
-          {props.slide.name || props.slide.title}
-        </h3>
-        <div className="font-bold mx-3">
-          {new Date(
-            props.slide.publishDate
-              ? props.slide.publishDate
-              : props.slide.eventDate
-          ).toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-          })}
-          ,&nbsp;
-          {new Date(
-            props.slide.publishDate
-              ? props.slide.publishDate
-              : props.slide.eventDate
-          ).toLocaleDateString('en-US', {
-            year: 'numeric',
-          })}
-        </div>
-        <p className="mx-3 mt-3">
-          {props.slide.summary.length > 150
-            ? `${props.slide.summary.substring(
-                0,
-                props.slide.summary.substring(0, 150).lastIndexOf(' ')
-              )}...`
-            : props.slide.summary}
-        </p>
-        <div className="flex w-full justify-center mt-3">
-          {props.slide.eventDate ? (
-            props.slide.registrationLink ? (
-              <CTAButton
-                label="RSVP Today"
-                link={props.slide.registrationLink}
-                theme={Theme.gunviolence}
-              />
-            ) : (
-              <CTAButton
-                label="Learn More"
-                link={`/events/${props.slide.key}`}
-                theme={Theme.gunviolence}
-              />
-            )
-          ) : (
-            <CTAButton
-              label="Learn More"
-              link={`/news/${props.slide.key}`}
-              theme={Theme.gunviolence}
-            />
-          )}
-        </div>
-      </div>
-      {/* </div> */}
-    </div>
-  );
-};
-
-const jumpClass =
-  'border-purple text-purple fill-green group-hover:fill-purple';
-
 export default function GunViolence({
   page,
   mergedItems,
+  initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const jumpClass =
+    Theming[initiative].border +
+    ' ' +
+    Theming[initiative].text +
+    ' ' +
+    Theming[initiative].fill;
+  (' group-hover:fill-purple');
+  const renderSlide = (props: { slide: Item }) => {
+    return (
+      <div className="flex flex-col lg:flex-row-reverse">
+        <div className="flex-grow w-full lg:w-1/2">
+          {props.slide.thumbnail ? (
+            <Image
+              id={`thumb-${props.slide.key}`}
+              alt={props.slide.thumbAltText}
+              // transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+              imgId={props.slide.thumbnail.publicId}
+              width={460}
+              maxWidthDisable={true}
+              className="w-full"
+            />
+          ) : (
+            <ImagePlaceholder
+              imageLabel="News/Event"
+              width={335}
+              height={200}
+            />
+          )}
+        </div>
+        <div className="lg:basis-1/2">
+          <h3 className="text-bluegreen text-xl font-semibold mt-3 mx-3">
+            {props.slide.name || props.slide.title}
+          </h3>
+          <div className="font-bold mx-3">
+            {new Date(
+              props.slide.publishDate
+                ? props.slide.publishDate
+                : props.slide.eventDate
+            ).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+            })}
+            ,&nbsp;
+            {new Date(
+              props.slide.publishDate
+                ? props.slide.publishDate
+                : props.slide.eventDate
+            ).toLocaleDateString('en-US', {
+              year: 'numeric',
+            })}
+          </div>
+          <p className="mx-3 mt-3">
+            {props.slide.summary.length > 150
+              ? `${props.slide.summary.substring(
+                  0,
+                  props.slide.summary.substring(0, 150).lastIndexOf(' ')
+                )}...`
+              : props.slide.summary}
+          </p>
+          <div className="flex w-full justify-center mt-3">
+            {props.slide.eventDate ? (
+              props.slide.registrationLink ? (
+                <CTAButton
+                  label="RSVP Today"
+                  link={props.slide.registrationLink}
+                  theme={Theming[initiative].theme}
+                />
+              ) : (
+                <CTAButton
+                  label="Learn More"
+                  link={`/events/${props.slide.key}`}
+                  theme={Theming[initiative].theme}
+                />
+              )
+            ) : (
+              <CTAButton
+                label="Learn More"
+                link={`/news/${props.slide.key}`}
+                theme={Theming[initiative].theme}
+              />
+            )}
+          </div>
+        </div>
+        {/* </div> */}
+      </div>
+    );
+  };
   return (
     <Layout
       error={error}
       fullBleed={true}
-      theme={Theme.gunviolence}
+      theme={Theming[initiative].theme}
       breadcrumbs={[
         { label: 'Social Impact Initiatives', href: '/initiatives' },
       ]}
@@ -134,7 +146,9 @@ export default function GunViolence({
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
             <h2 className="text-5xl text-slate font-extrabold">
-              Transforming Narratives of Gun Violence
+              {initiative === 'gunviolence'
+                ? ' Transforming Narratives of Gun Violence'
+                : 'Transforming Narratives for Environmental Justice'}
             </h2>
             <div className="flex flex-col-reverse lg:flex-row">
               <div className="w-full lg:w-1/2">
@@ -144,28 +158,30 @@ export default function GunViolence({
                   <h2 className="text-green text-xl lg:text-3xl font-extrabold uppercase">
                     Jump to:
                   </h2>
-                  <div>
+                  <div className="flex flex-col">
                     <Button
                       label="The Big Picture of Gun Violence in Boston"
                       anchorId="context"
                       className={jumpClass}
                     />
+                    <div className="flex flex-row justify-between w-1/2">
+                      <Button
+                        label="Projects"
+                        anchorId="projects"
+                        className={jumpClass}
+                      />
+                      <Button
+                        label="Studios"
+                        anchorId="studios"
+                        className={jumpClass}
+                      />
+                      <Button
+                        label="Research"
+                        anchorId="research"
+                        className={jumpClass}
+                      />
+                    </div>
                   </div>
-                  <Button
-                    label="Projects"
-                    anchorId="projects"
-                    className={`inline ${jumpClass}`}
-                  />
-                  <Button
-                    label="Studios"
-                    anchorId="studios"
-                    className={`ml-2 ${jumpClass}`}
-                  />
-                  <Button
-                    label="Research"
-                    anchorId="research"
-                    className={`ml-2 ${jumpClass}`}
-                  />
                 </div>
               </div>
               {/* <Button label="→ Projects" link="/archive?gunviolence" /> */}
@@ -188,13 +204,12 @@ export default function GunViolence({
                 />
               </div>
             )}
-            {/* <MoreButton link="/" label="See more news" theme={Theme.gunviolence} /> */}
           </div>
           <Divider color="bg-green" />
           <Gutter>
             <DocumentRenderer
               document={page?.body.document}
-              componentBlocks={Blocks(Theming['gunviolence'])}
+              componentBlocks={Blocks(Theming[initiative])}
               renderers={Doc({
                 heading: (
                   level: number,
@@ -264,9 +279,11 @@ export default function GunViolence({
             )}
           </Gutter>
 
-          <Divider color="bg-green" />
+          {page.studios && page.studios.length > 0 && (
+            <Divider color="bg-green" />
+          )}
           <Gutter>
-            {page.studios && (
+            {page.studios && page.studios.length > 0 && (
               <div id="studios">
                 <h2 className="font-bold text-4xl">Recent Studios</h2>
                 <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
@@ -355,26 +372,43 @@ export default function GunViolence({
           <Divider color="bg-green" />
           <Gutter>
             <h2 className="text-3xl font-bold">Partner Organizations</h2>
-            <Logos
-              partners={[
-                'ldbpi',
-                'mgh',
-                'magv',
-                'teenempowerment',
-                'uncornered',
-              ]}
-            />
+            {initiative === 'gunviolence' ? (
+              <Logos
+                partners={[
+                  'ldbpi',
+                  'mgh',
+                  'magv',
+                  'teenempowerment',
+                  'uncornered',
+                ]}
+              />
+            ) : (
+              <Logos partners={[]} />
+            )}
           </Gutter>
         </div>
       )}
     </Layout>
   );
 }
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  return {
+    paths: ['/initiatives/gunviolence', '/initiatives/environment'],
+    fallback: false,
+  };
+}
 
-export async function getStaticProps() {
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+  let objectName = 'Gun Violence';
+  let initiative = 'gunviolence';
+  if (params!.key === 'environment') {
+    objectName = 'Environmental Justice';
+    initiative = 'climate';
+  }
+
   const result = await Query(
     'initiative',
-    `initiative(where: { name: "Gun Violence" }) {
+    `initiative(where: { name: "${objectName}" }) {
         intro 
         slides {
           image {
@@ -444,6 +478,7 @@ export async function getStaticProps() {
       props: {
         error: result.error,
         page: null,
+        initiative: 'gunviolence',
       },
     };
   }
@@ -466,6 +501,7 @@ export async function getStaticProps() {
   return {
     props: {
       page,
+      initiative,
       mergedItems,
     },
   };

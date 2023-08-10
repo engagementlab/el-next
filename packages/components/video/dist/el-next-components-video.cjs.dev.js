@@ -91,6 +91,9 @@ var Video = function Video(_ref2) {
         e.preventDefault();
       },
       className: "group",
+      style: {
+        height: 'inherit'
+      },
       children: [/*#__PURE__*/jsxRuntime.jsx(Image__default["default"], {
         alt: "Thumbnail image for video with title \"".concat(videoLabel, "\""),
         className: "pointer-events-none",

@@ -50,6 +50,7 @@ export const Video = ({
             e.preventDefault();
           }}
           className="group"
+          style={{ height: 'inherit' }}
         >
           <Image
             alt={`Thumbnail image for video with title "${videoLabel}"`}

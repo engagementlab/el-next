@@ -85,6 +85,18 @@ const Studio: Lists.Studio = list({
         { label: 'Incarceration', value: 'incarceration' },
       ],
     }),
+    initiativesRelated: relationship({
+      ref: 'Initiative.studios',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   ui: {
     listView: {

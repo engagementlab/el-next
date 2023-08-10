@@ -2,6 +2,7 @@ import { list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
+  relationship,
   text,
   timestamp,
 } from '@keystone-6/core/fields';
@@ -117,6 +118,18 @@ const Event: Lists.Event = list({
       },
 
       componentBlocks,
+    }),
+    initiativesWhatsNew: relationship({
+      ref: 'Initiative.events',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
     }),
   },
   hooks: {

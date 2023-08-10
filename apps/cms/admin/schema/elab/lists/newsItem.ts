@@ -158,6 +158,18 @@ const NewsItem: Lists.NewsItem = list({
         },
       },
     }),
+    initiativesWhatsNew: relationship({
+      ref: 'Initiative.news',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   hooks: {
     resolveInput: async ({

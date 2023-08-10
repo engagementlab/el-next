@@ -227,6 +227,18 @@ const StudioProject: Lists.StudioProject = list({
         },
       },
     }),
+    initiativesRelated: relationship({
+      ref: 'Initiative.projects',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   hooks: {
     resolveInput: async ({

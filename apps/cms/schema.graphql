@@ -187,6 +187,8 @@ type Event {
   address: String
   blurb: Event_blurb_Document
   content: Event_content_Document
+  initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
@@ -228,6 +230,7 @@ input EventWhereInput {
   eventDate: DateTimeFilter
   registrationLink: StringFilter
   address: StringFilter
+  initiativesWhatsNew: InitiativeManyRelationFilter
 }
 
 input DateTimeNullableFilter {
@@ -255,6 +258,12 @@ input DateTimeFilter {
   gt: DateTime
   gte: DateTime
   not: DateTimeFilter
+}
+
+input InitiativeManyRelationFilter {
+  every: InitiativeWhereInput
+  some: InitiativeWhereInput
+  none: InitiativeWhereInput
 }
 
 input EventOrderByInput {
@@ -285,6 +294,14 @@ input EventUpdateInput {
   address: String
   blurb: JSON
   content: JSON
+  initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
+}
+
+input InitiativeRelateToManyForUpdateInput {
+  disconnect: [InitiativeWhereUniqueInput!]
+  set: [InitiativeWhereUniqueInput!]
+  create: [InitiativeCreateInput!]
+  connect: [InitiativeWhereUniqueInput!]
 }
 
 input EventUpdateArgs {
@@ -307,6 +324,12 @@ input EventCreateInput {
   address: String
   blurb: JSON
   content: JSON
+  initiativesWhatsNew: InitiativeRelateToManyForCreateInput
+}
+
+input InitiativeRelateToManyForCreateInput {
+  create: [InitiativeCreateInput!]
+  connect: [InitiativeWhereUniqueInput!]
 }
 
 type Filter {
@@ -511,6 +534,21 @@ type Initiative {
   intro: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
+  news(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
+  newsCount(where: NewsItemWhereInput! = {}): Int
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
+  eventsCount(where: EventWhereInput! = {}): Int
+  body: Initiative_body_Document
+  projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
+  projectsCount(where: StudioProjectWhereInput! = {}): Int
+  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
+  studiosCount(where: StudioWhereInput! = {}): Int
+  research(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
+  researchCount(where: ResearchProjectWhereInput! = {}): Int
+}
+
+type Initiative_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input InitiativeWhereUniqueInput {
@@ -526,12 +564,29 @@ input InitiativeWhereInput {
   name: StringFilter
   intro: StringFilter
   slides: SlideManyRelationFilter
+  news: NewsItemManyRelationFilter
+  events: EventManyRelationFilter
+  projects: StudioProjectManyRelationFilter
+  studios: StudioManyRelationFilter
+  research: ResearchProjectManyRelationFilter
 }
 
 input SlideManyRelationFilter {
   every: SlideWhereInput
   some: SlideWhereInput
   none: SlideWhereInput
+}
+
+input EventManyRelationFilter {
+  every: EventWhereInput
+  some: EventWhereInput
+  none: EventWhereInput
+}
+
+input StudioManyRelationFilter {
+  every: StudioWhereInput
+  some: StudioWhereInput
+  none: StudioWhereInput
 }
 
 input InitiativeOrderByInput {
@@ -544,6 +599,12 @@ input InitiativeUpdateInput {
   name: String
   intro: String
   slides: SlideRelateToManyForUpdateInput
+  news: NewsItemRelateToManyForUpdateInput
+  events: EventRelateToManyForUpdateInput
+  body: JSON
+  projects: StudioProjectRelateToManyForUpdateInput
+  studios: StudioRelateToManyForUpdateInput
+  research: ResearchProjectRelateToManyForUpdateInput
 }
 
 input SlideRelateToManyForUpdateInput {
@@ -551,6 +612,20 @@ input SlideRelateToManyForUpdateInput {
   set: [SlideWhereUniqueInput!]
   create: [SlideCreateInput!]
   connect: [SlideWhereUniqueInput!]
+}
+
+input EventRelateToManyForUpdateInput {
+  disconnect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input StudioRelateToManyForUpdateInput {
+  disconnect: [StudioWhereUniqueInput!]
+  set: [StudioWhereUniqueInput!]
+  create: [StudioCreateInput!]
+  connect: [StudioWhereUniqueInput!]
 }
 
 input InitiativeUpdateArgs {
@@ -562,11 +637,27 @@ input InitiativeCreateInput {
   name: String
   intro: String
   slides: SlideRelateToManyForCreateInput
+  news: NewsItemRelateToManyForCreateInput
+  events: EventRelateToManyForCreateInput
+  body: JSON
+  projects: StudioProjectRelateToManyForCreateInput
+  studios: StudioRelateToManyForCreateInput
+  research: ResearchProjectRelateToManyForCreateInput
 }
 
 input SlideRelateToManyForCreateInput {
   create: [SlideCreateInput!]
   connect: [SlideWhereUniqueInput!]
+}
+
+input EventRelateToManyForCreateInput {
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input StudioRelateToManyForCreateInput {
+  create: [StudioCreateInput!]
+  connect: [StudioWhereUniqueInput!]
 }
 
 type InitiativesLanding {
@@ -740,6 +831,8 @@ type NewsItem {
   alumniCount(where: GraduateWhereInput! = {}): Int
   learningPartners(where: LearningPartnersWhereInput! = {}, orderBy: [LearningPartnersOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LearningPartnersWhereUniqueInput): [LearningPartners!]
   learningPartnersCount(where: LearningPartnersWhereInput! = {}): Int
+  initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
 }
 
 enum NewsItemFlagType {
@@ -786,6 +879,7 @@ input NewsItemWhereInput {
   externalLink: StringFilter
   alumni: GraduateManyRelationFilter
   learningPartners: LearningPartnersManyRelationFilter
+  initiativesWhatsNew: InitiativeManyRelationFilter
 }
 
 input GraduateManyRelationFilter {
@@ -831,6 +925,7 @@ input NewsItemUpdateInput {
   body: JSON
   alumni: GraduateRelateToManyForUpdateInput
   learningPartners: LearningPartnersRelateToManyForUpdateInput
+  initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
 }
 
 input HelperFieldInput {
@@ -875,6 +970,7 @@ input NewsItemCreateInput {
   body: JSON
   alumni: GraduateRelateToManyForCreateInput
   learningPartners: LearningPartnersRelateToManyForCreateInput
+  initiativesWhatsNew: InitiativeRelateToManyForCreateInput
 }
 
 input GraduateRelateToManyForCreateInput {
@@ -1124,6 +1220,8 @@ type ResearchProject {
   projectLeadsCount(where: PersonWhereInput! = {}): Int
   contact: String
   tools: JSON
+  initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
 }
 
 enum ResearchProjectFlagType {
@@ -1161,6 +1259,7 @@ input ResearchProjectWhereInput {
   partners: PartnerManyRelationFilter
   projectLeads: PersonManyRelationFilter
   contact: StringFilter
+  initiativesRelated: InitiativeManyRelationFilter
 }
 
 input FilterManyRelationFilter {
@@ -1214,6 +1313,7 @@ input ResearchProjectUpdateInput {
   projectLeads: PersonRelateToManyForUpdateInput
   contact: String
   tools: JSON
+  initiativesRelated: InitiativeRelateToManyForUpdateInput
 }
 
 input FilterRelateToManyForUpdateInput {
@@ -1262,6 +1362,7 @@ input ResearchProjectCreateInput {
   projectLeads: PersonRelateToManyForCreateInput
   contact: String
   tools: JSON
+  initiativesRelated: InitiativeRelateToManyForCreateInput
 }
 
 input FilterRelateToManyForCreateInput {
@@ -1467,12 +1568,6 @@ input SlideshowManyRelationFilter {
   none: SlideshowWhereInput
 }
 
-input InitiativeManyRelationFilter {
-  every: InitiativeWhereInput
-  some: InitiativeWhereInput
-  none: InitiativeWhereInput
-}
-
 input SlideOrderByInput {
   id: OrderDirection
   altText: OrderDirection
@@ -1497,13 +1592,6 @@ input SlideshowRelateToManyForUpdateInput {
   connect: [SlideshowWhereUniqueInput!]
 }
 
-input InitiativeRelateToManyForUpdateInput {
-  disconnect: [InitiativeWhereUniqueInput!]
-  set: [InitiativeWhereUniqueInput!]
-  create: [InitiativeCreateInput!]
-  connect: [InitiativeWhereUniqueInput!]
-}
-
 input SlideUpdateArgs {
   where: SlideWhereUniqueInput!
   data: SlideUpdateInput!
@@ -1522,11 +1610,6 @@ input SlideCreateInput {
 input SlideshowRelateToManyForCreateInput {
   create: [SlideshowCreateInput!]
   connect: [SlideshowWhereUniqueInput!]
-}
-
-input InitiativeRelateToManyForCreateInput {
-  create: [InitiativeCreateInput!]
-  connect: [InitiativeWhereUniqueInput!]
 }
 
 type Slideshow {
@@ -1588,6 +1671,8 @@ type Studio {
   semesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   semestersCount(where: SemesterWhereInput! = {}): Int
   initiatives: [StudioInitiativeType!]
+  initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
 }
 
 enum StudioInitiativeType {
@@ -1614,6 +1699,7 @@ input StudioWhereInput {
   shortDescription: StringFilter
   blurb: StringFilter
   semesters: SemesterManyRelationFilter
+  initiativesRelated: InitiativeManyRelationFilter
 }
 
 input StudioOrderByInput {
@@ -1638,6 +1724,7 @@ input StudioUpdateInput {
   blurb: String
   semesters: SemesterRelateToManyForUpdateInput
   initiatives: [StudioInitiativeType!]
+  initiativesRelated: InitiativeRelateToManyForUpdateInput
 }
 
 input StudioUpdateArgs {
@@ -1656,6 +1743,7 @@ input StudioCreateInput {
   blurb: String
   semesters: SemesterRelateToManyForCreateInput
   initiatives: [StudioInitiativeType!]
+  initiativesRelated: InitiativeRelateToManyForCreateInput
 }
 
 type StudioProject {
@@ -1695,6 +1783,8 @@ type StudioProject {
   undergradCount(where: UndergraduateWhereInput! = {}): Int
   grad(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
   gradCount(where: GraduateWhereInput! = {}): Int
+  initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
 }
 
 enum StudioProjectInitiativeType {
@@ -1764,6 +1854,7 @@ input StudioProjectWhereInput {
   semester: SemesterManyRelationFilter
   undergrad: UndergraduateManyRelationFilter
   grad: GraduateManyRelationFilter
+  initiativesRelated: InitiativeManyRelationFilter
 }
 
 input StudioProjectInitiativeTypeNullableFilter {
@@ -1821,6 +1912,7 @@ input StudioProjectUpdateInput {
   semester: SemesterRelateToManyForUpdateInput
   undergrad: UndergraduateRelateToManyForUpdateInput
   grad: GraduateRelateToManyForUpdateInput
+  initiativesRelated: InitiativeRelateToManyForUpdateInput
 }
 
 input UndergraduateRelateToManyForUpdateInput {
@@ -1863,6 +1955,7 @@ input StudioProjectCreateInput {
   semester: SemesterRelateToManyForCreateInput
   undergrad: UndergraduateRelateToManyForCreateInput
   grad: GraduateRelateToManyForCreateInput
+  initiativesRelated: InitiativeRelateToManyForCreateInput
 }
 
 input UndergraduateRelateToManyForCreateInput {

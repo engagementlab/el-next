@@ -166,6 +166,18 @@ const ResearchProject: Lists.ResearchProject = list({
         views: path.join(process.cwd(), '/admin/components/tools.tsx'),
       },
     }),
+    initiativesRelated: relationship({
+      ref: 'Initiative.research',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   hooks: {
     resolveInput: async ({

@@ -198,7 +198,7 @@ export default function GunViolence({
                 <Slideshow
                   slides={mergedItems}
                   ContentRenderer={renderSlide}
-                  heightOverride="min-h-[550px] lg:min-h-[300px]"
+                  heightOverride="min-h-[550px] md:min-h-[570px] lg:min-h-[300px]"
                   className="border-4 border-green rounded-large"
                   themeColor="bg-green"
                 />
@@ -383,7 +383,7 @@ export default function GunViolence({
                 ]}
               />
             ) : (
-              <Logos partners={[]} />
+              <Logos partners={['ficdc', 'greenroots', 'sftt', 'swboston']} />
             )}
           </Gutter>
         </div>

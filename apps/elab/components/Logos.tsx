@@ -73,6 +73,38 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           />
         </svg>
       )}
+      {(all || partners.includes('ficdc')) && (
+        <Image
+          id="ficdc-logo"
+          alt="Fairmount Indigo CDC Collaborative logo"
+          imgId="elab-home-v3.x/logos/ficdc"
+          width={130}
+        />
+      )}
+      {(all || partners.includes('greenroots')) && (
+        <Image
+          id="greenroots-logo"
+          alt="GreenRoots logo"
+          imgId="elab-home-v3.x/logos/greenroots"
+          width={130}
+        />
+      )}
+      {(all || partners.includes('sftt')) && (
+        <Image
+          id="sftt-logo"
+          alt="Speak for the Trees logo"
+          imgId="elab-home-v3.x/logos/sftt"
+          width={130}
+        />
+      )}
+      {(all || partners.includes('swboston')) && (
+        <Image
+          id="swboston-logo"
+          alt="Southwest Boston Community Development Corporation logo"
+          imgId="elab-home-v3.x/logos/swboston"
+          width={130}
+        />
+      )}
     </div>
   );
 };

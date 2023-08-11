@@ -33,7 +33,7 @@ if [ $# -eq 0 ]
     else
         # Remove, rebuild and launch only specified service
         docker stop $1
-        docker rm $1
+        # docker rm $1
         DOCKER_BUILDKIT=1 docker compose build $1
         DOCKER_BUILDKIT=1 docker compose up $1 -d
 fi

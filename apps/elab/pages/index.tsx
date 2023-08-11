@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Variants, motion } from 'framer-motion';
+import { Variants, motion, useInView, useScroll } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import Layout from '../components/Layout';
@@ -41,13 +41,18 @@ export default function Home({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [targetElement, setTarget] = useState();
+  const [vidH, setVidH] = useState(0);
   const [bgTargetElement, setBgVideo] = useState();
-  const targetRef = useRef();
+  const [wordIndex, setWordIndex] = useState(0);
+  const targetRef = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef();
-  useEffect(() => {
-    setTarget(targetRef.current);
-  }, [targetRef]);
+  // useEffect(() => {
+  //   setTarget(targetRef.current);
+  // }, [targetRef]);
 
+  // const { scrollYProgress } = useScroll({ container: targetElement });
+
+  const isInView = useInView(targetRef);
   useEffect(() => {
     setBgVideo(bgVideoRef.current);
     // debugger;
@@ -55,7 +60,7 @@ export default function Home({
     const player = new Player('video-bg', {
       id: 846665267,
       width: 1640,
-      height: 566,
+      height: 720,
       controls: false,
       autoplay: true,
       autopause: true,
@@ -63,10 +68,38 @@ export default function Home({
       loop: true,
       responsive: true,
     });
-    // }
+    player.on('resize', (e) => {
+      // console.log('resize', );
+      setVidH(
+        document && document.querySelector !== null
+          ? document.querySelector('iframe').clientHeight -
+              document.querySelector('nav').clientHeight
+          : 0
+      );
+    });
+    // (async () => {
+    //   const h = await player.on();
+    //   console.log(bgVideoRef.current);
+    // })();
   }, [bgVideoRef]);
 
   const cardVariants: Variants = {
+    offscreen: {
+      y: 100,
+      opacity: 0,
+      // transitionEnd: {
+      //   display: 'none',
+      // },
+    },
+    onscreen: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 1.8,
+      },
+    },
+  };
+  const wordVariants: Variants = {
     offscreen: {
       y: 100,
       opacity: 0,
@@ -75,13 +108,11 @@ export default function Home({
       y: 0,
       opacity: 1,
       transition: {
-        // type: 'spring',
-        // bounce: 0.4,
         duration: 1.8,
       },
     },
   };
-
+  console.log(isInView);
   return (
     <Layout
       topBgElement={
@@ -96,39 +127,61 @@ export default function Home({
       }
       error={error}
     >
-      <div
-        className={`flex flex-col max-h-screen home-center overflow-y-scroll no-scrollbar`}
+      <motion.div
+        className="flex static"
+        // initial="offscreen"
+        // whileInView="onscreen"
+        // viewport={{ amount: 'all' }}
       >
-        <div className="w-full relative text-3xl" ref={targetElement}>
-          <motion.div
-            className=" flex home-center"
-            // initial="offscreen"
-            whileInView="onscreen"
-            viewport={{ amount: 0.8 }}
-          >
-            <motion.div className="card" variants={cardVariants}>
-              Advancing peace, equity, & justice through collaborative
-              <div className="text-yellow text-4xl font-extrabold">
-                storytelling
-                <hr className="h-1 border-none bg-red w-full" />
-                <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                <hr className="h-1 border-none bg-yellow w-full" />
-              </div>
-            </motion.div>
-          </motion.div>
+        <motion.div className="text-4xl font-extrabold" variants={cardVariants}>
+          Advancing <span className="text-purple">peace</span>,&nbsp;
+          <span className="text-purple">equity</span>, &&nbsp;
+          <span className="text-purple">justice</span> through collaborative{' '}
+          <span className="inline-block text-4xl font-extrabold">
+            <motion.span
+              className="text-yellow"
+              variants={wordVariants}
+              initial="onscreen"
+              animate={wordIndex > 0 ? 'offscreen' : 'onscreen'}
+            >
+              storytelling
+            </motion.span>
+            <hr className="h-1 border-none bg-red w-full" />
+            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+            <hr className="h-1 border-none bg-yellow w-full" />
+          </span>
+        </motion.div>
+      </motion.div>
 
+      <div
+        className={`flex flex-col max-h-screen overflow-y-scroll no-scrollbar`}
+        ref={targetRef}
+        style={{ height: vidH }}
+      >
+        <div className="w-full relative text-3xl font-extrabold">
           <motion.div
-            className="h-screen flex home-center bg-green-blue bg-opacity-30 top-48 relative"
+            className="h-screen flex top-48 relative"
             initial="offscreen"
             whileInView="onscreen"
             viewport={{ amount: 0.5 }}
             variants={cardVariants}
+            onAnimationStart={(definition) => {
+              console.log('Completed animating', definition);
+              setWordIndex(0);
+            }}
+            onAnimationComplete={(definition) => {
+              console.log('Completed animating', definition);
+              setWordIndex(1);
+            }}
           >
-            <div>Storytelling definition</div>
+            <div>
+              The art of conveying a narrative or a sequence of events through
+              spoken, written, or visual means.
+            </div>
           </motion.div>
 
           <motion.div
-            className="h-screen flex home-center bg-yellow bg-opacity-30 relative"
+            className="h-screen flex relative"
             initial="offscreen"
             whileInView="onscreen"
             viewport={{ amount: 0.5 }}
@@ -138,17 +191,20 @@ export default function Home({
           </motion.div>
 
           <motion.div
-            className="h-screen flex home-center bg-red bg-opacity-30 relative"
+            className="h-screen flex relative"
             initial="offscreen"
             whileInView="onscreen"
             viewport={{ amount: 0.5 }}
             variants={cardVariants}
+            onAnimationComplete={(definition) => {
+              console.log('Completed animating', definition);
+            }}
           >
             <div>Design definition</div>
           </motion.div>
         </div>
       </div>
-      <div className="flex flex-col home-center mb-10 xl:mt-16 md:px-20xl:px-24 w-full">
+      <div className="flex flex-col  mb-10 xl:mt-16 md:px-20xl:px-24 w-full">
         <Divider />
         <h1 className="text-3xl lg:text-7xl text-grey font-bold mt-5">
           Featured
@@ -161,7 +217,7 @@ export default function Home({
               <div className="w-2/5 sm:w-14 mr-3">
                 <Icons icons={['event']} />
               </div>
-              <div className="flex flex-col home-center text-grey">
+              <div className="flex flex-col  text-grey">
                 <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
                   {event.name}
                 </h2>
@@ -214,7 +270,7 @@ export default function Home({
                   })}
                 />
               </div>
-              <div className="flex flex-col home-center text-grey">
+              <div className="flex flex-col  text-grey">
                 <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
                   {studioProject.name}
                 </h2>
@@ -239,7 +295,7 @@ export default function Home({
               <div className="w-2/5 sm:w-14 mr-3">
                 <Icons icons={['news']} />
               </div>
-              <div className="flex flex-col home-center text-grey">
+              <div className="flex flex-col  text-grey">
                 <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
                   {newsItem.title}
                 </h2>

@@ -5,6 +5,7 @@
     "build": "preconstruct build",
     "cleanup": "docker system prune --all --force",
     "deploy": "ssh apps@cms.elab.emerson.edu 'bash -s' < ./scripts/deploy.sh",
+    "deploy-qa": "ssh apps@cms.elab.emerson.edu 'bash -s' < ./scripts/deploy.sh el-next-qa-elab-1",
     "dev":  "npx tsc start.ts --outfile dist/start.js; node dist/start.js",
     "docker": "docker build -t el-next . --network=host",
     "docker:dev": "BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 && docker compose -f docker-compose.dev.yml up --force-recreate",

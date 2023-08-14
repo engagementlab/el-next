@@ -1,5 +1,20 @@
-import { useState, useRef, useEffect } from 'react';
-import { Variants, motion, useInView, useScroll } from 'framer-motion';
+import {
+  useState,
+  useRef,
+  useEffect,
+  JSXElementConstructor,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+  SetStateAction,
+} from 'react';
+import {
+  MotionValue,
+  Variants,
+  motion,
+  useInView,
+  useScroll,
+} from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import Layout from '../components/Layout';
@@ -13,6 +28,7 @@ import { InferGetStaticPropsType } from 'next';
 import BleedImage from '@/components/BleedImage';
 import { Icons } from '@/components/Icons';
 import Player from '@vimeo/player';
+import { Gutter } from '@/components/Gutter';
 
 type News = {
   title: string;
@@ -41,10 +57,12 @@ export default function Home({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [targetElement, setTarget] = useState();
-  const [vidH, setVidH] = useState(0);
+  const [vidH, setVideoHeight] = useState(0);
+  const [videoOverlayHeight, setVideoOverlayHeight] = useState(0);
   const [bgTargetElement, setBgVideo] = useState();
   const [wordIndex, setWordIndex] = useState(0);
   const targetRef = useRef<HTMLDivElement>(null);
+  const definition1Ref = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef();
   // useEffect(() => {
   //   setTarget(targetRef.current);
@@ -52,13 +70,12 @@ export default function Home({
 
   // const { scrollYProgress } = useScroll({ container: targetElement });
 
-  const isInView = useInView(targetRef);
+  const isInView = useInView(definition1Ref, { root: targetRef });
   useEffect(() => {
     setBgVideo(bgVideoRef.current);
-    // debugger;
-    // if (bgVideoRef.current) {
+    const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
     const player = new Player('video-bg', {
-      id: 846665267,
+      id: portraitVideo ? 854491578 : 846665267,
       width: 1640,
       height: 720,
       controls: false,
@@ -69,24 +86,26 @@ export default function Home({
       responsive: true,
     });
     player.on('resize', (e) => {
-      // console.log('resize', );
-      setVidH(
-        document && document.querySelector !== null
-          ? document.querySelector('iframe').clientHeight -
-              document.querySelector('nav').clientHeight
+      // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
+      setVideoHeight(
+        document.querySelector<HTMLElement>('iframe') !== null
+          ? document.querySelector<HTMLElement>('iframe')!.clientHeight -
+              document.querySelector<HTMLElement>('nav')!.clientHeight -
+              document.querySelector<HTMLElement>('#tagline')!.clientHeight
+          : 0
+      );
+      setVideoOverlayHeight(
+        document.querySelector<HTMLElement>('iframe') !== null
+          ? document.querySelector<HTMLElement>('iframe')!.clientHeight
           : 0
       );
     });
-    // (async () => {
-    //   const h = await player.on();
-    //   console.log(bgVideoRef.current);
-    // })();
   }, [bgVideoRef]);
 
   const cardVariants: Variants = {
     offscreen: {
       y: 100,
-      opacity: 0,
+      // opacity: 0,
       // transitionEnd: {
       //   display: 'none',
       // },
@@ -101,18 +120,43 @@ export default function Home({
   };
   const wordVariants: Variants = {
     offscreen: {
-      y: 100,
+      x: 45,
       opacity: 0,
+      // transitionEnd: {
+      //   display: 'none',
+      // },
     },
     onscreen: {
-      y: 0,
+      x: 0,
       opacity: 1,
+      display: 'flex',
+
       transition: {
-        duration: 1.8,
+        duration: 0.4,
       },
     },
   };
-  console.log(isInView);
+
+  const Definition = ({ text, index }: { text: string; index: number }) => {
+    return (
+      <div className="h-full flex items-center">
+        <motion.p
+          ref={definition1Ref}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ root: targetRef, amount: 'all' }}
+          onViewportEnter={(definition) => {
+            // console.log('Started animating #' + index, definition);
+            // debugger;
+            setWordIndex(index);
+          }}
+          className="h-1/5 relative"
+        >
+          {text}
+        </motion.p>
+      </div>
+    );
+  };
   return (
     <Layout
       topBgElement={
@@ -122,205 +166,221 @@ export default function Home({
             ref={bgTargetElement}
             className="absolute top-0 h-screen w-full"
           ></div>
-          <div className="absolute top-0 h-screen w-full bg-gradient-to-b from-[#EFC3C0] via-[#CDE6E1] to-[#F4E3C5] opacity-80"></div>
+          <div
+            className="absolute top-0 w-full bg-gradient-to-b from-[#EFC3C0] via-[#CDE6E1] to-[#F4E3C5] opacity-80"
+            style={{ height: videoOverlayHeight }}
+          ></div>
         </div>
       }
+      fullBleed={true}
       error={error}
     >
-      <motion.div
-        className="flex static"
-        // initial="offscreen"
-        // whileInView="onscreen"
-        // viewport={{ amount: 'all' }}
-      >
-        <motion.div className="text-4xl font-extrabold" variants={cardVariants}>
-          Advancing <span className="text-purple">peace</span>,&nbsp;
-          <span className="text-purple">equity</span>, &&nbsp;
-          <span className="text-purple">justice</span> through collaborative{' '}
-          <span className="inline-block text-4xl font-extrabold">
-            <motion.span
-              className="text-yellow"
-              variants={wordVariants}
-              initial="onscreen"
-              animate={wordIndex > 0 ? 'offscreen' : 'onscreen'}
-            >
-              storytelling
-            </motion.span>
-            <hr className="h-1 border-none bg-red w-full" />
-            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-            <hr className="h-1 border-none bg-yellow w-full" />
-          </span>
+      <Gutter noMarginY={true}>
+        <motion.div id="tagline" className="flex static flex-col">
+          <motion.div
+            className="flex justify-center text-2xl md:text-4xl font-extrabold mt-10 xl:mt-24"
+            variants={cardVariants}
+          >
+            <div className="w-3/4 xl:w-full text-center">
+              Advancing&nbsp;<span className="text-purple">peace</span>,&nbsp;
+              <span className="text-purple">equity</span>, &&nbsp;
+              <span className="text-purple">justice</span>&nbsp;through&nbsp;
+              collaborative&nbsp;
+              <div className="inline-flex flex-col text-2xl md:text-4xl font-extrabold">
+                <div className="overflow-hidden h-8 md:h-10">
+                  <div
+                    className={`inline-flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 text-left  ${
+                      wordIndex !== 0
+                        ? wordIndex === 1
+                          ? 'translate-y-[-33%]'
+                          : 'translate-y-[-66%]'
+                        : ''
+                    }`}
+                  >
+                    <motion.span
+                      className="text-yellow"
+                      // variants={wordVariants}
+                      initial="onscreen"
+                    >
+                      storytelling
+                    </motion.span>{' '}
+                    <motion.span
+                      className="text-green"
+                      initial="onscreen"
+                      // animate={wordIndex !s== 1 ? 'offscreen' : 'onscreen'}
+                    >
+                      research
+                    </motion.span>
+                    <motion.span
+                      className="text-red"
+                      // variants={wordVariants}
+                      initial="onscreen"
+                      // animate={wordIndex !s== 1 ? 'offscreen' : 'onscreen'}
+                    >
+                      design
+                    </motion.span>
+                  </div>
+                </div>
+                <div
+                  className={`flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300  ${
+                    wordIndex !== 0
+                      ? wordIndex === 1
+                        ? 'w-9/12'
+                        : 'w-7/12'
+                      : ''
+                  }`}
+                >
+                  {' '}
+                  <hr className="h-1 border-none bg-red w-full" />
+                  <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+                  <hr className="h-1 border-none bg-yellow w-full" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
 
-      <div
-        className={`flex flex-col max-h-screen overflow-y-scroll no-scrollbar`}
-        ref={targetRef}
-        style={{ height: vidH }}
-      >
-        <div className="w-full relative text-3xl font-extrabold">
-          <motion.div
-            className="h-screen flex top-48 relative"
-            initial="offscreen"
-            whileInView="onscreen"
-            viewport={{ amount: 0.5 }}
-            variants={cardVariants}
-            onAnimationStart={(definition) => {
-              console.log('Completed animating', definition);
-              setWordIndex(0);
-            }}
-            onAnimationComplete={(definition) => {
-              console.log('Completed animating', definition);
-              setWordIndex(1);
-            }}
-          >
-            <div>
-              The art of conveying a narrative or a sequence of events through
-              spoken, written, or visual means.
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="h-screen flex relative"
-            initial="offscreen"
-            whileInView="onscreen"
-            viewport={{ amount: 0.5 }}
-            variants={cardVariants}
-          >
-            <div>Research definition</div>
-          </motion.div>
-
-          <motion.div
-            className="h-screen flex relative"
-            initial="offscreen"
-            whileInView="onscreen"
-            viewport={{ amount: 0.5 }}
-            variants={cardVariants}
-            onAnimationComplete={(definition) => {
-              console.log('Completed animating', definition);
-            }}
-          >
-            <div>Design definition</div>
-          </motion.div>
+        <div
+          className={`flex justify-center max-h-screen overflow-y-scroll no-scrollbar`}
+          style={{ height: vidH }}
+          ref={targetRef}
+        >
+          <div className="w-3/4 md:w-full xl:w-11/12 h-full relative text-3xl font-extrabold">
+            <Definition
+              text="The art of conveying a narrative or a sequence of events through
+                spoken, written, or visual means."
+              index={0}
+            />
+            <Definition
+              text="The systematic investigation of the observable world"
+              index={1}
+            />
+            <Definition text="The intentional shaping of futures" index={2} />
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col  mb-10 xl:mt-16 md:px-20xl:px-24 w-full">
-        <Divider />
-        <h1 className="text-3xl lg:text-7xl text-grey font-bold mt-5">
-          Featured
-        </h1>
+      </Gutter>
+      <Divider />
+      <Gutter>
+        <div className="flex flex-col mb-10 w-full">
+          <h1 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+            Featured
+          </h1>
 
-        {/* Featured event */}
-        {event && (
-          <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
-            <div className="flex fill-grey lg:w-4/5 px-5">
-              <div className="w-2/5 sm:w-14 mr-3">
-                <Icons icons={['event']} />
+          {/* Featured event */}
+          {event && (
+            <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
+              <div className="flex fill-grey lg:w-4/5 px-5">
+                <div className="w-2/5 sm:w-14 mr-3">
+                  <Icons icons={['event']} />
+                </div>
+                <div className="flex flex-col  text-grey">
+                  <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
+                    {event.name}
+                  </h2>
+                  {event.eventDate &&
+                    `${new Date(event.eventDate).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                    })} ${new Date(event.eventDate).toLocaleDateString(
+                      'en-US',
+                      {
+                        month: 'long',
+                        day: 'numeric',
+                      }
+                    )}`}
+
+                  <DocumentRenderer document={event.blurb.document} />
+
+                  <div className="mt-8">
+                    <CTAButton
+                      label="Learn more"
+                      link={`/events/${event.key}`}
+                      theme={Theme.climate}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col  text-grey">
-                <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
-                  {event.name}
-                </h2>
-                {event.eventDate &&
-                  `${new Date(event.eventDate).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                  })} ${new Date(event.eventDate).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                  })}`}
+              <BleedImage
+                id={`thumb-${event.key}`}
+                alt={event.thumbAltText}
+                imgId={event.thumbnail.publicId}
+                width={700}
+                transforms="c_fill,g_faces,h_650,w_650"
+                className="mb-6 lg:mb-0"
+              />
+            </div>
+          )}
 
-                <DocumentRenderer document={event.blurb.document} />
-
-                <div className="mt-8">
-                  <CTAButton
-                    label="Learn more"
-                    link={`/events/${event.key}`}
-                    theme={Theme.climate}
+          {/* Featured studio project */}
+          {studioProject && (
+            <div className="flex flex-col justify-between items-center lg:flex-row my-7">
+              <BleedImage
+                id={`thumb-${studioProject.key}`}
+                alt={studioProject.thumbAltText}
+                imgId={studioProject.thumbnail.publicId}
+                width={350}
+                transforms="c_fill,g_faces,h_650,w_650"
+                className="mb-6 lg:mb-0"
+              />
+              <div className="flex fill-grey lg:w-4/5 px-5 ml-4">
+                <div className="w-2/5 sm:w-14 mr-3">
+                  <Icons
+                    icons={studioProject.filters?.map((f) => {
+                      return f.key;
+                    })}
                   />
+                </div>
+                <div className="flex flex-col  text-grey">
+                  <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
+                    {studioProject.name}
+                  </h2>
+                  <DocumentRenderer document={studioProject.blurb.document} />
+
+                  <div className="mt-8">
+                    <CTAButton
+                      label="Learn more"
+                      link={`/news/${studioProject.key}`}
+                      theme={Theme.gunviolence}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-            <BleedImage
-              id={`thumb-${event.key}`}
-              alt={event.thumbAltText}
-              imgId={event.thumbnail.publicId}
-              width={700}
-              transforms="c_fill,g_faces,h_650,w_650"
-              className="mb-6 lg:mb-0"
-            />
-          </div>
-        )}
+          )}
 
-        {/* Featured studio project */}
-        {studioProject && (
-          <div className="flex flex-col justify-between items-center lg:flex-row my-7">
-            <BleedImage
-              id={`thumb-${studioProject.key}`}
-              alt={studioProject.thumbAltText}
-              imgId={studioProject.thumbnail.publicId}
-              width={350}
-              transforms="c_fill,g_faces,h_650,w_650"
-              className="mb-6 lg:mb-0"
-            />
-            <div className="flex fill-grey lg:w-4/5 px-5 ml-4">
-              <div className="w-2/5 sm:w-14 mr-3">
-                <Icons
-                  icons={studioProject.filters?.map((f) => {
-                    return f.key;
-                  })}
-                />
-              </div>
-              <div className="flex flex-col  text-grey">
-                <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
-                  {studioProject.name}
-                </h2>
-                <DocumentRenderer document={studioProject.blurb.document} />
+          {/* Featured news */}
+          {newsItem && (
+            <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
+              <div className="flex fill-grey lg:w-4/5 px-5">
+                <div className="w-2/5 sm:w-14 mr-3">
+                  <Icons icons={['news']} />
+                </div>
+                <div className="flex flex-col  text-grey">
+                  <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
+                    {newsItem.title}
+                  </h2>
+                  <DocumentRenderer document={newsItem.blurb.document} />
 
-                <div className="mt-8">
-                  <CTAButton
-                    label="Learn more"
-                    link={`/news/${studioProject.key}`}
-                    theme={Theme.gunviolence}
-                  />
+                  <div className="mt-8">
+                    <CTAButton
+                      label="Read news"
+                      link={`/news/${newsItem.key}`}
+                      theme={Theme.climate}
+                    />
+                  </div>
                 </div>
               </div>
+              <BleedImage
+                id={`thumb-${newsItem.key}`}
+                alt={newsItem.thumbAltText}
+                imgId={newsItem.thumbnail.publicId}
+                width={700}
+                transforms="c_fill,g_faces,h_650,w_650"
+                className="mb-6 lg:mb-0"
+              />
             </div>
-          </div>
-        )}
-
-        {/* Featured news */}
-        {newsItem && (
-          <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
-            <div className="flex fill-grey lg:w-4/5 px-5">
-              <div className="w-2/5 sm:w-14 mr-3">
-                <Icons icons={['news']} />
-              </div>
-              <div className="flex flex-col  text-grey">
-                <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
-                  {newsItem.title}
-                </h2>
-                <DocumentRenderer document={newsItem.blurb.document} />
-
-                <div className="mt-8">
-                  <CTAButton
-                    label="Read news"
-                    link={`/news/${newsItem.key}`}
-                    theme={Theme.climate}
-                  />
-                </div>
-              </div>
-            </div>
-            <BleedImage
-              id={`thumb-${newsItem.key}`}
-              alt={newsItem.thumbAltText}
-              imgId={newsItem.thumbnail.publicId}
-              width={700}
-              transforms="c_fill,g_faces,h_650,w_650"
-              className="mb-6 lg:mb-0"
-            />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </Gutter>
     </Layout>
   );
 }

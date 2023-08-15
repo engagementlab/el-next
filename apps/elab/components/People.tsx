@@ -4,6 +4,7 @@ import ImagePlaceholder from './ImagePlaceholder';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { ThemeConfig } from '@/types';
+import Link from 'next/link';
 
 interface State {
   peopleOpen: boolean[];
@@ -50,9 +51,10 @@ const subMenuAnimate: Variants = {
   },
 };
 
-const Person = ({
+export const Person = ({
   person,
   theme,
+  large,
 }: {
   person: {
     key: any;
@@ -61,10 +63,39 @@ const Person = ({
     title: string;
   };
   theme: ThemeConfig;
+  large?: boolean;
 }): JSX.Element => {
+  if (large)
+    return (
+      <Link
+        href={`/people/${person.key}`}
+        className="flex flex-col items-center text-center ml-0 group basis-full md:basis-1/3"
+      >
+        {person.image ? (
+          <Image
+            id={`thumb-${person.key}`}
+            alt={`Photo of ${person.name}`}
+            imgId={person.image.publicId}
+            width={250}
+            transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_250,w_250"
+            className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight} group-hover:border-8`}
+          />
+        ) : (
+          <ImagePlaceholder imageLabel="Person" width={150} height={150} />
+        )}
+        <p
+          className={`border-b-2 mt-3 ${theme.text} text-2xl font-semibold group-hover:border-b-0 group-hover:text-green-blue`}
+        >
+          {person.name}
+        </p>
+        <p className="text-lg font-bold mt-1">
+          {person.title.replace(', Engagement Lab at Emerson College', '')}
+        </p>
+      </Link>
+    );
   return (
     <div
-      className="flex flex-col items-center text-center lg:basis-1/4 xl:basis-1/5 ml-0 group"
+      className="flex flex-col items-center text-center ml-0 group lg:basis-1/4 xl:basis-1/5"
       // key={`thumb-${person.key}`}
     >
       {person.image ? (
@@ -72,15 +103,16 @@ const Person = ({
           id={`thumb-${person.key}`}
           alt={`Photo of ${person.name}`}
           imgId={person.image.publicId}
-          width={150}
-          transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_150,w_150"
+          width={large ? 250 : 150}
+          transforms={`f_auto,dpr_auto,c_fill,g_face,r_max,${
+            large ? 'h_250,w_250' : 'h_150,w_150'
+          }`}
           className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight}`}
-          // ` group-hover:border-8 `
         />
       ) : (
         <ImagePlaceholder imageLabel="Person" width={150} height={150} />
       )}
-      <p className={`text-lg border-b-2 mt-3 ${theme.text}`}>{person.name}</p>
+      <p className={`border-b-2 mt-3 ${theme.text} text-lg`}>{person.name}</p>
       <p className="text-sm mt-1">{person.title}</p>
     </div>
   );

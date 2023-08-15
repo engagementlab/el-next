@@ -52,6 +52,20 @@ export interface ThemeConfig {
 }
 
 export const Theming: { [key: string]: ThemeConfig } = {
+  none: {
+    arrow: '#7C4E9F',
+    secodaryArrow: '#F6A536',
+    text: 'text-yellow',
+    heading: 'text-green-blue',
+    border: 'border-yellow',
+    borderLight: 'border-yellowlt',
+    bg: 'bg-yellow',
+    fill: 'fill-yellow',
+    gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
+    secodary: 'bg-[#E2BDFE]',
+    secodaryBg: 'bg-[#E2BDFE]/40',
+    theme: Theme.none,
+  },
   gunviolence: {
     arrow: '#7C4E9F',
     secodaryArrow: '#00A494',

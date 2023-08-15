@@ -121,12 +121,18 @@ export type Studio = {
 export type StudioProject = {
   name: string;
   key: string;
-
+  flags: string[];
   initiative: string;
+  blurb: { document: any };
+
   about: {
     document: any;
   };
 
+  filters: {
+    key: string;
+    name: string;
+  }[];
   trailerId: string;
   videoId: string;
   buttons: any[];
@@ -186,6 +192,7 @@ export type StudioProject = {
 export type News = {
   title: string;
   key: string;
+  flags: string[];
   initiatives: string[];
   publishDate: string;
   blurb: { document: any };
@@ -200,6 +207,7 @@ export type News = {
 export type Event = {
   name: string;
   key: string;
+  flags: string[];
   initiatives: string[];
   eventDate: string;
   blurb: { document: any };

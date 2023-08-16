@@ -71,7 +71,7 @@ export const Person = ({
         href={`/about/people/${person.key}`}
         className="flex flex-col items-center text-center ml-0 group basis-full md:basis-1/3"
       >
-        {person.image ? (
+        {person.image && person.image.publicId ? (
           <Image
             id={`thumb-${person.key}`}
             alt={`Photo of ${person.name}`}
@@ -81,7 +81,7 @@ export const Person = ({
             className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight} group-hover:border-8`}
           />
         ) : (
-          <ImagePlaceholder imageLabel="Person" width={150} height={150} />
+          <ImagePlaceholder imageLabel="Person" width={250} height={250} />
         )}
         <p
           className={`border-b-2 mt-3 ${theme.text} text-2xl font-semibold group-hover:border-b-0 group-hover:text-green-blue`}

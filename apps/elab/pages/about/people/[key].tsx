@@ -40,15 +40,23 @@ export default function AboutPage({
             <div className="flex flex-col lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/3 max-md:flex flex-row items-center justify-evenly">
                 <span className="max-w-[200px]">
-                  <Image
-                    id="thumb"
-                    alt={`Photo of ${item.name}`}
-                    imgId={item.image.publicId}
-                    width={300}
-                    maxWidthDisable={true}
-                    transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_300,w_300"
-                    className={`rounded-full border-4 mt-2 transition-all border-yellowlt`}
-                  />
+                  {item.image && item.image.publicId ? (
+                    <Image
+                      id="thumb"
+                      alt={`Photo of ${item.name}`}
+                      imgId={item.image.publicId}
+                      width={300}
+                      maxWidthDisable={true}
+                      transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_300,w_300"
+                      className={`rounded-full border-4 mt-2 transition-all border-yellowlt`}
+                    />
+                  ) : (
+                    <ImagePlaceholder
+                      imageLabel="Person"
+                      width={300}
+                      height={300}
+                    />
+                  )}
                 </span>
                 <span className="lg:hidden">
                   <h1 className="font-extrabold text-3xl xl:text-5xl text-slate">

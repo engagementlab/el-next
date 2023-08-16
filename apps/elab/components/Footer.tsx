@@ -212,6 +212,36 @@ export const Footer = () => {
       </>
     );
   };
+
+  interface CheckboxProps {
+    id: string;
+    // label: string;
+  }
+
+  const Checkbox = (props: CheckboxProps) => (
+    <div className="flex gap-2">
+      <input
+        className="peer relative appearance-none shrink-0 w-4 h-4 border-2 mt-1 
+        focus:outline-none focus:ring-offset-0 focus:ring-1 focus:ring-blue-100
+        border-slate bg-[rgba(255,255,255,0)] text-transparent accent-[#fcd2a3] text-slate bg-[rgba(255,255,255,0] before:content-none before:w-2 before:h-2"
+        type="checkbox"
+        id={props.id}
+        defaultChecked={true}
+      />
+      <svg
+        className="absolute w-3 h-3 pointer-events-none hidden peer-checked:block stroke-black mt-1 outline-none"
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+  );
+
   return (
     <div className=" bg-yellow bg-opacity-50">
       <Divider />
@@ -300,17 +330,20 @@ export const Footer = () => {
                     {!submitted ? (
                       // Form
                       <span className="flex flex-col w-full justify-between items-center mb-10">
-                        <label>
-                          <input
+                        <label className="flex flex-row">
+                          {/* <input
                             id="monthly"
                             type="checkbox"
                             defaultChecked={true}
-                            className="border-4 border-slate bg-[rgba(255,255,255,0)] text-transparent accent-[#fcd2a3] text-slate bg-[rgba(255,255,255,0] before:content-none before:w-2 before:h-2
-                        "
-                          />
-                          Monthly Engagement Lab Newsletter
+                          /> */}
+                          <Checkbox id="monthly" />
+                          <span className="ml-2">
+                            <span className="block font-medium">Monthly</span>
+                            Engagement Lab Newsletter
+                          </span>
                         </label>
                         <div className="relative w-full">
+                          <div className="absolute w-full h-8 border-yellow border-2 mt-1 ml-1"></div>
                           <input
                             type="email"
                             placeholder="Your email"
@@ -323,7 +356,6 @@ export const Footer = () => {
                             disabled={submitted}
                             className=" absolute w-full h-8 bg-[rgba(255,255,255,0)] border-2 border-slate p-3 placeholder:text-slate shadow-[16px_20px_0px_0px_#2d3748]1"
                           />
-                          <div className="absolute w-full h-8 border-yellow border-2 mt-1 ml-1"></div>
                         </div>
                         {/* <input
                           type="submit"

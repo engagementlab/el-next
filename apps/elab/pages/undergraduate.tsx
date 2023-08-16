@@ -7,8 +7,7 @@ import { Button, HeadingStyle, Image, Query } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
-import { CTAButton } from '@/components/Buttons';
-import { Studio, StudioProject, Theme, Theming } from '@/types';
+import { Studio, StudioProject } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
@@ -26,7 +25,6 @@ type UndergradPage = {
   projectSpotlight: StudioProject[];
 };
 
-const wrapperClass = 'my-0 xl:my-12 mt-14 mb-4 xl:mt-16 px-5 w-full';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
     const customRenderers = {
@@ -50,13 +48,13 @@ export default function Initiatives({
               <h1 className="font-extrabold text-black">
                 Undergraduate Curriculum
               </h1>
-              <p className="flex flex-col studios-center w-full">
+              <div className="flex flex-col studios-center w-full">
                 <DocumentRenderer
                   document={page.intro.document}
                   componentBlocks={Blocks()}
                   renderers={Doc(rendererOverrides)}
                 />
-              </p>
+              </div>
               <div className="hidden lg:block w-full mt-6 mb-12">
                 <p className="text-xl lg:text-3xl font-extrabold uppercase">
                   Jump to:

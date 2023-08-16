@@ -22,7 +22,7 @@ const CaptionedImage = ({
         <div className="relative w-[105%] max-w-[105%]">
           {!imgId ? (
             <img
-              className={`relative rounded-full md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0`}
+              className={`relative md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0`}
               src="https://placehold.co/812x812?text=Needs Image Here"
             />
           ) : (
@@ -30,7 +30,7 @@ const CaptionedImage = ({
               id={`captioned-image-${imgId}`}
               alt={alt}
               imgId={imgId}
-              transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
+              transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
               className="relative md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0"
             />
           )}

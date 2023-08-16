@@ -324,8 +324,8 @@ export default function Home({
                     id={`thumb-${event.key}`}
                     alt={event.thumbAltText}
                     imgId={event.thumbnail.publicId}
-                    width={700}
-                    transforms="c_fill,g_faces,h_650,w_650"
+                    transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
+                    width={650}
                     className="mb-6 lg:mb-0"
                   />
                 </div>
@@ -338,8 +338,8 @@ export default function Home({
                     id={`thumb-${studioProject.key}`}
                     alt={studioProject.thumbAltText}
                     imgId={studioProject.thumbnail.publicId}
-                    width={350}
-                    transforms="c_fill,g_faces,h_650,w_650"
+                    transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
+                    width={650}
                     className="mb-6 lg:mb-0"
                   />
                   <div className="flex fill-grey lg:w-4/5 px-5 ml-4">
@@ -396,8 +396,8 @@ export default function Home({
                     id={`thumb-${newsItem.key}`}
                     alt={newsItem.thumbAltText}
                     imgId={newsItem.thumbnail.publicId}
-                    width={700}
-                    transforms="c_fill,g_faces,h_650,w_650"
+                    transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
+                    width={650}
                     className="mb-6 lg:mb-0"
                   />
                 </div>

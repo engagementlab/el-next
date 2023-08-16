@@ -96,37 +96,28 @@ export default function Initiatives({
           </div>
           <Divider />
 
-          <Gutter>
-            <DocumentRenderer
-              document={page.mediaDesign.document}
-              componentBlocks={Blocks()}
-              renderers={Doc({
-                heading: (
-                  level: number,
-                  children: ReactNode,
-                  textAlign: any
-                ) => {
-                  const customRenderers = {
-                    4: `font-bold my-2 uppercase text-yellow`,
-                  };
-                  return HeadingStyle({
-                    level,
-                    children,
-                    textAlign,
-                    customRenderers,
-                  });
-                },
-              })}
-            />
-          </Gutter>
-          <Divider />
-
           <div id="ma">
             <Gutter>
               <DocumentRenderer
                 document={page.mediaDesign.document}
                 componentBlocks={Blocks()}
-                renderers={Doc()}
+                renderers={Doc({
+                  heading: (
+                    level: number,
+                    children: ReactNode,
+                    textAlign: any
+                  ) => {
+                    const customRenderers = {
+                      4: `font-bold my-2 uppercase text-yellow`,
+                    };
+                    return HeadingStyle({
+                      level,
+                      children,
+                      textAlign,
+                      customRenderers,
+                    });
+                  },
+                })}
               />
             </Gutter>
           </div>

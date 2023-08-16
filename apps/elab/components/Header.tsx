@@ -243,6 +243,7 @@ const Header = ({ theme }: Props): JSX.Element => {
     );
   const aboutLinks = (
     <>
+      <NavLink href="/about/about-the-lab" label="About the Lab" />
       <NavLink href="/about/mission-values" label="Mission & Values" />
       <NavLink href="/about/our-approach" label="Our Approach" />
       <NavLink href="/about/people" label="People" />

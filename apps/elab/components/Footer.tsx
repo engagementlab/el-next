@@ -32,14 +32,17 @@ export const Footer = () => {
     e.preventDefault();
     setSubmitted(true);
 
-    const email = (e.currentTarget[0] as HTMLInputElement).value;
+    const monthly = (e.currentTarget[0] as HTMLInputElement).checked;
+    const tngv = (e.currentTarget[1] as HTMLInputElement).checked;
+    const tnej = (e.currentTarget[2] as HTMLInputElement).checked;
+    const email = (e.currentTarget[3] as HTMLInputElement).value;
     const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       email
     );
 
     if (emailValid) {
       await fetch(
-        `https://elab-initiatives-api.azurewebsites.net/api/newsletter?email=${email}`
+        `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tneg=${tnej}`
       )
         .then((response) => {
           return response;
@@ -312,7 +315,7 @@ export const Footer = () => {
             <form onSubmit={SubmitEmail}>
               <div className="py-6 px-8 w-full">
                 {status === 'already_subscribed' && (
-                  <span className="text-bluegreen">
+                  <span className="text-bluegreen font-bold">
                     You are already subscribed. Nice! 😎
                   </span>
                 )}
@@ -320,7 +323,7 @@ export const Footer = () => {
                   <span className="text-purple">Thanks for joining! 😍</span>
                 )}
                 {status === 'error' && (
-                  <span className="text-green-blue">
+                  <span className="text-red">
                     Sorry, there was a problem. Try again later, please. ☹️
                   </span>
                 )}
@@ -331,15 +334,25 @@ export const Footer = () => {
                       // Form
                       <span className="flex flex-col w-full justify-between items-center mb-10">
                         <label className="flex flex-row">
-                          {/* <input
-                            id="monthly"
-                            type="checkbox"
-                            defaultChecked={true}
-                          /> */}
                           <Checkbox id="monthly" />
                           <span className="ml-2">
                             <span className="block font-medium">Monthly</span>
                             Engagement Lab Newsletter
+                          </span>
+                        </label>
+                        <label className="flex flex-row">
+                          <Checkbox id="tngv" />
+                          <span className="ml-2">
+                            <span className="block font-medium">Quarterly</span>
+                            Transforming Narratives of Gun Violence Newsletter
+                          </span>
+                        </label>
+                        <label className="flex flex-row">
+                          <Checkbox id="tnej" />
+                          <span className="ml-2">
+                            <span className="block font-medium">Quarterly</span>
+                            Transforming Narratives for Environmental Justice
+                            Newsletter
                           </span>
                         </label>
                         <div className="relative w-full">
@@ -357,18 +370,10 @@ export const Footer = () => {
                             className=" absolute w-full h-8 bg-[rgba(255,255,255,0)] border-2 border-slate p-3 placeholder:text-slate shadow-[16px_20px_0px_0px_#2d3748]1"
                           />
                         </div>
-                        {/* <input
-                          type="submit"
-                          value="Add your email"
-                          name="subscribe"
-                          id="mc-embedded-subscribe"
-                          aria-hidden="true"
-                          className="hidden"
-                        />
                         <button
                           type="submit"
                           aria-label="Subscribe"
-                          className="group"
+                          className="group block mt-8"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -384,7 +389,7 @@ export const Footer = () => {
                               d="M14 5l7 7m0 0l-7 7m7-7H3"
                             />
                           </svg>
-                        </button> */}
+                        </button>
                       </span>
                     ) : (
                       // Loading

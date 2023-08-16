@@ -134,14 +134,27 @@ type NavState = {
   toggleMenuHover: (hover: boolean) => void;
 };
 
+const ActiveLink = (href: string | undefined) => {
+  const router = useRouter();
+
+  return router.asPath === href;
+};
+
+const [blockScroll, allowScroll] = useScrollBlock();
+
 // Create store with Zustand
 const useStore = create<NavState>((set) => ({
   navOpen: false,
   menuButtonHover: false,
   toggleNavOpen: (open: boolean) =>
     set((state) => {
-      document.body.style.overflow = open ? 'hidden' : 'visible';
-      if (open) window.scrollTo(0, 0);
+      // debugger;
+      // document.body.style.overflow = open ? 'hidden' : 'visible';
+      if (open) {
+        window.scrollTo(0, 0);
+        blockScroll();
+      } else allowScroll();
+
       return { ...state, navOpen: open };
     }),
   toggleMenuHover: (hover: boolean) =>
@@ -149,12 +162,6 @@ const useStore = create<NavState>((set) => ({
       return { ...state, menuButtonHover: !hover };
     }),
 }));
-
-const ActiveLink = (href: string | undefined) => {
-  const router = useRouter();
-
-  return router.asPath === href;
-};
 
 const Header = ({ theme }: Props): JSX.Element => {
   const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
@@ -169,8 +176,6 @@ const Header = ({ theme }: Props): JSX.Element => {
   const [hoverNews, toggleHoverNews] = useCycle(false, true);
 
   const [expanded, setExpanded] = useState<false | number>(-1);
-
-  const [blockScroll, allowScroll] = useScrollBlock();
 
   const { navOpen, toggleNavOpen } = useStore();
 
@@ -215,7 +220,13 @@ const Header = ({ theme }: Props): JSX.Element => {
         {label}
       </span>
     ) : (
-      <Link href={href} className="mt-3 xl:my-1">
+      <Link
+        href={href}
+        className="mt-3 xl:my-1"
+        onClick={() => {
+          toggleNavOpen(false);
+        }}
+      >
         {subLink && (
           <svg
             height="20"
@@ -329,7 +340,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   };
   useEffect(() => {
     router.events.on('routeChangeComplete', () => {
-      toggleNavOpen(false);
+      // toggleNavOpen(false);
       toggleHoverAbout(0);
       toggleHoverSII(0);
       toggleHoverResearch(0);
@@ -747,7 +758,6 @@ const Header = ({ theme }: Props): JSX.Element => {
         <MenuToggle
           toggle={() => {
             toggleNavOpen(!navOpen);
-            !navOpen ? blockScroll() : allowScroll();
           }}
           hover={() => toggleMenuHover()}
           isHover={menuButtonHover}

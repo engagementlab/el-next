@@ -68,7 +68,7 @@ export const Person = ({
   if (large)
     return (
       <Link
-        href={`/people/${person.key}`}
+        href={`/about/people/${person.key}`}
         className="flex flex-col items-center text-center ml-0 group basis-full md:basis-1/3"
       >
         {person.image ? (
@@ -88,7 +88,7 @@ export const Person = ({
         >
           {person.name}
         </p>
-        <p className="text-lg font-bold mt-1">
+        <p className="text-sm font-semibold mt-1">
           {person.title.replace(', Engagement Lab at Emerson College', '')}
         </p>
       </Link>

@@ -250,3 +250,16 @@ export type ResearchProject = {
 };
 
 export type Item = News & Event;
+type Category = 'core' | 'studentstaff' | 'fellow';
+export type Person = {
+  name: string;
+  key: string;
+  title: string;
+  image: {
+    publicId: string;
+  };
+  category?: Category;
+  content?: {
+    document: any;
+  };
+};

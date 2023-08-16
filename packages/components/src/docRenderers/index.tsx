@@ -100,7 +100,7 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
           return renderOverrides?.paragraph ? (
             renderOverrides.paragraph(children)
           ) : (
-            <p>{children}</p>
+            <p className="my-4">{children}</p>
           );
         },
       },

@@ -77,6 +77,7 @@ var DocRenderers = function DocRenderers(styles) {
         paragraph: function paragraph(_ref7) {
           var children = _ref7.children;
           return renderOverrides !== null && renderOverrides !== void 0 && renderOverrides.paragraph ? renderOverrides.paragraph(children) : /*#__PURE__*/jsxRuntime.jsx("p", {
+            className: "my-4",
             children: children
           });
         }

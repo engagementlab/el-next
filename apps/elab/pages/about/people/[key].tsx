@@ -70,7 +70,7 @@ export default function AboutPage({
                   </h3>
                 </span>
               </div>
-              <div className="mt-5 lg:mt-0">
+              <div className="mt-5 lg:mt-0 lg:w-3/5">
                 <span className="hidden lg:block">
                   <h1 className="font-extrabold text-4xl xl:text-5xl text-slate">
                     {item.name}

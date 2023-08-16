@@ -49,13 +49,13 @@ export default function Initiatives({
           <div className="flex flex-col lg:flex-row justify-start">
             <div className="px-4 md:px-20 lg:pl-20 my-0 lg:mt-14 xl:mt-16 xl:mb-20 w-full lg:w-4/6 xl:w-1/2">
               <h1 className="font-extrabold text-black">Learning Partners</h1>
-              <p className="flex flex-col studios-center w-full">
+              <div className="flex flex-col studios-center w-full">
                 <DocumentRenderer
                   document={page.intro.document}
                   componentBlocks={Blocks()}
                   renderers={Doc(rendererOverrides)}
                 />
-              </p>
+              </div>
               <div className="hidden lg:block w-full mt-6 mb-12">
                 <p className="text-xl lg:text-3xl font-extrabold uppercase">
                   Jump to:

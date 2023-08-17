@@ -35,24 +35,34 @@ const newsletterSignup: AzureFunction = async function (
     apiKey: process.env.MAILCHIMP_KEY,
     server: 'us6',
   });
-
+  const queryKeys = Object.keys(req.query);
+  queryKeys.splice(queryKeys.indexOf('email'), 1);
+  const tagsFormatted = queryKeys.map((tag) => {
+    return tag.toLocaleUpperCase();
+  });
   try {
     const response = await mailchimp.lists.addListMember(listId, {
       email_address: req.query.email,
+      tags: tagsFormatted,
       status: 'subscribed',
     });
 
+    // const response = await mailchimp.lists.getListMemberTags(
+    //   listId,
+    //   req.query.email
+    // );
     if (response) {
       context.res = {
         status: 200,
-        body: 'ok',
+        body: response,
       };
     }
   } catch (e) {
-    if (e.response.body.title === 'Member Exists') {
+    if (e.response && e.response.body.title === 'Member Exists') {
       context.res = {
         status: 409,
-        body: 'already_subscribed',
+        // body: 'already_subscribed',
+        body: tagsFormatted,
       };
       return;
     }

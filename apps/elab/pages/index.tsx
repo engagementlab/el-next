@@ -101,20 +101,33 @@ export default function Home({
     },
   };
 
-  const Definition = ({ text, index }: { text: string; index: number }) => {
+  const Definition = ({
+    word,
+    define,
+    index,
+    color,
+  }: {
+    word: string;
+    define: string;
+    index: number;
+    color: string;
+  }) => {
     return (
-      <div className="h-full flex items-center">
-        <motion.p
+      <div className="h-full flex items-center -translate-y-16">
+        <motion.div
           initial={{ opacity: 0, filter: 'blur(5px)' }}
           whileInView={{ opacity: 1, filter: 'blur(0)' }}
           viewport={{ root: targetRef, amount: 'all' }}
           onViewportEnter={() => {
             setWordIndex(index);
           }}
-          className="h-1/5 relative"
+          className={`h-1/5 relative ${color}`}
         >
-          {text}
-        </motion.p>
+          <p className="flex flex-row w-3/4 justify-between items-center">
+            {word} <em className="text-sm font-semibold">noun</em>
+          </p>
+          <p className="text-grey font-normal text-sm">{define}</p>
+        </motion.div>
       </div>
     );
   };
@@ -169,21 +182,22 @@ export default function Home({
       <Gutter noMarginY={true}>
         <motion.div id="tagline" className="flex static flex-col">
           <motion.div
-            className="flex justify-center text-3xl md:text-4xl font-extrabold mt-10 xl:mt-24"
+            className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24"
             // variants={cardVariants}
           >
-            <div className="w-3/4 md:w-full max-[375px]:break-words">
+            {/*  leading-[3.2rem] */}
+            <div className="w-3/4 max-[375px]:break-words">
               Advancing&nbsp;
               <span className="inline-block text-purple">
                 peace<span className="text-black">,</span>
               </span>
               &nbsp;
-              <span className="text-purple">equity</span>, &&nbsp;
+              <span className="inline-block text-purple">equity</span>, &&nbsp;
               <span className="text-purple">justice</span>
-              &nbsp;through&nbsp;
-              <span className="block md:inline-block">collaborative&nbsp;</span>
-              <div className="inline-flex flex-col text-4xl lg:text-5xl font-extrabold">
-                <div className="overflow-hidden h-10 lg:h-12">
+              <br />
+              through collaborative&nbsp;
+              <div className="inline-flex flex-col font-extrabold">
+                <div className="overflow-hidden h-8 md:h-12">
                   <div
                     className={`inline-flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 text-left  ${
                       wordIndex !== 0
@@ -193,26 +207,13 @@ export default function Home({
                         : ''
                     }`}
                   >
-                    <motion.span
-                      className="text-yellow"
-                      // variants={wordVariants}
-                      initial="onscreen"
-                    >
+                    <motion.span className="text-yellow" initial="onscreen">
                       storytelling
                     </motion.span>{' '}
-                    <motion.span
-                      className="text-green"
-                      initial="onscreen"
-                      // animate={wordIndex !s== 1 ? 'offscreen' : 'onscreen'}
-                    >
+                    <motion.span className="text-green" initial="onscreen">
                       research
                     </motion.span>
-                    <motion.span
-                      className="text-red"
-                      // variants={wordVariants}
-                      initial="onscreen"
-                      // animate={wordIndex !s== 1 ? 'offscreen' : 'onscreen'}
-                    >
+                    <motion.span className="text-red" initial="onscreen">
                       design
                     </motion.span>
                   </div>
@@ -245,23 +246,28 @@ export default function Home({
                 transition: { duration: 0.5 },
               }}
               exit={{ opacity: 0 }}
-              className="flex justify-center overflow-y-scroll no-scrollbar max-h-screen"
-              // style={{ height:  }}
+              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen min-h-[190px]"
               ref={targetRef}
             >
-              <div className="w-3/4 md:w-full xl:w-11/12 h-full relative text-3xl font-extrabold">
+              <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">
                 <Definition
-                  text="The art of conveying a narrative or a sequence of events through
-                spoken, written, or visual means."
+                  word="sto•ry•tell​•ing"
+                  define="The art of conveying a narrative or a sequence of events through
+                  spoken, written, or visual means."
                   index={0}
+                  color="text-yellow"
                 />
                 <Definition
-                  text="The systematic investigation of the observable world"
+                  word="re•search"
+                  define="The systematic investigation of the observable world"
                   index={1}
+                  color="text-green"
                 />
                 <Definition
-                  text="The intentional shaping of futures"
+                  word="de•sign"
+                  define="The intentional shaping of futures"
                   index={2}
+                  color="text-red"
                 />
               </div>
             </motion.div>

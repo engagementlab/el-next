@@ -39,7 +39,7 @@ export default function Home({
     setBgVideo(bgVideoRef.current);
     const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
     const player = new Player('video-bg', {
-      id: portraitVideo ? 854491578 : 846665267,
+      id: portraitVideo ? 855474088 : 855473995,
       width: 1640,
       height: 720,
       controls: false,
@@ -55,13 +55,14 @@ export default function Home({
     });
     player.on('resize', (e) => {
       // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
-      setVideoHeight(
-        document.querySelector<HTMLElement>('iframe') !== null
-          ? document.querySelector<HTMLElement>('iframe')!.clientHeight -
-              document.querySelector<HTMLElement>('nav')!.clientHeight -
-              document.querySelector<HTMLElement>('#tagline')!.clientHeight
-          : 0
-      );
+      let height =
+        document.querySelector<HTMLElement>('iframe')!.clientHeight -
+        document.querySelector<HTMLElement>('nav')!.clientHeight -
+        document.querySelector<HTMLElement>('#tagline')!.clientHeight;
+      if (window.matchMedia('(orientation: portrait)').matches && height > 500)
+        height = 500;
+
+      setVideoHeight(height);
       setVideoOverlayHeight(
         document.querySelector<HTMLElement>('iframe') !== null
           ? document.querySelector<HTMLElement>('iframe')!.clientHeight
@@ -113,7 +114,7 @@ export default function Home({
     color: string;
   }) => {
     return (
-      <div className="h-full flex items-center -translate-y-16">
+      <div className="h-full flex items-center">
         <motion.div
           initial={{ opacity: 0, filter: 'blur(5px)' }}
           whileInView={{ opacity: 1, filter: 'blur(0)' }}
@@ -180,7 +181,7 @@ export default function Home({
       error={error}
     >
       <Gutter noMarginY={true}>
-        <motion.div id="tagline" className="flex static flex-col">
+        <motion.div id="tagline" className="flex static flex-col pt-14">
           <motion.div
             className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24"
             // variants={cardVariants}
@@ -246,7 +247,8 @@ export default function Home({
                 transition: { duration: 0.5 },
               }}
               exit={{ opacity: 0 }}
-              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen min-h-[190px]"
+              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen "
+              // min-h-[200px]"
               ref={targetRef}
             >
               <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">
@@ -286,10 +288,10 @@ export default function Home({
             exit={{ opacity: 0 }}
           >
             <Divider />
-            <h1 className="text-3xl lg:text-7xl text-grey font-bold my-14 md:px-20 xl:px-24 px-5 w-full">
+            <h1 className="text-3xl lg:text-7xl text-grey bg-white font-bold py-16 md:px-20 xl:px-24 px-5 w-full">
               Featured
             </h1>
-            <div className="flex flex-col my-14px-5 mb-10 md:px-20 xl:px-24 w-full">
+            <div className="flex flex-col bg-white px-5 mb-10 md:px-20 xl:px-24 w-full">
               {/* Featured event */}
               {event && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">

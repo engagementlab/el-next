@@ -449,11 +449,7 @@ export default function Home({
                                         d="M 23.513 29.203 L 18.842 25.289 L 28.198 25.284 L 23.513 29.203 Z M 4.613 7.434 L 42.398 7.434 L 42.398 25.39 L 4.613 25.39 L 4.613 7.434 Z"
                                         style={{ fill: 'white' }}
                                       ></path>
-                                      <text
-                                        x="8.321"
-                                        y="18.097"
-                                        fontSize=".5em"
-                                      >
+                                      <text x="8.321" y="18.097" fontSize="1em">
                                         Event
                                       </text>
                                     </svg>
@@ -482,11 +478,7 @@ export default function Home({
                                         d="M 23.513 29.203 L 18.842 25.289 L 28.198 25.284 L 23.513 29.203 Z M 4.613 7.434 L 42.398 7.434 L 42.398 25.39 L 4.613 25.39 L 4.613 7.434 Z"
                                         style={{ fill: 'white' }}
                                       ></path>
-                                      <text
-                                        x="8.321"
-                                        y="18.097"
-                                        fontSize=".5em"
-                                      >
+                                      <text x="8.321" y="18.097" fontSize="1em">
                                         News
                                       </text>
                                     </svg>

@@ -35,32 +35,43 @@ export const Footer = () => {
     const monthly = (e.currentTarget[0] as HTMLInputElement).checked;
     const tngv = (e.currentTarget[1] as HTMLInputElement).checked;
     const tnej = (e.currentTarget[2] as HTMLInputElement).checked;
+    if (!monthly && !tngv && !tnej) {
+      setStatus('noselection');
+      setSubmitted(false);
+
+      return;
+    }
+
     const email = (e.currentTarget[3] as HTMLInputElement).value;
     const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       email
     );
 
     if (emailValid) {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tneg=${tnej}`
-      )
-        .then((response) => {
-          return response;
-        })
-        .then((res) => {
-          if (res.status === 409) {
-            setStatus('already_subscribed');
-            return;
-          }
-          if (res.status === 500) {
+      try {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tneg=${tnej}`
+        )
+          .then((response) => {
+            return response;
+          })
+          .then((res) => {
+            if (res.status === 409) {
+              setStatus('already_subscribed');
+              return;
+            }
+            if (res.status === 500 || res.status === 404) {
+              setStatus('error');
+              return;
+            }
+            setStatus('success');
+          })
+          .catch(() => {
             setStatus('error');
-            return;
-          }
-          setStatus('success');
-        })
-        .catch((error) => {
-          setStatus('error');
-        });
+          });
+      } catch {
+        setStatus('error');
+      }
     } else setSubmitted(false);
   };
   const GetInTouch = () => {
@@ -107,7 +118,7 @@ export const Footer = () => {
   const LicensePrivacy = () => {
     return (
       <>
-        <div className="flex flex-row mt-3">
+        <div className="flex flex-row mt-10">
           <svg width="35px" height="35px" viewBox="5.5 -3.5 64 64">
             <g>
               <circle
@@ -210,8 +221,10 @@ export const Footer = () => {
             </g>
           </svg>
         </div>
-        <Link href="/privacy">Privacy Policy</Link>
-        <Link href="/attributions">Attributions</Link>
+        <div className="flex flex-row gap-x-4 mt-5">
+          <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/attributions">Attributions</Link>
+        </div>
       </>
     );
   };
@@ -240,7 +253,25 @@ export const Footer = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <polyline points="20 6 9 17 4 12"></polyline>
+        {/* <polyline points="20 6 9 17 4 12"></polyline> */}
+      </svg>
+      {/* <svg
+        className="absolute w-3 h-3 pointer-events-none hidden peer-checked:block stroke-black mt-1 outline-none"
+        width="24"
+        height="24"
+        xmlns="http://www.w3.org/2000/svg"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+      >
+        <path d="M24 4.685l-16.327 17.315-7.673-9.054.761-.648 6.95 8.203 15.561-16.501.728.685z" />
+      </svg> */}
+      <svg
+        viewBox="0 4 12 9"
+        width="11"
+        height="9"
+        className="absolute pointer-events-none hidden peer-checked:block stroke-black mt-[0.45rem] ml-[0.17rem] outline-none"
+      >
+        <path d="M 12 4.342 L 3.837 13 L 0 8.473 L 0.381 8.149 L 3.856 12.25 L 11.636 4 L 12 4.342 L 12 4.342 Z"></path>
       </svg>
     </div>
   );
@@ -249,8 +280,8 @@ export const Footer = () => {
     <div className=" bg-yellow bg-opacity-50">
       <Divider />
       <nav className="w-full flex flex-col bottom-0 lg:flex-row-reverse justify-between">
-        <div className="flex flex-col items-center lg:justify-center lg:w-2/3 mt-10 lg:mt-0 p0x-6 md:px-16 xl:px-24">
-          <div className="flex flex-col items-center justify-around lg:flex-row w-full mt-3">
+        <div className="flex flex-col items-center justify-center lg:w-2/3 mt-10 lg:mt-0 px-6 md:px-16 xl:px-24">
+          <div className="flex flex-col items-center justify-around lg:flex-row w-full">
             <svg
               viewBox="0 0 166 58.741"
               width="166"
@@ -313,49 +344,54 @@ export const Footer = () => {
           <h3 className="uppercase font-extrabold text-xl">Newsletters</h3>
           <div id="newsletter">
             <form onSubmit={SubmitEmail}>
-              <div className="py-6 px-8 w-full">
+              <div className="py-6 w-full">
                 {status === 'already_subscribed' && (
-                  <span className="text-bluegreen font-bold">
+                  <span className="text-green-blue">
                     You are already subscribed. Nice! 😎
                   </span>
                 )}
                 {status === 'success' && (
-                  <span className="text-purple">Thanks for joining! 😍</span>
+                  <span className="text-green">Thanks for joining! 😍</span>
                 )}
                 {status === 'error' && (
                   <span className="text-red">
                     Sorry, there was a problem. Try again later, please. ☹️
                   </span>
                 )}
-
-                {!status && (
-                  <div>
+                {(!status || status === 'noselection') && (
+                  <>
                     {!submitted ? (
                       // Form
-                      <span className="flex flex-col w-full justify-between items-center mb-10">
-                        <label className="flex flex-row">
+                      <div className="flex flex-col w-full text-sm">
+                        <label className="flex flex-row w-full">
                           <Checkbox id="monthly" />
-                          <span className="ml-2">
+                          <span className="ml-2 lg:flex lg:gap-x-5">
                             <span className="block font-medium">Monthly</span>
-                            Engagement Lab Newsletter
+                            <span className="font-light">
+                              Engagement Lab Newsletter
+                            </span>
                           </span>
                         </label>
-                        <label className="flex flex-row">
+                        <label className="flex flex-row w-full">
                           <Checkbox id="tngv" />
-                          <span className="ml-2">
+                          <span className="ml-2 lg:flex lg:gap-x-2">
                             <span className="block font-medium">Quarterly</span>
-                            Transforming Narratives of Gun Violence Newsletter
+                            <span className="font-light">
+                              Transforming Narratives of Gun Violence Newsletter
+                            </span>
                           </span>
                         </label>
-                        <label className="flex flex-row">
+                        <label className="flex flex-row w-full">
                           <Checkbox id="tnej" />
-                          <span className="ml-2">
+                          <span className="ml-2 lg:flex lg:gap-x-2">
                             <span className="block font-medium">Quarterly</span>
-                            Transforming Narratives for Environmental Justice
-                            Newsletter
+                            <span className="font-light">
+                              Transforming Narratives for Environmental Justice
+                              Newsletter
+                            </span>
                           </span>
                         </label>
-                        <div className="relative w-full">
+                        <div className="relative w-full mt-3">
                           <div className="absolute w-full h-8 border-yellow border-2 mt-1 ml-1"></div>
                           <input
                             type="email"
@@ -370,27 +406,37 @@ export const Footer = () => {
                             className=" absolute w-full h-8 bg-[rgba(255,255,255,0)] border-2 border-slate p-3 placeholder:text-slate shadow-[16px_20px_0px_0px_#2d3748]1"
                           />
                         </div>
+
                         <button
                           type="submit"
                           aria-label="Subscribe"
-                          className="group block mt-8"
+                          className="group relative my-12"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 group-hover:translate-x-1 transition-transform"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="#000"
-                            strokeWidth="2"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            />
-                          </svg>
+                          <div className="absolute w-24 h-8 border-yellow border-2 mt-1 ml-1 bg-yellow bg-opacity-0 group-hover:bg-opacity-25"></div>
+                          <div className="absolute w-24 h-8 bg-[rgba(255,255,255,0)] border-2 border-yellow py-2">
+                            Sign up
+                            <svg
+                              className="h-4 w-4 ml-2 inline-block group-hover:translate-x-1 transition-transform"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                stroke="black"
+                              />
+                            </svg>
+                          </div>
                         </button>
-                      </span>
+
+                        {status === 'noselection' && (
+                          <span className="text-red">
+                            Please select at least one newsletter to join. 😕
+                          </span>
+                        )}
+                      </div>
                     ) : (
                       // Loading
                       <svg
@@ -468,34 +514,34 @@ export const Footer = () => {
                         </circle>
                       </svg>
                     )}
-                  </div>
+                  </>
                 )}
               </div>
             </form>
             <div className="subscribed"></div>
           </div>
         </div>
-      </nav>
-      <p className="bottom-0 right-0 pl-16">
-        <span className="italic ">ELab Home</span> v{packageInfo.version}
-        <a
-          href="https://github.com/engagementlab"
-          role="link"
-          aria-label="Link to the Engagement Lab's Github repo for elab home app"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            className="h-6 w-6 fill-slate-900"
+        <p className="absolute flex flex-row gap-x-2 bottom-0 right-0 px-6 py-5 text-sm items-center">
+          <span className="italic">ELab Home</span> v{packageInfo.version}
+          <a
+            href="https://github.com/engagementlab"
+            role="link"
+            aria-label="Link to the Engagement Lab's Github repo for elab home app"
           >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M12 2C6.477 2 2 6.463 2 11.97c0 4.404 2.865 8.14 6.839 9.458.5.092.682-.216.682-.48 0-.236-.008-.864-.013-1.695-2.782.602-3.369-1.337-3.369-1.337-.454-1.151-1.11-1.458-1.11-1.458-.908-.618.069-.606.069-.606 1.003.07 1.531 1.027 1.531 1.027.892 1.524 2.341 1.084 2.91.828.092-.643.35-1.083.636-1.332-2.22-.251-4.555-1.107-4.555-4.927 0-1.088.39-1.979 1.029-2.675-.103-.252-.446-1.266.098-2.638 0 0 .84-.268 2.75 1.022A9.607 9.607 0 0 1 12 6.82c.85.004 1.705.114 2.504.336 1.909-1.29 2.747-1.022 2.747-1.022.546 1.372.202 2.386.1 2.638.64.696 1.028 1.587 1.028 2.675 0 3.83-2.339 4.673-4.566 4.92.359.307.678.915.678 1.846 0 1.332-.012 2.407-.012 2.734 0 .267.18.577.688.48 3.97-1.32 6.833-5.054 6.833-9.458C22 6.463 17.522 2 12 2Z"
-            ></path>
-          </svg>
-        </a>
-      </p>
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="h-6 w-6 fill-slate-900"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12 2C6.477 2 2 6.463 2 11.97c0 4.404 2.865 8.14 6.839 9.458.5.092.682-.216.682-.48 0-.236-.008-.864-.013-1.695-2.782.602-3.369-1.337-3.369-1.337-.454-1.151-1.11-1.458-1.11-1.458-.908-.618.069-.606.069-.606 1.003.07 1.531 1.027 1.531 1.027.892 1.524 2.341 1.084 2.91.828.092-.643.35-1.083.636-1.332-2.22-.251-4.555-1.107-4.555-4.927 0-1.088.39-1.979 1.029-2.675-.103-.252-.446-1.266.098-2.638 0 0 .84-.268 2.75 1.022A9.607 9.607 0 0 1 12 6.82c.85.004 1.705.114 2.504.336 1.909-1.29 2.747-1.022 2.747-1.022.546 1.372.202 2.386.1 2.638.64.696 1.028 1.587 1.028 2.675 0 3.83-2.339 4.673-4.566 4.92.359.307.678.915.678 1.846 0 1.332-.012 2.407-.012 2.734 0 .267.18.577.688.48 3.97-1.32 6.833-5.054 6.833-9.458C22 6.463 17.522 2 12 2Z"
+              ></path>
+            </svg>
+          </a>
+        </p>
+      </nav>
     </div>
   );
 };

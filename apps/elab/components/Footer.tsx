@@ -50,7 +50,10 @@ export const Footer = () => {
     if (emailValid) {
       try {
         await fetch(
-          `${process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI}/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tneg=${tnej}`
+          `${
+            process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||
+            'https://elab-initiatives-api.azurewebsites.net/api'
+          }/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tneg=${tnej}`
         )
           .then((response) => {
             return response;

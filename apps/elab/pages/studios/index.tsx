@@ -175,7 +175,7 @@ export default function Studios({
           </h2>
           <div className="flex flex-col lg:flex-row gap-x-5 gap-y-2">
             {filterGroups.map((group) => {
-              const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
+              const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 ${
                 !haveGroupOpen(group.key)
                   ? `bg-white ${Theming[group.key].text}`
                   : `text-white ${Theming[group.key].bg}`

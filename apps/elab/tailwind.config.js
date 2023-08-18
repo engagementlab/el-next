@@ -6,6 +6,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
     '../../packages/components/src/**/*.tsx',
+    './types.ts',
   ],
   theme: {
     borderRadius: {

@@ -1,24 +1,19 @@
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { create, Mutate, StoreApi } from 'zustand';
+import { useEffect } from 'react';
+import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import _ from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { Image, Filtering, Query } from '@el-next/components';
-
-import { StudioProject, Theme, Theming } from '@/types';
-import Layout from '../../../components/Layout';
-import { useEffect, useState } from 'react';
+import { Image, Query } from '@el-next/components';
+import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+import { StudioProject, Theme, Theming } from '@/types';
 
-// import ImagePlaceholder from '../../components/';
+import Layout from '../../../components/Layout';
 
-interface ItemRendererProps<T> {
-  item: T;
-  toggleFilter: (filter: string) => void;
-}
 interface FilterState {
   currentTheme: Theme;
   currentFilters: never[];
@@ -31,7 +26,7 @@ interface FilterState {
 let preSelectedGroup = '';
 let preSelectedFilters: never[] = [];
 let preSelectedTheme = Theme.none;
-export default function MediaArchive({
+export default function StudioProjects({
   filters,
   studioProjects,
   error,
@@ -83,6 +78,7 @@ export default function MediaArchive({
         set({
           filterGroupOpen: '',
           currentFilters: [],
+          currentTheme: Theme.none,
         }),
     }))
   );
@@ -237,11 +233,11 @@ export default function MediaArchive({
     };
     const RenderFilters = (filters: any[]) => {
       const menu = (
-        <div className="mx-6">
+        <div className="mx-6 mt-7">
           <h2 className="uppercase leading-10 text-grey text-xl font-bold">
             Filter Projects By:
           </h2>
-          <div className="flex flex-row gap-x-5">
+          <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
             {filterGroups.map((group) => {
               const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
                 !haveGroupOpen(group.key)
@@ -288,7 +284,7 @@ export default function MediaArchive({
 
           {!noGroupsOpen() && (
             <>
-              <div className="flex mt-2 ml-5 flex-grow">
+              <div className="flex mt-2 ml-3 lg:ml-5 flex-grow">
                 <svg
                   height="20"
                   viewBox="0 -960 960 960"
@@ -297,9 +293,9 @@ export default function MediaArchive({
                 >
                   <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
                 </svg>
-                <div className="flex flex-grow items-center justify-start gap-x-3 ml-4 transition-all">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:flex flex-row items-center justify-start gap-x-1 transition-all">
                   {filters.map((filter) => {
-                    const filterButtonStyle = `font-bold border-2 border-${
+                    const filterButtonStyle = `font-bold text-center border-2 border-${
                       Theming[filterGroupOpen].bg
                     } rounded-large px-3 py-1 ${
                       !haveSpecificFilter(filter.key)
@@ -367,28 +363,30 @@ export default function MediaArchive({
     return (
       <Layout error={error} theme={currentTheme}>
         <div className="flex flex-col">
-          <h1 className="m-6 font-bold text-4xl xl:text-6xl text-slate">
+          <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studio Projects
           </h1>
+          {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
+            {showing}
+          </div> */}
           {RenderFilters(filters)}
 
-          <div className="w-full">
-            <span className="my-8 xl:my-4 uppercase w-full block text-right text-lg xl:text-sm font-semibold">
-              {showing}
-            </span>
-            {count === 0 && (
-              <p className="w-full text-xl my-20 text-center">
-                Sorry, no matches found. Please try other filters.
-              </p>
-            )}
-            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 mb-11">
-              {count > 0 && (
-                <AnimatePresence>
-                  {filteredItems.map((item, i: number) => (
-                    <ItemRenderer key={i} item={item} />
-                  ))}
-                </AnimatePresence>
+          <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
+            <div className="w-full">
+              {count === 0 && (
+                <p className="w-full text-xl my-20 text-center">
+                  Sorry, no matches found. Please try other filters.
+                </p>
               )}
+              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
+                {count > 0 && (
+                  <AnimatePresence>
+                    {filteredItems.map((item, i: number) => (
+                      <ItemRenderer key={i} item={item} />
+                    ))}
+                  </AnimatePresence>
+                )}
+              </div>
             </div>
           </div>
         </div>

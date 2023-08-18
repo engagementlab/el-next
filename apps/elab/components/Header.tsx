@@ -259,27 +259,23 @@ const Header = ({ theme }: Props): JSX.Element => {
         label="Transforming Narratives of Gun Violence (TNGV)"
       />
       <NavLink
-        href="/studios?initiative=gunviolence"
+        href="/studios?gunviolence"
         label="TNGV Studios"
         subLink={true}
       />
       <NavLink
-        href="/studios/projects?initiative=gunviolence"
+        href="/studios/projects?gunviolence"
         label="TNGV Projects"
         subLink={true}
       />
       <NavLink
-        href="/initiatives/environment"
-        label="Transforming Narratives for Environmental Justice (TN4EJ)"
+        href="/initiatives?climate"
+        label="Transforming Narratives for Environmental Justice (TNEJ)"
       />
+      <NavLink href="/studios?climate" label="TNEJ Studios" subLink={true} />
       <NavLink
-        href="/studios?initiative=environment"
-        label="TN4EJ Studios"
-        subLink={true}
-      />
-      <NavLink
-        href="/studios/projects?initiative=environment"
-        label="TN4EJ Projects"
+        href="/studios/projects?climate"
+        label="TNEJ Projects"
         subLink={true}
       />
     </>

@@ -63,30 +63,11 @@ export default function Studios({
     }))
   );
 
-  // Alter URL when groups and filters change
+  // Alter URL when filters change
   useStore.subscribe(
     (state) => state.selectedFilter,
     (current) => {
-      const group = current.toLowerCase();
-
-      history.replaceState(
-        {},
-        'Filtered Data',
-        `${location.pathname}?${group}`
-      );
-    }
-  );
-  useStore.subscribe(
-    (state) => state.selectedFilter,
-    (current) => {
-      // // Preserve the current initiative key in path
-      // const initiativeKey = location.search.split('/')[0];
-      // debugger;
-      history.replaceState(
-        {},
-        'Filtered Data',
-        `${location.pathname}/${current}`
-      );
+      history.replaceState({}, 'Filtered Data', `/studios?${current}`);
     }
   );
   const toggle = useStore((state) => state.toggle);

@@ -103,7 +103,11 @@ const Layout = ({
           }}
         >
           <ParallaxProvider>
-            <div className={`${!fullBleed ? 'md:px-20 xl:px-24' : 'md:px-0'}`}>
+            <div
+              className={`${
+                !fullBleed ? 'md:px-20 xl:px-24' : 'md:px-0'
+              } mt-14 min-h-[500px]`}
+            >
               {children}
             </div>
           </ParallaxProvider>

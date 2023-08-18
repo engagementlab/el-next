@@ -16,6 +16,10 @@ const nextConfig = {
         source: '/news',
         destination: '/whats-new',
       },
+      {
+        source: '/events',
+        destination: '/whats-new',
+      },
     ];
   },
 };

@@ -33,51 +33,6 @@ type Props = {
   theme?: Theme;
 };
 
-const sidebar: Variants = {
-  open: (height = 1000) => ({
-    transition: {
-      staggerChildren: 0.05,
-      delayChildren: 0.1,
-      duration: 0.1,
-      type: 'spring',
-    },
-  }),
-  closed: {
-    // clipPath: 'circle(20px at 263px 60px)',
-    transition: {
-      delay: 0.1,
-      duration: 0.1,
-      staggerChildren: 0.2,
-      staggerDirection: -1,
-      type: 'spring',
-      // stiffness: 400,
-      damping: 40,
-    },
-  },
-};
-const navItemsVariants: Variants = {
-  open: {
-    display: 'block',
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.35,
-      y: { stiffness: 1000, velocity: -100 },
-    },
-  },
-  closed: {
-    display: 'none',
-    y: -100,
-    opacity: 0,
-    transition: {
-      duration: 0.15,
-      // y: { stiffness: 1000 },
-    },
-  },
-  hover: {
-    scale: 1.03,
-  },
-};
 const subMenuAnimate: Variants = {
   enter: {
     left: '50%',
@@ -136,8 +91,7 @@ type NavState = {
 
 const ActiveLink = (href: string | undefined) => {
   const router = useRouter();
-
-  return router.asPath === href;
+  if (router.isReady) return router.asPath === href;
 };
 
 const [blockScroll, allowScroll] = useScrollBlock();
@@ -184,63 +138,57 @@ const Header = ({ theme }: Props): JSX.Element => {
     href,
     disabled = false,
     subLink = false,
-  }: NavLink): JSX.Element =>
-    ActiveLink(href) ? (
-      <span
-        onClick={() => {
-          toggleNavOpen(false);
-        }}
-        className="opacity-40"
-      >
-        {subLink && (
-          <svg
-            height="20"
-            viewBox="0 -960 960 960"
-            width="20"
-            className="inline"
-          >
-            <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
-          </svg>
-        )}
-        &nbsp;{label}
-      </span>
-    ) : disabled ? (
-      <span className="opacity-50 mt-3 xl:my-1">
-        {subLink && (
-          <svg
-            height="20"
-            viewBox="0 -960 960 960"
-            width="20"
-            className="inline"
-          >
-            <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
-          </svg>
-        )}
-        &nbsp;
-        {label}
-      </span>
-    ) : (
-      <Link
-        href={href}
-        className="mt-3 xl:my-1"
-        onClick={() => {
-          toggleNavOpen(false);
-        }}
-      >
-        {subLink && (
-          <svg
-            height="20"
-            viewBox="0 -960 960 960"
-            width="20"
-            className="inline"
-          >
-            <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
-          </svg>
-        )}
-        &nbsp;
-        {label}
-      </Link>
-    );
+  }: NavLink): JSX.Element => {
+    if (ActiveLink(href))
+      return (
+        <span
+          onClick={() => {
+            toggleNavOpen(false);
+          }}
+          className="opacity-40"
+        ></span>
+      );
+    else if (disabled)
+      return (
+        <span className="opacity-50 mt-3 xl:my-1">
+          {subLink && (
+            <svg
+              height="20"
+              viewBox="0 -960 960 960"
+              width="20"
+              className="inline"
+            >
+              <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+            </svg>
+          )}
+          &nbsp;
+          {label}
+        </span>
+      );
+    else
+      return (
+        <Link
+          href={href}
+          className="mt-3 xl:my-1"
+          onClick={() => {
+            toggleNavOpen(false);
+          }}
+        >
+          {subLink && (
+            <svg
+              height="20"
+              viewBox="0 -960 960 960"
+              width="20"
+              className="inline"
+            >
+              <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+            </svg>
+          )}
+          &nbsp;
+          {label}
+        </Link>
+      );
+  };
   const aboutLinks = (
     <>
       <NavLink href="/about/about-the-lab" label="About the Lab" />
@@ -291,7 +239,7 @@ const Header = ({ theme }: Props): JSX.Element => {
       <NavLink href="/whats-new?news" label="News" />
       <NavLink href="/events" label="Events" />
       {/* <NavLink href="/press" label="Press Room" disabled={true} /> */}
-      <NavLink href="/newsletter" label="Join Newsletter" disabled={true} />
+      {/* <NavLink href="/newsletter" label="Join Newsletter" disabled={true} /> */}
     </>
   );
   const MobileAccordion = ({

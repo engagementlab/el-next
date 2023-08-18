@@ -3,16 +3,23 @@ import Link from 'next/link';
 
 import { Image, Query } from '@el-next/components';
 
-import Layout from '../../components/Layout';
-import ImagePlaceholder from '../../components/ImagePlaceholder';
+import Layout from '../components/Layout';
+import ImagePlaceholder from '../components/ImagePlaceholder';
 import { News, Event, Item } from '@/types';
+import { useRouter } from 'next/router';
 
 const groupButtonStyle =
   'flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1';
-export default function News({
+export default function WhatsNew({
   items,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  let filter: string | null = null;
+  if (router.asPath === '/news') filter = 'news';
+  else if (router.asPath === '/events') filter = 'events';
+
   return (
     <Layout error={error}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
@@ -22,12 +29,18 @@ export default function News({
           Filter By:
         </h2>
         <div className="flex flex-row mt-3 mb-5 gap-x-5">
-          <Link
-            href="/news"
-            className={`${groupButtonStyle} text-green border-green`}
-          >
-            <span>News</span>
-            {/* <svg
+          {['News', 'Events'].map((str) => {
+            return (
+              <Link
+                href={`/${str.toLocaleLowerCase()}`}
+                className={`${groupButtonStyle} text-green border-green ${
+                  filter === str.toLocaleLowerCase()
+                    ? 'bg-green text-white'
+                    : ''
+                }`}
+              >
+                <span>{str}</span>
+                {/* <svg
                         viewBox="185.411 115.41 11 11"
                         width="11"
                         height="11"
@@ -36,30 +49,19 @@ export default function News({
                         }`}
                         >
                         <path
-                          d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
-                          className="fill-white"
-                          ></path>
+                        d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
+                        className="fill-white"
+                        ></path>
                       </svg> */}
-          </Link>
-          <Link
+              </Link>
+            );
+          })}
+          {/* <Link
             href="/events"
             className={`${groupButtonStyle} text-green border-green`}
           >
             <span>Events</span>
-            {/* <svg
-                        viewBox="185.411 115.41 11 11"
-                        width="11"
-                        height="11"
-                        className={`flex-shrink-0 ml-3 ${
-                          !haveGroupOpen(group.key) ? 'hidden' : 'block'
-                        }`}
-                        >
-                        <path
-                          d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
-                          className="fill-white"
-                          ></path>
-                      </svg> */}
-          </Link>
+          </Link> */}
         </div>
         {/* //           {filterGroups.map((group) => {
           })} */}

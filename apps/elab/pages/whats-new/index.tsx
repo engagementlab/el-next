@@ -7,6 +7,8 @@ import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { News, Event, Item } from '@/types';
 
+const groupButtonStyle =
+  'flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1';
 export default function News({
   items,
   error,
@@ -15,6 +17,53 @@ export default function News({
     <Layout error={error}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         <h2 className="text-5xl font-semibold mb-8">News & Events</h2>
+
+        <h2 className="uppercase leading-10 text-grey text-xl font-bold">
+          Filter By:
+        </h2>
+        <div className="flex flex-row mt-3 mb-5 gap-x-5">
+          <Link
+            href="/news"
+            className={`${groupButtonStyle} text-green border-green`}
+          >
+            <span>News</span>
+            {/* <svg
+                        viewBox="185.411 115.41 11 11"
+                        width="11"
+                        height="11"
+                        className={`flex-shrink-0 ml-3 ${
+                          !haveGroupOpen(group.key) ? 'hidden' : 'block'
+                        }`}
+                        >
+                        <path
+                          d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
+                          className="fill-white"
+                          ></path>
+                      </svg> */}
+          </Link>
+          <Link
+            href="/events"
+            className={`${groupButtonStyle} text-green border-green`}
+          >
+            <span>Events</span>
+            {/* <svg
+                        viewBox="185.411 115.41 11 11"
+                        width="11"
+                        height="11"
+                        className={`flex-shrink-0 ml-3 ${
+                          !haveGroupOpen(group.key) ? 'hidden' : 'block'
+                        }`}
+                        >
+                        <path
+                          d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
+                          className="fill-white"
+                          ></path>
+                      </svg> */}
+          </Link>
+        </div>
+        {/* //           {filterGroups.map((group) => {
+          })} */}
+
         <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
           {items &&
             items.map((item: Item, i: number) => {

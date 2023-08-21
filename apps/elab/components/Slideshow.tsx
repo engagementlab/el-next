@@ -56,18 +56,18 @@ const Slideshow = ({
   return (
     <div className="flex-grow my-5">
       <div
-        className={`relative ${
+        className={`relative flex items-center ${
           heightOverride ? heightOverride : 'min-h-[350px]'
         } lg:min-h-[465px] overflow-hidden ${className}`}
       >
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
-            className={`absolute lg:mx-4 w-full ${
+            className={`absolute max-[1100px]:top-0 w-full ${
               !ContentRenderer
                 ? 'flex justify-center max-h-[350px] lg:max-h-[465px]'
                 : ''
             }`}
-            key={slide}
+            key={`slide-${slide}`}
             custom={direction}
             variants={variants}
             initial="enter"
@@ -94,12 +94,12 @@ const Slideshow = ({
           >
             {slides.map((slide, index) => {
               return index === slideIndex ? (
-                <div id={`slide-${index}`}>
+                <div id={`slide-${index}`} key={`slide-${index}`}>
                   {ContentRenderer ? (
                     <ContentRenderer slide={slide} />
                   ) : slide.videoId ? (
                     <div
-                      className={`flex items-center min-h-[350px] lg:min-h-[465px] ${themeColor} bg-opacity-50`}
+                      className={`flex items-center min-h-[350px] lg:min-h-[465px]`}
                     >
                       <Video
                         videoLabel={'item?.videos[0].label'}
@@ -114,9 +114,9 @@ const Slideshow = ({
                         id={'img-' + slide.image.publicId}
                         alt={slide.altText}
                         imgId={slide.image.publicId}
-                        lazy={false}
-                        aspectDefault={false}
-                        transforms="f_auto,dpr_auto,c_crop,g_center,r_max,h_630,w_630"
+                        // lazy={false}
+                        // aspectDefault={false}
+                        // transforms="f_auto,dpr_auto,c_crop,g_center,r_max,h_630,w_630"
                         className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
                       />
                       <aside
@@ -145,7 +145,7 @@ const Slideshow = ({
                       lazy={false}
                       // width={300}
                       transforms="c_crop,g_center"
-                      className="pointer-events-none"
+                      className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
                     />
                   )}
                 </div>
@@ -154,22 +154,25 @@ const Slideshow = ({
           </motion.div>
         </AnimatePresence>
       </div>
-      <div>
-        <li className="flex justify-center mt-3">
-          {slides.map((slide, index) => (
-            <label
-              htmlFor={`slide-${index}`}
-              className={`${dotClass} ${
-                index !== slideIndex ? 'opacity-50' : 'scale-125'
-              }`}
-              id={`slide-dot-${index}`}
-              onClick={(event) => {
-                setPage([index, slideIndex > index ? -1 : 1]);
-              }}
-            ></label>
-          ))}
-        </li>
-      </div>
+      {slides.length > 1 && (
+        <div>
+          <li className="flex justify-center mt-3">
+            {slides.map((slide, index) => (
+              <label
+                htmlFor={`slide-${index}`}
+                className={`${dotClass} ${
+                  index !== slideIndex ? 'opacity-50' : 'scale-125'
+                }`}
+                key={`slide-dot-${index}`}
+                id={`slide-dot-${index}`}
+                onClick={(event) => {
+                  setPage([index, slideIndex > index ? -1 : 1]);
+                }}
+              ></label>
+            ))}
+          </li>
+        </div>
+      )}
     </div>
   );
 };

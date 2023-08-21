@@ -145,12 +145,12 @@ export default function GunViolence({
       {page && (
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
-            <h2 className="text-5xl text-slate font-extrabold">
+            <h2 className="text-4xl lg:text-5xl text-slate font-extrabold">
               {initiative === 'gunviolence'
                 ? ' Transforming Narratives of Gun Violence'
                 : 'Transforming Narratives for Environmental Justice'}
             </h2>
-            <div className="flex flex-col-reverse lg:flex-row">
+            <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
                 <p>{page?.intro}</p>
 
@@ -160,11 +160,15 @@ export default function GunViolence({
                   </h2>
                   <div className="flex flex-col">
                     <Button
-                      label="The Big Picture of Gun Violence in Boston"
+                      label={`Learn More about ${
+                        initiative === 'gunviolence'
+                          ? 'Gun Violence'
+                          : 'Environmental Justice'
+                      } in Boston`}
                       anchorId="context"
                       className={jumpClass}
                     />
-                    <div className="flex flex-row justify-between w-1/2">
+                    <div className="flex flex-row justify-between lg:w-3/4 xl:w-1/2">
                       <Button
                         label="Projects"
                         anchorId="projects"
@@ -185,8 +189,12 @@ export default function GunViolence({
                 </div>
               </div>
               {/* <Button label="→ Projects" link="/archive?gunviolence" /> */}
-              {page?.slides && (
-                <Slideshow slides={page?.slides} themeColor="bg-purple" />
+              {page?.slides && page?.slides.length > 0 && (
+                <Slideshow
+                  slides={page?.slides}
+                  // themeColor={Theming[initiative].bg}
+                  className={`${Theming[initiative].bg} bg-opacity-50`}
+                />
               )}
             </div>
 
@@ -198,15 +206,15 @@ export default function GunViolence({
                 <Slideshow
                   slides={mergedItems}
                   ContentRenderer={renderSlide}
-                  heightOverride="min-h-[550px] md:min-h-[570px] lg:min-h-[300px]"
+                  heightOverride="min-h-[550px] md:min-h-[610px] lg:min-h-[300px] min-[1180px]:min-h-[335px] xl:min-h-[295px]"
                   className="border-4 border-green rounded-large"
-                  themeColor="bg-green"
+                  // themeColor="bg-green"
                 />
               </div>
             )}
           </div>
           <Divider color="bg-green" />
-          <Gutter>
+          <Gutter noMarginY={false}>
             <DocumentRenderer
               document={page?.body.document}
               componentBlocks={Blocks(Theming[initiative])}
@@ -231,7 +239,7 @@ export default function GunViolence({
           {page.projects && page.projects.length > 0 && (
             <Divider color="bg-green" />
           )}
-          <Gutter>
+          <Gutter noMarginY={false}>
             {page.projects && page.projects.length > 0 && (
               <div id="projects">
                 <h2 className="font-bold text-4xl">Featured Projects</h2>
@@ -268,11 +276,11 @@ export default function GunViolence({
                     );
                   })}
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center lg:justify-end">
                   <MoreButton
-                    link={`/studios/projects/initiative=gunviolence`}
+                    link={`/studios/projects?${initiative}`}
+                    theme={Theming[initiative].theme}
                     label="See more projects"
-                    theme={Theme.gunviolence}
                   />
                 </div>
               </div>
@@ -282,7 +290,7 @@ export default function GunViolence({
           {page.studios && page.studios.length > 0 && (
             <Divider color="bg-green" />
           )}
-          <Gutter>
+          <Gutter noMarginY={false}>
             {page.studios && page.studios.length > 0 && (
               <div id="studios">
                 <h2 className="font-bold text-4xl">Recent Studios</h2>
@@ -315,11 +323,11 @@ export default function GunViolence({
                     );
                   })}
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center lg:justify-end">
                   <MoreButton
-                    link={`/studios/initiative=gunviolence`}
+                    link={`/studios?${initiative}`}
+                    theme={Theming[initiative].theme}
                     label="See more studios"
-                    theme={Theme.gunviolence}
                   />
                 </div>
               </div>
@@ -329,7 +337,7 @@ export default function GunViolence({
           {page.research && page.research.length > 0 && (
             <Divider color="bg-green" />
           )}
-          <Gutter>
+          <Gutter noMarginY={false}>
             {page.research && page.research.length > 0 && (
               <div id="research">
                 <h2 className="font-bold text-4xl">Related Research</h2>
@@ -370,7 +378,7 @@ export default function GunViolence({
             )}
           </Gutter>
           <Divider color="bg-green" />
-          <Gutter>
+          <Gutter noMarginY={false}>
             <h2 className="text-3xl font-bold">Partner Organizations</h2>
             {initiative === 'gunviolence' ? (
               <Logos
@@ -393,7 +401,7 @@ export default function GunViolence({
 }
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
-    paths: ['/initiatives/gunviolence', '/initiatives/environment'],
+    paths: ['/initiatives/gunviolence', '/initiatives/climate'],
     fallback: false,
   };
 }
@@ -401,7 +409,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   let objectName = 'Gun Violence';
   let initiative = 'gunviolence';
-  if (params!.key === 'environment') {
+  if (params!.key === 'climate') {
     objectName = 'Environmental Justice';
     initiative = 'climate';
   }

@@ -7,7 +7,7 @@ type Props = {
 };
 const Logos = ({ all = false, partners }: Props): JSX.Element => {
   return (
-    <div className="flex flex-col lg:flex-row w-full items-center">
+    <div className="flex flex-col lg:flex-row w-full items-center justify-around mt-4">
       {(all || partners.includes('ldbpi')) && (
         <Image
           id="ldpni-logo"

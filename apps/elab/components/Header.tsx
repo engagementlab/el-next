@@ -146,7 +146,9 @@ const Header = ({ theme }: Props): JSX.Element => {
             toggleNavOpen(false);
           }}
           className="opacity-40"
-        ></span>
+        >
+          {label}
+        </span>
       );
     else if (disabled)
       return (
@@ -236,7 +238,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   );
   const whatsNewLinks = (
     <>
-      <NavLink href="/whats-new?news" label="News" />
+      <NavLink href="/news" label="News" />
       <NavLink href="/events" label="Events" />
       {/* <NavLink href="/press" label="Press Room" disabled={true} /> */}
       {/* <NavLink href="/newsletter" label="Join Newsletter" disabled={true} /> */}

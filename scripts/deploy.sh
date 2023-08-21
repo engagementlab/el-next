@@ -9,7 +9,8 @@ if [ $# -eq 0 ]
 
         # Prune build cache
         docker buildx prune --filter=until=48h -f
-
+        docker builder prune --all
+        
         # Pull swarm down
         docker compose down
 

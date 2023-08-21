@@ -214,7 +214,7 @@ export default function Initiatives({
                 Everything Else
               </h2>
               <DocumentRenderer
-                document={page?.tn4ej.document}
+                document={page?.everythingElse.document}
                 componentBlocks={Blocks()}
                 renderers={Doc(rendererOverrides)}
               />

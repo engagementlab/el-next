@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import Layout from '../components/Layout';
@@ -30,12 +30,19 @@ export default function Home({
   const [vidH, setVideoHeight] = useState(0);
   const [videoOverlayHeight, setVideoOverlayHeight] = useState(0);
   const [bgTargetElement, setBgVideo] = useState();
+  const [didScroll, setDidScroll] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const targetRef = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef();
-
   useEffect(() => {
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!didScroll) setDidScroll(true);
+      },
+      true
+    );
     setBgVideo(bgVideoRef.current);
     const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
     const player = new Player('video-bg', {
@@ -71,37 +78,6 @@ export default function Home({
     });
   }, [bgVideoRef]);
 
-  const cardVariants: Variants = {
-    offscreen: {
-      y: 100,
-    },
-    onscreen: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 1.8,
-      },
-    },
-  };
-  const wordVariants: Variants = {
-    offscreen: {
-      x: 45,
-      opacity: 0,
-      // transitionEnd: {
-      //   display: 'none',
-      // },
-    },
-    onscreen: {
-      x: 0,
-      opacity: 1,
-      display: 'flex',
-
-      transition: {
-        duration: 0.4,
-      },
-    },
-  };
-
   const Definition = ({
     word,
     define,
@@ -120,7 +96,8 @@ export default function Home({
           whileInView={{ opacity: 1, filter: 'blur(0)' }}
           viewport={{ root: targetRef, amount: 'all' }}
           onViewportEnter={() => {
-            setWordIndex(index);
+            if (didScroll) setWordIndex(index);
+            // console.log(index, scrollYProgress.get());
           }}
           className={`h-1/5 relative ${color}`}
         >
@@ -182,58 +159,57 @@ export default function Home({
     >
       <Gutter noMarginY={true}>
         <motion.div id="tagline" className="flex static flex-col pt-14">
-          <motion.div
-            className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24"
-            // variants={cardVariants}
-          >
-            {/*  leading-[3.2rem] */}
-            <div className="w-3/4 max-[375px]:break-words">
-              Advancing&nbsp;
-              <span className="inline-block text-purple">
-                peace<span className="text-black">,</span>
-              </span>
-              &nbsp;
-              <span className="inline-block text-purple">equity</span>, &&nbsp;
-              <span className="text-purple">justice</span>
-              <br />
-              through collaborative&nbsp;
-              <div className="inline-flex flex-col font-extrabold">
-                <div className="overflow-hidden h-8 md:h-12">
+          <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
+            {showVideo && (
+              <div className="w-3/4 max-[375px]:break-words">
+                Advancing&nbsp;
+                <span className="inline-block text-purple">
+                  peace<span className="text-black">,</span>
+                </span>
+                &nbsp;
+                <span className="inline-block text-purple">equity</span>,
+                &&nbsp;
+                <span className="text-purple">justice</span>
+                <br />
+                through collaborative&nbsp;
+                <div className="inline-flex flex-col font-extrabold">
+                  <div className="overflow-hidden h-8 md:h-12">
+                    <div
+                      className={`inline-flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 text-left  ${
+                        wordIndex !== 0
+                          ? wordIndex === 1
+                            ? 'translate-y-[-33%]'
+                            : 'translate-y-[-66%]'
+                          : ''
+                      }`}
+                    >
+                      <motion.span className="text-yellow" initial="onscreen">
+                        storytelling
+                      </motion.span>{' '}
+                      <motion.span className="text-green" initial="onscreen">
+                        research
+                      </motion.span>
+                      <motion.span className="text-red" initial="onscreen">
+                        design
+                      </motion.span>
+                    </div>
+                  </div>
                   <div
-                    className={`inline-flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 text-left  ${
+                    className={`flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
                       wordIndex !== 0
                         ? wordIndex === 1
-                          ? 'translate-y-[-33%]'
-                          : 'translate-y-[-66%]'
+                          ? 'w-9/12'
+                          : 'w-7/12'
                         : ''
                     }`}
                   >
-                    <motion.span className="text-yellow" initial="onscreen">
-                      storytelling
-                    </motion.span>{' '}
-                    <motion.span className="text-green" initial="onscreen">
-                      research
-                    </motion.span>
-                    <motion.span className="text-red" initial="onscreen">
-                      design
-                    </motion.span>
+                    <hr className="h-1 border-none bg-red w-full" />
+                    <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+                    <hr className="h-1 border-none bg-yellow w-full" />
                   </div>
                 </div>
-                <div
-                  className={`flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
-                    wordIndex !== 0
-                      ? wordIndex === 1
-                        ? 'w-9/12'
-                        : 'w-7/12'
-                      : ''
-                  }`}
-                >
-                  <hr className="h-1 border-none bg-red w-full" />
-                  <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                  <hr className="h-1 border-none bg-yellow w-full" />
-                </div>
               </div>
-            </div>
+            )}
           </motion.div>
         </motion.div>
 
@@ -247,8 +223,7 @@ export default function Home({
                 transition: { duration: 0.5 },
               }}
               exit={{ opacity: 0 }}
-              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen "
-              // min-h-[200px]"
+              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen"
               ref={targetRef}
             >
               <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">

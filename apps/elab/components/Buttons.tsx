@@ -30,23 +30,23 @@ const CTAButton = ({
 }: Props): JSX.Element => {
   const themeConfig = [
     {
-      arrow: '#00A494',
+      arrow: '#F6A536',
       hover:
-        'drop-shadow-[2px_3px_0px_#BBEBE7] text-teal border-teal drop-shadow-teal hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
+        'drop-shadow-[2px_3px_0px_#FFF1DB] text-yellow border-yellow drop-shadow-teal hover:bg-[#FFF1DB] hover:drop-shadow-[3px_7px_0px_#F6A536]',
     },
     {
       arrow: ThemeColors[1].primaryHex,
       hover:
-        'purple text-purple border-purple drop-shadow-purple hover:bg-[#E3BFFF] hover:drop-shadow-[3px_5px_0px_#7C4E9F]',
+        'purple text-purple border-purple drop-shadow-purple hover:bg-[#E3BFFF] hover:drop-shadow-[3px_7px_0px_#7C4E9F]',
     },
     {
       arrow: '#00A494',
       hover:
-        'green-blue text-green-blue border-green-blue drop-shadow-green-blue hover:bg-[#BBEBE7] hover:drop-shadow-[3px_5px_0px_#00A494]',
+        'green-blue text-green-blue border-green-blue drop-shadow-green-blue hover:bg-[#BBEBE7] hover:drop-shadow-[3px_7px_0px_#00A494]',
     },
   ];
   const buttonClass = clsx(
-    'inline-block px-3 py-3 border-2 bg-white transition-all duration-200',
+    'inline-block px-3 py-3 border-2 bg-white transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-200',
     themeConfig[theme].hover,
     className
   );

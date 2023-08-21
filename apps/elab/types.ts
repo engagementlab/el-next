@@ -53,7 +53,7 @@ export interface ThemeConfig {
 
 export const Theming: { [key: string]: ThemeConfig } = {
   none: {
-    arrow: '#7C4E9F',
+    arrow: '#F6A536',
     secodaryArrow: '#F6A536',
     text: 'text-yellow',
     heading: 'text-green-blue',

@@ -297,7 +297,7 @@ const Header = ({ theme }: Props): JSX.Element => {
 
   return (
     <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16">
-      <div className="w-full xl:w-6/12 px-6 xl:px-0 flex items-center">
+      <div className="w-full xl:w-4/12 px-6 xl:px-0 flex items-center">
         <Link href="/" passHref className="w-36 md:w-44 xl:w-52 h-min">
           <motion.svg
             id="logo-img"
@@ -534,11 +534,13 @@ const Header = ({ theme }: Props): JSX.Element => {
       </div>
       {/* Desktop+ */}
       <div className="hidden xl:block flex-grow">
-        <div className="flex flex-row items-center justify-end mr-3 mb-5 text-sm text-grey">
-          <span className="uppercase font-extrabold mr-7">Our Curriculum:</span>
+        <div className="flex flex-row items-center justify-end mb-5 text-[14px] text-grey">
+          <span className="uppercase font-semibold mr-7 tracking-wide">
+            Our Curriculum:
+          </span>
           <Link
             href="/undergraduate"
-            className="uppercase flex items-center mr-7 font-semibold group"
+            className="uppercase flex items-center mr-7 font-extrabold tracking-wide group"
           >
             <svg
               height="25"
@@ -559,7 +561,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </Link>
           <Link
             href="/graduate"
-            className="uppercase flex items-center mr-7 font-semibold group"
+            className="uppercase flex items-center mr-7 font-extrabold tracking-wide group"
           >
             <svg
               height="25"
@@ -580,7 +582,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </Link>
           <Link
             href="/learning-partners"
-            className="uppercase flex items-center mr-7 font-semibold group"
+            className="uppercase flex items-center mr-7 font-extrabold tracking-wide group"
           >
             <svg
               height="25"
@@ -600,8 +602,8 @@ const Header = ({ theme }: Props): JSX.Element => {
             </span>
           </Link>
         </div>
-        <div className="flex flex-row relative z-50">
-          <div className="w-[160px]"></div>
+        <div className="flex flex-row justify-end relative z-50">
+          {/* <div className="w-[160px]"></div> */}
           <motion.div
             className="group relative"
             onMouseEnter={() => {
@@ -627,7 +629,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </motion.div>
 
           <motion.div
-            className="group relative"
+            className="group relative mr-8"
             onMouseEnter={() => {
               toggleHoverSII();
             }}
@@ -675,7 +677,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </motion.div> */}
 
           <motion.div
-            className="group relative"
+            className="group relative "
             onMouseEnter={() => {
               toggleHoverNews();
             }}

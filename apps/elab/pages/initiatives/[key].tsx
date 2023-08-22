@@ -75,7 +75,7 @@ export default function GunViolence({
             />
           )}
         </div>
-        <div className="lg:basis-1/2">
+        <div className="lg:basis-1/2 flex flex-col justify-center">
           <h3 className="text-bluegreen text-xl font-semibold mt-3 mx-3">
             {props.slide.name || props.slide.title}
           </h3>
@@ -168,7 +168,7 @@ export default function GunViolence({
                       anchorId="context"
                       className={jumpClass}
                     />
-                    <div className="flex flex-row justify-between lg:w-3/4 xl:w-1/2">
+                    <div className="flex flex-row justify-between lg:w-3/4 xl:w-4/6">
                       <Button
                         label="Projects"
                         anchorId="projects"
@@ -206,7 +206,7 @@ export default function GunViolence({
                 <Slideshow
                   slides={mergedItems}
                   ContentRenderer={renderSlide}
-                  heightOverride="min-h-[550px] md:min-h-[610px] lg:min-h-[300px] min-[1180px]:min-h-[335px] xl:min-h-[295px]"
+                  heightOverride="min-h-[550px] md:min-h-[610px] lg:min-h-[300px] min-[1180px]:min-h-[335px] xl:min-h-[395px]"
                   className="border-4 border-green rounded-large"
                   // themeColor="bg-green"
                 />

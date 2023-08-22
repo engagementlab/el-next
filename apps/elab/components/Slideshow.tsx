@@ -109,7 +109,7 @@ const Slideshow = ({
                       />
                     </div>
                   ) : slide.caption ? (
-                    <div className="relative overflow-x-hidden">
+                    <div className="relative">
                       <Image
                         id={'img-' + slide.image.publicId}
                         alt={slide.altText}

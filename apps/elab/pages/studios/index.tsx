@@ -116,7 +116,7 @@ export default function Studios({
       },
       {
         key: 'climate',
-        label: 'Transforming Narratives for Climate Justice',
+        label: 'Transforming Narratives for  Environmental Justice',
       },
     ];
 

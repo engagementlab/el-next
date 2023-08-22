@@ -177,7 +177,7 @@ export default function StudioProjects({
       },
       {
         key: 'climate',
-        label: 'Transforming Narratives for Climate Justice',
+        label: 'Transforming Narratives for Environmental Justice',
       },
     ];
 

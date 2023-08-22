@@ -75,6 +75,17 @@ let AppBlocks = (theme: ThemeConfig | null) => {
         </Link>
       );
     },
+    embed: (props: any) => {
+      if (props.html)
+        return (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: props.html as string,
+            }}
+          />
+        );
+      else return <iframe src={props.embed.open_graph.url}></iframe>;
+    },
   };
 };
 const SuperBlocks = BlockRenderers();
@@ -86,6 +97,7 @@ const Blocks = (theme?: ThemeConfig) => {
     video: SuperBlocks(blockOverrides(theme ? theme : null)).video,
     slideshow: AppBlocks(theme ? theme : null).slideshow,
     iconLink: AppBlocks(theme ? theme : null).iconLink,
+    embed: AppBlocks(theme ? theme : null).embed,
   };
 };
 

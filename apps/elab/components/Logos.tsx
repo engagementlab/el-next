@@ -13,7 +13,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="ldpni-logo"
           alt="Louis D. Brown Peace Institute (LDBPI) logo"
           imgId="tngvi/logos/ldpi"
-          width={86}
+          width={150}
         />
       )}
       {(all || partners.includes('mgh')) && (
@@ -21,7 +21,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="mgh-logo"
           alt="MGH Center for Gun Violence Prevention logo"
           imgId="tngvi/logos/mgh-cgvp"
-          width={89}
+          width={150}
           className="aspect-[3/2] mt-1"
         />
       )}
@@ -30,7 +30,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="magv-logo"
           alt="Massachusetts Coalition to Prevent Gun Violence logo"
           imgId="elab-home-v3.x/logos/magv"
-          width={174}
+          width={200}
           className="mt-1"
         />
       )}
@@ -39,11 +39,11 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="teenempowerment-logo"
           alt="The Center for Teen Empowerment logo"
           imgId="elab-home-v3.x/logos/teenempowerment"
-          width={130}
+          width={170}
         />
       )}
       {(all || partners.includes('uncornered')) && (
-        <svg viewBox="0 0 715.59 440.94" className="w-[90px]">
+        <svg viewBox="0 0 715.59 440.94" className="w-[150px]">
           <title>Boston Uncornered logo</title>
           <linearGradient
             id="a"
@@ -52,8 +52,8 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
             x2="357.8"
             y1="440.94"
           >
-            <stop offset="0" stop-color="#ed2224" />
-            <stop offset=".83" stop-color="#f78c1e" />
+            <stop offset="0" stopColor="#ed2224" />
+            <stop offset=".83" stopColor="#f78c1e" />
           </linearGradient>
           <g fill="#231f20">
             <path d="m107.58 211.38a23.6 23.6 0 0 1 4.9 5.76 27.22 27.22 0 0 1 3.11 7.29 27.83 27.83 0 0 1 1 8 23.76 23.76 0 0 1 -1.37 7.44 17.46 17.46 0 0 1 -4 6.66 13.22 13.22 0 0 1 -6 3.54l-12.83 3.44h-.09a5.55 5.55 0 0 1 -6.83-3.94l-15.94-59.5a5.55 5.55 0 0 1 3.94-6.82h.09l11.3-3a12.32 12.32 0 0 1 6.46.05 15.39 15.39 0 0 1 6.22 3.48 21.59 21.59 0 0 1 4.37 5.18 25.66 25.66 0 0 1 3.72 13.67 20.93 20.93 0 0 1 -1.17 6.61 18.53 18.53 0 0 1 3.12 2.14zm-21.35-1.78 6-1.61a1.69 1.69 0 0 0 .7-.62 6.63 6.63 0 0 0 .88-1.73 8.17 8.17 0 0 0 .62-3.43 16 16 0 0 0 -2-7.36 8.29 8.29 0 0 0 -2.25-2.67 6.91 6.91 0 0 0 -1.63-1.05 1.72 1.72 0 0 0 -.92-.19l-6 1.61zm16 29.66a3 3 0 0 0 1.47-1.16 7.37 7.37 0 0 0 1.19-2.58 16.46 16.46 0 0 0 .5-3.69 15.46 15.46 0 0 0 -.59-4.51 15.44 15.44 0 0 0 -4-7.1 7.54 7.54 0 0 0 -2.31-1.6 3 3 0 0 0 -1.85-.27l-7.54 2 5.6 20.91z" />
@@ -78,7 +78,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="ficdc-logo"
           alt="Fairmount Indigo CDC Collaborative logo"
           imgId="elab-home-v3.x/logos/ficdc"
-          width={130}
+          width={180}
         />
       )}
       {(all || partners.includes('greenroots')) && (
@@ -86,7 +86,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="greenroots-logo"
           alt="GreenRoots logo"
           imgId="elab-home-v3.x/logos/greenroots"
-          width={130}
+          width={180}
         />
       )}
       {(all || partners.includes('sftt')) && (
@@ -94,7 +94,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="sftt-logo"
           alt="Speak for the Trees logo"
           imgId="elab-home-v3.x/logos/sftt"
-          width={130}
+          width={180}
         />
       )}
       {(all || partners.includes('swboston')) && (
@@ -102,7 +102,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           id="swboston-logo"
           alt="Southwest Boston Community Development Corporation logo"
           imgId="elab-home-v3.x/logos/swboston"
-          width={130}
+          width={180}
         />
       )}
     </div>

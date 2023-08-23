@@ -112,7 +112,10 @@ export const Person = ({
       ) : (
         <ImagePlaceholder imageLabel="Person" width={150} height={150} />
       )}
-      <p className={`border-b-2 mt-3 ${theme.text} text-lg`}>{person.name}</p>
+      {/* 
+      // border-b-2
+       */}
+      <p className={`mt-3 ${theme.text} text-lg`}>{person.name}</p>
       <p className="text-sm mt-1">{person.title}</p>
     </div>
   );

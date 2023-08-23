@@ -45,7 +45,7 @@ const Slideshow = ({
   ContentRenderer,
 }: Props): JSX.Element => {
   const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-1 rounded-large inline-block transition-all hover:scale-125 cursor-pointer ${
-    themeColor || ' bg-purple'
+    themeColor || ' bg-green-blue'
   }`;
   const [[slide, direction], setPage] = React.useState([0, 0]);
   const slideIndex = wrap(0, slides.length, slide);

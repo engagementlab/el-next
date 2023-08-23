@@ -23,6 +23,8 @@ import { AnimatePresence, motion, useCycle } from 'framer-motion';
 import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { PeopleList } from '@/components/People';
+import Partners from '@/components/Partners';
+import Slideshow from '@/components/Slideshow';
 
 type Semester = {
   key: string;
@@ -36,6 +38,9 @@ type Semester = {
   };
   impact: {
     document: any;
+  };
+  slides: {
+    slides: any[];
   };
 
   projects: {
@@ -199,22 +204,22 @@ export default function Studio({
       },
       quote: (children: ReactElement[]) => {
         if (
-          children.length === 2 &&
-          children[0].props.node.type === 'paragraph' &&
-          children[1].props.node.type === 'paragraph'
+          children.length > 1 &&
+          // children[0].props.node.type === 'paragraph' &&
+          children[children.length - 1].props.node.type === 'paragraph'
         )
           return (
             <div className="my-4">
-              <p
-                className={`italic text-sm ${
-                  Theming[item.initiatives[0]].text
-                }`}
-              >
-                {children[0].props.node.children[0].text}
-              </p>
-              <p className="text-right">
-                {children[1].props.node.children[0].text}
-              </p>
+              {children.map((child) => (
+                <p
+                  className={`italic text-lg font-bold ${
+                    Theming[item.initiatives[0]].text
+                  }`}
+                >
+                  {child.props.node.children[0].text}
+                </p>
+              ))}
+              <p>&mdash; {children[1].props.node.children[0].text}</p>
             </div>
           );
         else
@@ -305,7 +310,7 @@ export default function Studio({
                     }}
                   >
                     <ul
-                      className={`w-full uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${
+                      className={`w-full list-none uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${
                         Theming[item.initiatives[0]].border
                       }`}
                     >
@@ -357,10 +362,11 @@ export default function Studio({
                           ? 'border-teal'
                           : Theming[item.initiatives[0]].border
                       }
-                        se.type
-                          ? 'text-teal'
-                          : Theming[item.initiatives[0]].text
-                      }`}
+                        ${
+                          se.type
+                            ? 'text-teal'
+                            : Theming[item.initiatives[0]].text
+                        }`}
                     ></div>
                     <a
                       href="#"
@@ -412,24 +418,47 @@ export default function Studio({
                     >
                       Course Information
                     </h2>
-                    <p>
-                      <span className="font-bold tracking-wider">NUMBER:</span>
-                      <br />
-                      {selectedSemester.courseNumber}
-                    </p>
+                    <div className="flex flex-row w-full justify-start gap-8">
+                      <div className="flex flex-col xl:flex-row">
+                        <div className="w-full xl:w-1/2">
+                          <p>
+                            <span className="font-bold tracking-wider">
+                              NUMBER:
+                            </span>
+                            <br />
+                            {selectedSemester.courseNumber}
+                          </p>
 
-                    <p className="my-2">
-                      <span className="font-bold tracking-wider">
-                        INSTRUCTOR:
-                      </span>
-                      <br />
-                      {selectedSemester.instructors
-                        .map((i) => i.name)
-                        .join(', ')}
-                    </p>
-                    <p className="my-2">{selectedSemester.description}</p>
+                          <p>
+                            <span className="font-bold tracking-wider">
+                              INSTRUCTOR:
+                            </span>
+                            <br />
+                            {selectedSemester.instructors
+                              .map((i) => i.name)
+                              .join(', ')}
+                          </p>
+                          <p className="my-2">
+                            <span className="font-bold tracking-wider">
+                              PARTNERS:&nbsp;
+                            </span>
+                            {Partners({ partners: selectedSemester.partners })}
+                          </p>
+                        </div>
+                        {selectedSemester.slides &&
+                          selectedSemester.slides.slides.length > 0 && (
+                            <Slideshow
+                              slides={selectedSemester.slides.slides}
+                              themeColor={Theming[item.initiatives[0]].bg}
+                              className={`${
+                                Theming[item.initiatives[0]].bg
+                              } bg-opacity-50`}
+                            />
+                          )}
+                      </div>
+                    </div>
                   </div>
-
+                  <p className="p-6">{selectedSemester.description}</p>
                   <div className="hidden lg:block w-full mt-6 p-6">
                     <h2
                       className={`uppercase text-xl lg:text-3xl font-extrabold ${
@@ -438,7 +467,7 @@ export default function Studio({
                     >
                       Jump to:
                     </h2>
-                    <div className="flex flex-row w-full gap-x-10">
+                    <div className="flex flex-col w-full gap-x-10">
                       <Button
                         label="A Look Inside the Co-Creation Process"
                         anchorId="cocreation"
@@ -447,14 +476,29 @@ export default function Studio({
                         } ${Theming[item.initiatives[0]].fill}
                       `}
                       />
-                      <Button
-                        label="Impact Beyond the Studio"
-                        anchorId="impact"
-                        className={`text-sm ${
-                          Theming[item.initiatives[0]].text
-                        } ${Theming[item.initiatives[0]].fill}
+
+                      {selectedSemester.projects &&
+                        selectedSemester.projects.length > 0 && (
+                          <Button
+                            label="Projects"
+                            anchorId="projects"
+                            className={`text-sm ${
+                              Theming[item.initiatives[0]].text
+                            } ${Theming[item.initiatives[0]].fill}
                       `}
-                      />
+                          />
+                        )}
+                      {selectedSemester.impact &&
+                        selectedSemester.impact.document.length > 2 && (
+                          <Button
+                            label="Impact Beyond the Studio"
+                            anchorId="impact"
+                            className={`text-sm ${
+                              Theming[item.initiatives[0]].text
+                            } ${Theming[item.initiatives[0]].fill}
+                      `}
+                          />
+                        )}
                       <Button
                         label="Studio Participants"
                         anchorId="impact"
@@ -476,59 +520,80 @@ export default function Studio({
                     />
                   </div>
 
-                  <Divider color={Theming[item.initiatives[0]].secodary} />
-
-                  <div id="impact" className="p-6">
-                    <h2 className="font-bold text-5xl my-3">
-                      Impact Beyond the Studio
-                    </h2>
-                    <DocumentRenderer
-                      document={selectedSemester.impact.document}
-                      componentBlocks={Blocks()}
-                      renderers={Doc(rendererOverrides)}
-                    />
-                  </div>
-                  <h2
-                    className={`uppercase font-extrabold p-6 ${
-                      Theming[item.initiatives[0]].heading
-                    }`}
-                  >
-                    {selectedSemester.name} Studio Projects
-                  </h2>
-                  <div className="grid lg:ml-4 lg:grid-cols-2 xl:grid-cols-4 lg:gap-2 xl:gap-3 p-6">
-                    {selectedSemester.projects.map((project) => (
-                      <Link
-                        href={`/studios/projects/${project.key}`}
-                        passHref
-                        className="group"
-                        key={project.key}
-                      >
-                        {project.thumbnail ? (
-                          <Image
-                            id={`thumb-${project.key}`}
-                            alt={project.thumbailAltText}
-                            imgId={project.thumbnail.publicId}
-                            width={250}
-                            className="w-full"
-                          />
-                        ) : (
-                          <ImagePlaceholder
-                            imageLabel="Project"
-                            width={335}
-                            height={200}
-                          />
-                        )}
-                        <h3 className="text-bluegreen text-3xl font-bold mt-4 hover:text-green-blue group-hover:text-green-blue">
-                          {project.name}
-                        </h3>
-                        <div className="mt-2 mb-20">
-                          <p className="m-0">{project.shortDescription}</p>
+                  {selectedSemester.projects &&
+                    selectedSemester.projects.length > 0 && (
+                      <>
+                        <Divider
+                          color={`${
+                            Theming[item.initiatives[0]].bg
+                          } bg-opacity-50`}
+                        />
+                        <div id="projects" className="p-6">
+                          <h2 className="font-bold text-5xl my-3">
+                            {selectedSemester.name} Studio Projects
+                          </h2>
+                          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                            {selectedSemester.projects.map((project) => (
+                              <Link
+                                href={`/studios/projects/${project.key}`}
+                                passHref
+                                className="group"
+                                key={project.key}
+                              >
+                                {project.thumbnail ? (
+                                  <Image
+                                    id={`thumb-${project.key}`}
+                                    alt={project.thumbailAltText}
+                                    imgId={project.thumbnail.publicId}
+                                    transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                                    width={460}
+                                    className="w-full"
+                                  />
+                                ) : (
+                                  <ImagePlaceholder
+                                    imageLabel="Project"
+                                    width={335}
+                                    height={200}
+                                  />
+                                )}
+                                <h3 className="text-bluegreen text-3xl font-bold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                                  {project.name}
+                                </h3>
+                                <div className="mt-2 mb-20">
+                                  <p className="m-0">
+                                    {project.shortDescription}
+                                  </p>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
                         </div>
-                      </Link>
-                    ))}
-                  </div>
+                      </>
+                    )}
 
-                  <Divider color={Theming[item.initiatives[0]].secodary} />
+                  {selectedSemester.impact &&
+                    selectedSemester.impact.document.length > 2 && (
+                      <>
+                        <Divider
+                          color={`${
+                            Theming[item.initiatives[0]].bg
+                          } bg-opacity-50`}
+                        />
+                        <div id="impact" className="p-6">
+                          <h2 className="font-bold text-5xl my-3">
+                            Impact Beyond the Studio
+                          </h2>
+                          <DocumentRenderer
+                            document={selectedSemester.impact.document}
+                            componentBlocks={Blocks()}
+                            renderers={Doc(rendererOverrides)}
+                          />
+                        </div>
+                      </>
+                    )}
+                  <Divider
+                    color={`${Theming[item.initiatives[0]].bg} bg-opacity-50`}
+                  />
                   <div className="p-6">
                     <h2 className="font-bold text-5xl my-3">
                       {selectedSemester.name} Studio Participants
@@ -652,6 +717,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             courseNumber
             description
             partners
+            slides {
+              slides {
+                altText
+                image {
+                  publicId
+                }
+              }
+            }
             coCreation {
                 document(hydrateRelationships: true)
             }

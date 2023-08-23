@@ -60,9 +60,12 @@ var Image = function Image(_ref) {
   cloudImage.addTransformation("".concat(transforms || defaultTransforms).concat(lowBandwidth ? ',e_grayscale,q_auto:eco' : ''));
 
   // If lazyload not set to false, enable
-  if (lazy === undefined) plugins.push(react.lazyload(), react.placeholder({
-    mode: 'blur'
-  }));
+  if (lazy === undefined) plugins.push(react.lazyload()
+  // placeholder({
+  //   mode: 'blur',
+  // })
+  );
+
   return /*#__PURE__*/jsxRuntime.jsx(react.AdvancedImage, {
     id: id,
     className: className,

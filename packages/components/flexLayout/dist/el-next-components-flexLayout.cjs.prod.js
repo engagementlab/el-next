@@ -31,7 +31,7 @@ var FlexLayout = function FlexLayout(_ref) {
       className: flexClass,
       children: children.map(function (element, i) {
         return /*#__PURE__*/jsxRuntime.jsx("div", {
-          className: "".concat(i === 0 ? 'w-full lg:w-3/4' : ''),
+          className: "".concat(i === 0 ? 'w-full lg:w-3/4' : 'lg:w-1/4'),
           children: element
         }, i);
       })
@@ -43,7 +43,7 @@ var FlexLayout = function FlexLayout(_ref) {
       className: flexClass,
       children: children.map(function (element, i) {
         return /*#__PURE__*/jsxRuntime.jsx("div", {
-          className: "".concat(i === 1 ? 'w-full lg:w-3/4' : ''),
+          className: "".concat(i === 1 ? 'w-full lg:w-3/4 lg:basis-3/4' : 'lg:w-1/4'),
           children: element
         }, i);
       })

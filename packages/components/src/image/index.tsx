@@ -141,10 +141,10 @@ const Image = ({
   // If lazyload not set to false, enable
   if (lazy === undefined)
     plugins.push(
-      lazyload(),
-      placeholder({
-        mode: 'blur',
-      })
+      lazyload()
+      // placeholder({
+      //   mode: 'blur',
+      // })
     );
 
   return (

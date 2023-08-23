@@ -34,7 +34,10 @@ export const FlexLayout = ({ layout, children }: FlexProps) => {
     return (
       <div className={flexClass}>
         {children.map((element, i) => (
-          <div key={i} className={`${i === 0 ? 'w-full lg:w-3/4' : ''}`}>
+          <div
+            key={i}
+            className={`${i === 0 ? 'w-full lg:w-3/4' : 'lg:w-1/4'}`}
+          >
             {element}
           </div>
         ))}
@@ -46,7 +49,12 @@ export const FlexLayout = ({ layout, children }: FlexProps) => {
     return (
       <div className={flexClass}>
         {children.map((element, i) => (
-          <div key={i} className={`${i === 1 ? 'w-full lg:w-3/4' : ''}`}>
+          <div
+            key={i}
+            className={`${
+              i === 1 ? 'w-full lg:w-3/4 lg:basis-3/4' : 'lg:w-1/4'
+            }`}
+          >
             {element}
           </div>
         ))}

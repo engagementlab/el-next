@@ -52,6 +52,10 @@ const ResearchProject: Lists.ResearchProject = list({
         displayMode: 'select',
       },
     }),
+    mdProject: checkbox({
+      label: 'Is MD Project',
+      defaultValue: false,
+    }),
     ...group({
       label: 'Images',
       description: 'Project thumbnail and header image',

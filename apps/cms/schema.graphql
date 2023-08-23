@@ -531,7 +531,7 @@ input NewsItemRelateToManyForCreateInput {
 type Initiative {
   id: ID!
   name: String
-  intro: String
+  intro: Initiative_intro_Document
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
   news(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
@@ -545,6 +545,10 @@ type Initiative {
   studiosCount(where: StudioWhereInput! = {}): Int
   research(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchCount(where: ResearchProjectWhereInput! = {}): Int
+}
+
+type Initiative_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 type Initiative_body_Document {
@@ -562,7 +566,6 @@ input InitiativeWhereInput {
   NOT: [InitiativeWhereInput!]
   id: IDFilter
   name: StringFilter
-  intro: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
   events: EventManyRelationFilter
@@ -592,12 +595,11 @@ input StudioManyRelationFilter {
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  intro: OrderDirection
 }
 
 input InitiativeUpdateInput {
   name: String
-  intro: String
+  intro: JSON
   slides: SlideRelateToManyForUpdateInput
   news: NewsItemRelateToManyForUpdateInput
   events: EventRelateToManyForUpdateInput
@@ -635,7 +637,7 @@ input InitiativeUpdateArgs {
 
 input InitiativeCreateInput {
   name: String
-  intro: String
+  intro: JSON
   slides: SlideRelateToManyForCreateInput
   news: NewsItemRelateToManyForCreateInput
   events: EventRelateToManyForCreateInput
@@ -663,13 +665,17 @@ input StudioRelateToManyForCreateInput {
 type InitiativesLanding {
   id: ID!
   name: String
-  intro: String
+  intro: InitiativesLanding_intro_Document
   introImage: CloudinaryImage_File
   introImageAltText: String
   introImageCaption: String
   tngvi: InitiativesLanding_tngvi_Document
   tn4ej: InitiativesLanding_tn4ej_Document
   everythingElse: InitiativesLanding_everythingElse_Document
+}
+
+type InitiativesLanding_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 type InitiativesLanding_tngvi_Document {
@@ -695,7 +701,6 @@ input InitiativesLandingWhereInput {
   NOT: [InitiativesLandingWhereInput!]
   id: IDFilter
   name: StringFilter
-  intro: StringFilter
   introImageAltText: StringFilter
   introImageCaption: StringFilter
 }
@@ -703,14 +708,13 @@ input InitiativesLandingWhereInput {
 input InitiativesLandingOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  intro: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
 }
 
 input InitiativesLandingUpdateInput {
   name: String
-  intro: String
+  intro: JSON
   introImage: Upload
   introImageAltText: String
   introImageCaption: String
@@ -726,7 +730,7 @@ input InitiativesLandingUpdateArgs {
 
 input InitiativesLandingCreateInput {
   name: String
-  intro: String
+  intro: JSON
   introImage: Upload
   introImageAltText: String
   introImageCaption: String
@@ -1205,6 +1209,7 @@ type ResearchProject {
   flags: [ResearchProjectFlagType!]
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
+  mdProject: Boolean
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   headingImage: CloudinaryImage_File
@@ -1252,6 +1257,7 @@ input ResearchProjectWhereInput {
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
   filters: FilterManyRelationFilter
+  mdProject: BooleanFilter
   thumbAltText: StringFilter
   headingImageAltText: StringFilter
   headingText: StringFilter
@@ -1286,6 +1292,7 @@ input ResearchProjectOrderByInput {
   key: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
+  mdProject: OrderDirection
   thumbAltText: OrderDirection
   headingImageAltText: OrderDirection
   headingText: OrderDirection
@@ -1300,6 +1307,7 @@ input ResearchProjectUpdateInput {
   enabled: Boolean
   flags: [ResearchProjectFlagType!]
   filters: FilterRelateToManyForUpdateInput
+  mdProject: Boolean
   thumbnail: Upload
   thumbAltText: String
   headingImage: Upload
@@ -1349,6 +1357,7 @@ input ResearchProjectCreateInput {
   enabled: Boolean
   flags: [ResearchProjectFlagType!]
   filters: FilterRelateToManyForCreateInput
+  mdProject: Boolean
   thumbnail: Upload
   thumbAltText: String
   headingImage: Upload
@@ -1391,6 +1400,7 @@ type Semester {
   courseNumber: String
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   instructorsCount(where: PersonWhereInput! = {}): Int
+  slides: Slideshow
   description: String
   partners: [SemesterPartnerType!]
   coCreation: Semester_coCreation_Document
@@ -1450,6 +1460,7 @@ input SemesterWhereInput {
   type: SemesterTypeTypeNullableFilter
   courseNumber: StringFilter
   instructors: PersonManyRelationFilter
+  slides: SlideshowWhereInput
   description: StringFilter
   projects: StudioProjectManyRelationFilter
   learningPartners: PersonManyRelationFilter
@@ -1486,6 +1497,7 @@ input SemesterUpdateInput {
   type: SemesterTypeType
   courseNumber: String
   instructors: PersonRelateToManyForUpdateInput
+  slides: SlideshowRelateToOneForUpdateInput
   description: String
   partners: [SemesterPartnerType!]
   coCreation: JSON
@@ -1503,6 +1515,12 @@ input StudioRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
+input SlideshowRelateToOneForUpdateInput {
+  create: SlideshowCreateInput
+  connect: SlideshowWhereUniqueInput
+  disconnect: Boolean
+}
+
 input SemesterUpdateArgs {
   where: SemesterWhereUniqueInput!
   data: SemesterUpdateInput!
@@ -1517,6 +1535,7 @@ input SemesterCreateInput {
   type: SemesterTypeType
   courseNumber: String
   instructors: PersonRelateToManyForCreateInput
+  slides: SlideshowRelateToOneForCreateInput
   description: String
   partners: [SemesterPartnerType!]
   coCreation: JSON
@@ -1531,6 +1550,11 @@ input SemesterCreateInput {
 input StudioRelateToOneForCreateInput {
   create: StudioCreateInput
   connect: StudioWhereUniqueInput
+}
+
+input SlideshowRelateToOneForCreateInput {
+  create: SlideshowCreateInput
+  connect: SlideshowWhereUniqueInput
 }
 
 type Slide {
@@ -1618,6 +1642,8 @@ type Slideshow {
   key: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
+  semesterSlides(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  semesterSlidesCount(where: SemesterWhereInput! = {}): Int
 }
 
 input SlideshowWhereUniqueInput {
@@ -1633,6 +1659,7 @@ input SlideshowWhereInput {
   name: StringFilter
   key: StringFilter
   slides: SlideManyRelationFilter
+  semesterSlides: SemesterManyRelationFilter
 }
 
 input SlideshowOrderByInput {
@@ -1645,6 +1672,7 @@ input SlideshowUpdateInput {
   name: String
   key: String
   slides: SlideRelateToManyForUpdateInput
+  semesterSlides: SemesterRelateToManyForUpdateInput
 }
 
 input SlideshowUpdateArgs {
@@ -1656,6 +1684,7 @@ input SlideshowCreateInput {
   name: String
   key: String
   slides: SlideRelateToManyForCreateInput
+  semesterSlides: SemesterRelateToManyForCreateInput
 }
 
 type Studio {
@@ -1756,6 +1785,7 @@ type StudioProject {
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
   flags: [StudioProjectFlagType!]
+  mdProject: Boolean
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   shortDescription: String
@@ -1842,6 +1872,7 @@ input StudioProjectWhereInput {
   enabled: BooleanFilter
   initiative: StudioProjectInitiativeTypeNullableFilter
   filters: FilterManyRelationFilter
+  mdProject: BooleanFilter
   thumbAltText: StringFilter
   shortDescription: StringFilter
   videoId: StringFilter
@@ -1877,6 +1908,7 @@ input StudioProjectOrderByInput {
   createdDate: OrderDirection
   enabled: OrderDirection
   initiative: OrderDirection
+  mdProject: OrderDirection
   thumbAltText: OrderDirection
   shortDescription: OrderDirection
   videoId: OrderDirection
@@ -1892,6 +1924,7 @@ input StudioProjectUpdateInput {
   initiative: StudioProjectInitiativeType
   filters: FilterRelateToManyForUpdateInput
   flags: [StudioProjectFlagType!]
+  mdProject: Boolean
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
@@ -1935,6 +1968,7 @@ input StudioProjectCreateInput {
   initiative: StudioProjectInitiativeType
   filters: FilterRelateToManyForCreateInput
   flags: [StudioProjectFlagType!]
+  mdProject: Boolean
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String

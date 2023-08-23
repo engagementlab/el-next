@@ -69,6 +69,11 @@ const Semester: Lists.Semester = list({
       many: true,
       ui: { hideCreate: true },
     }),
+    slides: relationship({
+      ref: 'Slideshow.semesterSlides',
+      many: false,
+      label: 'Slideshow',
+    }),
     description: text({
       label: 'Semester Description',
       validation: {

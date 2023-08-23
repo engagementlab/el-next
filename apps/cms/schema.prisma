@@ -67,7 +67,7 @@ model Graduate {
 model Initiative {
   id       String            @id @default(cuid())
   name     String            @unique @default("Initiative Name")
-  intro    String            @default("")
+  intro    Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   slides   Slide[]           @relation("Initiative_slides")
   news     NewsItem[]        @relation("Initiative_news")
   events   Event[]           @relation("Event_initiativesWhatsNew")
@@ -80,7 +80,7 @@ model Initiative {
 model InitiativesLanding {
   id                String @id @default(cuid())
   name              String @unique @default("Initiatives Landing Page")
-  intro             String @default("")
+  intro             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   introImage        Json?
   introImageAltText String @default("")
   introImageCaption String @default("")
@@ -162,6 +162,7 @@ model ResearchProject {
   enabled             Boolean      @default(true)
   flags               Json         @default("[]")
   filters             Filter[]     @relation("Filter_researchProjects")
+  mdProject           Boolean      @default(false)
   thumbnail           Json?
   thumbAltText        String       @default("")
   headingImage        Json?
@@ -189,6 +190,8 @@ model Semester {
   type             SemesterTypeType?
   courseNumber     String            @default("")
   instructors      Person[]          @relation("Person_studioInstructors")
+  slides           Slideshow?        @relation("Semester_slides", fields: [slidesId], references: [id])
+  slidesId         String?           @map("slides")
   description      String            @default("")
   partners         Json              @default("[]")
   coCreation       Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
@@ -200,6 +203,7 @@ model Semester {
   contact          String            @default("")
 
   @@index([studioId])
+  @@index([slidesId])
 }
 
 model Slide {
@@ -215,10 +219,11 @@ model Slide {
 }
 
 model Slideshow {
-  id     String  @id @default(cuid())
-  name   String  @default("")
-  key    String  @unique @default("")
-  slides Slide[] @relation("Slide_slideshowSlides")
+  id             String     @id @default(cuid())
+  name           String     @default("")
+  key            String     @unique @default("")
+  slides         Slide[]    @relation("Slide_slideshowSlides")
+  semesterSlides Semester[] @relation("Semester_slides")
 }
 
 model Studio {
@@ -245,6 +250,7 @@ model StudioProject {
   initiative          StudioProjectInitiativeType @default(gunviolence)
   filters             Filter[]                    @relation("Filter_studioProjects")
   flags               Json                        @default("[]")
+  mdProject           Boolean                     @default(false)
   thumbnail           Json?
   thumbAltText        String                      @default("")
   shortDescription    String                      @default("")

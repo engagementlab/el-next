@@ -27,9 +27,7 @@ const Undergraduate: Lists.Undergraduate = list({
       label: 'Intro Fields',
       fields: {
         intro: document({
-          formatting: {
-            headingLevels: [4],
-          },
+          formatting: true,
           links: true,
           ui: {
             views: './admin/components/component-blocks',

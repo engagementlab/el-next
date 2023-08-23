@@ -26,10 +26,13 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
     ...group({
       label: 'Intro Fields',
       fields: {
-        intro: text({
+        intro: document({
+          formatting: true,
+          links: true,
           ui: {
-            displayMode: 'textarea',
+            views: './admin/components/component-blocks',
           },
+          componentBlocks,
         }),
         introImage: cloudinaryImage({
           //   label: 'Thumbnail/Header Image',

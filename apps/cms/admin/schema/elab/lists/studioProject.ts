@@ -20,6 +20,7 @@ import { PartnersSelect } from './partners';
 
 import { Flags } from '../flags';
 import { helper, HelperIcon } from '../../../components/helper';
+import { boolean } from 'yargs';
 
 const StudioProject: Lists.StudioProject = list({
   access: allowAll,
@@ -65,6 +66,10 @@ const StudioProject: Lists.StudioProject = list({
       },
     }),
     flags: Flags,
+    mdProject: checkbox({
+      label: 'Is MD Project',
+      defaultValue: false,
+    }),
     thumbnail: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,

@@ -36,6 +36,7 @@ const About: Lists.About = list({
       },
     }),
     intro: document({
+      formatting: true,
       links: true,
     }),
     headingImage: cloudinaryImage({

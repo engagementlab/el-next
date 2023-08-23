@@ -48,6 +48,18 @@ const Slideshow: Lists.Slideshow = list({
         },
       },
     }),
+    semesterSlides: relationship({
+      ref: 'Semester.slides',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   ui: {
     listView: {

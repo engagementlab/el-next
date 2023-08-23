@@ -16,10 +16,13 @@ const Initiative: Lists.Initiative = list({
       isFilterable: true,
       defaultValue: 'Initiative Name',
     }),
-    intro: text({
+    intro: document({
+      formatting: true,
+      links: true,
       ui: {
-        displayMode: 'textarea',
+        views: './admin/components/component-blocks',
       },
+      componentBlocks,
     }),
     // helper: helper({
     //   html: 'A slide can be <i>either</i> an image or video. If you define both, only the image will display. ',

@@ -144,19 +144,21 @@ export default function Studio({
       },
       quote: (children: ReactElement[]) => {
         if (
-          children.length === 2 &&
-          children[0].props.node.type === 'paragraph' &&
-          children[1].props.node.type === 'paragraph'
+          children.length > 1 &&
+          // children[0].props.node.type === 'paragraph' &&
+          children[children.length - 1].props.node.type === 'paragraph'
         )
           return (
             <div className="my-4">
-              <p
-                className={`italic text-lg font-bold ${
-                  Theming[item.initiative].text
-                }`}
-              >
-                {children[0].props.node.children[0].text}
-              </p>
+              {children.map((child) => (
+                <p
+                  className={`italic text-lg font-bold ${
+                    Theming[item.initiative].text
+                  }`}
+                >
+                  {child.props.node.children[0].text}
+                </p>
+              ))}
               <p>&mdash; {children[1].props.node.children[0].text}</p>
             </div>
           );
@@ -281,14 +283,16 @@ export default function Studio({
                       `}
                   />
                   <div className="flex flex-row gap-x-5">
-                    <Button
-                      label="Impact"
-                      anchorId="impact"
-                      className={`text-sm ${Theming[item.initiative].text} ${
-                        Theming[item.initiative].fill
-                      }
+                    {item.impact && item.impact.document.length > 2 && (
+                      <Button
+                        label="Impact"
+                        anchorId="impact"
+                        className={`text-sm ${Theming[item.initiative].text} ${
+                          Theming[item.initiative].fill
+                        }
                     `}
-                    />
+                      />
+                    )}
                     <Button
                       label="Team"
                       anchorId="team"
@@ -330,19 +334,22 @@ export default function Studio({
               </h2>
               <Logos partners={item.partners} />
             </Gutter>
-            <Divider color="bg-green" />
 
-            <Gutter>
-              <div id="impact">
-                <h2 className="font-bold text-5xl my-3">Impact</h2>
-                <DocumentRenderer
-                  document={item.impact.document}
-                  componentBlocks={Blocks(Theming[item.initiative])}
-                  renderers={Doc(rendererOverrides)}
-                />
-              </div>
-            </Gutter>
-
+            {item.impact && item.impact.document.length > 2 && (
+              <>
+                <Divider color="bg-green" />
+                <Gutter>
+                  <div id="impact">
+                    <h2 className="font-bold text-5xl my-3">Impact</h2>
+                    <DocumentRenderer
+                      document={item.impact.document}
+                      componentBlocks={Blocks(Theming[item.initiative])}
+                      renderers={Doc(rendererOverrides)}
+                    />
+                  </div>
+                </Gutter>
+              </>
+            )}
             <Divider color="bg-green" />
             <Gutter>
               <h2 className="font-bold text-5xl my-3">Project Team</h2>

@@ -98,17 +98,23 @@ export default function Home({
     return (
       <div className="h-full flex items-center">
         <motion.div
-          initial={{ opacity: 0, filter: 'blur(5px)' }}
-          whileInView={{ opacity: 1, filter: 'blur(0)' }}
+          initial={{
+            opacity: 0,
+            filter: 'drop-shadow(0px 0px 13px #fff) blur(5px)',
+          }}
+          whileInView={{
+            opacity: 1,
+            filter: 'drop-shadow(0px 0px 13px #fff) blur(0px)',
+          }}
           viewport={{ root: targetRef, amount: 'all' }}
           onViewportEnter={() => {
             if (didScroll) setWordIndex(index);
             // console.log(index, scrollYProgress.get());
           }}
-          className={`h-1/5 relative ${color}`}
+          className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
         >
-          <p className="flex flex-row w-3/4 justify-between items-center">
-            {word} <em className="text-sm font-semibold">noun</em>
+          <p className="flex flex-row w-3/4 justify-start items-center">
+            {word} <em className="text-sm font-semibold ml-3">noun</em>
           </p>
           <p className="text-grey font-normal text-sm">{define}</p>
         </motion.div>
@@ -167,10 +173,10 @@ export default function Home({
         <motion.div id="tagline" className="flex static flex-col pt-14">
           <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
             {showVideo && (
-              <div className="w-3/4 max-[375px]:break-words">
+              <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_10px_#fff] ">
                 Advancing&nbsp;
                 <span className="inline-block text-purple">
-                  peace<span className="text-black">,</span>
+                  peace<span className="text-slate">,</span>
                 </span>
                 &nbsp;
                 <span className="inline-block text-purple">equity</span>,

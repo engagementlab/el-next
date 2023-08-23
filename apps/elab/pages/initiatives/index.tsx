@@ -7,15 +7,15 @@ import { Button, HeadingStyle, Query } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../../components/Layout';
 import Divider from '../../components/Divider';
-import { CTAButton } from '@/components/Buttons';
 import { Theme, Theming } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc } from '@/components/Renderers';
-import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 
 type AboutPage = {
-  intro: string;
+  intro: {
+    document: any;
+  };
   introImage: {
     publicId: string;
   };
@@ -47,7 +47,13 @@ export default function Initiatives({
               <h1 className="font-extrabold text-black">
                 Social Impact Initiatives
               </h1>
-              <p className="flex flex-col items-center w-full">{page?.intro}</p>
+              <div className="flex flex-col items-center w-full">
+                <DocumentRenderer
+                  document={page?.intro.document}
+                  componentBlocks={Blocks()}
+                  renderers={Doc()}
+                />
+              </div>
               <div className="hidden lg:block w-full mt-6 mb-12">
                 <p className="text-xl lg:text-3xl font-extrabold uppercase">
                   Jump to:
@@ -87,7 +93,7 @@ export default function Initiatives({
           <div id="tngvi" className="lg:mx-14 xl:mx-24">
             {/* <Gutter> */}
             <div className="flex flex-col">
-              <h2 className="text-4xl xl:text-6xl text-purple font-bold flex flex-col sm:flex-row self-center items-center mt-12 mx-6">
+              <h2 className="text-4xl xl:text-6xl text-purple font-bold flex flex-col sm:flex-row justify-center items-center w-full my-12 mx-6">
                 <svg
                   viewBox="0 0.081 202 123.988"
                   width="202"
@@ -178,9 +184,7 @@ export default function Initiatives({
                     ></path>
                   </g>
                 </svg>
-                Transforming <br />
-                Narratives
-                <br /> of Gun Violence
+                Transforming Narratives of Gun Violence
               </h2>
 
               <DocumentRenderer
@@ -194,11 +198,21 @@ export default function Initiatives({
           <Divider />
           <div id="tnej" className="lg:mx-14 xl:mx-24">
             <div className="flex flex-col">
-              <h2 className="text-4xl xl:text-6xl text-leaf font-bold flex flex-col xl:flex-row self-center items-center mt-12">
-                Transforming
-                <br /> Narratives
-                <br /> for Environmental <br />
-                Justice
+              <h2 className="text-4xl xl:text-6xl text-leaf font-bold flex flex-col sm:flex-row justify-center items-center my-12">
+                <svg
+                  enable-background="new 0 0 1920 1080"
+                  viewBox="0 0 1920 1080"
+                  className="max-w-[220px]"
+                >
+                  <g fill="#39b54a">
+                    <path d="m1043.1 736.5v-441.4h303.1v95.8h-183.4v78.7h132.6v92.4h-132.6v78.7h183.4v95.8z" />
+                    <path d="m1569.8 137.4c9.7-5.7 17.7-13.4 24.3-22.5 4.4 1 15.3 2 15.3 2-15.1 20.3-20.5 20-29.4 30.2 1.7 1.3 18.8 120.4-126.6 109.5-36.5-2.7-62.1 5.8-62.1 5.8-6.7-40.3 51.7-205.1 178.5-125z" />
+                    <path d="m735.2 257.5v-147.2h-520.2v147.1h112.7c14 0 39.8-2.9 51.6.7v474.9h191.6v-430.1c0-12.5-2.5-35.1.7-45.5h163.6z" />
+                    <path d="m925 298.5c-12.6 0-31.7-2.7-42.7.7v221.7h-1.7c-9.7-18.6-23.8-35.5-34.8-53.1-24.1-38.3-48.6-75.9-72.7-114.1-7.9-12.4-16.5-25.2-24.8-37.9-3.4-5.2-9.7-10.7-11.7-17.2h-78c-12.8 0-32.1-2.8-43.1.7v433.9h119.8v-215.7c6.1 2.7 8.8 11.7 12.2 16.5 8.2 12.7 16.8 25.7 25.4 38.7 24.7 36.7 48.7 74.1 73.4 111.1 8.2 12 16.1 23.7 24 36.3 3.1 4.8 9.9 13 9.9 13h78.6c11.9 0 33.5 2.7 43.3-.7v-392.3c0-12.6 2.7-31-.7-41.6z" />
+                    <path d="m1390.2 295.1h144.6v462.3c0 49.4-3.6 92.4-25.5 128.8-22 36.4-45 64.5-84 84.2s-84.3 29.6-136 29.6c-46 0-87.6-8.2-125-24.5s-67-41.3-88.9-74.9-32.7-72.4-32.4-123.3h160.6c.5 20.2 4.7 34.1 12.5 48.4 7.8 14.4 18.6 25.3 32.4 32.9s30.1 11.4 49 11.4c19.9 0 36.7-4.3 50.5-12.9s24.3-21.3 31.5-38 10.8-37.3 10.8-61.8v-462.2z" />
+                  </g>
+                </svg>
+                Transforming Narratives for Environmental Justice
               </h2>
               <DocumentRenderer
                 document={page?.tn4ej.document}
@@ -210,7 +224,7 @@ export default function Initiatives({
           <Divider />
           <div id="else" className="lg:mx-14 xl:mx-24">
             <div className="flex flex-col">
-              <h2 className="text-4xl xl:text-6xl text-yellow font-bold flex flex-col xl:flex-row self-center items-center mt-12">
+              <h2 className="text-4xl xl:text-6xl text-yellow font-bold flex flex-col xl:flex-row my-12">
                 Everything Else
               </h2>
               <DocumentRenderer
@@ -230,7 +244,9 @@ export async function getStaticProps() {
   const result = await Query(
     'initiativesLanding',
     `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
-        intro
+        intro {
+          document
+        }
         introImage {
           publicId
         }

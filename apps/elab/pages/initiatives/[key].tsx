@@ -30,7 +30,9 @@ import { ReactNode } from 'react';
 import { Gutter } from '@/components/Gutter';
 
 type AboutPage = {
-  intro: string;
+  intro: {
+    document: any;
+  };
   slides: any[];
   body: { document: any };
   news: News[];
@@ -53,6 +55,7 @@ export default function GunViolence({
     ' ' +
     Theming[initiative].fill;
   (' group-hover:fill-purple');
+  const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
   const renderSlide = (props: { slide: Item }) => {
     return (
       <div className="flex flex-col lg:flex-row-reverse">
@@ -152,12 +155,14 @@ export default function GunViolence({
             </h2>
             <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
-                <p>{page?.intro}</p>
+                <DocumentRenderer
+                  document={page?.intro.document}
+                  componentBlocks={Blocks()}
+                  renderers={Doc()}
+                />
 
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
-                  <h2 className="text-green text-xl lg:text-3xl font-extrabold uppercase">
-                    Jump to:
-                  </h2>
+                  <h2 className={subHeadClass}>Jump to:</h2>
                   <div className="flex flex-col">
                     <Button
                       label={`Learn More about ${
@@ -192,28 +197,24 @@ export default function GunViolence({
               {page?.slides && page?.slides.length > 0 && (
                 <Slideshow
                   slides={page?.slides}
-                  // themeColor={Theming[initiative].bg}
+                  themeColor={Theming[initiative].bg}
                   className={`${Theming[initiative].bg} bg-opacity-50`}
                 />
               )}
             </div>
-
-            <h2 className="text-green text-3xl my-7 font-extrabold uppercase">
-              What's new
-            </h2>
+            <h2 className={subHeadClass}>What's new</h2>
             {mergedItems && (
               <div className="xl:mx-32">
                 <Slideshow
                   slides={mergedItems}
                   ContentRenderer={renderSlide}
                   heightOverride="min-h-[550px] md:min-h-[610px] lg:min-h-[300px] min-[1180px]:min-h-[335px] xl:min-h-[395px]"
-                  className="border-4 border-green rounded-large"
-                  // themeColor="bg-green"
+                  className={`${Theming[initiative].border} border-4 rounded-large`}
                 />
               </div>
             )}
           </div>
-          <Divider color="bg-green" />
+          <Divider color={Theming[initiative].secodary} />
           <Gutter noMarginY={false}>
             <DocumentRenderer
               document={page?.body.document}
@@ -237,7 +238,7 @@ export default function GunViolence({
             />
           </Gutter>
           {page.projects && page.projects.length > 0 && (
-            <Divider color="bg-green" />
+            <Divider color={Theming[initiative].secodary} />
           )}
           <Gutter noMarginY={false}>
             {page.projects && page.projects.length > 0 && (
@@ -247,6 +248,7 @@ export default function GunViolence({
                   {page.projects.map((item: StudioProject, i: number) => {
                     return (
                       <Link
+                        key={`project-${item.key}`}
                         href={`/studios/projects/${item.key}`}
                         className="group"
                       >
@@ -288,7 +290,7 @@ export default function GunViolence({
           </Gutter>
 
           {page.studios && page.studios.length > 0 && (
-            <Divider color="bg-green" />
+            <Divider color={Theming[initiative].secodary} />
           )}
           <Gutter noMarginY={false}>
             {page.studios && page.studios.length > 0 && (
@@ -297,7 +299,11 @@ export default function GunViolence({
                 <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
                   {page.studios.map((item: Studio, i: number) => {
                     return (
-                      <Link href={`/studios/${item.key}`} className="group">
+                      <Link
+                        key={`studio-${item.key}`}
+                        href={`/studios/${item.key}`}
+                        className="group"
+                      >
                         {item.thumbnail ? (
                           <Image
                             id={`thumb-${i}`}
@@ -335,7 +341,7 @@ export default function GunViolence({
           </Gutter>
 
           {page.research && page.research.length > 0 && (
-            <Divider color="bg-green" />
+            <Divider color={Theming[initiative].secodary} />
           )}
           <Gutter noMarginY={false}>
             {page.research && page.research.length > 0 && (
@@ -345,7 +351,8 @@ export default function GunViolence({
                   {page.research.map((item: ResearchProject, i: number) => {
                     return (
                       <Link
-                        href={`/studios/research/${item.key}`}
+                        key={`research-${item.key}`}
+                        href={`research/${item.key}`}
                         className="group"
                       >
                         {item.thumbnail ? (
@@ -377,7 +384,8 @@ export default function GunViolence({
               </div>
             )}
           </Gutter>
-          <Divider color="bg-green" />
+          <Divider color={Theming[initiative].secodary} />
+
           <Gutter noMarginY={false}>
             <h2 className="text-3xl font-bold">Partner Organizations</h2>
             {initiative === 'gunviolence' ? (
@@ -416,8 +424,10 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
 
   const result = await Query(
     'initiative',
-    `initiative(where: { name: "${objectName}" }) {
-        intro 
+    `initiative(where: { name: "${objectName}" }) {      
+        intro {
+          document
+        }
         slides {
           image {
             publicId

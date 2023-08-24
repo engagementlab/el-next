@@ -33,6 +33,7 @@ const rendererOverrides = {
 
 export default function Event({
   item,
+  date,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
@@ -52,22 +53,7 @@ export default function Event({
             <h1 className="text-coated text-2xl font-extrabold mt-5">
               {item.name}
             </h1>
-            <div className="text-coated font-medium">
-              {new Date(item.eventDate).toLocaleDateString('en-US', {
-                weekday: 'long',
-              })}
-              ,{' '}
-              {new Date(item.eventDate).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-              ,{' '}
-              {new Date(item.eventDate).toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </div>
+            <div className="text-coated font-medium">{date}</div>
 
             <DocumentRenderer
               document={item.content.document}
@@ -162,6 +148,15 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   }
 
   const item = itemResult[0] as Event;
-
-  return { props: { item } };
+  const date = `${new Date(item.eventDate).toLocaleDateString('en-US', {
+    weekday: 'long',
+  })} , ${new Date(item.eventDate).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })}, ${new Date(item.eventDate).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`;
+  return { props: { item, date } };
 }

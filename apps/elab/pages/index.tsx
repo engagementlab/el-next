@@ -356,7 +356,7 @@ export default function Home({
                       <div className="mt-8">
                         <CTAButton
                           label="Learn more"
-                          link={`/news/${studioProject.key}`}
+                          link={`/studios/projects/${studioProject.key}`}
                           theme={Theme.gunviolence}
                         />
                       </div>

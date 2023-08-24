@@ -32,6 +32,7 @@ const CaptionedImage = ({
               imgId={imgId}
               transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
               width={460}
+              maxWidthDisable={true}
               className="relative md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0"
             />
           )}

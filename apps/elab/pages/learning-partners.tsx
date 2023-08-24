@@ -77,7 +77,7 @@ export default function Initiatives({
                 />
               </div>
             </div>
-            <div className="flex justify-center my-12 xl:max-w-md">
+            <div className="flex justify-center my-12 w-3/5 max-w-xl">
               <CaptionedImage
                 alt={page.introImageAltText}
                 imgId={page?.introImage.publicId}
@@ -90,18 +90,24 @@ export default function Initiatives({
 
           <div id="what">
             <Gutter>
+              <h2 className="font-bold text-4xl">
+                What are Learning Partners?
+              </h2>
               <DocumentRenderer
                 document={page.what.document}
                 componentBlocks={Blocks()}
                 renderers={Doc()}
               />
-              <h4 className="font-bold my-2 uppercase text-yellow">Partners</h4>
+              <h4 className="font-bold my-2 uppercase text-yellow">
+                Partner Organizations
+              </h4>
               <Logos all={true} partners={[]} />
             </Gutter>
           </div>
           <Divider />
           <div id="benefits">
             <Gutter>
+              <h2 className="font-bold text-4xl">Benefits</h2>
               <DocumentRenderer
                 document={page.benefits.document}
                 componentBlocks={Blocks()}

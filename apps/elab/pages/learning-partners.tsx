@@ -63,17 +63,17 @@ export default function Initiatives({
                 <Button
                   label="What are Learning Partners?"
                   anchorId="what"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Benefits"
                   anchorId="benefits"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Learning Partner Spotlight"
                   anchorId="spotlight"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
               </div>
             </div>

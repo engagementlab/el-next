@@ -99,6 +99,9 @@ export default function GunViolence({
             ).toLocaleDateString('en-US', {
               year: 'numeric',
             })}
+            {props.slide.eventDate && (
+              <div className="text-xs">{props.slide.address}</div>
+            )}
           </div>
           <p className="mx-3 mt-3">
             {props.slide.summary.length > 150
@@ -108,7 +111,7 @@ export default function GunViolence({
                 )}...`
               : props.slide.summary}
           </p>
-          <div className="flex w-full justify-center mt-3">
+          <div className="flex w-full mx-3 mt-3">
             {props.slide.eventDate ? (
               props.slide.registrationLink ? (
                 <CTAButton
@@ -455,6 +458,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             key
             eventDate
             registrationLink
+            address
             summary
             thumbnail { 
                 publicId

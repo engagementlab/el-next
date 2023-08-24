@@ -71,17 +71,17 @@ export default function Initiatives({
                 <Button
                   label="Graduate M.A.: Media Design"
                   anchorId="ma"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Social Justice + Media Symposium"
                   anchorId="sjm"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Alumni Spotlight"
                   anchorId="alumni"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
               </div>
             </div>

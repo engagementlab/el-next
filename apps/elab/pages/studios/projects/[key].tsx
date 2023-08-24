@@ -192,14 +192,14 @@ export default function Studio({
                 {item.name}
               </h1>
               <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7">
-                <div
-                  className={`relative transition-all duration-500 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] ${
-                    videoOpen
-                      ? 'w-full basis-full'
-                      : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
-                  }`}
-                >
-                  {item.trailerId && (
+                {item.trailerId && item.videoId ? (
+                  <div
+                    className={`relative transition-all duration-500 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] ${
+                      videoOpen
+                        ? 'w-full basis-full'
+                        : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
+                    }`}
+                  >
                     <div className="group w-full h-full">
                       <div
                         id="video"
@@ -240,8 +240,18 @@ export default function Studio({
                         </button>
                       )}
                     </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5">
+                    <Image
+                      id="thumb"
+                      alt={item.thumbAltText}
+                      imgId={item.thumbnail.publicId}
+                      transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                      width={460}
+                    />
+                  </div>
+                )}
                 <div className="basis-1/3 xl:basis-1/2">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${
@@ -251,8 +261,14 @@ export default function Studio({
                     About
                   </h2>
                   <div className="flex flex-col items-center">
-                    <p className="my-6">{item.shortDescription}</p>
-                    {!videoOpen && (
+                    <div className="my-6">
+                      <DocumentRenderer
+                        document={item.about.document}
+                        componentBlocks={Blocks(Theming[item.initiative])}
+                        renderers={Doc(rendererOverrides)}
+                      />
+                    </div>
+                    {item.trailerId && item.videoId && !videoOpen && (
                       <CTAButton
                         label="Watch the film"
                         link="/"
@@ -264,11 +280,22 @@ export default function Studio({
                         onClick={() => toggleVideo()}
                       />
                     )}
+                    {item.buttons.map((button) => (
+                      <CTAButton
+                        label={button.label}
+                        link={button.url}
+                        icon={button.icon}
+                        theme={Theming[item.initiative].theme}
+                        className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
+                          Theming[item.initiative].fill
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
                 <div className="hidden lg:block w-3/4 lg:w-full">
                   <h2
-                    className={`uppercase text-xl lg:text-3xl font-extrabold ${
+                    className={`uppercase text-xl lg:text-3xl my-3 font-extrabold ${
                       Theming[item.initiative].heading
                     }`}
                   >
@@ -430,16 +457,16 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             key
             initiative
             about {
-            document(hydrateRelationships: true)
+              document(hydrateRelationships: true)
             }
             buttons
             semester {
-            name
+              name
             }
             shortDescription
             thumbAltText
             thumbnail {
-            publicId
+              publicId
             }
             trailerId
             trailerThumbnail {

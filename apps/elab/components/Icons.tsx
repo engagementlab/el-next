@@ -43,27 +43,27 @@ export const Icons = ({ icons }: Props): JSX.Element => {
         </svg>
       )}
       {icons?.includes('article') && (
-        <svg height="20" width="20" viewBox="0 -960 960 960">
+        <svg height="48" width="48" viewBox="0 -960 960 960">
           <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h462l198 198v462q0 24-18 42t-42 18H180Zm0-60h600v-428.571H609V-780H180v600Zm99-111h402v-60H279v60Zm0-318h201v-60H279v60Zm0 159h402v-60H279v60Zm-99-330v171.429V-780v600-600Z" />
         </svg>
       )}
       {icons?.includes('action') && (
-        <svg height="20" width="20" viewBox="0 -960 960 960">
+        <svg height="48" width="48" viewBox="0 -960 960 960">
           <path d="m438-441 192-192-43-43-149 149-65-65-43 43 108 108Zm42 282q133-121 196.5-219.5T740-552q0-118-75.5-193T480-820q-109 0-184.5 75T220-552q0 75 65 173.5T480-159Zm0 79Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z" />
         </svg>
       )}
       {icons?.includes('website') && (
-        <svg height="20" viewBox="0 -960 960 960" width="20">
+        <svg height="48" viewBox="0 -960 960 960" width="48">
           <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h279v60H180v600h600v-279h60v279q0 24-18 42t-42 18H180Zm202-219-42-43 398-398H519v-60h321v321h-60v-218L382-339Z" />
         </svg>
       )}
       {icons?.includes('app') && (
-        <svg height="20" viewBox="0 -960 960 960" width="20">
+        <svg height="48" viewBox="0 -960 960 960" width="48">
           <path d="M480-313 287-506l43-43 120 120v-371h60v371l120-120 43 43-193 193ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
         </svg>
       )}
       {icons?.includes('video') && (
-        <svg height="20" width="20" viewBox="0 -960 960 960">
+        <svg height="48" width="48" viewBox="0 -960 960 960">
           <path d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z" />
         </svg>
       )}

@@ -59,17 +59,17 @@ export default function Initiatives({
                 <Button
                   label="Undergraduate Minor: Social Impact Design"
                   anchorId="sid"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Social Impact Studios"
                   anchorId="studios"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Project Spotlight"
                   anchorId="projects"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
               </div>
             </div>
@@ -104,17 +104,17 @@ export default function Initiatives({
                 <Button
                   label="Undergraduate Minor: Social Impact Design"
                   anchorId="sid"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Social Impact Studios"
                   anchorId="studios"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
                 <Button
                   label="Project Spotlight"
                   anchorId="projects"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
               </div>
             </div>

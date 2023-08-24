@@ -71,7 +71,7 @@ export default function Initiatives({
                 <Button
                   label="Everything Else"
                   anchorId="else"
-                  className="border-yellow text-yellow fill-yellow"
+                  className="border-teal text-teal fill-yellow"
                 />
               </div>
             </div>

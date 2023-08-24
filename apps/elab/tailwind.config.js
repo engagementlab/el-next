@@ -23,6 +23,20 @@ module.exports = {
         purple: '3px 5px 0 rgba(227,191,255,1)',
         'green-blue': '3px 5px 0 rgba(187,235,231,1)',
       },
+      screens: {
+        tall: {
+          raw: `only screen and (max-height: 960px) and (max-width: 480px)`,
+        },
+        wide: {
+          raw: `only screen and (max-height: 480px) and (max-width: 960px)`,
+        },
+        portrait: {
+          raw: '(orientation: portrait)',
+        },
+        landscape: {
+          raw: '(orientation: landscape)',
+        },
+      },
     },
     colors: {
       black: '#000',

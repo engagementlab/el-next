@@ -173,7 +173,7 @@ export default function Home({
         <motion.div id="tagline" className="flex static flex-col pt-14">
           <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
             {showVideo && (
-              <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_10px_#fff] ">
+              <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_15px_#fff] ">
                 Advancing&nbsp;
                 <span className="inline-block text-purple">
                   peace<span className="text-slate">,</span>

@@ -171,7 +171,7 @@ const Header = ({ theme }: Props): JSX.Element => {
       return (
         <Link
           href={href}
-          className="mt-3 xl:my-1"
+          className="mt-3 xl:my-1 wide:mt-1"
           onClick={() => {
             toggleNavOpen(false);
           }}
@@ -734,7 +734,7 @@ const Header = ({ theme }: Props): JSX.Element => {
         <AnimatePresence>
           {navOpen && (
             <motion.aside
-              className="absolute w-full h-full top-0 left-0 bottom-0 pl-8 pr-20 pt-16 z-40 text-white font-bold bg-gradient-to-b from-[#00A494] to-[#438EA0]"
+              className="absolute w-full h-full top-0 left-0 bottom-0 pl-8 pr-20 pt-16 wide:pt-7 z-40 text-white font-bold bg-gradient-to-b from-[#00A494] to-[#438EA0]"
               animate={{
                 borderRadius: 0,
                 opacity: 1,
@@ -746,106 +746,108 @@ const Header = ({ theme }: Props): JSX.Element => {
                 transition: { delay: 0.2, duration: 1.15 },
               }}
             >
-              <section className="flex flex-col">
-                <h2 className="uppercase">Main Menu</h2>
-                <MobileAccordion
-                  i={0}
-                  expanded={expanded}
-                  setExpanded={setExpanded}
-                  links={aboutLinks}
-                  label="About"
-                />
-                <MobileAccordion
-                  i={1}
-                  expanded={expanded}
-                  setExpanded={setExpanded}
-                  links={siiLinks}
-                  label="Social Impact Initiatives"
-                />
-                {/* <MobileAccordion
+              <section className="flex flex-col landscape:flex-row gap-x-16 gap-y-16">
+                <div>
+                  <h2 className="uppercase">Main Menu</h2>
+                  <MobileAccordion
+                    i={0}
+                    expanded={expanded}
+                    setExpanded={setExpanded}
+                    links={aboutLinks}
+                    label="About"
+                  />
+                  <MobileAccordion
+                    i={1}
+                    expanded={expanded}
+                    setExpanded={setExpanded}
+                    links={siiLinks}
+                    label="Social Impact Initiatives"
+                  />
+                  {/* <MobileAccordion
                   i={2}
                   expanded={expanded}
                   setExpanded={setExpanded}
                   links={researchLinks}
                   label="Research"
                 /> */}
-                <MobileAccordion
-                  i={3}
-                  expanded={expanded}
-                  setExpanded={setExpanded}
-                  links={whatsNewLinks}
-                  label="What's New"
-                />
-              </section>
-              <div className="absolute flex flex-col font-light text-[13px] left-[9vw] top-[80vh] wide:top-[67vh] wide:right-0">
-                <span className="uppercase font-bold mb-4">
-                  Our Curriculum:
-                </span>
+                  <MobileAccordion
+                    i={3}
+                    expanded={expanded}
+                    setExpanded={setExpanded}
+                    links={whatsNewLinks}
+                    label="What's New"
+                  />
+                </div>
+                <div className="flex flex-col font-light text-[13px] flex-shrink-0">
+                  <span className="uppercase font-bold mb-4">
+                    Our Curriculum:
+                  </span>
 
-                <Link
-                  href="/undergraduate"
-                  onClick={() => {
-                    toggleNavOpen(false);
-                  }}
-                  className="uppercase group"
-                >
-                  <svg
-                    height="25"
-                    viewBox="0 -960 960 960"
-                    width="25"
-                    className="inline mr-1 fill-white"
+                  <Link
+                    href="/undergraduate"
+                    onClick={() => {
+                      toggleNavOpen(false);
+                    }}
+                    className="uppercase group"
                   >
-                    <path
-                      d="M560-574v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-610q-38 0-73 9.5T560-574Zm0 220v-49q33-13.5 67.5-20.25T700-430q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-390q-38 0-73 9t-67 27Zm0-110v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-500q-38 0-73 9.5T560-464Zm-48 214q50-25 98-37.5T712-300q38 0 78.5 6t69.5 16v-429q-34-17-71.822-25-37.823-8-76.178-8-54 0-104.5 16.5T512-677v427Zm-30 90q-51-38-111-58.5T248-239q-36.537 0-71.768 9Q141-221 106-208q-23.1 11-44.55-3Q40-225 40-251v-463q0-15 7-27.5T68-761q42-20 87.5-29.5T248-800q63 0 122.5 17T482-731q51-35 109.5-52T712-800q47.179 0 92.089 9.5Q849-781 891-761q14 7 21.5 19.5T920-714v463q0 27.894-22.5 42.447Q875-194 853-208q-34-14-69.232-22.5Q748.537-239 712-239q-63 0-121 21t-109 58Z"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    />
-                    <path d="M560-574v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-610q-38 0-73 9.5T560-574Zm0 220v-49q33-13.5 67.5-20.25T700-430q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-390q-38 0-73 9t-67 27Zm0-110v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-500q-38 0-73 9.5T560-464ZM248-300q53.566 0 104.283 12.5T452-250v-427q-45-30-97.619-46.5Q301.763-740 248-740q-38 0-74.5 9.5T100-707v434q31-14 70.5-20.5T248-300Zm264 50q50-25 98-37.5T712-300q38 0 78.5 6t69.5 16v-429q-34-17-71.822-25-37.823-8-76.178-8-54 0-104.5 16.5T512-677v427Zm-30 90q-51-38-111-58.5T248-239q-36.537 0-71.768 9Q141-221 106-208q-23.1 11-44.55-3Q40-225 40-251v-463q0-15 7-27.5T68-761q42-20 87.395-29.5Q200.789-800 248-800q63 0 122.5 17T482-731q51-35 109.5-52T712-800q46.868 0 91.934 9.5Q849-781 891-761q14 7 21.5 19.5T920-714v463q0 27.894-22.5 42.447Q875-194 853-208q-34-14-69.232-22.5Q748.537-239 712-239q-63 0-121 21t-109 58ZM276-489Z" />
-                  </svg>
-                  <span className="inline-block">Undergraduate</span>
-                </Link>
-                <Link
-                  href="/graduate"
-                  onClick={() => {
-                    toggleNavOpen(false);
-                  }}
-                  className="uppercase"
-                >
-                  <svg
-                    height="25"
-                    viewBox="0 -960 960 960"
-                    width="25"
-                    className="inline mr-1 fill-white"
+                    <svg
+                      height="25"
+                      viewBox="0 -960 960 960"
+                      width="25"
+                      className="inline mr-1 fill-white"
+                    >
+                      <path
+                        d="M560-574v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-610q-38 0-73 9.5T560-574Zm0 220v-49q33-13.5 67.5-20.25T700-430q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-390q-38 0-73 9t-67 27Zm0-110v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-500q-38 0-73 9.5T560-464Zm-48 214q50-25 98-37.5T712-300q38 0 78.5 6t69.5 16v-429q-34-17-71.822-25-37.823-8-76.178-8-54 0-104.5 16.5T512-677v427Zm-30 90q-51-38-111-58.5T248-239q-36.537 0-71.768 9Q141-221 106-208q-23.1 11-44.55-3Q40-225 40-251v-463q0-15 7-27.5T68-761q42-20 87.5-29.5T248-800q63 0 122.5 17T482-731q51-35 109.5-52T712-800q47.179 0 92.089 9.5Q849-781 891-761q14 7 21.5 19.5T920-714v463q0 27.894-22.5 42.447Q875-194 853-208q-34-14-69.232-22.5Q748.537-239 712-239q-63 0-121 21t-109 58Z"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <path d="M560-574v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-610q-38 0-73 9.5T560-574Zm0 220v-49q33-13.5 67.5-20.25T700-430q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-390q-38 0-73 9t-67 27Zm0-110v-48q33-14 67.5-21t72.5-7q26 0 51 4t49 10v44q-24-9-48.5-13.5T700-500q-38 0-73 9.5T560-464ZM248-300q53.566 0 104.283 12.5T452-250v-427q-45-30-97.619-46.5Q301.763-740 248-740q-38 0-74.5 9.5T100-707v434q31-14 70.5-20.5T248-300Zm264 50q50-25 98-37.5T712-300q38 0 78.5 6t69.5 16v-429q-34-17-71.822-25-37.823-8-76.178-8-54 0-104.5 16.5T512-677v427Zm-30 90q-51-38-111-58.5T248-239q-36.537 0-71.768 9Q141-221 106-208q-23.1 11-44.55-3Q40-225 40-251v-463q0-15 7-27.5T68-761q42-20 87.395-29.5Q200.789-800 248-800q63 0 122.5 17T482-731q51-35 109.5-52T712-800q46.868 0 91.934 9.5Q849-781 891-761q14 7 21.5 19.5T920-714v463q0 27.894-22.5 42.447Q875-194 853-208q-34-14-69.232-22.5Q748.537-239 712-239q-63 0-121 21t-109 58ZM276-489Z" />
+                    </svg>
+                    <span className="inline-block">Undergraduate</span>
+                  </Link>
+                  <Link
+                    href="/graduate"
+                    onClick={() => {
+                      toggleNavOpen(false);
+                    }}
+                    className="uppercase"
                   >
-                    <path
-                      d="M860-283v-282L479-360 40-600l439-240 441 240v317h-60ZM479-120 189-279v-210l290 159 290-159v210L479-120Z"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    />
-                    <path d="M479-120 189-279v-240L40-600l439-240 441 240v317h-60v-282l-91 46v240L479-120Zm0-308 315-172-315-169-313 169 313 172Zm0 240 230-127v-168L479-360 249-485v170l230 127Zm1-240Zm-1 74Zm0 0Z" />
-                  </svg>
-                  <span className="inline-block">Graduate</span>
-                </Link>
-                <Link
-                  href="/learning-partners"
-                  onClick={() => {
-                    toggleNavOpen(false);
-                  }}
-                  className="uppercase"
-                >
-                  <svg
-                    height="25"
-                    viewBox="0 -960 960 960"
-                    width="25"
-                    className="inline mr-1 fill-white"
+                    <svg
+                      height="25"
+                      viewBox="0 -960 960 960"
+                      width="25"
+                      className="inline mr-1 fill-white"
+                    >
+                      <path
+                        d="M860-283v-282L479-360 40-600l439-240 441 240v317h-60ZM479-120 189-279v-210l290 159 290-159v210L479-120Z"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <path d="M479-120 189-279v-240L40-600l439-240 441 240v317h-60v-282l-91 46v240L479-120Zm0-308 315-172-315-169-313 169 313 172Zm0 240 230-127v-168L479-360 249-485v170l230 127Zm1-240Zm-1 74Zm0 0Z" />
+                    </svg>
+                    <span className="inline-block">Graduate</span>
+                  </Link>
+                  <Link
+                    href="/learning-partners"
+                    onClick={() => {
+                      toggleNavOpen(false);
+                    }}
+                    className="uppercase"
                   >
-                    <path
-                      d="M484-120q-17 0-29-11.788-12-11.787-12-29.212 0-7 3-14.5t9-13.5l185-185-21-21-185 185q-6 6-13 9t-15 3q-17 0-28.5-11.5T366-238q0-10 3-16.5t8-11.5l185-185-21-21-185 184q-6 6-13 9t-16 3q-16 0-28-12t-12-28q0-8 3-15t9-13l185-185-21-21-184 185q-5 5-12 8t-17 3q-17 0-28.5-11.212Q210-376.425 210-393q0-8 3-15t9-13l223-223 127 127q11 11 24.5 18.5T629-491q32 0 54-20.5t22-55.5q0-14-5.5-27.5T681-621L502-800l6-7q17-16 38-24.5t42-8.5q26 0 48 8.5t40 26.5l169 170q18 18 26.5 40t8.5 51q0 20-9 40.5T845-466L512-132q-8 8-14 10t-14 2ZM169-412l-54-54q-17-16-26-38t-9-46q0-26 10-48t25-37l169-170q16-16 38-25.5t43-9.5q27 0 48 7.5t41 27.5l205 205q9 9 12.5 17t3.5 16q0 20-13 33t-33 13q-9 0-18.5-4.5T592-539L444-687 169-412Z"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    />
-                    <path d="M475-140q5 0 11.5-2.5T497-149l337-338q13-13 19.5-29.667Q860-533.333 860-550q0-17-6.5-34T834-614L654-794q-13-13-30-19.5t-34-6.5q-16.667 0-33.333 6.5Q540-807 527-794l-18 18 81 82q13 14 23 32.5t10 40.5q0 38-29.5 67T526-525q-25 0-41.5-7.5t-30.185-21.341L381-627 200-446q-5 5-7 10.526-2 5.527-2 11.842 0 12.632 8.5 21.132 8.5 8.5 21.167 8.5 6.333 0 11.833-3t9.5-7l138-138 42 42-137 137q-5 5-7 11t-2 12q0 12 9 21t21 9q6 0 11.5-2.5t9.5-6.5l138-138 42 42-137 137q-4 4-6.5 10.333Q361-261.333 361-255q0 12 9 21t21 9q6 0 11-2t10-7l138-138 42 42-138 138q-5 5-7 11t-2 11q0 14 8 22t22 8Zm.064 60Q442-80 416-104.5t-31-60.619Q351-170 328-193t-28-57q-34-5-56.5-28.5T216-335q-37-5-61-30t-24-60q0-17 6.724-34.049T157-489l224-224 110 110q8 8 17.333 12.5Q517.667-586 527-586q13 0 24.5-11.5t11.5-24.654q0-5.846-3.5-13.346T548-651L405-794q-13-13-30-19.5t-34-6.5q-16.667 0-33.333 6.5Q291-807 278.059-794.143L126-642q-14 14-19.5 29.5t-6.5 35q-1 19.5 7.5 38T128-506l-43 43q-20-22-32.5-53T40-579q0-30 11.5-57.5T84-685l151-151q22-22 49.793-32.5 27.794-10.5 57-10.5Q371-879 398.5-868.5T448-836l18 18 18-18q22-22 49.793-32.5 27.794-10.5 57-10.5Q620-879 647.5-868.5T697-836l179 179q22 22 33 50.033t11 57Q920-521 909-493.5T876-444L539-107q-13 13-29.532 20t-34.404 7ZM377-626Z" />
-                  </svg>
-                  <span className="inline-block">Learning Partners</span>
-                </Link>
-              </div>
+                    <svg
+                      height="25"
+                      viewBox="0 -960 960 960"
+                      width="25"
+                      className="inline mr-1 fill-white"
+                    >
+                      <path
+                        d="M484-120q-17 0-29-11.788-12-11.787-12-29.212 0-7 3-14.5t9-13.5l185-185-21-21-185 185q-6 6-13 9t-15 3q-17 0-28.5-11.5T366-238q0-10 3-16.5t8-11.5l185-185-21-21-185 184q-6 6-13 9t-16 3q-16 0-28-12t-12-28q0-8 3-15t9-13l185-185-21-21-184 185q-5 5-12 8t-17 3q-17 0-28.5-11.212Q210-376.425 210-393q0-8 3-15t9-13l223-223 127 127q11 11 24.5 18.5T629-491q32 0 54-20.5t22-55.5q0-14-5.5-27.5T681-621L502-800l6-7q17-16 38-24.5t42-8.5q26 0 48 8.5t40 26.5l169 170q18 18 26.5 40t8.5 51q0 20-9 40.5T845-466L512-132q-8 8-14 10t-14 2ZM169-412l-54-54q-17-16-26-38t-9-46q0-26 10-48t25-37l169-170q16-16 38-25.5t43-9.5q27 0 48 7.5t41 27.5l205 205q9 9 12.5 17t3.5 16q0 20-13 33t-33 13q-9 0-18.5-4.5T592-539L444-687 169-412Z"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <path d="M475-140q5 0 11.5-2.5T497-149l337-338q13-13 19.5-29.667Q860-533.333 860-550q0-17-6.5-34T834-614L654-794q-13-13-30-19.5t-34-6.5q-16.667 0-33.333 6.5Q540-807 527-794l-18 18 81 82q13 14 23 32.5t10 40.5q0 38-29.5 67T526-525q-25 0-41.5-7.5t-30.185-21.341L381-627 200-446q-5 5-7 10.526-2 5.527-2 11.842 0 12.632 8.5 21.132 8.5 8.5 21.167 8.5 6.333 0 11.833-3t9.5-7l138-138 42 42-137 137q-5 5-7 11t-2 12q0 12 9 21t21 9q6 0 11.5-2.5t9.5-6.5l138-138 42 42-137 137q-4 4-6.5 10.333Q361-261.333 361-255q0 12 9 21t21 9q6 0 11-2t10-7l138-138 42 42-138 138q-5 5-7 11t-2 11q0 14 8 22t22 8Zm.064 60Q442-80 416-104.5t-31-60.619Q351-170 328-193t-28-57q-34-5-56.5-28.5T216-335q-37-5-61-30t-24-60q0-17 6.724-34.049T157-489l224-224 110 110q8 8 17.333 12.5Q517.667-586 527-586q13 0 24.5-11.5t11.5-24.654q0-5.846-3.5-13.346T548-651L405-794q-13-13-30-19.5t-34-6.5q-16.667 0-33.333 6.5Q291-807 278.059-794.143L126-642q-14 14-19.5 29.5t-6.5 35q-1 19.5 7.5 38T128-506l-43 43q-20-22-32.5-53T40-579q0-30 11.5-57.5T84-685l151-151q22-22 49.793-32.5 27.794-10.5 57-10.5Q371-879 398.5-868.5T448-836l18 18 18-18q22-22 49.793-32.5 27.794-10.5 57-10.5Q620-879 647.5-868.5T697-836l179 179q22 22 33 50.033t11 57Q920-521 909-493.5T876-444L539-107q-13 13-29.532 20t-34.404 7ZM377-626Z" />
+                    </svg>
+                    <span className="inline-block">Learning Partners</span>
+                  </Link>
+                </div>
+              </section>
             </motion.aside>
           )}
         </AnimatePresence>

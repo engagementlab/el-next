@@ -298,15 +298,22 @@ const Header = ({ theme }: Props): JSX.Element => {
   return (
     <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16">
       <div className="w-full xl:w-4/12 px-6 xl:px-0 flex items-center">
-        <Link href="/" passHref className="w-36 md:w-44 xl:w-52 h-min">
+        <Link
+          href="/"
+          className={`w-36 md:w-44 xl:w-52 h-min ${
+            ActiveLink('/') ? 'cursor-default' : 'cursor-pointer'
+          }`}
+        >
           <motion.svg
             id="logo-img"
             viewBox="0 0 940.5 447.2"
             width="200"
             height="82"
             aria-label="Engagement Lab logo"
-            whileHover={{ scale: 1.023 }}
-            className="max-w-[100%]"
+            whileHover={{
+              scale: ActiveLink('/') ? 1 : 1.023,
+            }}
+            className="max-w-[100%] ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] "
           >
             <g>
               <g>
@@ -633,11 +640,11 @@ const Header = ({ theme }: Props): JSX.Element => {
               toggleHoverAbout();
             }}
           >
-            <Link href="/" className="block w-40 text-center">
+            <div className="block w-40 text-center cursor-pointer">
               <span className={`w-11 border-yellow ${navHeaderClass}`}>
                 About
               </span>
-            </Link>
+            </div>
             <motion.div
               className={`bg-[#FFEACB] w-40 ${navSubClass}`}
               initial="exit"

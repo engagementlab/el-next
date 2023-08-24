@@ -90,7 +90,7 @@ const Event: Lists.Event = list({
       },
     }),
     blurb: document({
-      links: true,
+      formatting: true,
       ui: {
         description: 'Appears when item is featured.',
       },

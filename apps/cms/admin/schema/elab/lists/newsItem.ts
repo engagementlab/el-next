@@ -106,7 +106,7 @@ const NewsItem: Lists.NewsItem = list({
       label: 'External link',
     }),
     blurb: document({
-      links: true,
+      formatting: true,
       ui: {
         description: 'Appears when item is featured.',
       },

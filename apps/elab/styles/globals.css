@@ -3,6 +3,9 @@
   ol {
     list-style: revert;
   }
+  p {
+    margin-top: 1em;
+  }
 }
 
 @tailwind base;

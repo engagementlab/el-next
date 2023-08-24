@@ -171,18 +171,21 @@ export async function getStaticProps() {
   }
   const mergedItems = (
     [...(events as Event[]), ...(newsItems as News[])] as Item[]
-  ).sort((a, b) => {
-    let val = 0;
-    if (a.publishDate && b.publishDate)
-      val = a.publishDate > b.publishDate ? 1 : -1;
-    else if (a.eventDate && b.eventDate)
-      val = a.eventDate > b.eventDate ? -1 : 1;
-    else if (a.eventDate && b.publishDate)
-      val = a.eventDate > b.publishDate ? -1 : 1;
-    else if (a.publishDate && b.eventDate)
-      val = a.publishDate > b.eventDate ? -1 : 1;
-    return val;
-  });
+  )
+    .sort((a, b) => {
+      let val = 0;
+      if (a.publishDate && b.publishDate)
+        val = Date.parse(a.publishDate) - Date.parse(b.publishDate);
+      else if (a.eventDate && b.eventDate)
+        val = Date.parse(a.eventDate) - Date.parse(b.eventDate);
+      else if (a.eventDate && b.publishDate)
+        val = Date.parse(a.eventDate) - Date.parse(b.publishDate);
+      else if (a.publishDate && b.eventDate)
+        val = Date.parse(a.publishDate) - Date.parse(b.eventDate);
+
+      return val;
+    })
+    .reverse();
   return {
     props: {
       items: mergedItems,

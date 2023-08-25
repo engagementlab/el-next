@@ -3,11 +3,12 @@ import { AnimatePresence, motion, wrap } from 'framer-motion';
 import * as React from 'react';
 import { HTMLProps } from 'react';
 import CaptionedImage from './CaptionedImage';
+import { ThemeConfig } from '@/types';
 
 type Props = {
   slides: any[];
   className?: HTMLProps<HTMLElement>['className'];
-  themeColor?: string;
+  theme?: ThemeConfig;
   heightOverride?: string;
   ContentRenderer?: React.ComponentType<any>;
 };
@@ -40,12 +41,12 @@ const swipePower = (offset: number, velocity: number) => {
 const Slideshow = ({
   slides,
   className,
-  themeColor,
+  theme,
   heightOverride,
   ContentRenderer,
 }: Props): JSX.Element => {
-  const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-1 rounded-large inline-block transition-all hover:scale-125 cursor-pointer ${
-    themeColor || ' bg-green-blue'
+  const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-2 rounded-large inline-block transition-all hover:scale-125 cursor-pointer ${
+    theme?.bg || ' bg-green-blue'
   }`;
   const [[slide, direction], setPage] = React.useState([0, 0]);
   const slideIndex = wrap(0, slides.length, slide);
@@ -114,13 +115,10 @@ const Slideshow = ({
                         id={'img-' + slide.image.publicId}
                         alt={slide.altText}
                         imgId={slide.image.publicId}
-                        // lazy={false}
-                        // aspectDefault={false}
-                        // transforms="f_auto,dpr_auto,c_crop,g_center,r_max,h_630,w_630"
                         className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
                       />
                       <aside
-                        className={`absolute bottom-0 right-0 p-3 w-full lg:w-3/4 ${themeColor} text-white`}
+                        className={`absolute bottom-0 right-0 p-3 w-full lg:w-3/4 ${theme?.bg} text-white`}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -155,22 +153,39 @@ const Slideshow = ({
         </AnimatePresence>
       </div>
       {slides.length > 1 && (
-        <div>
-          <li className="flex justify-center mt-3">
-            {slides.map((slide, index) => (
-              <label
-                htmlFor={`slide-${index}`}
-                className={`${dotClass} ${
-                  index !== slideIndex ? 'opacity-50' : 'scale-125'
-                }`}
-                key={`slide-dot-${index}`}
-                id={`slide-dot-${index}`}
-                onClick={(event) => {
-                  setPage([index, slideIndex > index ? -1 : 1]);
-                }}
-              ></label>
-            ))}
-          </li>
+        <div className="flex justify-center items-center mt-3">
+          <button
+            className="transition-all hover:scale-125 cursor-pointer"
+            onClick={() => paginate(-1)}
+          >
+            <svg height="48" viewBox="0 -960 960 960" width="48">
+              <path
+                d="M561-240 320-481l241-241 43 43-198 198 198 198-43 43Z"
+                className={theme?.fill || 'fill-green-blue'}
+              />
+            </svg>
+          </button>
+          {slides.map((slide, index) => (
+            <label
+              htmlFor={`slide-${index}`}
+              className={`${dotClass} ${
+                index !== slideIndex ? 'opacity-50' : 'scale-125'
+              }`}
+              key={`slide-dot-${index}`}
+              id={`slide-dot-${index}`}
+              onClick={() => {
+                setPage([index, slideIndex > index ? -1 : 1]);
+              }}
+            ></label>
+          ))}
+          <button className="transition-all hover:scale-125 cursor-pointer">
+            <svg height="48" viewBox="0 -960 960 960" width="48">
+              <path
+                d="M530-481 332-679l43-43 241 241-241 241-43-43 198-198Z"
+                className={theme?.fill || 'fill-green-blue'}
+              />
+            </svg>
+          </button>
         </div>
       )}
     </div>

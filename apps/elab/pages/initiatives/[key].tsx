@@ -200,7 +200,7 @@ export default function GunViolence({
               {page?.slides && page?.slides.length > 0 && (
                 <Slideshow
                   slides={page?.slides}
-                  themeColor={Theming[initiative].bg}
+                  theme={Theming[initiative]}
                   className={`${Theming[initiative].bg} bg-opacity-50`}
                 />
               )}

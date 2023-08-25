@@ -1,6 +1,6 @@
 import { BlockRenderers, DocRenderers, Image } from '@el-next/components';
 import { CTAButton } from './Buttons';
-import { Item, Theme, ThemeConfig, Theming } from '@/types';
+import { CustomEase, Item, Theme, ThemeConfig, Theming } from '@/types';
 import CaptionedImage from './CaptionedImage';
 import Slideshow from './Slideshow';
 import Link from 'next/link';
@@ -51,7 +51,7 @@ let AppBlocks = (theme: ThemeConfig | null) => {
       return (
         <Slideshow
           slides={props.slideshow.data.slides}
-          themeColor={theme ? theme.bg : 'bg-green'}
+          theme={theme ? theme : Theming[Theme.none]}
         />
       );
     },
@@ -190,7 +190,7 @@ const NewsEventRenderer = ({
           )}
         </div>
         <hr
-          className={`border-b-[15px] transition-transform origin-bottom ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+          className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
         />
       </div>
 

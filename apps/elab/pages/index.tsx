@@ -5,7 +5,7 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 import Layout from '../components/Layout';
 import { CTAButton, MoreButton } from '@/components/Buttons';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { Event, Item, News, StudioProject, Theme } from '@/types';
+import { CustomEase, Event, Item, News, StudioProject, Theme } from '@/types';
 
 import { Image, Query } from '@el-next/components';
 import Divider from '@/components/Divider';
@@ -128,7 +128,7 @@ export default function Home({
           <div
             id="video-bg"
             ref={bgTargetElement}
-            className={`absolute top-0 h-screen w-full min-h-screen transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300  ${
+            className={`absolute top-0 h-screen w-full min-h-screen transition-all ${CustomEase} duration-300  ${
               showVideo ? 'block' : 'hidden'
             }`}
             style={{ height: vidH }}
@@ -187,7 +187,7 @@ export default function Home({
                 <div className="inline-flex flex-col font-extrabold">
                   <div className="overflow-hidden h-8 md:h-12">
                     <div
-                      className={`inline-flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 text-left  ${
+                      className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left  ${
                         wordIndex !== 0
                           ? wordIndex === 1
                             ? 'translate-y-[-33%]'
@@ -207,7 +207,7 @@ export default function Home({
                     </div>
                   </div>
                   <div
-                    className={`flex flex-col transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
+                    className={`flex flex-col transition-all ${CustomEase} duration-300 ${
                       wordIndex !== 0
                         ? wordIndex === 1
                           ? 'w-9/12'

@@ -3,7 +3,7 @@ import { Variants, motion } from 'framer-motion';
 import ImagePlaceholder from './ImagePlaceholder';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { ThemeConfig } from '@/types';
+import { CustomEase, ThemeConfig } from '@/types';
 import Link from 'next/link';
 
 interface State {
@@ -167,7 +167,7 @@ export const PeopleList = ({
             <p className="uppercase">{heading}</p>
 
             <svg
-              className={`transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
+              className={`transition-all ${CustomEase} duration-300 ${
                 peopleOpen[index] ? 'rotate-180' : 'rotate-0'
               }`}
               height="40"

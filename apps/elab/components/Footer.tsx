@@ -4,6 +4,7 @@ import { create } from 'zustand';
 
 import packageInfo from '../package.json';
 import Divider from './Divider';
+import { CustomEase } from '@/types';
 
 type FormState = {
   status: string;
@@ -93,6 +94,7 @@ export const Footer = () => {
             href="https://www.instagram.com/engagelab"
             role="link"
             aria-label="Link to the Engagement Lab's Instagram profile"
+            className={`transition-all hover:scale-110 hover:opacity-40 ${CustomEase}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,6 +110,7 @@ export const Footer = () => {
             href="https://twitter.com/engagelab"
             role="link"
             aria-label="Link to the Engagement Lab's Twitter profile"
+            className={`transition-all hover:scale-110 hover:opacity-40 ${CustomEase}`}
           >
             <svg width="24" height="24" viewBox="0 0 24 24">
               <title>Twitter logo</title>
@@ -226,7 +229,7 @@ export const Footer = () => {
         </div>
         <div className="flex flex-row gap-x-4 mt-5">
           <Link href="/privacy">Privacy Policy</Link>
-          <Link href="/attributions">Attributions</Link>
+          {/* <Link href="/attributions">Attributions</Link> */}
         </div>
       </>
     );
@@ -530,6 +533,7 @@ export const Footer = () => {
             href="https://github.com/engagementlab"
             role="link"
             aria-label="Link to the Engagement Lab's Github repo for elab home app"
+            className={`transition-all hover:scale-110 hover:opacity-40 ${CustomEase}`}
           >
             <svg
               viewBox="0 0 24 24"

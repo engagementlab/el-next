@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { Theme, ThemeColors } from '@/types';
+import { CustomEase, Theme, ThemeColors } from '@/types';
 import { Button } from '@el-next/components';
 import { Icons } from './Icons';
 
@@ -46,7 +46,7 @@ const CTAButton = ({
     },
   ];
   const buttonClass = clsx(
-    'inline-block px-3 py-3 border-2 bg-white transition-all ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-200',
+    `inline-block px-3 py-3 border-2 bg-white transition-all ${CustomEase} duration-200`,
     themeConfig[theme].hover,
     className
   );

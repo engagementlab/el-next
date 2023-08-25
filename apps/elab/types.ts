@@ -2,18 +2,6 @@ export interface Breadcrumb {
   href: string;
   label: string;
 }
-// export enum Partner {
-//   all = 'all',
-//   ficdc = 'Fairmount Indigo CDC Collaborative',
-//   greenroots = 'GreenRoots',
-//   ldbpi = 'LDBPI',
-//   mgh = 'MGH Center for Gun Violence Prevention',
-//   magv = 'MA Coalition to Prevent Gun Violence',
-//   sftt = 'Speak for the Trees',
-//   swbcdc = 'Southwest Boston Community Development Corporation',
-//   teenempowerment = 'Teen Empowerment',
-//   uncornered = 'Boston Uncornered',
-// }
 
 export const enum Theme {
   none,
@@ -21,6 +9,7 @@ export const enum Theme {
   climate,
   incarceration,
 }
+
 export const ThemeColors = [
   {
     primary: 'text-purple border-purple',
@@ -251,6 +240,7 @@ export type ResearchProject = {
 };
 
 export type Item = News & Event;
+
 type Category = 'core' | 'studentstaff' | 'fellow';
 export type Person = {
   name: string;
@@ -264,3 +254,4 @@ export type Person = {
     document: any;
   };
 };
+export const CustomEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';

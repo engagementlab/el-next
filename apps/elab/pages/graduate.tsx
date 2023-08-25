@@ -238,7 +238,7 @@ export default function Initiatives({
                           )}
 
                           <hr
-                            className={`border-b-[15px] transition-transform origin-bottom ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+                            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
                           />
                           <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
                             {item.name}

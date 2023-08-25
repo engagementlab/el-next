@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Image, Query } from '@el-next/components';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { Studio, StudioProject, Theme, Theming } from '@/types';
+import { CustomEase, Studio, StudioProject, Theme, Theming } from '@/types';
 
 import Layout from '../../components/Layout';
 
@@ -156,7 +156,7 @@ export default function Studios({
             </div>
             {noGroupsOpen() && (
               <hr
-                className={`border-b-[15px] transition-transform origin-bottom ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+                className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
               />
             )}{' '}
             <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">

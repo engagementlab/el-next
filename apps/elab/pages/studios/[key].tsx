@@ -1,3 +1,4 @@
+import { ReactElement, ReactNode, useEffect } from 'react';
 import {
   GetStaticPathsResult,
   GetStaticPropsContext,
@@ -9,17 +10,14 @@ import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 
 import _ from 'lodash';
 import { create } from 'zustand';
-// import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { AnimatePresence, motion, useCycle } from 'framer-motion';
 
 import Layout from '../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';
-import { CTAButton } from '@/components/Buttons';
-import { Partner, Theme, Theming } from '@/types';
+import { CustomEase, Theme, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
-import { ReactElement, ReactNode, useEffect } from 'react';
 import Divider from '@/components/Divider';
-import { AnimatePresence, motion, useCycle } from 'framer-motion';
 import Link from 'next/link';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { PeopleList } from '@/components/People';
@@ -225,7 +223,7 @@ export default function Studio({
                 <svg height="36" viewBox="0 -960 960 960" width="36">
                   <path d="m627-287 45-45-159-160v-201h-60v225l174 181ZM480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-82 31.5-155t86-127.5Q252-817 325-848.5T480-880q82 0 155 31.5t127.5 86Q817-708 848.5-635T880-480q0 82-31.5 155t-86 127.5Q708-143 635-111.5T480-80Zm0-400Zm0 340q140 0 240-100t100-240q0-140-100-240T480-820q-140 0-240 100T140-480q0 140 100 240t240 100Z" />
                 </svg>
-                <p className="ml-2">CHOOSE A SEMESTER TO EXPLORE:</p>
+                <p className="ml-2 mt-0">CHOOSE A SEMESTER TO EXPLORE:</p>
               </div>
               <div
                 className={`relative z-10 border-l-[1px] border-r-[1px] border-t-[1px] w-full h-[67px] xl:hidden ${
@@ -247,7 +245,7 @@ export default function Studio({
                       {selectedSemester ? GetLabel(selectedSemester) : 'Select'}
                     </span>
                     <svg
-                      className={`transition-transform ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] duration-300 ${
+                      className={`transition-transform ${CustomEase} duration-300 ${
                         semestersNavOpen && 'rotate-180'
                       } ${Theming[item.initiatives[0]].fill}`}
                       viewBox="0 -960 960 960"
@@ -318,7 +316,26 @@ export default function Studio({
 
             <div className="hidden xl:flex flex-row">
               {item.semesters.map((se) => {
-                // const label = () => { return ({se.name.split(' ')[0]} <br /> {se.name.split(' ')[1]}) };
+                let linkClass = `absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ${
+                  se.type
+                    ? 'text-teal border-teal group-hover:bg-teal/40'
+                    : `${Theming[item.initiatives[0]].border} ${
+                        Theming[item.initiatives[0]].text
+                      }`
+                }`;
+                if (se === selectedSemester)
+                  linkClass += se.type
+                    ? ' border-teal bg-teal/40 text-white'
+                    : ` ${Theming[item.initiatives[0]].border} ${
+                        Theming[item.initiatives[0]].bg
+                      } text-white`;
+
+                switch (item.initiatives[0]) {
+                  case 'gunviolence':
+                    linkClass += ` group-hover:bg-purple`;
+                  case 'climate':
+                    linkClass += ` group-hover:bg-leaf`;
+                }
                 return (
                   <button
                     key={se.key}
@@ -342,22 +359,7 @@ export default function Studio({
                         toggle(se.key);
                         e.preventDefault();
                       }}
-                      className={`absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ${
-                        se.type
-                          ? 'text-teal border-teal group-hover:bg-teal/40'
-                          : Theming[item.initiatives[0]].border +
-                            ' ' +
-                            Theming[item.initiatives[0]].text +
-                            ' ' +
-                            `group-hover:${Theming[item.initiatives[0]].bg}`
-                      } ${
-                        se === selectedSemester &&
-                        (se.type
-                          ? 'border-teal bg-teal/40 text-white'
-                          : Theming[item.initiatives[0]].border +
-                            ' text-white ' +
-                            Theming[item.initiatives[0]].bg)
-                      }`}
+                      className={linkClass}
                     >
                       {se.type === 'upcoming' && 'Upcoming \n Semester'}
                       {se.type === 'current' && 'Current \n Semester'}
@@ -417,7 +419,7 @@ export default function Studio({
                         selectedSemester.slides.slides.length > 0 && (
                           <Slideshow
                             slides={selectedSemester.slides.slides}
-                            themeColor={Theming[item.initiatives[0]].bg}
+                            theme={Theming[item.initiatives[0]]}
                             className={`${
                               Theming[item.initiatives[0]].bg
                             } bg-opacity-50`}

@@ -18,7 +18,7 @@ import {
 
 import { MenuToggle } from './MenuToggle';
 import { useScrollBlock } from './scrollBlock';
-import { Theme } from '@/types';
+import { CustomEase, Theme } from '@/types';
 
 interface NavLink {
   enabled?: boolean;
@@ -311,9 +311,9 @@ const Header = ({ theme }: Props): JSX.Element => {
             height="82"
             aria-label="Engagement Lab logo"
             whileHover={{
-              scale: ActiveLink('/') ? 1 : 1.023,
+              scale: ActiveLink('/') ? 1 : 1.053,
             }}
-            className="max-w-[100%] ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] "
+            className={`max-w-[100%] ${CustomEase}`}
           >
             <g>
               <g>

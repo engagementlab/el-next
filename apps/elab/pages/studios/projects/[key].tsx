@@ -9,26 +9,15 @@ import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 
 import _ from 'lodash';
 import { create } from 'zustand';
-// import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../../components/Renderers';
 
-import { StudioProject, Theme, ThemeConfig, Theming } from '@/types';
+import { CustomEase, StudioProject, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
-import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactFragment,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-} from 'react';
+import { ReactElement, ReactNode } from 'react';
 import Divider from '@/components/Divider';
-import { AnimatePresence, Variants, motion, useCycle } from 'framer-motion';
-import Link from 'next/link';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
 import { Gutter } from '@/components/Gutter';
@@ -162,7 +151,7 @@ export default function Studio({
               <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7">
                 {item.trailerId && item.videoId ? (
                   <div
-                    className={`relative transition-all duration-500 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] ${
+                    className={`relative transition-all duration-500 ${CustomEase} ${
                       videoOpen
                         ? 'w-full basis-full'
                         : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
@@ -192,7 +181,7 @@ export default function Studio({
                             height="48"
                             width="48"
                             viewBox="0 -960 960 960"
-                            className="inline transition-all duration-200 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)] group-hover:scale-125"
+                            className="inline transition-all duration-200 ${CustomEase} group-hover:scale-125"
                           >
                             <path
                               d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"

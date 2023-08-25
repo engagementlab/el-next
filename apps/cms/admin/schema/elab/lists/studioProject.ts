@@ -114,9 +114,6 @@ const StudioProject: Lists.StudioProject = list({
           },
         }),
         trailerThumbAltText: text({
-          validation: {
-            isRequired: true,
-          },
           label: 'Trailer Thumbail Alt Text ♿',
         }),
         about: document({

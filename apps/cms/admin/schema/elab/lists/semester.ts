@@ -143,14 +143,14 @@ const Semester: Lists.Semester = list({
       many: true,
     }),
     contact: text({
-      validation: {
-        isRequired: true,
-        match: {
-          regex:
-            /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/gm,
-          explanation: 'Not a valid email address',
-        },
-      },
+      // validation: {
+      //   isRequired: true,
+      //   match: {
+      //     regex:
+      //       /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/gm,
+      //     explanation: 'Not a valid email address',
+      //   },
+      // },
       label: 'Semester Contact Email',
     }),
   },

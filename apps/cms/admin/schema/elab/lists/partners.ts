@@ -15,7 +15,10 @@ export const PartnersSelect = multiselect({
     { label: 'Fairmount Indigo CDC Collaborative', value: 'ficdc' },
     { label: 'GreenRoots', value: 'greenroots' },
     { label: 'LDBPI', value: 'ldbpi' },
-    { label: 'MGH Center for Gun Violence Prevention', value: 'mgh' },
+    {
+      label: 'Massachusetts General Hospital Gun Violence Prevention Center',
+      value: 'mgh',
+    },
     {
       label: 'MA Coalition to Prevent Gun Violence',
       value: 'magv',

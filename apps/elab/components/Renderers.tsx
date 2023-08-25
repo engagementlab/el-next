@@ -249,7 +249,11 @@ const NewsEventRenderer = ({
     </div>
   );
 };
-const QuoteRenderer = (children: ReactElement[], item: any) => {
+const QuoteRenderer = (
+  children: ReactElement[],
+  item: any,
+  theme: ThemeConfig
+) => {
   if (
     children.length > 1 &&
     children[children.length - 1].props.node.type === 'paragraph'
@@ -257,11 +261,7 @@ const QuoteRenderer = (children: ReactElement[], item: any) => {
     return (
       <div className="my-4">
         {children.slice(0, children.length - 1).map((child) => (
-          <p
-            className={`italic text-lg font-bold ${
-              Theming[item.initiative].text
-            }`}
-          >
+          <p className={`italic text-lg font-bold ${theme.text}`}>
             {child.props.node.children[0].text}
           </p>
         ))}

@@ -143,7 +143,7 @@ export default function Studio({
         return HeadingStyle({ level, children, textAlign, customRenderers });
       },
       quote: (children: ReactElement[]) => {
-        return QuoteRenderer(children, item);
+        return QuoteRenderer(children, item, Theming[item.initiative]);
       },
     };
     return (

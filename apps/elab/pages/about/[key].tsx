@@ -23,6 +23,7 @@ import {
   ReactPortal,
 } from 'react';
 import CaptionedImage from '@/components/CaptionedImage';
+import { Theming } from '@/types';
 
 type About = {
   name: string;
@@ -113,7 +114,7 @@ export default function AboutPage({
       );
     },
     quote: (children: ReactElement[]) => {
-      return QuoteRenderer(children, item);
+      return QuoteRenderer(children, item, Theming['none']);
     },
   };
 

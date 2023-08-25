@@ -1,11 +1,12 @@
 import { BlockRenderers, DocRenderers, Image } from '@el-next/components';
 import { CTAButton } from './Buttons';
-import { Item, Theme, ThemeConfig } from '@/types';
+import { Item, Theme, ThemeConfig, Theming } from '@/types';
 import CaptionedImage from './CaptionedImage';
 import Slideshow from './Slideshow';
 import Link from 'next/link';
 import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
+import { ReactElement } from 'react';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -248,4 +249,38 @@ const NewsEventRenderer = ({
     </div>
   );
 };
-export { Blocks, Doc, NewsEventRenderer };
+const QuoteRenderer = (children: ReactElement[], item: any) => {
+  if (
+    children.length > 1 &&
+    children[children.length - 1].props.node.type === 'paragraph'
+  )
+    return (
+      <div className="my-4">
+        {children.slice(0, children.length - 1).map((child) => (
+          <p
+            className={`italic text-lg font-bold ${
+              Theming[item.initiative].text
+            }`}
+          >
+            {child.props.node.children[0].text}
+          </p>
+        ))}
+        <p>&mdash; {children[1].props.node.children[0].text}</p>
+      </div>
+    );
+  else
+    return (
+      <p className="bg-red text-white font-bold text-2xl p-4">
+        Quote block error: quotes need to be followed by a full line break
+        before attribution. Example:
+        <br />
+        <code>
+          “This is a long quote.”
+          <br />
+          <br />
+          Name, Title
+        </code>
+      </p>
+    );
+};
+export { Blocks, Doc, NewsEventRenderer, QuoteRenderer };

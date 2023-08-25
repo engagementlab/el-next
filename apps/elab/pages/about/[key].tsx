@@ -9,7 +9,7 @@ import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 import _ from 'lodash';
 
 import Layout from '../../components/Layout';
-import { Blocks, Doc } from '../../components/Renderers';
+import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';
 import Logos from '@/components/Logos';
 import Divider from '@/components/Divider';
 import { motion } from 'framer-motion';
@@ -113,35 +113,7 @@ export default function AboutPage({
       );
     },
     quote: (children: ReactElement[]) => {
-      if (
-        children.length === 2 &&
-        children[0].props.node.type === 'paragraph' &&
-        children[1].props.node.type === 'paragraph'
-      )
-        return (
-          <div className="my-4 mx-6">
-            <p className="italic text-sm font-bold text-teal">
-              {children[0].props.node.children[0].text}
-            </p>
-            <p className="mt-3 ml-2">
-              &mdash; {children[1].props.node.children[0].text}
-            </p>
-          </div>
-        );
-      else
-        return (
-          <p className="bg-red text-white font-bold text-2xl p-4">
-            Quote block error: quotes need to be followed by a full line break
-            before attribution. Example:
-            <br />
-            <code>
-              “This is a long quote.”
-              <br />
-              <br />
-              Name, Title
-            </code>
-          </p>
-        );
+      return QuoteRenderer(children, item);
     },
   };
 

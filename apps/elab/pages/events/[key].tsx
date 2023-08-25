@@ -14,14 +14,9 @@ import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { Blocks, Doc } from '../../components/Renderers';
 
-type Event = {
-  name: string;
-  eventDate: string;
-  content: any;
-  thumbnail: any;
-  thumbAltText: string;
-};
-
+import { Event, Theme, Theming } from '@/types';
+import { it } from 'node:test';
+import { CTAButton } from '@/components/Buttons';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
     const customRenderers = {
@@ -54,13 +49,33 @@ export default function Event({
               {item.name}
             </h1>
             <div className="text-coated font-medium">{date}</div>
-
+            {item.address && (
+              <div className="text-coated font-medium">
+                <a
+                  href={`https://www.google.com/maps?q=${item.address}`}
+                  target="_blank"
+                  className="border-b-2 border-b-yellow"
+                >
+                  {item.address}
+                </a>
+              </div>
+            )}
             <DocumentRenderer
               document={item.content.document}
               componentBlocks={Blocks()}
               renderers={Doc(rendererOverrides)}
             />
-
+            {item.registrationLink && (
+              <CTAButton
+                label="RSVP Today"
+                link={item.registrationLink}
+                theme={
+                  item.initiatives && item.initiatives.length > 0
+                    ? Theming[item.initiatives[0]].theme
+                    : Theme.none
+                }
+              />
+            )}
             {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
@@ -128,6 +143,9 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     `events(where: { key: { equals: "${params!.key}" } }) {
        name
        eventDate
+       address
+       registrationLink
+       initiatives
        content { 
            document 
        }
@@ -150,7 +168,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const item = itemResult[0] as Event;
   const date = `${new Date(item.eventDate).toLocaleDateString('en-US', {
     weekday: 'long',
-  })} , ${new Date(item.eventDate).toLocaleDateString('en-US', {
+  })}, ${new Date(item.eventDate).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',

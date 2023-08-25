@@ -135,15 +135,14 @@ export default function StudioProjects({
         toggleFilterGroupOpen(preSelectedGroup);
     }
     // Call group-specific filters from the router path after the first key symbol
-    const group = router.asPath.split('?')[1];
-    let filters = group.split('/');
-    if (group && filters.length > 1) {
-      filters.shift();
-      // const params = ;
-      preSelectedFilters = filters as never[];
+    if (router.asPath.indexOf('?') > 0) {
+      const group = router.asPath.split('?')[1];
+      let filters = group.split('/');
+      if (group && filters.length > 1) {
+        filters.shift();
 
-      // debugger;
-      // useStore.setState({ currentFilters: preSelectedFilters });
+        preSelectedFilters = filters as never[];
+      }
     }
   }, []);
 

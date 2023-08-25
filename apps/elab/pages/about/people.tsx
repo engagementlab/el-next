@@ -9,20 +9,9 @@ import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 import _ from 'lodash';
 
 import Layout from '../../components/Layout';
-import { Blocks, Doc } from '../../components/Renderers';
 import { motion } from 'framer-motion';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
-import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactFragment,
-  ReactNode,
-  ReactPortal,
-} from 'react';
-import CaptionedImage from '@/components/CaptionedImage';
-import { PeopleList, Person } from '@/components/People';
-import { Person as P, Theme, Theming } from '@/types';
+import { Person } from '@/components/People';
+import { Person as P, Theming } from '@/types';
 
 export default function AboutPage({
   people,

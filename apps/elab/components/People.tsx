@@ -11,6 +11,13 @@ interface State {
   togglePeople: (i: number) => void;
 }
 
+type PersonT = {
+  key: any;
+  name: string;
+  image: { publicId: string };
+  title: string;
+};
+
 // Create store with Zustand
 const useStore = create<State>()(
   subscribeWithSelector((set) => ({
@@ -127,7 +134,7 @@ export const PeopleList = ({
   index,
 }: {
   heading: any;
-  list: any;
+  list: PersonT[];
   theme: ThemeConfig;
   index: any;
 }): JSX.Element => {
@@ -140,16 +147,13 @@ export const PeopleList = ({
         {heading}
       </h3>
       <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
-        {list.map(
-          (person: {
-            key: any;
-            name: string;
-            image: { publicId: string };
-            title: string;
-          }) => (
-            <Person key={person.key} person={person} theme={theme} />
+        {list
+          .sort((person1: PersonT, person2: PersonT) =>
+            person1.name.split(' ')[1].localeCompare(person2.name.split(' ')[1])
           )
-        )}
+          .map((person: PersonT) => (
+            <Person key={person.key} person={person} theme={theme} />
+          ))}
       </div>
       <div className="flex flex-col flex-wrap my-4 lg:hidden">
         <hr className={`border-1 ${theme.heading}`} />
@@ -184,16 +188,22 @@ export const PeopleList = ({
           animate={peopleOpen[index] ? 'enter' : 'exit'}
           variants={subMenuAnimate}
         >
-          {list.map(
-            (person: {
-              key: any;
-              name: string;
-              image: { publicId: string };
-              title: string;
-            }) => (
-              <Person key={person.key} person={person} theme={theme} />
+          {list
+            .sort((person1: PersonT, person2: PersonT) =>
+              person1.name
+                .split(' ')[1]
+                .localeCompare(person2.name.split(' ')[1])
             )
-          )}
+            .map(
+              (person: {
+                key: any;
+                name: string;
+                image: { publicId: string };
+                title: string;
+              }) => (
+                <Person key={person.key} person={person} theme={theme} />
+              )
+            )}
         </motion.div>
       </div>
     </div>

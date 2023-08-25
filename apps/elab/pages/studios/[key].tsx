@@ -12,7 +12,7 @@ import { create } from 'zustand';
 // import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Layout from '../../components/Layout';
-import { Blocks, Doc } from '../../components/Renderers';
+import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';
 import { CTAButton } from '@/components/Buttons';
 import { Partner, Theme, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
@@ -203,39 +203,7 @@ export default function Studio({
         return HeadingStyle({ level, children, textAlign, customRenderers });
       },
       quote: (children: ReactElement[]) => {
-        if (
-          children.length > 1 &&
-          // children[0].props.node.type === 'paragraph' &&
-          children[children.length - 1].props.node.type === 'paragraph'
-        )
-          return (
-            <div className="my-4">
-              {children.map((child) => (
-                <p
-                  className={`italic text-lg font-bold ${
-                    Theming[item.initiatives[0]].text
-                  }`}
-                >
-                  {child.props.node.children[0].text}
-                </p>
-              ))}
-              <p>&mdash; {children[1].props.node.children[0].text}</p>
-            </div>
-          );
-        else
-          return (
-            <p className="bg-red text-white font-bold text-2xl p-4">
-              Quote block error: quotes need to be followed by a full line break
-              before attribution. Example:
-              <br />
-              <code>
-                “This is a long quote.”
-                <br />
-                <br />
-                Name, Title
-              </code>
-            </p>
-          );
+        return QuoteRenderer(children, item);
       },
     };
     return (
@@ -418,44 +386,43 @@ export default function Studio({
                     >
                       Course Information
                     </h2>
-                    <div className="flex flex-row w-full justify-start gap-8">
-                      <div className="flex flex-col xl:flex-row">
-                        <div className="w-full xl:w-1/2">
-                          <p>
-                            <span className="font-bold tracking-wider">
-                              NUMBER:
-                            </span>
-                            <br />
-                            {selectedSemester.courseNumber}
-                          </p>
 
-                          <p>
-                            <span className="font-bold tracking-wider">
-                              INSTRUCTOR:
-                            </span>
-                            <br />
-                            {selectedSemester.instructors
-                              .map((i) => i.name)
-                              .join(', ')}
-                          </p>
-                          <p className="my-2">
-                            <span className="font-bold tracking-wider">
-                              PARTNERS:&nbsp;
-                            </span>
-                            {Partners({ partners: selectedSemester.partners })}
-                          </p>
-                        </div>
-                        {selectedSemester.slides &&
-                          selectedSemester.slides.slides.length > 0 && (
-                            <Slideshow
-                              slides={selectedSemester.slides.slides}
-                              themeColor={Theming[item.initiatives[0]].bg}
-                              className={`${
-                                Theming[item.initiatives[0]].bg
-                              } bg-opacity-50`}
-                            />
-                          )}
+                    <div className="flex flex-col xl:flex-row gap-8">
+                      <div className="w-full xl:w-1/2">
+                        <p>
+                          <span className="font-bold tracking-wider">
+                            NUMBER:
+                          </span>
+                          <br />
+                          {selectedSemester.courseNumber}
+                        </p>
+
+                        <p>
+                          <span className="font-bold tracking-wider">
+                            INSTRUCTOR:
+                          </span>
+                          <br />
+                          {selectedSemester.instructors
+                            .map((i) => i.name)
+                            .join(', ')}
+                        </p>
+                        <p className="my-2">
+                          <span className="font-bold tracking-wider">
+                            PARTNERS:&nbsp;
+                          </span>
+                          {Partners({ partners: selectedSemester.partners })}
+                        </p>
                       </div>
+                      {selectedSemester.slides &&
+                        selectedSemester.slides.slides.length > 0 && (
+                          <Slideshow
+                            slides={selectedSemester.slides.slides}
+                            themeColor={Theming[item.initiatives[0]].bg}
+                            className={`${
+                              Theming[item.initiatives[0]].bg
+                            } bg-opacity-50`}
+                          />
+                        )}
                     </div>
                   </div>
                   <p className="p-6">{selectedSemester.description}</p>

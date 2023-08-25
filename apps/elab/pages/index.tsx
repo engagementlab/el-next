@@ -283,7 +283,7 @@ export default function Home({
               {event && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
                   <div className="flex fill-grey lg:w-4/5 px-5">
-                    <div className="w-2/5 sm:w-14 mr-3">
+                    <div className="w-1/12 mr-3">
                       <Icons icons={['event']} />
                     </div>
                     <div className="flex flex-col  text-grey">
@@ -338,7 +338,7 @@ export default function Home({
                     className="mb-6 lg:mb-0"
                   />
                   <div className="flex fill-grey lg:w-4/5 px-5 ml-4">
-                    <div className="w-2/5 sm:w-14 mr-3">
+                    <div className="w-1/12 mr-3">
                       <Icons
                         icons={studioProject.filters?.map((f) => {
                           return f.key;
@@ -369,7 +369,7 @@ export default function Home({
               {newsItem && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
                   <div className="flex fill-grey lg:w-4/5 px-5">
-                    <div className="w-2/5 sm:w-14 mr-3">
+                    <div className="w-1/12 mr-3">
                       <Icons icons={['news']} />
                     </div>
                     <div className="flex flex-col  text-grey">

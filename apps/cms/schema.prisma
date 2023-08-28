@@ -182,7 +182,7 @@ model ResearchProject {
 model Semester {
   id               String            @id @default(cuid())
   name             String            @default("")
-  key              String            @unique @default("")
+  key              String            @default("")
   createdDate      DateTime?
   enabled          Boolean           @default(true)
   studio           Studio?           @relation("Semester_studio", fields: [studioId], references: [id])

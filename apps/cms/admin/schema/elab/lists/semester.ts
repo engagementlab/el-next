@@ -26,7 +26,7 @@ const Semester: Lists.Semester = list({
       },
     }),
     key: text({
-      isIndexed: 'unique',
+      // isIndexed: 'unique',
       isFilterable: true,
       ui: {
         createView: {

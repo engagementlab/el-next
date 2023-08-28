@@ -1444,7 +1444,6 @@ type Semester_impact_Document {
 
 input SemesterWhereUniqueInput {
   id: ID
-  key: String
 }
 
 input SemesterWhereInput {

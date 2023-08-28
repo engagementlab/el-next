@@ -9,6 +9,7 @@ import Layout from '../components/Layout';
 import Divider from '../components/Divider';
 import { CTAButton } from '@/components/Buttons';
 import {
+  CustomEase,
   News,
   ResearchProject,
   Studio,

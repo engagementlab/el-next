@@ -1,7 +1,7 @@
 // 'use client';
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import Link from 'next/link';
 import _ from 'lodash';
 import { create } from 'zustand';
@@ -19,6 +19,7 @@ import {
 import { MenuToggle } from './MenuToggle';
 import { useScrollBlock } from './scrollBlock';
 import { CustomEase, Theme } from '@/types';
+import { link } from 'fs';
 
 interface NavLink {
   enabled?: boolean;
@@ -27,6 +28,7 @@ interface NavLink {
   href: string;
   subLink?: boolean;
   disabled?: boolean;
+  linkOverride?: string;
 }
 
 type Props = {
@@ -118,6 +120,8 @@ const useStore = create<NavState>((set) => ({
 }));
 
 const Header = ({ theme }: Props): JSX.Element => {
+  // const router = useRouter();
+
   const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
   const navSubClass =
     'absolute flex flex-col text-stone text-sm border-t-2 border-t-white p-3';
@@ -138,6 +142,7 @@ const Header = ({ theme }: Props): JSX.Element => {
     href,
     disabled = false,
     subLink = false,
+    linkOverride,
   }: NavLink): JSX.Element => {
     if (ActiveLink(href))
       return (
@@ -174,6 +179,8 @@ const Header = ({ theme }: Props): JSX.Element => {
           className="mt-3 xl:my-1 wide:mt-1"
           onClick={() => {
             toggleNavOpen(false);
+            if (linkOverride) window.location.href = linkOverride;
+            // router.reload(window.location.pathname);
           }}
         >
           {subLink && (
@@ -208,12 +215,14 @@ const Header = ({ theme }: Props): JSX.Element => {
         label="Transforming Narratives of Gun Violence (TNGV)"
       />
       <NavLink
-        href="/studios?gunviolence"
+        href="/studios/?gunviolence"
+        linkOverride="/studios/?gunviolence"
         label="TNGV Studios"
         subLink={true}
       />
       <NavLink
-        href="/studios/projects?gunviolence"
+        href="/studios/projects/?gunviolence"
+        linkOverride="/studios/projects?gunviolence"
         label="TNGV Projects"
         subLink={true}
       />
@@ -221,9 +230,15 @@ const Header = ({ theme }: Props): JSX.Element => {
         href="/initiatives/climate"
         label="Transforming Narratives for Environmental Justice (TNEJ)"
       />
-      <NavLink href="/studios?climate" label="TNEJ Studios" subLink={true} />
       <NavLink
-        href="/studios/projects?climate"
+        href="/studios/?climate"
+        linkOverride="/studios/?climate"
+        label="TNEJ Studios"
+        subLink={true}
+      />
+      <NavLink
+        href="/studios/projects/?climate"
+        linkOverride="/studios/projects?climate"
         label="TNEJ Projects"
         subLink={true}
       />

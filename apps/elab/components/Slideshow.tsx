@@ -178,7 +178,10 @@ const Slideshow = ({
               }}
             ></label>
           ))}
-          <button className="transition-all hover:scale-125 cursor-pointer">
+          <button
+            className="transition-all hover:scale-125 cursor-pointer"
+            onClick={() => paginate(1)}
+          >
             <svg height="48" viewBox="0 -960 960 960" width="48">
               <path
                 d="M530-481 332-679l43-43 241 241-241 241-43-43 198-198Z"

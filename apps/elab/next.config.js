@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // output: 'export',
   redirects: async () => {
     return [
       {
@@ -22,6 +22,11 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    unoptimized: true,
+  },
+  reactStrictMode: true,
+  trailingSlash: true,
 };
 
 module.exports = nextConfig;

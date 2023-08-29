@@ -107,7 +107,7 @@ export default function Studios({
   }
   useEffect(() => {
     router.events.on('routeChangeComplete', (url) => {
-      console.log(`completely routed to ${url}`);
+      // console.log(`completely routed to ${url}`);
       // The preselected group will be in the query, if any
       if (url.indexOf('?') > 0) {
         let filter = url.substring(url.indexOf('?'), url.length);
@@ -119,7 +119,7 @@ export default function Studios({
           preSelectedTheme = Theme.climate;
         }
 
-        console.log(preSelectedTheme);
+        // console.log(preSelectedTheme);
         // if (useStore.getState().currentTheme === Theme.none)
         // toggle(preSelectedFilter);
         reset();
@@ -217,14 +217,16 @@ export default function Studios({
                 <div key={group.key} className="flex flex-row">
                   {/* Hide group selector if other is selected */}
                   <a
-                    href="#"
+                    href={
+                      noGroupsOpen() ? `/studios/?${group.key}` : '/studios'
+                    }
                     className={`inline-block ${
                       !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
                     } `}
-                    onClick={(e) => {
-                      toggle(group.key);
-                      e.preventDefault();
-                    }}
+                    // onClick={(e) => {
+                    //   toggle(group.key);
+                    //   e.preventDefault();
+                    // }}
                   >
                     <div className={groupButtonStyle}>
                       <span>{group.label}</span>

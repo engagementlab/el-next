@@ -574,15 +574,17 @@ export async function getStaticProps() {
     .sort((a, b) => {
       let val = 0;
       if (a.publishDate && b.publishDate)
-        val = a.publishDate > b.publishDate ? 1 : -1;
+        val = Date.parse(a.publishDate) - Date.parse(b.publishDate);
       else if (a.eventDate && b.eventDate)
-        val = a.eventDate > b.eventDate ? -1 : 1;
+        val = Date.parse(a.eventDate) - Date.parse(b.eventDate);
       else if (a.eventDate && b.publishDate)
-        val = a.eventDate > b.publishDate ? -1 : 1;
+        val = Date.parse(a.eventDate) - Date.parse(b.publishDate);
       else if (a.publishDate && b.eventDate)
-        val = a.publishDate > b.eventDate ? -1 : 1;
+        val = Date.parse(a.publishDate) - Date.parse(b.eventDate);
+
       return val;
     })
+    .reverse()
     .slice(0, 3);
   return {
     props: {

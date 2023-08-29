@@ -166,33 +166,29 @@ export default function GunViolence({
 
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
                   <h2 className={subHeadClass}>Jump to:</h2>
-                  <div className="flex flex-col">
+                  <div className="flex flex-row">
                     <Button
-                      label={`Learn More about ${
-                        initiative === 'gunviolence'
-                          ? 'Gun Violence'
-                          : 'Environmental Justice'
-                      } in Boston`}
+                      label="Context"
                       anchorId="context"
                       className={jumpClass}
                     />
-                    <div className="flex flex-row justify-between lg:w-3/4 xl:w-4/6">
-                      <Button
-                        label="Projects"
-                        anchorId="projects"
-                        className={jumpClass}
-                      />
-                      <Button
-                        label="Studios"
-                        anchorId="studios"
-                        className={jumpClass}
-                      />
-                      <Button
+                    {/* <div className="flex flex-row lg:w-3/4 xl:w-4/6"> */}
+                    <Button
+                      label="Projects"
+                      anchorId="projects"
+                      className={jumpClass + ' ml-3'}
+                    />
+                    <Button
+                      label="Studios"
+                      anchorId="studios"
+                      className={jumpClass + ' ml-3'}
+                    />
+                    {/* <Button
                         label="Research"
                         anchorId="research"
                         className={jumpClass}
-                      />
-                    </div>
+                      /> */}
+                    {/* </div> */}
                   </div>
                 </div>
               </div>
@@ -219,26 +215,28 @@ export default function GunViolence({
           </div>
           <Divider color={Theming[initiative].secodary} />
           <Gutter noMarginY={false}>
-            <DocumentRenderer
-              document={page?.body.document}
-              componentBlocks={Blocks(Theming[initiative])}
-              renderers={Doc({
-                heading: (
-                  level: number,
-                  children: ReactNode,
-                  textAlign: any
-                ) => {
-                  return HeadingStyle({
-                    level,
-                    children,
-                    textAlign,
-                    customRenderers: {
-                      2: `font-bold text-4xl`,
-                    },
-                  });
-                },
-              })}
-            />
+            <div id="context">
+              <DocumentRenderer
+                document={page?.body.document}
+                componentBlocks={Blocks(Theming[initiative])}
+                renderers={Doc({
+                  heading: (
+                    level: number,
+                    children: ReactNode,
+                    textAlign: any
+                  ) => {
+                    return HeadingStyle({
+                      level,
+                      children,
+                      textAlign,
+                      customRenderers: {
+                        2: `font-bold text-4xl`,
+                      },
+                    });
+                  },
+                })}
+              />
+            </div>
           </Gutter>
           {page.projects && page.projects.length > 0 && (
             <Divider color={Theming[initiative].secodary} />

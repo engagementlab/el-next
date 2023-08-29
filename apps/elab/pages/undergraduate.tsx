@@ -137,6 +137,7 @@ export default function Initiatives({
                 <span className="text-4xl">Social Impact Design</span>
               </h2>
               <svg
+                id="sid"
                 viewBox="2.559 -0.012 395.774 217.842"
                 width="780"
                 className="max-w-full lg:max-w-md"

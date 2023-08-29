@@ -102,7 +102,9 @@ const Blocks = (theme?: ThemeConfig) => {
   };
 };
 
-const Doc: any = DocRenderers();
+const Doc: any = DocRenderers({
+  linkClass: 'border-b-green-blue text-green-blue hover:border-b-0',
+});
 
 const NewsEventRenderer = ({
   external,
@@ -265,7 +267,12 @@ const QuoteRenderer = (
             {child.props.node.children[0].text}
           </p>
         ))}
-        <p>&mdash; {children[1].props.node.children[0].text}</p>
+        <p className="text-right font-bold">
+          &mdash;{' '}
+          <span className={theme.text}>
+            {children[1].props.node.children[0].text}
+          </span>
+        </p>
       </div>
     );
   else

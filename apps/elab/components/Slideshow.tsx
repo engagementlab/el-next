@@ -95,7 +95,11 @@ const Slideshow = ({
           >
             {slides.map((slide, index) => {
               return index === slideIndex ? (
-                <div id={`slide-${index}`} key={`slide-${index}`}>
+                <div
+                  id={`slide-${index}`}
+                  key={`slide-${index}`}
+                  className="w-full"
+                >
                   {ContentRenderer ? (
                     <ContentRenderer slide={slide} />
                   ) : slide.videoId ? (
@@ -103,7 +107,7 @@ const Slideshow = ({
                       className={`flex items-center min-h-[350px] lg:min-h-[465px]`}
                     >
                       <Video
-                        videoLabel={'item?.videos[0].label'}
+                        videoLabel={''}
                         videoUrl={`https://player.vimeo.com/video/${slide.videoId}`}
                         thumbUrl={slide.image.publicUrl}
                         isSlide={true}

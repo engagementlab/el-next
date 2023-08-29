@@ -149,7 +149,7 @@ export default function Studio({
                 {item.name}
               </h1>
               <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7">
-                {item.trailerId && item.videoId ? (
+                {item.videoId ? (
                   <div
                     className={`relative transition-all duration-500 ${CustomEase} ${
                       videoOpen
@@ -158,21 +158,31 @@ export default function Studio({
                     }`}
                   >
                     <div className="group w-full h-full">
-                      <div
-                        id="video"
-                        className={videoOpen ? 'relative mb-5' : ``}
-                      >
-                        <Video
-                          videoLabel={`Trailer for ${item.name} `}
-                          videoUrl={`https://player.vimeo.com/video/${
-                            videoOpen ? item.videoId : item.trailerId
-                          }`}
-                          thumbUrl={item.trailerThumbnail.publicUrl}
-                          play={trailerOpen || videoOpen}
-                          noUi={true}
+                      {item.trailerId ? (
+                        <div
+                          id="video"
+                          className={videoOpen ? 'relative mb-5' : ``}
+                        >
+                          <Video
+                            videoLabel={`Trailer for ${item.name} `}
+                            videoUrl={`https://player.vimeo.com/video/${
+                              videoOpen ? item.videoId : item.trailerId
+                            }`}
+                            thumbUrl={item.trailerThumbnail.publicUrl}
+                            play={trailerOpen || videoOpen}
+                            noUi={true}
+                          />
+                        </div>
+                      ) : (
+                        <Image
+                          id="thumb"
+                          alt={item.thumbAltText}
+                          imgId={item.thumbnail.publicId}
+                          transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                          width={460}
                         />
-                      </div>
-                      {!videoOpen && !trailerOpen && (
+                      )}
+                      {!videoOpen && !trailerOpen && item.trailerId && (
                         <button
                           className="absolute bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
                           onClick={() => toggleTrailerVideo()}
@@ -225,7 +235,7 @@ export default function Studio({
                         renderers={Doc(rendererOverrides)}
                       />
                     </div>
-                    {item.trailerId && item.videoId && !videoOpen && (
+                    {item.videoId && !videoOpen && (
                       <CTAButton
                         label="Watch the film"
                         link="/"
@@ -285,13 +295,13 @@ export default function Studio({
                       }
                     `}
                     />
-                    <Button
+                    {/* <Button
                       label="Related Projects"
                       anchorId="related"
                       className={`text-sm ${Theming[item.initiative].text} ${
                         Theming[item.initiative].fill
                       }`}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -336,7 +346,9 @@ export default function Studio({
             )}
             <Divider color="bg-green" />
             <Gutter>
-              <h2 className="font-bold text-5xl my-3">Project Team</h2>
+              <h2 className="font-bold text-5xl my-3" id="team">
+                Project Team
+              </h2>
               {item.studioStudents && item.studioStudents.length > 0 && (
                 <PeopleList
                   list={item.studioStudents}

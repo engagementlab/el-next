@@ -393,7 +393,7 @@ export default function Studio({
                       <div className="w-full xl:w-1/2">
                         <p>
                           <span className="font-bold tracking-wider">
-                            NUMBER:
+                            DEPARTMENT(S):
                           </span>
                           <br />
                           {selectedSemester.courseNumber}
@@ -401,7 +401,7 @@ export default function Studio({
 
                         <p>
                           <span className="font-bold tracking-wider">
-                            INSTRUCTOR:
+                            INSTRUCTOR(S):
                           </span>
                           <br />
                           {selectedSemester.instructors
@@ -410,10 +410,11 @@ export default function Studio({
                         </p>
                         <p className="my-2">
                           <span className="font-bold tracking-wider">
-                            PARTNERS:&nbsp;
+                            PARTNER(S):&nbsp;
                           </span>
                           {Partners({ partners: selectedSemester.partners })}
                         </p>
+                        <p className="my-2">{selectedSemester.description}</p>
                       </div>
                       {selectedSemester.slides &&
                         selectedSemester.slides.slides.length > 0 && (
@@ -427,7 +428,6 @@ export default function Studio({
                         )}
                     </div>
                   </div>
-                  <p className="p-6">{selectedSemester.description}</p>
                   <div className="hidden lg:block w-full mt-6 p-6">
                     <h2
                       className={`uppercase text-xl lg:text-3xl font-extrabold ${
@@ -470,7 +470,7 @@ export default function Studio({
                         )}
                       <Button
                         label="Studio Participants"
-                        anchorId="impact"
+                        anchorId="participants"
                         className={`text-sm ${
                           Theming[item.initiatives[0]].text
                         } ${Theming[item.initiatives[0]].fill}
@@ -563,7 +563,7 @@ export default function Studio({
                   <Divider
                     color={`${Theming[item.initiatives[0]].bg} bg-opacity-50`}
                   />
-                  <div className="p-6">
+                  <div className="p-6" id="participants">
                     <h2 className="font-bold text-5xl my-3">
                       {selectedSemester.name} Studio Participants
                     </h2>
@@ -616,19 +616,10 @@ export default function Studio({
                     >
                       Studio Contact
                     </h2>
-                    <p className="lg:w-1/2">
+                    <p className="w-full">
                       Are you an Emerson student interested in enrolling in this
                       course in the future? Please contact the instructor
-                      at&nbsp;
-                      <a
-                        href={`mailto:${selectedSemester.contact}`}
-                        className={`font-semibold ${
-                          Theming[item.initiatives[0]].text
-                        }`}
-                      >
-                        {selectedSemester.contact}
-                      </a>{' '}
-                      to learn more!
+                      at&nbsp;{selectedSemester.contact}&nbsp;to learn more!
                     </p>
                     <h2
                       className={`text-xl font-extrabold uppercase mb-3 mt-8 ${

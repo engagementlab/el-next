@@ -149,7 +149,11 @@ export const PeopleList = ({
       <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
         {list
           .sort((person1: PersonT, person2: PersonT) =>
-            person1.name.split(' ')[1].localeCompare(person2.name.split(' ')[1])
+            person1.name
+              .split(' ')
+              [person1.name.split(' ').length - 1].localeCompare(
+                person2.name.split(' ')[person2.name.split(' ').length - 1]
+              )
           )
           .map((person: PersonT) => (
             <Person key={person.key} person={person} theme={theme} />

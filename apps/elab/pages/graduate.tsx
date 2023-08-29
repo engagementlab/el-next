@@ -79,11 +79,11 @@ export default function Initiatives({
                   anchorId="sjm"
                   className="border-teal text-teal fill-yellow"
                 />
-                <Button
+                {/* <Button
                   label="Alumni Spotlight"
                   anchorId="alumni"
                   className="border-teal text-teal fill-yellow"
-                />
+                /> */}
               </div>
             </div>
             <div className="flex justify-center my-12 w-3/5 max-w-xl">
@@ -170,7 +170,7 @@ export default function Initiatives({
                 <h2 className="font-bold text-4xl lg:w-1/2">
                   Social Justice and Media Symposium
                 </h2>
-                <Image
+                {/* <Image
                   id="sjm"
                   alt="Social Justice and Media Symposium logo"
                   // transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
@@ -178,7 +178,7 @@ export default function Initiatives({
                   width={300}
                   // maxWidthDisable={true}
                   // className="w-full"
-                />
+                /> */}
               </div>
               <DocumentRenderer
                 document={page.symposium.document}

@@ -55,9 +55,7 @@ const Graduate: Lists.Graduate = list({
       },
     }),
     mediaDesign: document({
-      formatting: {
-        headingLevels: [4],
-      },
+      formatting: true,
       links: true,
       layouts: [
         [1, 1],

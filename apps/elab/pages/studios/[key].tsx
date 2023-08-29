@@ -692,6 +692,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
                 image {
                   publicId
                 }
+                caption
               }
             }
             coCreation {

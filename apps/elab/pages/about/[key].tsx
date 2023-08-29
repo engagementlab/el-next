@@ -251,7 +251,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         headingImageAltText
         headingImageCaption
         content {
-            document
+           document(hydrateRelationships: true)
         }
     }`
   );

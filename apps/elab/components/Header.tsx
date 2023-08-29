@@ -119,7 +119,7 @@ const useStore = create<NavState>((set) => ({
     }),
 }));
 
-const Header = ({ theme }: Props): JSX.Element => {
+const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   // const router = useRouter();
 
   const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
@@ -136,6 +136,7 @@ const Header = ({ theme }: Props): JSX.Element => {
   const [expanded, setExpanded] = useState<false | number>(-1);
 
   const { navOpen, toggleNavOpen } = useStore();
+  const [currentTheme, setTheme] = useState(Theme.none);
 
   const NavLink = ({
     label,
@@ -205,7 +206,7 @@ const Header = ({ theme }: Props): JSX.Element => {
       <NavLink href="/about/people" label="People" />
       <NavLink href="/about/jobs" label="Jobs" />
       <NavLink href="/about/get-involved" label="Get Involved" />
-      <NavLink href="/about/donate" label="Donate" />
+      {/* <NavLink href="/about/donate" label="Donate" /> */}
     </>
   );
   const siiLinks = (
@@ -236,12 +237,12 @@ const Header = ({ theme }: Props): JSX.Element => {
         label="TNEJ Studios"
         subLink={true}
       />
-      <NavLink
+      {/* <NavLink
         href="/studios/projects/?climate"
         linkOverride="/studios/projects?climate"
         label="TNEJ Projects"
         subLink={true}
-      />
+      /> */}
     </>
   );
   const researchLinks = (
@@ -300,14 +301,13 @@ const Header = ({ theme }: Props): JSX.Element => {
     );
   };
   useEffect(() => {
+    setTheme(theme);
     router.events.on('routeChangeComplete', () => {
-      // toggleNavOpen(false);
       toggleHoverAbout(0);
       toggleHoverSII(0);
       toggleHoverResearch(0);
       toggleHoverNews(0);
     });
-    // isMobile = /Android|iPhone|iPad|webOS/i.test(navigator.userAgent);
   });
 
   return (
@@ -453,7 +453,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </motion.svg>
         </Link>
         {/* TNGVI logo */}
-        {theme === Theme.gunviolence && (
+        {currentTheme === Theme.gunviolence && (
           <motion.svg
             viewBox="0 0.081 81.459 50"
             width="81.459"
@@ -550,7 +550,7 @@ const Header = ({ theme }: Props): JSX.Element => {
           </motion.svg>
         )}
         {/* TN4EJ logo */}
-        {theme === Theme.climate && (
+        {currentTheme === Theme.climate && (
           <motion.svg
             viewBox="0 0 1920 1080"
             width="81.459"

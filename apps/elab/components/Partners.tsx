@@ -7,9 +7,12 @@ type Props = {
 };
 const Partners = ({ partners }: Props): string => {
   const names = [
-    { key: 'ldbpi', name: 'Louis D. Brown Peace Institute (LDBPI)' },
+    { key: 'ldbpi', name: 'Louis D. Brown Peace Institute' },
     { key: 'mgh', name: 'MGH Center for Gun Violence Prevention' },
-    { key: 'magv', name: 'Massachusetts Coalition to Prevent Gun Violence' },
+    {
+      key: 'magv',
+      name: 'Massachusetts General Hospital Gun Violence Prevention Center',
+    },
     { key: 'teenempowerment', name: 'The Center for Teen Empowerment' },
     { key: 'uncornered', name: 'Boston Uncornered' },
     { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative logo' },

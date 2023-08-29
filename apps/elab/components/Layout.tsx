@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -32,13 +32,19 @@ const Layout = ({
   fullBleed,
   topBgElement,
 }: Props): JSX.Element => {
-  let currentBg =
-    'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]';
-  if (theme === Theme.gunviolence)
-    currentBg = 'bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]';
-  if (theme === Theme.climate)
-    currentBg = 'bg-gradient-to-b from-[#D7EFC1] to-leaf';
+  // let currentBg =
+  // 'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]';
   const BG = topBgElement ? topBgElement : <></>;
+  const [currentBg, setBg] = useState(
+    'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]'
+  );
+
+  useEffect(() => {
+    if (theme === Theme.gunviolence)
+      setBg('bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]');
+    if (theme === Theme.climate)
+      setBg('bg-gradient-to-b from-[#D7EFC1] to-leaf');
+  }, []);
 
   return (
     <>

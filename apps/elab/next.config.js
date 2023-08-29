@@ -10,18 +10,6 @@ const nextConfig = {
       },
     ];
   },
-  rewrites: async () => {
-    return [
-      {
-        source: '/news',
-        destination: '/whats-new',
-      },
-      {
-        source: '/events',
-        destination: '/whats-new',
-      },
-    ];
-  },
   images: {
     unoptimized: true,
   },

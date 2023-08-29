@@ -64,13 +64,11 @@ var Button = function Button(_ref) {
     onClick: onClick,
     children: [label, " ", icon]
   });
-  return /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
+  return /*#__PURE__*/jsxRuntime.jsxs(Link__default["default"], {
     href: link,
     passHref: true,
-    children: /*#__PURE__*/jsxRuntime.jsxs("button", {
-      className: "group ".concat(classOverride || classStr),
-      children: [label, " ", icon]
-    })
+    className: "group ".concat(classOverride || classStr),
+    children: [label, " ", icon]
   });
 };
 

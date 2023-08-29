@@ -102,10 +102,8 @@ export const Button = ({
       </button>
     );
   return (
-    <Link href={link} passHref>
-      <button className={`group ${classOverride || classStr}`}>
-        {label} {icon}
-      </button>
+    <Link href={link} passHref className={`group ${classOverride || classStr}`}>
+      {label} {icon}
     </Link>
   );
 };

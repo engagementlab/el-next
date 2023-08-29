@@ -223,7 +223,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       />
       <NavLink
         href="/studios/projects/?gunviolence"
-        linkOverride="/studios/projects?gunviolence"
+        linkOverride="/studios/projects/?gunviolence"
         label="TNGV Projects"
         subLink={true}
       />

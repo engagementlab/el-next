@@ -40,7 +40,13 @@ export const Video = ({
   const videoOpen = useStore((state) => state.videoOpen);
   const buttonSize = isSlide ? 75 : 150;
   return (
-    <div className="relative video w-full h-full lg:mb-8">
+    <div
+      className={
+        isSlide
+          ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8'
+          : 'relative video w-full h-full lg:mb-8'
+      }
+    >
       {videoOpen || play ? (
         ''
       ) : (
@@ -107,8 +113,8 @@ export const Video = ({
       {!videoOpen && !play ? (
         ''
       ) : (
-        <div id="video-embed" className="w-full">
-          <div className="relative" style={{ padding: '49.27% 0 0 0' }}>
+        <div id="video-embed" className="w-full h-full">
+          <div className="relative h-full">
             <iframe
               src={`${videoUrl}?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1`}
               style={{

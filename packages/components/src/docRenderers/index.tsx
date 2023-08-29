@@ -62,7 +62,7 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
             <a
               href={fixedHref}
               target={href.indexOf('#') === 0 ? '_self' : '_blank'}
-              className={`no-underline border-b-2 transition-all ${
+              className={`no-underline border-b-2 ${
                 styles && styles.linkClass
               }`}
             >

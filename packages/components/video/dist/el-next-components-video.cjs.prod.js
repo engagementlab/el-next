@@ -84,7 +84,7 @@ var Video = function Video(_ref2) {
   });
   var buttonSize = isSlide ? 75 : 150;
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
-    className: "relative video w-full h-full lg:mb-8",
+    className: isSlide ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8' : 'relative video w-full h-full lg:mb-8',
     children: [videoOpen || play ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
       onClick: function onClick(e) {
         toggleOpen(true);
@@ -140,12 +140,9 @@ var Video = function Video(_ref2) {
       })]
     }), !videoOpen && !play ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
       id: "video-embed",
-      className: "w-full",
+      className: "w-full h-full",
       children: /*#__PURE__*/jsxRuntime.jsx("div", {
-        className: "relative",
-        style: {
-          padding: '49.27% 0 0 0'
-        },
+        className: "relative h-full",
         children: /*#__PURE__*/jsxRuntime.jsx("iframe", {
           src: "".concat(videoUrl, "?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1"),
           style: {

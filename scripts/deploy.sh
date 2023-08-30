@@ -38,3 +38,5 @@ if [ $# -eq 0 ]
         DOCKER_BUILDKIT=1 docker compose build $1
         DOCKER_BUILDKIT=1 docker compose up $1 -d
 fi
+
+sh /srv/apps/el-next/scripts/cleanup.sh

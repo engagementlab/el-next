@@ -172,7 +172,7 @@ export default function Studio({
                           thumbUrl={
                             item.trailerThumbnail
                               ? item.trailerThumbnail.publicUrl
-                              : null
+                              : ''
                           }
                           play={trailerOpen || videoOpen}
                           noUi={true}

@@ -37,7 +37,7 @@ export interface ThemeConfig {
   gradient: string;
   secodaryBg: string;
   secodary: string;
-  theme?: Theme;
+  theme: Theme;
 }
 
 export const Theming: { [key: string]: ThemeConfig } = {
@@ -96,6 +96,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     secodary: 'bg-#00A494',
     secodaryBg: 'bg-[#D7EFC1]',
     gradient: 'from-[#D7EFC1] to-teal',
+    theme: Theme.none,
   },
 };
 

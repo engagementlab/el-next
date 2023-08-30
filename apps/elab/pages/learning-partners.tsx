@@ -77,7 +77,7 @@ export default function Initiatives({
                 />
               </div>
             </div>
-            <div className="flex justify-center my-12 w-3/5 max-w-xl">
+            <div className="flex justify-center my-12 w-full lg:w-3/5 max-w-xl">
               <CaptionedImage
                 alt={page.introImageAltText}
                 imgId={page?.introImage.publicId}

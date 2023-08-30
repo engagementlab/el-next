@@ -237,7 +237,10 @@ export default function Studios({
           return (
             selectedFilter === '' ||
             // ...otherwise, item's filters must match group and ALL selected sub-filters
-            item.initiatives[0].toLowerCase() === selectedFilter
+
+            (item.initiatives &&
+              item.initiatives.length > 0 &&
+              item.initiatives[0].toLowerCase() === selectedFilter)
           );
         })
       : [];

@@ -252,17 +252,19 @@ export default function Studio({
                         onClick={() => toggleVideo()}
                       />
                     )}
-                    {item.buttons.map((button) => (
-                      <CTAButton
-                        label={button.label}
-                        link={button.url}
-                        icon={button.icon}
-                        theme={Theming[item.initiative].theme}
-                        className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
-                          Theming[item.initiative].fill
-                        }`}
-                      />
-                    ))}
+                    {item.buttons &&
+                      item.buttons.length > 0 &&
+                      item.buttons.map((button) => (
+                        <CTAButton
+                          label={button.label}
+                          link={button.url}
+                          icon={button.icon}
+                          theme={Theming[item.initiative].theme}
+                          className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
+                            Theming[item.initiative].fill
+                          }`}
+                        />
+                      ))}
                   </div>
                 </div>
                 <div className="hidden lg:block w-3/4 lg:w-full">

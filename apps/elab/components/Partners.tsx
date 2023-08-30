@@ -15,12 +15,12 @@ const Partners = ({ partners }: Props): string => {
     },
     { key: 'teenempowerment', name: 'The Center for Teen Empowerment' },
     { key: 'uncornered', name: 'Boston Uncornered' },
-    { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative logo' },
-    { key: 'greenroots', name: 'GreenRoots logo' },
-    { key: 'sftt', name: 'Speak for the Trees logo' },
+    { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative' },
+    { key: 'greenroots', name: 'GreenRoots' },
+    { key: 'sftt', name: 'Speak for the Trees' },
     {
       key: 'swboston',
-      name: 'Southwest Boston Community Development Corporation logo',
+      name: 'Southwest Boston Community Development Corporation',
     },
   ];
   return names

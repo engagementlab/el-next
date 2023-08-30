@@ -45,15 +45,10 @@ const blockOverrides = (theme: ThemeConfig | null) => {
     },
   };
 };
-let AppBlocks = (theme: ThemeConfig | null) => {
+let AppBlocks = (theme: ThemeConfig) => {
   return {
     slideshow: (props: any) => {
-      return (
-        <Slideshow
-          slides={props.slideshow.data.slides}
-          theme={theme ? theme : Theming[Theme.none]}
-        />
-      );
+      return <Slideshow slides={props.slideshow.data.slides} theme={theme} />;
     },
     iconLink: (props: any) => {
       return (
@@ -91,14 +86,14 @@ let AppBlocks = (theme: ThemeConfig | null) => {
 };
 const SuperBlocks = BlockRenderers();
 const Blocks = (theme?: ThemeConfig) => {
-  // return SuperBlocks(blockOverrides);
+  const componentTheme = theme ? theme : Theming['none'];
   return {
-    button: SuperBlocks(blockOverrides(theme ? theme : null)).button,
-    image: SuperBlocks(blockOverrides(theme ? theme : null)).image,
-    video: SuperBlocks(blockOverrides(theme ? theme : null)).video,
-    slideshow: AppBlocks(theme ? theme : null).slideshow,
-    iconLink: AppBlocks(theme ? theme : null).iconLink,
-    embed: AppBlocks(theme ? theme : null).embed,
+    button: SuperBlocks(blockOverrides(componentTheme)).button,
+    image: SuperBlocks(blockOverrides(componentTheme)).image,
+    video: SuperBlocks(blockOverrides(componentTheme)).video,
+    slideshow: AppBlocks(componentTheme).slideshow,
+    iconLink: AppBlocks(componentTheme).iconLink,
+    embed: AppBlocks(componentTheme).embed,
   };
 };
 

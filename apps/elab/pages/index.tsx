@@ -283,12 +283,15 @@ export default function Home({
               {event && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
                   <div className="flex fill-grey lg:w-4/5 px-5">
-                    <div className="w-1/12 mr-3">
+                    <div className="w-1/12 mr-3 hidden lg:block">
                       <Icons icons={['event']} />
                     </div>
                     <div className="flex flex-col  text-grey">
-                      <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
-                        {event.name}
+                      <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
+                        <div className="mr-3 block lg:hidden">
+                          <Icons icons={['event']} />
+                        </div>
+                        <span>{event.name}</span>
                       </h2>
                       {event.eventDate &&
                         `${new Date(event.eventDate).toLocaleDateString(
@@ -338,7 +341,7 @@ export default function Home({
                     className="mb-6 lg:mb-0"
                   />
                   <div className="flex fill-grey lg:w-4/5 px-5 ml-4">
-                    <div className="w-1/12 mr-3">
+                    <div className="mr-3 hidden lg:block">
                       <Icons
                         icons={studioProject.filters?.map((f) => {
                           return f.key;
@@ -346,8 +349,15 @@ export default function Home({
                       />
                     </div>
                     <div className="flex flex-col  text-grey">
-                      <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
-                        {studioProject.name}
+                      <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
+                        <div className="mr-3 block lg:hidden">
+                          <Icons
+                            icons={studioProject.filters?.map((f) => {
+                              return f.key;
+                            })}
+                          />
+                        </div>
+                        <span>{studioProject.name}</span>
                       </h2>
                       <DocumentRenderer
                         document={studioProject.blurb.document}
@@ -369,15 +379,17 @@ export default function Home({
               {newsItem && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
                   <div className="flex fill-grey lg:w-4/5 px-5">
-                    <div className="w-1/12 mr-3">
+                    <div className="w-1/12 mr-3 hidden lg:block">
                       <Icons icons={['news']} />
                     </div>
                     <div className="flex flex-col  text-grey">
-                      <h2 className="flex-shrink text-2xl lg:text-3xl text-grey font-bold">
-                        {newsItem.title}
+                      <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
+                        <div className="mr-3 block lg:hidden">
+                          <Icons icons={['news']} />
+                        </div>
+                        <span>{newsItem.title}</span>
                       </h2>
                       <DocumentRenderer document={newsItem.blurb.document} />
-
                       <div className="mt-8">
                         <CTAButton
                           label="Read news"

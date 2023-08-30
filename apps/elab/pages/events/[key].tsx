@@ -175,6 +175,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   })}, ${new Date(item.eventDate).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'America/New_York',
   })}`;
   return { props: { item, date } };
 }

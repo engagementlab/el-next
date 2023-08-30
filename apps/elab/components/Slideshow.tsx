@@ -54,6 +54,7 @@ const Slideshow = ({
   const paginate = (newDirection: number) => {
     setPage([slide + newDirection, newDirection]);
   };
+
   return (
     <div className="flex-grow my-5">
       <div
@@ -125,7 +126,6 @@ const Slideshow = ({
                         className={`absolute bottom-0 right-0 p-3 w-full lg:w-3/4 ${theme?.bg} text-white`}
                       >
                         <svg
-                          xmlns="http://www.w3.org/2000/svg"
                           height="20"
                           viewBox="0 -960 960 960"
                           width="20"
@@ -165,7 +165,7 @@ const Slideshow = ({
             <svg height="48" viewBox="0 -960 960 960" width="48">
               <path
                 d="M561-240 320-481l241-241 43 43-198 198 198 198-43 43Z"
-                className={theme?.fill || 'fill-green-blue'}
+                className={theme?.fill}
               />
             </svg>
           </button>

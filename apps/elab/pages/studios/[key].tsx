@@ -191,17 +191,18 @@ export default function Studio({
   };
 
   if (item) {
+    let theme = Theming['none'];
+    if (item.initiatives && item.initiatives.length > 0)
+      theme = Theming[item.initiatives[0]];
     const rendererOverrides = {
       heading: (level: number, children: ReactNode, textAlign: any) => {
         const customRenderers = {
-          3: `text-xl font-extrabold uppercase my-4 ${
-            Theming[item.initiatives[0]].heading
-          }`,
+          3: `text-xl font-extrabold uppercase my-4 ${theme.heading}`,
         };
         return HeadingStyle({ level, children, textAlign, customRenderers });
       },
       quote: (children: ReactElement[]) => {
-        return QuoteRenderer(children, item, Theming[item.initiatives[0]]);
+        return QuoteRenderer(children, item, theme);
       },
     };
     return (
@@ -209,9 +210,9 @@ export default function Studio({
         error={error}
         breadcrumbs={[{ label: 'Social Impact Studios', href: '/studios' }]}
         theme={
-          item.initiatives.length > 1
+          !item.initiatives || item.initiatives.length < 1
             ? Theme.none
-            : Theming[item.initiatives[0]].theme
+            : theme.theme
         }
       >
         {item && (
@@ -228,14 +229,12 @@ export default function Studio({
               <div
                 className={`relative z-10 border-l-[1px] border-r-[1px] border-t-[1px] w-full h-[67px] xl:hidden ${
                   !semestersNavOpen && 'border-b-[1px]'
-                } ${Theming[item.initiatives[0]].border}`}
+                } ${theme.border}`}
               >
                 <button
                   className={`absolute z-10 mt-2 ml-2 mr-2 pb-2 pr-2 w-full uppercase font-extrabold border-l-[1px] border-r-[1px] border-t-[1px] ${
                     !semestersNavOpen && 'border-b-[1px]'
-                  } ${Theming[item.initiatives[0]].border} ${
-                    Theming[item.initiatives[0]].text
-                  }`}
+                  } ${theme.border} ${theme.text}`}
                   onClick={() => {
                     toggleMenuHover();
                   }}
@@ -247,7 +246,7 @@ export default function Studio({
                     <svg
                       className={`transition-transform ${CustomEase} duration-300 ${
                         semestersNavOpen && 'rotate-180'
-                      } ${Theming[item.initiatives[0]].fill}`}
+                      } ${theme.fill}`}
                       viewBox="0 -960 960 960"
                       width="40"
                       height="40"
@@ -261,9 +260,7 @@ export default function Studio({
               <AnimatePresence>
                 {semestersNavOpen && (
                   <motion.div
-                    className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full -top-1/2 opacity-0 ${
-                      Theming[item.initiatives[0]].border
-                    }`}
+                    className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full -top-1/2 opacity-0 ${theme.border}`}
                     animate={{
                       opacity: 1,
                       top: 0,
@@ -276,18 +273,14 @@ export default function Studio({
                     }}
                   >
                     <ul
-                      className={`w-full list-none uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${
-                        Theming[item.initiatives[0]].border
-                      }`}
+                      className={`w-full list-none uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${theme.border}`}
                     >
                       {item.semesters.map((se) => {
                         return (
                           <li>
                             <p
                               className={`p-2 cursor-pointer font-semibold ${
-                                se.type
-                                  ? Theming[item.initiatives[0]].heading
-                                  : Theming[item.initiatives[0]].text
+                                se.type ? theme.heading : theme.text
                               }`}
                             >
                               <a
@@ -319,16 +312,12 @@ export default function Studio({
                 let linkClass = `absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ${
                   se.type
                     ? 'text-teal border-teal group-hover:bg-teal/40'
-                    : `${Theming[item.initiatives[0]].border} ${
-                        Theming[item.initiatives[0]].text
-                      }`
+                    : `${theme.border} ${theme.text}`
                 }`;
                 if (se === selectedSemester)
                   linkClass += se.type
                     ? ' border-teal bg-teal/40 text-white'
-                    : ` ${Theming[item.initiatives[0]].border} ${
-                        Theming[item.initiatives[0]].bg
-                      } text-white`;
+                    : ` ${theme.border} ${theme.bg} text-white`;
 
                 switch (item.initiatives[0]) {
                   case 'gunviolence':
@@ -343,15 +332,9 @@ export default function Studio({
                   >
                     <div
                       className={`absolute w-full h-full border-[1px] ${
-                        se.type
-                          ? 'border-teal'
-                          : Theming[item.initiatives[0]].border
+                        se.type ? 'border-teal' : theme.border
                       }
-                        ${
-                          se.type
-                            ? 'text-teal'
-                            : Theming[item.initiatives[0]].text
-                        }`}
+                        ${se.type ? 'text-teal' : theme.text}`}
                     ></div>
                     <a
                       href="#"
@@ -378,14 +361,10 @@ export default function Studio({
                 <motion.div
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className={`my-20 ${Theming[item.initiatives[0]].secodaryBg}`}
+                  className={`my-20 ${theme.secodaryBg}`}
                 >
                   <div className="p-6">
-                    <h2
-                      className={`uppercase font-extrabold ${
-                        Theming[item.initiatives[0]].heading
-                      }`}
-                    >
+                    <h2 className={`uppercase font-extrabold ${theme.heading}`}>
                       Course Information
                     </h2>
 
@@ -420,83 +399,79 @@ export default function Studio({
                         selectedSemester.slides.slides.length > 0 && (
                           <Slideshow
                             slides={selectedSemester.slides.slides}
-                            theme={Theming[item.initiatives[0]]}
-                            className={`${
-                              Theming[item.initiatives[0]].bg
-                            } bg-opacity-50`}
+                            theme={theme}
+                            className={`${theme.bg} bg-opacity-50`}
                           />
                         )}
                     </div>
                   </div>
-                  <div className="hidden lg:block w-full mt-6 p-6">
-                    <h2
-                      className={`uppercase text-xl lg:text-3xl font-extrabold ${
-                        Theming[item.initiatives[0]].heading
-                      }`}
-                    >
-                      Jump to:
-                    </h2>
-                    <div className="flex flex-col w-full gap-x-10">
-                      <Button
-                        label="A Look Inside the Co-Creation Process"
-                        anchorId="cocreation"
-                        className={`text-sm ${
-                          Theming[item.initiatives[0]].text
-                        } ${Theming[item.initiatives[0]].fill}
+                  {selectedSemester.impact &&
+                    selectedSemester.impact.document.length > 2 && (
+                      <div className="hidden lg:block w-full mt-6 p-6">
+                        <h2
+                          className={`uppercase text-xl lg:text-3xl font-extrabold ${theme.heading}`}
+                        >
+                          Jump to:
+                        </h2>
+                        <div className="flex flex-col w-full gap-x-10">
+                          <Button
+                            label="A Look Inside the Co-Creation Process"
+                            anchorId="cocreation"
+                            className={`text-sm ${theme.text} ${theme.fill}
                       `}
-                      />
+                          />
 
-                      {selectedSemester.projects &&
-                        selectedSemester.projects.length > 0 && (
-                          <Button
-                            label="Projects"
-                            anchorId="projects"
-                            className={`text-sm ${
-                              Theming[item.initiatives[0]].text
-                            } ${Theming[item.initiatives[0]].fill}
+                          {selectedSemester.projects &&
+                            selectedSemester.projects.length > 0 && (
+                              <Button
+                                label="Projects"
+                                anchorId="projects"
+                                className={`text-sm ${theme.text} ${theme.fill}
                       `}
-                          />
-                        )}
-                      {selectedSemester.impact &&
-                        selectedSemester.impact.document.length > 2 && (
-                          <Button
-                            label="Impact Beyond the Studio"
-                            anchorId="impact"
-                            className={`text-sm ${
-                              Theming[item.initiatives[0]].text
-                            } ${Theming[item.initiatives[0]].fill}
+                              />
+                            )}
+                          {selectedSemester.impact &&
+                            selectedSemester.impact.document.length > 0 && (
+                              <Button
+                                label="Impact Beyond the Studio"
+                                anchorId="impact"
+                                className={`text-sm ${theme.text} ${theme.fill}
                       `}
-                          />
-                        )}
-                      <Button
-                        label="Studio Participants"
-                        anchorId="participants"
-                        className={`text-sm ${
-                          Theming[item.initiatives[0]].text
-                        } ${Theming[item.initiatives[0]].fill}
+                              />
+                            )}
+                          {selectedSemester.learningPartners &&
+                            selectedSemester.learningPartners.length > 0 &&
+                            selectedSemester.studioStudents &&
+                            selectedSemester.studioStudents.length > 0 && (
+                              <Button
+                                label="Studio Participants"
+                                anchorId="participants"
+                                className={`text-sm ${theme.text} ${theme.fill}
                       `}
-                      />
-                    </div>
-                  </div>
-                  <div id="cocreation" className="p-6">
-                    <h2 className="font-bold text-5xl my-3">
-                      A Look Inside the Co-Creation Process
-                    </h2>
-                    <DocumentRenderer
-                      document={selectedSemester.coCreation.document}
-                      componentBlocks={Blocks()}
-                      renderers={Doc(rendererOverrides)}
-                    />
-                  </div>
+                              />
+                            )}
+                        </div>
+                      </div>
+                    )}
+
+                  {selectedSemester.coCreation &&
+                    selectedSemester.coCreation.document.length > 2 && (
+                      <div id="cocreation" className="p-6">
+                        <h2 className="font-bold text-5xl my-3">
+                          A Look Inside the Co-Creation Process
+                        </h2>
+                        <DocumentRenderer
+                          document={selectedSemester.coCreation.document}
+                          componentBlocks={Blocks()}
+                          renderers={Doc(rendererOverrides)}
+                        />
+                      </div>
+                    )}
 
                   {selectedSemester.projects &&
                     selectedSemester.projects.length > 0 && (
                       <>
-                        <Divider
-                          color={`${
-                            Theming[item.initiatives[0]].bg
-                          } bg-opacity-50`}
-                        />
+                        <Divider color={`${theme.bg} bg-opacity-50`} />
                         <div id="projects" className="p-6">
                           <h2 className="font-bold text-5xl my-3">
                             {selectedSemester.name} Studio Projects
@@ -543,11 +518,7 @@ export default function Studio({
                   {selectedSemester.impact &&
                     selectedSemester.impact.document.length > 2 && (
                       <>
-                        <Divider
-                          color={`${
-                            Theming[item.initiatives[0]].bg
-                          } bg-opacity-50`}
-                        />
+                        <Divider color={`${theme.bg} bg-opacity-50`} />
                         <div id="impact" className="p-6">
                           <h2 className="font-bold text-5xl my-3">
                             Impact Beyond the Studio
@@ -560,9 +531,7 @@ export default function Studio({
                         </div>
                       </>
                     )}
-                  <Divider
-                    color={`${Theming[item.initiatives[0]].bg} bg-opacity-50`}
-                  />
+                  <Divider color={`${theme.bg} bg-opacity-50`} />
                   <div className="p-6" id="participants">
                     <h2 className="font-bold text-5xl my-3">
                       {selectedSemester.name} Studio Participants
@@ -572,7 +541,7 @@ export default function Studio({
                         <PeopleList
                           list={selectedSemester.studioStudents}
                           heading="Students"
-                          theme={Theming[item.initiatives[0]]}
+                          theme={theme}
                           index={0}
                         />
                       )}
@@ -582,7 +551,7 @@ export default function Studio({
                           list={selectedSemester.learningPartners}
                           heading="Learning Partners"
                           index={1}
-                          theme={Theming[item.initiatives[0]]}
+                          theme={theme}
                         />
                       )}
                     <div className="flex flex-col lg:flex-row gap-x-7">
@@ -592,7 +561,7 @@ export default function Studio({
                             <PeopleList
                               list={selectedSemester.instructors}
                               heading="Studio Instructors"
-                              theme={Theming[item.initiatives[0]]}
+                              theme={theme}
                               index={2}
                             />
                           )}
@@ -603,16 +572,14 @@ export default function Studio({
                             <PeopleList
                               list={selectedSemester.studioStaff}
                               heading="Engagement Lab Staff"
-                              theme={Theming[item.initiatives[0]]}
+                              theme={theme}
                               index={3}
                             />
                           )}
                       </div>
                     </div>
                     <h2
-                      className={`text-xl font-extrabold uppercase my-3 ${
-                        Theming[item.initiatives[0]].heading
-                      }`}
+                      className={`text-xl font-extrabold uppercase my-3 ${theme.heading}`}
                     >
                       Studio Contact
                     </h2>
@@ -621,14 +588,17 @@ export default function Studio({
                       course in the future? Please contact the instructor
                       at&nbsp;{selectedSemester.contact}&nbsp;to learn more!
                     </p>
-                    <h2
-                      className={`text-xl font-extrabold uppercase mb-3 mt-8 ${
-                        Theming[item.initiatives[0]].heading
-                      }`}
-                    >
-                      {selectedSemester.name} Partners
-                    </h2>
-                    <Logos partners={selectedSemester.partners} />
+                    {selectedSemester.partners &&
+                      selectedSemester.partners.length > 0 && (
+                        <>
+                          <h2
+                            className={`text-xl font-extrabold uppercase mb-3 mt-8 ${theme.heading}`}
+                          >
+                            {selectedSemester.name} Partners
+                          </h2>
+                          <Logos partners={selectedSemester.partners} />
+                        </>
+                      )}
                   </div>
                 </motion.div>
               )}

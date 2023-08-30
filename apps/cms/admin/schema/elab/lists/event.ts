@@ -75,15 +75,7 @@ const Event: Lists.Event = list({
         isRequired: true,
       },
     }),
-    registrationLink: text({
-      validation: {
-        match: {
-          regex:
-            /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
-          explanation: 'Not a valid URL',
-        },
-      },
-    }),
+    registrationLink: text(),
     address: text({
       ui: {
         displayMode: 'textarea',

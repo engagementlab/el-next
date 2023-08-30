@@ -154,6 +154,7 @@ export type StudioProject = {
   shortDescription: string;
   thumbnail: {
     publicId: string;
+    publicUrl?: string;
   };
   thumbAltText: string;
   trailerThumbnail: {

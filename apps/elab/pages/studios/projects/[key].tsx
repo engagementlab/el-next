@@ -153,35 +153,40 @@ export default function Studio({
                   <div
                     className={`relative transition-all duration-500 ${CustomEase} ${
                       videoOpen
-                        ? 'w-full basis-full'
+                        ? 'w-full basis-full min-h-[50vh]'
                         : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
                     }`}
                   >
-                    <div className="group w-full h-full">
-                      {item.trailerId ? (
-                        <div
-                          id="video"
-                          className={videoOpen ? 'relative mb-5' : ``}
-                        >
-                          <Video
-                            videoLabel={`Trailer for ${item.name} `}
-                            videoUrl={`https://player.vimeo.com/video/${
-                              videoOpen ? item.videoId : item.trailerId
-                            }`}
-                            thumbUrl={item.trailerThumbnail.publicUrl}
-                            play={trailerOpen || videoOpen}
-                            noUi={true}
-                          />
-                        </div>
-                      ) : (
-                        <Image
-                          id="thumb"
-                          alt={item.thumbAltText}
-                          imgId={item.thumbnail.publicId}
-                          transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                          width={460}
+                    <div className="group w-full min-h-[inherit]">
+                      <div
+                        id="video"
+                        className={`${
+                          videoOpen ? 'relative mb-5 h-full' : ``
+                        } min-h-[inherit]`}
+                      >
+                        <Video
+                          videoLabel={`Trailer for ${item.name} `}
+                          videoUrl={`https://player.vimeo.com/video/${
+                            videoOpen ? item.videoId : item.trailerId
+                          }`}
+                          thumbUrl={
+                            item.trailerThumbnail
+                              ? item.trailerThumbnail.publicUrl
+                              : null
+                          }
+                          play={trailerOpen || videoOpen}
+                          noUi={true}
                         />
-                      )}
+                        {!videoOpen && !item.trailerThumbnail && (
+                          <Image
+                            id="thumb"
+                            alt={item.thumbAltText}
+                            imgId={item.thumbnail.publicId}
+                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                            width={460}
+                          />
+                        )}
+                      </div>
                       {!videoOpen && !trailerOpen && item.trailerId && (
                         <button
                           className="absolute bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
@@ -436,6 +441,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             thumbAltText
             thumbnail {
               publicId
+              publicUrl
             }
             trailerId
             trailerThumbnail {

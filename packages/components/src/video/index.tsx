@@ -4,9 +4,9 @@ import { useState } from 'react';
 import create from 'zustand';
 
 interface VideoProps {
-  thumbUrl: string;
   videoUrl: string;
   videoLabel: string;
+  thumbUrl?: string;
   isSlide?: boolean;
   themeColor?: string;
   noUi?: boolean;
@@ -44,10 +44,10 @@ export const Video = ({
       className={
         isSlide
           ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8'
-          : 'relative video w-full h-full lg:mb-8'
+          : 'absolute video w-full h-full min-h-[inherit] lg:mb-8'
       }
     >
-      {videoOpen || play ? (
+      {videoOpen || play || !thumbUrl ? (
         ''
       ) : (
         <button
@@ -64,10 +64,10 @@ export const Video = ({
             src={thumbUrl}
             width={1920}
             height={1080}
-            // fill=''
             unoptimized={true}
             draggable="true"
           />
+
           {!noUi && (
             <span
               className="absolute"
@@ -113,8 +113,8 @@ export const Video = ({
       {!videoOpen && !play ? (
         ''
       ) : (
-        <div id="video-embed" className="w-full h-full">
-          <div className="relative h-full">
+        <div id="video-embed" className="w-full h-full min-h-[inherit]">
+          <div className="relative h-full min-h-[inherit]">
             <iframe
               src={`${videoUrl}?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1`}
               style={{

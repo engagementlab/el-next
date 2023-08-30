@@ -1,8 +1,8 @@
 /// <reference types="react" />
 interface VideoProps {
-    thumbUrl: string;
     videoUrl: string;
     videoLabel: string;
+    thumbUrl?: string;
     isSlide?: boolean;
     themeColor?: string;
     noUi?: boolean;

@@ -1395,6 +1395,7 @@ type Semester {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  buttonLabel: String
   studio: Studio
   type: SemesterTypeType
   courseNumber: String
@@ -1455,6 +1456,7 @@ input SemesterWhereInput {
   key: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
+  buttonLabel: StringFilter
   studio: StudioWhereInput
   type: SemesterTypeTypeNullableFilter
   courseNumber: StringFilter
@@ -1481,6 +1483,7 @@ input SemesterOrderByInput {
   key: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
+  buttonLabel: OrderDirection
   type: OrderDirection
   courseNumber: OrderDirection
   description: OrderDirection
@@ -1492,6 +1495,7 @@ input SemesterUpdateInput {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  buttonLabel: String
   studio: StudioRelateToOneForUpdateInput
   type: SemesterTypeType
   courseNumber: String
@@ -1530,6 +1534,7 @@ input SemesterCreateInput {
   key: String
   createdDate: DateTime
   enabled: Boolean
+  buttonLabel: String
   studio: StudioRelateToOneForCreateInput
   type: SemesterTypeType
   courseNumber: String

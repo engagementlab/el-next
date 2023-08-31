@@ -23,10 +23,12 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { PeopleList } from '@/components/People';
 import Partners from '@/components/Partners';
 import Slideshow from '@/components/Slideshow';
+import clsx from 'clsx';
 
 type Semester = {
   key: string;
   name: string;
+  buttonLabel?: string;
   type: string;
   courseNumber: string;
   description: string;
@@ -279,7 +281,7 @@ export default function Studio({
                         return (
                           <li>
                             <p
-                              className={`p-2 cursor-pointer font-semibold ${
+                              className={`p-2 m-0 cursor-pointer font-semibold ${
                                 se.type ? theme.heading : theme.text
                               }`}
                             >
@@ -295,7 +297,10 @@ export default function Studio({
                               >
                                 {se.type === 'upcoming' && 'Upcoming Semester'}
                                 {se.type === 'current' && 'Current Semester'}
-                                {se.type === null && se.name}
+                                {se.type === null &&
+                                  (se.buttonLabel
+                                    ? se.buttonLabel
+                                    : se.name.split(' - ')[0])}
                               </a>
                             </p>
                           </li>
@@ -307,24 +312,40 @@ export default function Studio({
               </AnimatePresence>
             </div>
 
+            {/* LARGE screens */}
             <div className="hidden xl:flex flex-row">
               {item.semesters.map((se) => {
-                let linkClass = `absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ${
-                  se.type
-                    ? 'text-teal border-teal group-hover:bg-teal/40'
-                    : `${theme.border} ${theme.text}`
-                }`;
-                if (se === selectedSemester)
-                  linkClass += se.type
-                    ? ' border-teal bg-teal/40 text-white'
-                    : ` ${theme.border} ${theme.bg} text-white`;
+                const linkBaseClass =
+                  'absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ';
+                let initiativeClass = 'group-hover:bg-yellow';
 
-                switch (item.initiatives[0]) {
-                  case 'gunviolence':
-                    linkClass += ` group-hover:bg-purple`;
-                  case 'climate':
-                    linkClass += ` group-hover:bg-leaf`;
+                if (item.initiatives && item.initiatives[0]) {
+                  if (item.initiatives[0] === 'gunviolence')
+                    initiativeClass = `group-hover:bg-purple`;
+                  else initiativeClass = `group-hover:bg-leaf`;
                 }
+                let innerClass = se.type
+                  ? 'text-teal border-teal group-hover:bg-teal/40'
+                  : `${theme.border}`;
+                let innerSelectedClass = ``;
+                if (se.type) {
+                  if (selectedSemester == se)
+                    innerSelectedClass = 'border-teal bg-teal/40 text-white';
+                } else if (!se.type) {
+                  if (selectedSemester == se)
+                    innerSelectedClass = `${theme.border} ${theme.bg} text-white`;
+                  else innerClass += ` ${theme.text}`;
+                }
+                // else {
+                // }
+
+                const buttonClass = clsx(
+                  linkBaseClass,
+                  !se.type ? initiativeClass : null,
+                  innerClass,
+                  innerSelectedClass
+                );
+
                 return (
                   <button
                     key={se.key}
@@ -342,7 +363,7 @@ export default function Studio({
                         toggle(se.key);
                         e.preventDefault();
                       }}
-                      className={linkClass}
+                      className={buttonClass}
                     >
                       {se.type === 'upcoming' && 'Upcoming \n Semester'}
                       {se.type === 'current' && 'Current \n Semester'}

@@ -185,6 +185,7 @@ model Semester {
   key              String            @default("")
   createdDate      DateTime?
   enabled          Boolean           @default(true)
+  buttonLabel      String            @default("")
   studio           Studio?           @relation("Semester_studio", fields: [studioId], references: [id])
   studioId         String?           @map("studio")
   type             SemesterTypeType?

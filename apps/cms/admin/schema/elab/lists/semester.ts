@@ -41,6 +41,9 @@ const Semester: Lists.Semester = list({
     enabled: checkbox({
       defaultValue: true,
     }),
+    buttonLabel: text({
+      ui: { description: "The label for the semester's button." },
+    }),
     studio: relationship({
       ref: 'Studio.semesters',
       ui: { hideCreate: true },

@@ -34,57 +34,57 @@ services:
       traefik.http.routers.cms-landing.tls: true
       traefik.http.routers.cms-landing.entrypoints: websecure
 
-  cms-tngvi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: cms-runner
-    ports:
-      - '3000:3000'
-    env_file:
-      - ./apps/cms/.env
-    environment:
-      - APP_NAME=tngvi
-      - PORT=3000
-    restart: on-failure
-    labels:
-      - 'traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi/api/graphql`)'
-      - 'traefik.http.routers.api-tngvi.tls=true'
-      - 'traefik.http.routers.api-tngvi.entrypoints=websecure'
-      - 'traefik.http.routers.api-tngvi.service=cms-tngvi-el-next'
-      - 'traefik.http.routers.news-tngvi.rule=PathPrefix(`/tngvi/rest/news`)'
-      - 'traefik.http.routers.news-tngvi.tls=true'
-      - 'traefik.http.routers.news-tngvi.entrypoints=websecure'
-      - 'traefik.http.routers.news-tngvi.service=cms-tngvi-el-next'
-      - 'traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)'
-      - 'traefik.http.routers.cms-tngvi.tls=true'
-      - 'traefik.http.routers.cms-tngvi.entrypoints=websecure'
-      - 'traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next'
-      - 'traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages'
-      - 'traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000'
+  # cms-tngvi:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: cms-runner
+  #   ports:
+  #     - '3000:3000'
+  #   env_file:
+  #     - ./apps/cms/.env
+  #   environment:
+  #     - APP_NAME=tngvi
+  #     - PORT=3000
+  #   restart: on-failure
+  #   labels:
+  #     - 'traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi/api/graphql`)'
+  #     - 'traefik.http.routers.api-tngvi.tls=true'
+  #     - 'traefik.http.routers.api-tngvi.entrypoints=websecure'
+  #     - 'traefik.http.routers.api-tngvi.service=cms-tngvi-el-next'
+  #     - 'traefik.http.routers.news-tngvi.rule=PathPrefix(`/tngvi/rest/news`)'
+  #     - 'traefik.http.routers.news-tngvi.tls=true'
+  #     - 'traefik.http.routers.news-tngvi.entrypoints=websecure'
+  #     - 'traefik.http.routers.news-tngvi.service=cms-tngvi-el-next'
+  #     - 'traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)'
+  #     - 'traefik.http.routers.cms-tngvi.tls=true'
+  #     - 'traefik.http.routers.cms-tngvi.entrypoints=websecure'
+  #     - 'traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next'
+  #     - 'traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages'
+  #     - 'traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000'
 
-  cms-sjm:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: cms-runner
-    env_file:
-      - ./apps/cms/.env
-    environment:
-      - APP_NAME=sjm
-      - PORT=3001
-    restart: on-failure
-    labels:
-      - 'traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)'
-      - 'traefik.http.routers.api-sjm.tls=true'
-      - 'traefik.http.routers.api-sjm.entrypoints=websecure'
-      - 'traefik.http.routers.api-sjm.service=cms-sjm-el-next'
-      - 'traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)'
-      - 'traefik.http.routers.cms-sjm.tls=true'
-      - 'traefik.http.routers.cms-sjm.entrypoints=websecure'
-      - 'traefik.http.routers.cms-sjm.service=cms-sjm-el-next'
-      - 'traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages'
-      - 'traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001'
+  # cms-sjm:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: cms-runner
+  #   env_file:
+  #     - ./apps/cms/.env
+  #   environment:
+  #     - APP_NAME=sjm
+  #     - PORT=3001
+  #   restart: on-failure
+  #   labels:
+  #     - 'traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)'
+  #     - 'traefik.http.routers.api-sjm.tls=true'
+  #     - 'traefik.http.routers.api-sjm.entrypoints=websecure'
+  #     - 'traefik.http.routers.api-sjm.service=cms-sjm-el-next'
+  #     - 'traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)'
+  #     - 'traefik.http.routers.cms-sjm.tls=true'
+  #     - 'traefik.http.routers.cms-sjm.entrypoints=websecure'
+  #     - 'traefik.http.routers.cms-sjm.service=cms-sjm-el-next'
+  #     - 'traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages'
+  #     - 'traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001'
 
   cms-elab:
     build:

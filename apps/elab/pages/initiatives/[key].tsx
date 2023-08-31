@@ -402,7 +402,7 @@ export default function GunViolence({
                 ]}
               />
             ) : (
-              <Logos partners={['ficdc', 'greenroots', 'sftt', 'swboston']} />
+              <Logos partners={['ficdc', 'greenroots', 'sftt']} />
             )}
           </Gutter>
         </div>

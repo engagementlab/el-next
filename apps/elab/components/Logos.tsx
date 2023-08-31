@@ -97,14 +97,14 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           width={180}
         />
       )}
-      {(all || partners.includes('swboston')) && (
+      {/* {(all || partners.includes('swboston')) && (
         <Image
           id="swboston-logo"
           alt="Southwest Boston Community Development Corporation logo"
           imgId="elab-home-v3.x/logos/swboston"
           width={180}
         />
-      )}
+      )} */}
     </div>
   );
 };

@@ -12,6 +12,12 @@ export const enum Theme {
 
 export const ThemeColors = [
   {
+    primary: 'text-yellow border-yellow',
+    primaryHex: '#7C4E9F',
+    secondary: 'text-teal fill-teal',
+    secondaryHex: '#00a494',
+  },
+  {
     primary: 'text-purple border-purple',
     primaryHex: '#7C4E9F',
     secondary: 'text-teal fill-teal',
@@ -20,8 +26,8 @@ export const ThemeColors = [
   {
     primary: 'text-purple border-purple',
     primaryHex: '#7C4E9F',
-    secondary: 'text-green fill-green',
-    secondaryHex: '#00a494',
+    secondary: 'text-yellow fill-yellow',
+    secondaryHex: '#F6A536',
   },
 ];
 
@@ -52,7 +58,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     fill: 'fill-yellow',
     gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
     secodary: 'bg-[#E2BDFE]',
-    secodaryBg: 'bg-[#E2BDFE]/40',
+    secodaryBg: 'bg-[#F6A536]/40',
     theme: Theme.none,
   },
   gunviolence: {

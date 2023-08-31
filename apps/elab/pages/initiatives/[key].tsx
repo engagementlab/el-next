@@ -173,11 +173,13 @@ export default function GunViolence({
                       className={jumpClass}
                     />
                     {/* <div className="flex flex-row lg:w-3/4 xl:w-4/6"> */}
-                    <Button
-                      label="Projects"
-                      anchorId="projects"
-                      className={jumpClass + ' ml-3'}
-                    />
+                    {page.projects && page.projects.length > 0 && (
+                      <Button
+                        label="Projects"
+                        anchorId="projects"
+                        className={jumpClass + ' ml-3'}
+                      />
+                    )}
                     <Button
                       label="Studios"
                       anchorId="studios"

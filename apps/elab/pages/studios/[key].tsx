@@ -336,8 +336,6 @@ export default function Studio({
                     innerSelectedClass = `${theme.border} ${theme.bg} text-white`;
                   else innerClass += ` ${theme.text}`;
                 }
-                // else {
-                // }
 
                 const buttonClass = clsx(
                   linkBaseClass,
@@ -673,8 +671,10 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
                 altText
                 image {
                   publicId
+                  publicUrl
                 }
                 caption
+                videoId
               }
             }
             coCreation {

@@ -63,28 +63,28 @@ services:
   #     - 'traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages'
   #     - 'traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000'
 
-  # cms-sjm:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     target: cms-runner
-  #   env_file:
-  #     - ./apps/cms/.env
-  #   environment:
-  #     - APP_NAME=sjm
-  #     - PORT=3001
-  #   restart: on-failure
-  #   labels:
-  #     - 'traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)'
-  #     - 'traefik.http.routers.api-sjm.tls=true'
-  #     - 'traefik.http.routers.api-sjm.entrypoints=websecure'
-  #     - 'traefik.http.routers.api-sjm.service=cms-sjm-el-next'
-  #     - 'traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)'
-  #     - 'traefik.http.routers.cms-sjm.tls=true'
-  #     - 'traefik.http.routers.cms-sjm.entrypoints=websecure'
-  #     - 'traefik.http.routers.cms-sjm.service=cms-sjm-el-next'
-  #     - 'traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages'
-  #     - 'traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001'
+  cms-sjm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cms-runner
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      - APP_NAME=sjm
+      - PORT=3001
+    restart: on-failure
+    labels:
+      - 'traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)'
+      - 'traefik.http.routers.api-sjm.tls=true'
+      - 'traefik.http.routers.api-sjm.entrypoints=websecure'
+      - 'traefik.http.routers.api-sjm.service=cms-sjm-el-next'
+      - 'traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)'
+      - 'traefik.http.routers.cms-sjm.tls=true'
+      - 'traefik.http.routers.cms-sjm.entrypoints=websecure'
+      - 'traefik.http.routers.cms-sjm.service=cms-sjm-el-next'
+      - 'traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages'
+      - 'traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001'
 
   cms-elab:
     build:
@@ -148,25 +148,25 @@ services:
   #     - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"
   #     - "traefik.http.routers.qa-tngvi.tls.certresolver=letsencrypt"
 
-  # qa-sjm:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     target: qa-image
-  #     args:
-  #       APP: sjm
-  #       PORT: 8082
-  #       CMS_ENDPOINT: cms-sjm:3001
-  #   restart: on-failure
-  #   labels:
-  #     - "traefik.http.routers.qa-sjm-http.entrypoints=web"
-  #     - "traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)"
-  #     - "traefik.http.routers.qa-sjm.entrypoints=websecure"
-  #     - "traefik.http.routers.qa-sjm.rule=Host(`qa.sjmsymposium.org`)"
-  #     - "traefik.http.routers.qa-sjm.tls=true"
-  #     - "traefik.http.routers.qa-sjm.service=qa-sjm-el-next"
-  #     - "traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082"
-  #     - "traefik.http.routers.qa-sjm.tls.certresolver=letsencrypt"
+  qa-sjm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: qa-image
+      args:
+        APP: sjm
+        PORT: 8082
+        CMS_ENDPOINT: cms-sjm:3001
+    restart: on-failure
+    labels:
+      - 'traefik.http.routers.qa-sjm-http.entrypoints=web'
+      - 'traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)'
+      - 'traefik.http.routers.qa-sjm.entrypoints=websecure'
+      - 'traefik.http.routers.qa-sjm.rule=Host(`qa.sjmsymposium.org`)'
+      - 'traefik.http.routers.qa-sjm.tls=true'
+      - 'traefik.http.routers.qa-sjm.service=qa-sjm-el-next'
+      - 'traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082'
+      - 'traefik.http.routers.qa-sjm.tls.certresolver=letsencrypt'
 
   api:
     build:

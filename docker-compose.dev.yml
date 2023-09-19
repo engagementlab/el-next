@@ -72,7 +72,25 @@ services:
       traefik.http.middlewares.error-pages.errors.service: error-pages
       traefik.http.middlewares.error-pages.errors.query: /error.html
 
-  cms-tngvi:
+  # cms-tngvi:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: cms-runner
+  #   env_file:
+  #     - ./apps/cms/.env
+  #   environment:
+  #     - APP_NAME=tngvi
+  #     - PORT=3000
+  #   labels:
+  #     - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
+  #     - "traefik.http.routers.cms-tngvi.entrypoints=web"
+  #     - "traefik.http.routers.cms-tngvi.service=cms-tngvi-transform-narratives"
+  #     - "traefik.http.routers.cms-tngvi.middlewares=error-pages"
+  cms-sjm:
+    hostname: cms-sjm
+    ports:
+      - "3001:3001"
     build:
       context: .
       dockerfile: Dockerfile
@@ -80,30 +98,12 @@ services:
     env_file:
       - ./apps/cms/.env
     environment:
-      - APP_NAME=tngvi
-      - PORT=3000
+      - APP_NAME=sjm
+      - PORT=3001
     labels:
-      - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
-      - "traefik.http.routers.cms-tngvi.entrypoints=web"
-      - "traefik.http.routers.cms-tngvi.service=cms-tngvi-transform-narratives"
-      - "traefik.http.routers.cms-tngvi.middlewares=error-pages"
-      # cms-sjm:
-      #   hostname: cms-sjm
-      #   ports:
-      #     - "3001:3001"
-      #   build:
-      #     context: .
-      #     dockerfile: Dockerfile
-      #     target: cms-runner
-      #   env_file:
-      #     - ./apps/cms/.env
-      #   environment:
-      #     - APP_NAME=sjm
-      #     - PORT=3001
-      #   labels:
-      #     - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
-      #     - "traefik.http.routers.cms-sjm.entrypoints=web"
-      #     - "traefik.http.routers.cms-sjm.service=cms-sjm-transform-narratives"
+      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
+      - "traefik.http.routers.cms-sjm.entrypoints=web"
+      - "traefik.http.routers.cms-sjm.service=cms-sjm-transform-narratives"
 
       # qa-tngvi:
       #   build:

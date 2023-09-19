@@ -15,17 +15,17 @@ import { v2 as cloudinary } from 'cloudinary';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 import cors from 'cors';
+// import CreateSchema from './admin/schema';
+import fs = require('fs');
 
-import { tngvi, sjm, elab } from './admin/schema';
-
-type schemaIndexType = {
-  [key: string]: object;
-};
-const schemaMap: schemaIndexType = {
-  elab: elab,
-  tngvi: tngvi,
-  sjm: sjm,
-};
+// type schemaIndexType = {
+//   [key: string]: object;
+// };
+// const schemaMap: schemaIndexType = {
+//   elab: elabSchema,
+//   sjm: sjmSchema,
+//   // tngvi: tngvi,
+// };
 
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
@@ -36,12 +36,6 @@ const argv: any = yargs(process.argv.slice(2)).options({
   },
 }).argv;
 
-const multer = require('multer');
-const upload = multer({
-  limits: {
-    fieldSize: 1024 * 1024 * 50,
-  },
-});
 const port = argv.port || 3000;
 
 cloudinary.config({
@@ -148,8 +142,14 @@ let ksConfig = (lists: any) => {
   };
 };
 
+import * as schema from './admin/schema';
 export default (() => {
-  let config = ksConfig(schemaMap[appName]);
+  // console.log(CreateSchema);
+
+  // fs.readdir('./database', (err, files) => {
+  //  files.forEach(file => {
+
+  let config = ksConfig(schema);
 
   if (process.env.PRODUCTION_MODE === 'true')
     config.ui = {
@@ -175,4 +175,5 @@ export default (() => {
     };
 
   return config;
+  // });
 })();

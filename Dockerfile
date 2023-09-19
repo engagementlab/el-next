@@ -29,18 +29,23 @@ RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
 # Create CMS Runner target
 
 FROM node:${NODE_VERSION}-slim AS cms-runner
-ENV NODE_ENV production
-ENV NEXTJS_IGNORE_ESLINT 1
-ENV NEXTJS_IGNORE_TYPECHECK 0
 
 ARG PORT=3000
 ARG APP_NAME=sjm
+
+ENV NODE_ENV production
+ENV NEXTJS_IGNORE_ESLINT 1
+ENV NEXTJS_IGNORE_TYPECHECK 0
+ENV APP_NAME ${APP_NAME}
 
 WORKDIR /repo
 
 COPY --from=deps /workspace-install ./
 
 WORKDIR /repo/apps/cms
+
+RUN rm -f /repo/apps/cms/admin/schema/index.ts
+RUN ln -s /repo/apps/cms/admin/schema/$APP_NAME/index.ts /repo/apps/cms/admin/schema/index.ts
 
 RUN apt-get update && apt-get install -y openssl libssl-dev curl
 
@@ -50,7 +55,6 @@ RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
 
 # Copy our favicon to the keystone module
 RUN cp favicon.ico ./node_modules/@keystone-6/core/favicon.ico
-
 EXPOSE $PORT
 
 CMD yarn keystone postinstall --fix --app $APP_NAME && \

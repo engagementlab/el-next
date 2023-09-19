@@ -1,3 +1,23 @@
+import { relationship } from '@keystone-6/core/fields';
+import Slideshow from '../slideshow';
+
+const slideshow = Slideshow({
+  semesterSlides: relationship({
+    ref: 'Semester.slides',
+    many: true,
+    ui: {
+      createView: {
+        fieldMode: 'hidden',
+      },
+      itemView: {
+        fieldMode: 'hidden',
+      },
+    },
+  }),
+});
+console.info('Slideshow elab', slideshow);
+console.trace();
+export { slideshow as Slideshow };
 export { default as About } from './lists/about';
 export { default as Filter } from './lists/filter';
 export { default as Event } from './lists/event';
@@ -9,7 +29,6 @@ export { default as NewsItem } from './lists/newsItem';
 export { default as ResearchProject } from './lists/researchProject';
 export { default as StudioProject } from './lists/studioProject';
 export { default as Slide } from './lists/slide';
-export { default as Slideshow } from '../slideshow';
 export { default as Studio } from './lists/studio';
 export { default as Semester } from './lists/semester';
 export { default as Partner } from './lists/partners';

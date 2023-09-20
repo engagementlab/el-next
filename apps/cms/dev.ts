@@ -35,7 +35,9 @@
   }
   try {
     exec('rm -f admin/schema/index.ts');
-    exec('ln -s admin/schema/sjm/index.ts admin/schema/index.ts');
+    exec(
+      `ln -s ${__dirname}/admin/schema/sjm/index.ts ${__dirname}/admin/schema/index.ts`
+    );
     exec(`yarn keystone dev --app sjm`);
     // exec(`cd apps/${response.value}; yarn dev`, AppType.FRONTEND);
   } catch (error) {

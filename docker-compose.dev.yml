@@ -15,14 +15,14 @@ services:
       - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.dashboard.service=api@internal"
 
-  cms-landing:
-    image: ghcr.io/patrickdappollonio/docker-http-server:v2
-    command: --path /html --title "ELab CMS Directory"
-    volumes:
-      - ./_site/index.html:/html/index.html
-    labels:
-      traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
-      traefik.http.routers.cms-landing.entrypoints: web
+  # cms-landing:
+  #   image: ghcr.io/patrickdappollonio/docker-http-server:v2
+  #   command: --path /html --title "ELab CMS Directory"
+  #   volumes:
+  #     - ./_site/index.html:/html/index.html
+  #   labels:
+  #     traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
+  #     traefik.http.routers.cms-landing.entrypoints: web
 
   # devapi:
   #   build:
@@ -72,21 +72,6 @@ services:
       traefik.http.middlewares.error-pages.errors.service: error-pages
       traefik.http.middlewares.error-pages.errors.query: /error.html
 
-  # cms-tngvi:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #     target: cms-runner
-  #   env_file:
-  #     - ./apps/cms/.env
-  #   environment:
-  #     - APP_NAME=tngvi
-  #     - PORT=3000
-  #   labels:
-  #     - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
-  #     - "traefik.http.routers.cms-tngvi.entrypoints=web"
-  #     - "traefik.http.routers.cms-tngvi.service=cms-tngvi-transform-narratives"
-  #     - "traefik.http.routers.cms-tngvi.middlewares=error-pages"
   cms-sjm:
     hostname: cms-sjm
     ports:
@@ -131,3 +116,17 @@ services:
       #     - "traefik.http.routers.qa-sjm.entrypoints=web"
       #     - "traefik.http.routers.qa-sjm.service=qa-sjm-transform-narratives"
       #     - "traefik.http.services.qa-sjm-transform-narratives.loadbalancer.server.port=8082"
+  qa-elab:
+      build:
+        context: .
+        dockerfile: Dockerfile
+        target: qa-image
+        args:
+          APP: elab
+          PORT: 8083
+          CMS_ENDPOINT: cms-elab:3002
+      restart: on-failure
+      labels:
+        - 'traefik.http.routers.qa-elab-http.entrypoints=web'
+        - 'traefik.http.routers.qa-elab.service=qa-elab-el-next'
+        - 'traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083'

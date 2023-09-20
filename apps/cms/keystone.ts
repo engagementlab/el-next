@@ -3,7 +3,6 @@ import {
   DatabaseConfig,
   KeystoneConfig,
 } from '@keystone-6/core/types';
-import axios from 'axios';
 
 import yargs from 'yargs/yargs';
 
@@ -15,17 +14,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { getNews } from './routes/news';
 import _ from 'lodash';
 import cors from 'cors';
-// import CreateSchema from './admin/schema';
-import fs = require('fs');
-
-// type schemaIndexType = {
-//   [key: string]: object;
-// };
-// const schemaMap: schemaIndexType = {
-//   elab: elabSchema,
-//   sjm: sjmSchema,
-//   // tngvi: tngvi,
-// };
+import * as schema from './admin/schema';
 
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
@@ -83,13 +72,8 @@ if (process.env.DB_URI) {
 }
 
 let ksConfig = (lists: any) => {
-  return {
+  const config: KeystoneConfig = {
     db: dbConfig,
-
-    experimental: {
-      generateNextGraphqlAPI: true,
-      generateNodeAPI: true,
-    },
 
     lists,
 
@@ -133,23 +117,19 @@ let ksConfig = (lists: any) => {
         );
       },
     },
-    ui: {},
+    ui: {
+      basePath: `/${process.env.PRODUCTION_MODE === 'true' ? appName : ''}`,
+    },
     graphql: {
       path: `/${
         process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
       }api/graphql`,
     },
   };
+  return config;
 };
 
-import * as schema from './admin/schema';
 export default (() => {
-  // console.log(CreateSchema);
-
-  // fs.readdir('./database', (err, files) => {
-  //  files.forEach(file => {
-
   let config = ksConfig(schema);
   return config;
-  // });
 })();

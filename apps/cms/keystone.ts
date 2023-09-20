@@ -150,30 +150,6 @@ export default (() => {
   //  files.forEach(file => {
 
   let config = ksConfig(schema);
-
-  if (process.env.PRODUCTION_MODE === 'true')
-    config.ui = {
-      getAdditionalFiles: [
-        async (config: KeystoneConfig) => [
-          {
-            mode: 'write',
-            src: `
-            const keystoneConfig =
-              require("@keystone-6/core/___internal-do-not-use-will-break-in-patch/admin-ui/next-config").config;
-
-            const config = {
-              ...keystoneConfig,
-              basePath: "/${appName}",
-            };
-
-            module.exports = config;
-            `,
-            outputPath: 'next.config.js',
-          },
-        ],
-      ],
-    };
-
   return config;
   // });
 })();

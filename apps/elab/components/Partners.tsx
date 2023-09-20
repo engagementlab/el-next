@@ -18,10 +18,10 @@ const Partners = ({ partners }: Props): string => {
     { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative' },
     { key: 'greenroots', name: 'GreenRoots' },
     { key: 'sftt', name: 'Speak for the Trees' },
-    {
-      key: 'swboston',
-      name: 'Southwest Boston Community Development Corporation',
-    },
+    // {
+    //   key: 'swboston',
+    //   name: 'Southwest Boston Community Development Corporation',
+    // },
   ];
   return names
     .filter((name) => partners.includes(name.key))

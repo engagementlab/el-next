@@ -177,7 +177,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       return (
         <Link
           href={href}
-          className="mt-3 xl:my-1 wide:mt-1"
+          className="mt-3 xl:my-1 wide:mt-1 group/navlink"
           onClick={() => {
             toggleNavOpen(false);
             if (linkOverride) window.location.href = linkOverride;
@@ -189,7 +189,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
               height="20"
               viewBox="0 -960 960 960"
               width="20"
-              className="inline"
+              className={`inline transition-transform group-hover/navlink:translate-x-[2px] ${CustomEase}`}
             >
               <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
             </svg>
@@ -212,18 +212,18 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   const siiLinks = (
     <>
       <NavLink
-        href="/initiatives/gunviolence"
+        href="/initiatives/tngv"
         label="Transforming Narratives of Gun Violence (TNGV)"
       />
       <NavLink
-        href="/studios/?gunviolence"
-        linkOverride="/studios/?gunviolence"
+        href="/studios/?tngv"
+        linkOverride="/studios/?tngv"
         label="TNGV Studios"
         subLink={true}
       />
       <NavLink
-        href="/studios/projects/?gunviolence"
-        linkOverride="/studios/projects/?gunviolence"
+        href="/studios/projects/?tngv"
+        linkOverride="/studios/projects/?tngv"
         label="TNGV Projects"
         subLink={true}
       />

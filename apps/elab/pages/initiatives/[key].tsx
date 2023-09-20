@@ -194,7 +194,7 @@ export default function GunViolence({
                   </div>
                 </div>
               </div>
-              {/* <Button label="→ Projects" link="/archive?gunviolence" /> */}
+              {/* <Button label="→ Projects" link="/archive?tngv" /> */}
               {page?.slides && page?.slides.length > 0 && (
                 <Slideshow
                   slides={page?.slides}
@@ -412,7 +412,7 @@ export default function GunViolence({
 }
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
-    paths: ['/initiatives/gunviolence', '/initiatives/climate'],
+    paths: ['/initiatives/tngv', '/initiatives/climate'],
     fallback: false,
   };
 }

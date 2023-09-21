@@ -39,11 +39,12 @@ export default function Studios({
         set((state) => {
           const group = filter.toLocaleLowerCase();
           let theme = Theme.none;
+          // debugger;
 
           if (state.selectedFilter !== group) {
-            if (group === 'gunviolence') {
+            if (group === 'tngv') {
               theme = Theme.gunviolence;
-            } else if (group === 'climate') {
+            } else if (group === 'tnej') {
               theme = Theme.climate;
             }
           }
@@ -80,9 +81,9 @@ export default function Studios({
       );
       preSelectedFilter = filter.replace('?', '');
 
-      if (preSelectedFilter === 'gunviolence') {
+      if (preSelectedFilter === 'tngv') {
         preSelectedTheme = Theme.gunviolence;
-      } else if (preSelectedFilter === 'climate') {
+      } else if (preSelectedFilter === 'tnej') {
         preSelectedTheme = Theme.climate;
       }
 
@@ -106,17 +107,15 @@ export default function Studios({
     const haveGroupOpen = (key: string) => {
       return selectedFilter.toLowerCase() === key.toLowerCase();
     };
-    const toggleFilter = useStore((state) => state.toggle);
-    const reset = useStore((state) => state.reset);
 
     const filterGroups = [
       {
-        key: 'gunviolence',
+        key: 'tngv',
         label: 'Transforming Narratives of Gun Violence',
       },
       {
-        key: 'climate',
-        label: 'Transforming Narratives for  Environmental Justice',
+        key: 'tnej',
+        label: 'Transforming Narratives for Environmental Justice',
       },
     ];
 
@@ -227,20 +226,21 @@ export default function Studios({
       return <div>{menu}</div>;
     };
 
-    // const haveFilters = selectedFilters.length > 0;
-    // const reset = useStore((state) => state.reset);
-
     const filteredItems = props.items
       ? props.items.filter((item) => {
           // If selected groups empty, show all...
-          // console.log(selectedFilters, item.filters, selectedFilter);
+          const group =
+            item.initiatives[0].toLowerCase() === 'gunviolence'
+              ? 'tngv'
+              : 'tnej';
+
           return (
             selectedFilter === '' ||
             // ...otherwise, item's filters must match group and ALL selected sub-filters
 
             (item.initiatives &&
               item.initiatives.length > 0 &&
-              item.initiatives[0].toLowerCase() === selectedFilter)
+              group === selectedFilter)
           );
         })
       : [];

@@ -60,9 +60,9 @@ export default function StudioProjects({
           let theme = Theme.none;
 
           if (state.filterGroupOpen !== group) {
-            if (group === 'gunviolence') {
+            if (group === 'tngv') {
               theme = Theme.gunviolence;
-            } else if (group === 'climate') {
+            } else if (group === 'tnej') {
               theme = Theme.climate;
             }
           }
@@ -171,11 +171,11 @@ export default function StudioProjects({
 
     const filterGroups = [
       {
-        key: 'gunviolence',
+        key: 'tngv',
         label: 'Transforming Narratives of Gun Violence',
       },
       {
-        key: 'climate',
+        key: 'tnej',
         label: 'Transforming Narratives for Environmental Justice',
       },
     ];
@@ -335,18 +335,15 @@ export default function StudioProjects({
     };
 
     let selectedFilters = useStore((state) => state.currentFilters);
-
-    // const haveFilters = selectedFilters.length > 0;
-    // const reset = useStore((state) => state.reset);
-
     const filteredItems = props.items
       ? props.items.filter((item) => {
           // If selected groups empty, show all...
-          // console.log(selectedFilters, item.filters, filterGroupOpen);
+          const group =
+            item.initiative.toLowerCase() === 'gunviolence' ? 'tngv' : 'tnej';
           return (
             filterGroupOpen === '' ||
             // ...otherwise, item's filters must match group and ALL selected sub-filters
-            (item.initiative.toLowerCase() === filterGroupOpen.toLowerCase() &&
+            (group === filterGroupOpen.toLowerCase() &&
               _.every(
                 selectedFilters,
                 (r) => _.map(item.filters, 'key').indexOf(r) >= 0

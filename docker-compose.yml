@@ -68,10 +68,12 @@ services:
       context: .
       dockerfile: Dockerfile
       target: cms-runner
+      args:
+        - APP_NAME=sjm
+        - PORT=3001
     env_file:
       - ./apps/cms/.env
     environment:
-      - APP_NAME=sjm
       - PORT=3001
     restart: on-failure
     labels:
@@ -91,10 +93,13 @@ services:
       context: .
       dockerfile: Dockerfile
       target: cms-runner
+      args:
+        - APP_NAME=elab
+        - PORT=3002
     env_file:
       - ./apps/cms/.env
     environment:
-      - APP_NAME=elab
+      # - APP_NAME=elab
       - PORT=3002
     restart: on-failure
     labels:

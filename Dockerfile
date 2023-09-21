@@ -31,12 +31,12 @@ RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
 FROM node:${NODE_VERSION}-slim AS cms-runner
 
 ARG PORT=3000
-ARG APP_NAME=sjm
+ARG APP_NAME
 
 ENV NODE_ENV production
 ENV NEXTJS_IGNORE_ESLINT 1
 ENV NEXTJS_IGNORE_TYPECHECK 0
-ENV APP_NAME ${APP_NAME}
+ENV APP_NAME=$APP_NAME
 
 WORKDIR /repo
 
@@ -57,9 +57,9 @@ RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
 RUN cp favicon.ico ./node_modules/@keystone-6/core/favicon.ico
 EXPOSE $PORT
 
-CMD yarn keystone postinstall --fix --app $APP_NAME && \
-    yarn build --app $APP_NAME && \
-    yarn start --app $APP_NAME
+CMD yarn keystone postinstall --fix && \
+    yarn build && \
+    yarn start
 
 # Create API target
 

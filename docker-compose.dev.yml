@@ -1,19 +1,19 @@
 version: '3'
 
 services:
-  traefik:
-    image: traefik:v2.9
-    ports:
-      - 80:80
-      - 8080:8080
-    volumes:
-      # So that Traefik can listen to the Docker events
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./proxy/traefik.dev.yml:/traefik.yml
-    labels:
-      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      - "traefik.http.routers.dashboard.entrypoints=web"
-      - "traefik.http.routers.dashboard.service=api@internal"
+  # traefik:
+  #   image: traefik:v2.9
+  #   ports:
+  #     - 80:80
+  #     - 8080:8080
+  #   volumes:
+  #     # So that Traefik can listen to the Docker events
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./proxy/traefik.dev.yml:/traefik.yml
+  #   labels:
+  #     - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+  #     - "traefik.http.routers.dashboard.entrypoints=web"
+  #     - "traefik.http.routers.dashboard.service=api@internal"
 
   # cms-landing:
   #   image: ghcr.io/patrickdappollonio/docker-http-server:v2
@@ -57,38 +57,59 @@ services:
   #     # traefik.http.middlewares.catch-all-middleware.errors.service: catch-all
   #     # traefik.http.middlewares.catch-all-middleware.errors.query: /500.html
 
-  error-pages:
-    image: ghcr.io/patrickdappollonio/docker-http-server:v2
-    command: --path /html
-    volumes:
-      - ./_site:/html
-    labels:
-      traefik.enable: "true"
-      traefik.http.services.error-pages.loadbalancer.server.port: 5000
-      traefik.http.routers.error-pages.entrypoints: web
-      traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.dev.local`)
-      traefik.http.routers.error-pages.priority: 1
-      traefik.http.middlewares.error-pages.errors.status: 500-599
-      traefik.http.middlewares.error-pages.errors.service: error-pages
-      traefik.http.middlewares.error-pages.errors.query: /error.html
+  # error-pages:
+  #   image: ghcr.io/patrickdappollonio/docker-http-server:v2
+  #   command: --path /html
+  #   volumes:
+  #     - ./_site:/html
+  #   labels:
+  #     traefik.enable: "true"
+  #     traefik.http.services.error-pages.loadbalancer.server.port: 5000
+  #     traefik.http.routers.error-pages.entrypoints: web
+  #     traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.dev.local`)
+  #     traefik.http.routers.error-pages.priority: 1
+  #     traefik.http.middlewares.error-pages.errors.status: 500-599
+  #     traefik.http.middlewares.error-pages.errors.service: error-pages
+  #     traefik.http.middlewares.error-pages.errors.query: /error.html
 
-  cms-sjm:
-    hostname: cms-sjm
+  cms-elab:
+    hostname: cms-elab
     ports:
-      - "3001:3001"
+      - "3000:3000"
     build:
       context: .
       dockerfile: Dockerfile
       target: cms-runner
+      args:
+        - APP_NAME=elab
+        - PORT=3000
     env_file:
       - ./apps/cms/.env
     environment:
-      - APP_NAME=sjm
-      - PORT=3001
-    labels:
-      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
-      - "traefik.http.routers.cms-sjm.entrypoints=web"
-      - "traefik.http.routers.cms-sjm.service=cms-sjm-transform-narratives"
+      # - APP_NAME=elab
+      - PORT=3000
+    # labels:
+    #   - "traefik.http.routers.cms-elab.rule=PathPrefix(`/elab`)"
+    #   - "traefik.http.routers.cms-elab.entrypoints=web"
+    #   - "traefik.http.routers.cms-elab.service=cms-elab-transform-narratives"
+
+  # cms-sjm:
+    # hostname: cms-sjm
+    # ports:
+    #   - "3001:3001"
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    #   target: cms-runner
+    # env_file:
+    #   - ./apps/cms/.env
+    # environment:
+    #   - APP_NAME=sjm
+    #   - PORT=3001
+    # labels:
+    #   - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
+    #   - "traefik.http.routers.cms-sjm.entrypoints=web"
+    #   - "traefik.http.routers.cms-sjm.service=cms-sjm-transform-narratives"
 
       # qa-tngvi:
       #   build:
@@ -116,17 +137,18 @@ services:
       #     - "traefik.http.routers.qa-sjm.entrypoints=web"
       #     - "traefik.http.routers.qa-sjm.service=qa-sjm-transform-narratives"
       #     - "traefik.http.services.qa-sjm-transform-narratives.loadbalancer.server.port=8082"
-  qa-elab:
-      build:
-        context: .
-        dockerfile: Dockerfile
-        target: qa-image
-        args:
-          APP: elab
-          PORT: 8083
-          CMS_ENDPOINT: cms-elab:3002
-      restart: on-failure
-      labels:
-        - 'traefik.http.routers.qa-elab-http.entrypoints=web'
-        - 'traefik.http.routers.qa-elab.service=qa-elab-el-next'
-        - 'traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083'
+
+  # qa-elab:
+  #     build:
+  #       context: .
+  #       dockerfile: Dockerfile
+  #       target: qa-image
+  #       args:
+  #         APP: elab
+  #         PORT: 8083
+  #         CMS_ENDPOINT: cms-elab:3002
+  #     restart: on-failure
+  #     labels:
+  #       - 'traefik.http.routers.qa-elab-http.entrypoints=web'
+  #       - 'traefik.http.routers.qa-elab.service=qa-elab-el-next'
+  #       - 'traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083'

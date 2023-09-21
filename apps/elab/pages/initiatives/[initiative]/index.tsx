@@ -8,7 +8,7 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 import {
   News,
   Event,
@@ -140,24 +140,19 @@ export default function GunViolence({
     );
   };
   return (
-    <Layout
-      error={error}
-      fullBleed={true}
-      theme={Theming[initiative].theme}
-      breadcrumbs={[
-        { label: 'Social Impact Initiatives', href: '/initiatives' },
-      ]}
-    >
+    <Layout error={error} fullBleed={true} theme={Theming[initiative].theme}>
       {page && (
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
-            <h2 className="text-4xl lg:text-5xl text-slate font-extrabold">
+            {/* <h2 className="text-4xl lg:text-5xl text-slate font-extrabold">
               {initiative === 'gunviolence'
                 ? ' Transforming Narratives of Gun Violence'
                 : 'Transforming Narratives for Environmental Justice'}
-            </h2>
+            </h2> */}
             <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
+                <h2 className={subHeadClass}>About The Initiative</h2>
+
                 <DocumentRenderer
                   document={page?.intro.document}
                   componentBlocks={Blocks()}
@@ -167,21 +162,21 @@ export default function GunViolence({
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
                   <h2 className={subHeadClass}>Jump to:</h2>
                   <div className="flex flex-row">
-                    <Button
+                    {/* <Button
                       label="Context"
                       anchorId="context"
                       className={jumpClass}
-                    />
+                    /> */}
                     {/* <div className="flex flex-row lg:w-3/4 xl:w-4/6"> */}
                     {page.projects && page.projects.length > 0 && (
                       <Button
-                        label="Projects"
+                        label="Featured Projects"
                         anchorId="projects"
                         className={jumpClass + ' ml-3'}
                       />
                     )}
                     <Button
-                      label="Studios"
+                      label="Featured Studios"
                       anchorId="studios"
                       className={jumpClass + ' ml-3'}
                     />
@@ -417,12 +412,16 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   };
 }
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
+export async function getStaticProps({
+  params,
+}: {
+  params: { initiative: string };
+}) {
   let objectName = 'Gun Violence';
-  let initiative = 'gunviolence';
-  if (params!.key === 'climate') {
+  let initiative = 'tngv';
+  if (params.initiative === 'tnej') {
     objectName = 'Environmental Justice';
-    initiative = 'climate';
+    initiative = 'tnej';
   }
 
   const result = await Query(
@@ -500,7 +499,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       props: {
         error: result.error,
         page: null,
-        initiative: 'gunviolence',
+        initiative: 'tngv',
       },
     };
   }

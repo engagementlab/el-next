@@ -194,8 +194,10 @@ export default function Studio({
 
   if (item) {
     let theme = Theming['none'];
-    if (item.initiatives && item.initiatives.length > 0)
-      theme = Theming[item.initiatives[0]];
+    if (item.initiatives && item.initiatives.length > 0) {
+      if (item.initiatives[0] === 'gunviolence') theme = Theming['tngv'];
+      else if (item.initiatives[0] === 'climate') theme = Theming['tnej'];
+    }
     const rendererOverrides = {
       heading: (level: number, children: ReactNode, textAlign: any) => {
         const customRenderers = {
@@ -210,7 +212,7 @@ export default function Studio({
     return (
       <Layout
         error={error}
-        breadcrumbs={[{ label: 'Social Impact Studios', href: '/studios' }]}
+        // breadcrumbs={[{ label: 'Social Impact Studios', href: '/studios' }]}
         theme={
           !item.initiatives || item.initiatives.length < 1
             ? Theme.none

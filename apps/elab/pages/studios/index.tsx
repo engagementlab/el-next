@@ -229,10 +229,13 @@ export default function Studios({
     const filteredItems = props.items
       ? props.items.filter((item) => {
           // If selected groups empty, show all...
-          const group =
-            item.initiatives[0].toLowerCase() === 'gunviolence'
-              ? 'tngv'
-              : 'tnej';
+
+          let group = '';
+          if (item.initiatives && item.initiatives.length > 0)
+            group =
+              item.initiatives[0].toLowerCase() === 'gunviolence'
+                ? 'tngv'
+                : 'tnej';
 
           return (
             selectedFilter === '' ||

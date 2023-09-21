@@ -81,6 +81,8 @@ export default function Studio({
   } = useStore((state) => state);
 
   if (item) {
+    const theming =
+      Theming[item.initiative === 'gunviolence' ? 'tngv' : 'tnej'];
     const rendererOverrides = {
       layout: (layout: number[], children: any[]) => {
         const flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row';
@@ -125,21 +127,19 @@ export default function Studio({
       },
       heading: (level: number, children: ReactNode, textAlign: any) => {
         const customRenderers = {
-          3: `text-xl font-extrabold uppercase my-4 ${
-            Theming[item.initiative].heading
-          }`,
+          3: `text-xl font-extrabold uppercase my-4 ${theming.heading}`,
         };
         return HeadingStyle({ level, children, textAlign, customRenderers });
       },
       quote: (children: ReactElement[]) => {
-        return QuoteRenderer(children, item, Theming[item.initiative]);
+        return QuoteRenderer(children, item, theming);
       },
     };
     return (
       <Layout
         error={error}
         breadcrumbs={[{ label: 'Studio Projects', href: '/studios/projects' }]}
-        theme={Theming[item.initiative].theme}
+        theme={theming.theme}
         fullBleed={true}
       >
         {item && (
@@ -201,9 +201,7 @@ export default function Studio({
                             <path
                               d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
                               fill="white"
-                              className={`group-hover:${
-                                Theming[item.initiative].fill
-                              }`}
+                              className={`group-hover:${theming.fill}`}
                             />
                           </svg>
                           <h4 className="text-white font-semibold text-3xl">
@@ -226,9 +224,7 @@ export default function Studio({
                 )}
                 <div className="basis-1/3 xl:basis-1/2">
                   <h2
-                    className={`uppercase text-xl lg:text-3xl font-extrabold ${
-                      Theming[item.initiative].heading
-                    }`}
+                    className={`uppercase text-xl lg:text-3xl font-extrabold ${theming.heading}`}
                   >
                     About
                   </h2>
@@ -236,7 +232,7 @@ export default function Studio({
                     <div className="my-6">
                       <DocumentRenderer
                         document={item.about.document}
-                        componentBlocks={Blocks(Theming[item.initiative])}
+                        componentBlocks={Blocks(theming)}
                         renderers={Doc(rendererOverrides)}
                       />
                     </div>
@@ -245,10 +241,8 @@ export default function Studio({
                         label="Watch the film"
                         link="/"
                         icon="play"
-                        theme={Theming[item.initiative].theme}
-                        className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
-                          Theming[item.initiative].fill
-                        }`}
+                        theme={theming.theme}
+                        className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${theming.fill}`}
                         onClick={() => toggleVideo()}
                       />
                     )}
@@ -259,28 +253,22 @@ export default function Studio({
                           label={button.label}
                           link={button.url}
                           icon={button.icon}
-                          theme={Theming[item.initiative].theme}
-                          className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${
-                            Theming[item.initiative].fill
-                          }`}
+                          theme={theming.theme}
+                          className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8 ${theming.fill}`}
                         />
                       ))}
                   </div>
                 </div>
                 <div className="hidden lg:block w-3/4 lg:w-full">
                   <h2
-                    className={`uppercase text-xl lg:text-3xl my-3 font-extrabold ${
-                      Theming[item.initiative].heading
-                    }`}
+                    className={`uppercase text-xl lg:text-3xl my-3 font-extrabold ${theming.heading}`}
                   >
                     Jump to:
                   </h2>
                   <Button
                     label="A Look Inside the Co-Creation Process"
                     anchorId="cocreation"
-                    className={`text-sm ${Theming[item.initiative].text} ${
-                      Theming[item.initiative].fill
-                    }
+                    className={`text-sm ${theming.text} ${theming.fill}
                       `}
                   />
                   <div className="flex flex-row gap-x-5">
@@ -288,25 +276,21 @@ export default function Studio({
                       <Button
                         label="Impact"
                         anchorId="impact"
-                        className={`text-sm ${Theming[item.initiative].text} ${
-                          Theming[item.initiative].fill
-                        }
+                        className={`text-sm ${theming.text} ${theming.fill}
                     `}
                       />
                     )}
                     <Button
                       label="Team"
                       anchorId="team"
-                      className={`text-sm ${Theming[item.initiative].text} ${
-                        Theming[item.initiative].fill
-                      }
+                      className={`text-sm ${theming.text} ${theming.fill}
                     `}
                     />
                     {/* <Button
                       label="Related Projects"
                       anchorId="related"
-                      className={`text-sm ${Theming[item.initiative].text} ${
-                        Theming[item.initiative].fill
+                      className={`text-sm ${theming.text} ${
+                        theming.fill
                       }`}
                     /> */}
                   </div>
@@ -321,15 +305,13 @@ export default function Studio({
                 </h2>
                 <DocumentRenderer
                   document={item.coCreation.document}
-                  componentBlocks={Blocks(Theming[item.initiative])}
+                  componentBlocks={Blocks(theming)}
                   renderers={Doc(rendererOverrides)}
                 />
               </div>
 
               <h2
-                className={`text-xl font-extrabold uppercase ${
-                  Theming[item.initiative].heading
-                }`}
+                className={`text-xl font-extrabold uppercase ${theming.heading}`}
               >
                 Partners
               </h2>
@@ -344,7 +326,7 @@ export default function Studio({
                     <h2 className="font-bold text-5xl my-3">Impact</h2>
                     <DocumentRenderer
                       document={item.impact.document}
-                      componentBlocks={Blocks(Theming[item.initiative])}
+                      componentBlocks={Blocks(theming)}
                       renderers={Doc(rendererOverrides)}
                     />
                   </div>
@@ -360,7 +342,7 @@ export default function Studio({
                 <PeopleList
                   list={item.studioStudents}
                   heading="Students"
-                  theme={Theming[item.initiative]}
+                  theme={theming}
                   index={0}
                 />
               )}
@@ -368,7 +350,7 @@ export default function Studio({
                 <PeopleList
                   list={item.learningPartners}
                   heading="Learning Partners"
-                  theme={Theming[item.initiative]}
+                  theme={theming}
                   index={1}
                 />
               )}
@@ -378,7 +360,7 @@ export default function Studio({
                     <PeopleList
                       list={item.instructors}
                       heading="Studio Instructors"
-                      theme={Theming[item.initiative]}
+                      theme={theming}
                       index={2}
                     />
                   )}
@@ -388,7 +370,7 @@ export default function Studio({
                     <PeopleList
                       list={item.studioStaff}
                       heading="Engagement Lab Staff"
-                      theme={Theming[item.initiative]}
+                      theme={theming}
                       index={3}
                     />
                   )}

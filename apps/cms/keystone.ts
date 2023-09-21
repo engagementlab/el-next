@@ -118,7 +118,9 @@ let ksConfig = (lists: any) => {
       },
     },
     ui: {
-      basePath: `/${process.env.PRODUCTION_MODE === 'true' ? appName : ''}`,
+      basePath: `${
+        process.env.PRODUCTION_MODE === 'true' ? '/' + appName : ''
+      }`,
     },
     graphql: {
       path: `/${

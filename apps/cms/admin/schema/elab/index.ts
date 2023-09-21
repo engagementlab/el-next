@@ -16,7 +16,6 @@ const slideshow = Slideshow({
   }),
 });
 console.info('Slideshow elab', slideshow);
-console.trace();
 export { slideshow as Slideshow };
 export { default as About } from './lists/about';
 export { default as Filter } from './lists/filter';

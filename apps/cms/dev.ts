@@ -1,4 +1,11 @@
+import yargs from 'yargs/yargs';
 (() => {
+  const argv: any = yargs(process.argv.slice(2)).options({
+    app: {
+      type: 'string',
+    },
+  }).argv;
+
   function exec(command: string) {
     command = command.replace(/\\?\n/g, ''); // need to merge multi-line commands into one string
 
@@ -36,9 +43,9 @@
   try {
     exec('rm -f admin/schema/index.ts');
     exec(
-      `ln -s ${__dirname}/admin/schema/sjm/index.ts ${__dirname}/admin/schema/index.ts`
+      `ln -s ${__dirname}/admin/schema/${argv.app}/index.ts ${__dirname}/admin/schema/index.ts`
     );
-    exec(`yarn keystone dev --app sjm`);
+    exec(`yarn keystone dev --app ${argv.app}`);
     // exec(`cd apps/${response.value}; yarn dev`, AppType.FRONTEND);
   } catch (error) {
     console.error(error);

@@ -4,14 +4,14 @@
   "private": true,
   "main": "keystone.ts",
   "scripts": {
-    "dev": "npx tsc dev.ts; node dev.js",
+    "dev": "npx tsc --esModuleInterop dev.ts; node dev.js",
     "start": "keystone start",
     "build": "node build.js",
     "build-export": "npx babel export/src -d export/lib --extensions .ts,.tsx",
     "export": "npm run build-export && node ./export/lib",
     "migrate": "keystone prisma migrate deploy",
     "watch-export": "npx babel export/src -d export/lib --extensions .ts,.tsx --watch",
-    "postinstall": "keystone postinstall --fix --app sjm",
+    "postinstall": "keystone postinstall --fix",
     "postinstall-ci": "keystone postinstall --fix"
   },
   "dependencies": {

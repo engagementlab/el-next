@@ -61,7 +61,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     secodaryBg: 'bg-[#F6A536]/40',
     theme: Theme.none,
   },
-  gunviolence: {
+  tngv: {
     arrow: '#7C4E9F',
     secodaryArrow: '#00A494',
     text: 'text-purple',
@@ -75,7 +75,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     secodaryBg: 'bg-[#E2BDFE]/40',
     theme: Theme.gunviolence,
   },
-  climate: {
+  tnej: {
     arrow: '#00A494',
     secodaryArrow: 'fill-green',
     text: 'text-leaf',

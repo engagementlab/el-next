@@ -15,7 +15,6 @@ import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { Blocks, Doc } from '../../components/Renderers';
 
 import { Event, Theme, Theming } from '@/types';
-import { it } from 'node:test';
 import { CTAButton } from '@/components/Buttons';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
@@ -31,6 +30,13 @@ export default function Event({
   date,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  let theme = Theme.none;
+  if (item) {
+    if (item.initiatives && item.initiatives.length > 0) {
+      if (item.initiatives[0] === 'gunviolence') theme = Theme.gunviolence;
+      else if (item.initiatives[0] === 'climate') theme = Theme.climate;
+    }
+  }
   return (
     <Layout error={error}>
       {item && (
@@ -69,11 +75,7 @@ export default function Event({
               <CTAButton
                 label="RSVP Today"
                 link={item.registrationLink}
-                theme={
-                  item.initiatives && item.initiatives.length > 0
-                    ? Theming[item.initiatives[0]].theme
-                    : Theme.none
-                }
+                theme={theme}
               />
             )}
             {/*  {relatedItems &&

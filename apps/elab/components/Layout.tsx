@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -32,24 +32,19 @@ const Layout = ({
   fullBleed,
   topBgElement,
 }: Props): JSX.Element => {
-  // let currentBg =
-  // 'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]';
   const BG = topBgElement ? topBgElement : <></>;
-  const [currentBg, setBg] = useState(
-    'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]'
-  );
-
-  useEffect(() => {
-    if (theme === Theme.gunviolence)
-      setBg('bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]');
-    if (theme === Theme.climate)
-      setBg('bg-gradient-to-b from-[#D7EFC1] to-leaf');
-  }, []);
+  const GutterBGClasses = [
+    'bg-gradient-to-b from-red/[.2] via-green-blue/[.2] to-yellow/[.5]',
+    'bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]',
+    'bg-gradient-to-b from-[#D7EFC1] to-leaf',
+  ];
 
   return (
     <>
       <span
-        className={`fixed top-0 bottom-0 w-1 md:w-16 ${currentBg} shadow-[inset_-14px_0_9px_-6px_rgba(0,0,0,0.1)]`}
+        className={`fixed top-0 bottom-0 w-1 md:w-16 shadow-[inset_-14px_0_9px_-6px_rgba(0,0,0,0.1)] ${
+          GutterBGClasses[theme || 0]
+        }`}
         aria-hidden="true"
       ></span>
       {BG}
@@ -129,7 +124,9 @@ const Layout = ({
         <Footer />
       </div>
       <span
-        className={`fixed top-0 bottom-0 right-0 w-1 md:w-16 ${currentBg} shadow-[inset_14px_0_9px_-6px_rgba(0,0,0,0.1)]`}
+        className={`fixed top-0 bottom-0 right-0 w-1 md:w-16 shadow-[inset_14px_0_9px_-6px_rgba(0,0,0,0.1)] ${
+          GutterBGClasses[theme || 0]
+        }`}
         aria-hidden="true"
       ></span>
     </>

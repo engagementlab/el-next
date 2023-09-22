@@ -1,32 +1,26 @@
-import {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from 'next';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
+import Link from 'next/link';
 
-import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
-
-// import query from '../../../../apollo-client';
 import Layout from '../../../components/Layout';
+
 import {
   News,
   Event,
   ResearchProject,
   Studio,
   StudioProject,
-  Theme,
   Theming,
   Item,
 } from '@/types';
+
 import { CTAButton, MoreButton } from '@/components/Buttons';
 import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
-import Link from 'next/link';
 import Logos from '@/components/Logos';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+import { Button, Query, Image } from '@el-next/components';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Blocks, Doc } from '@/components/Renderers';
-import { ReactNode } from 'react';
 import { Gutter } from '@/components/Gutter';
 
 type AboutPage = {
@@ -42,7 +36,7 @@ type AboutPage = {
   research: ResearchProject[];
 };
 
-export default function GunViolence({
+export default function InitIndex({
   page,
   mergedItems,
   initiative,
@@ -152,13 +146,17 @@ export default function GunViolence({
             <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
                 <h2 className={subHeadClass}>About The Initiative</h2>
-
                 <DocumentRenderer
                   document={page?.intro.document}
                   componentBlocks={Blocks()}
                   renderers={Doc()}
                 />
 
+                {initiative === 'tngv' ? (
+                  <Logos partners={['ldbpi', 'mgh']} />
+                ) : (
+                  <Logos partners={['ficdc', 'greenroots', 'sftt']} />
+                )}
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
                   <h2 className={subHeadClass}>Jump to:</h2>
                   <div className="flex flex-row">
@@ -210,31 +208,6 @@ export default function GunViolence({
               </div>
             )}
           </div>
-          <Divider color={Theming[initiative].secodary} />
-          <Gutter noMarginY={false}>
-            <div id="context">
-              <DocumentRenderer
-                document={page?.body.document}
-                componentBlocks={Blocks(Theming[initiative])}
-                renderers={Doc({
-                  heading: (
-                    level: number,
-                    children: ReactNode,
-                    textAlign: any
-                  ) => {
-                    return HeadingStyle({
-                      level,
-                      children,
-                      textAlign,
-                      customRenderers: {
-                        2: `font-bold text-4xl`,
-                      },
-                    });
-                  },
-                })}
-              />
-            </div>
-          </Gutter>
           {page.projects && page.projects.length > 0 && (
             <Divider color={Theming[initiative].secodary} />
           )}
@@ -386,7 +359,7 @@ export default function GunViolence({
 
           <Gutter noMarginY={false}>
             <h2 className="text-3xl font-bold">Partner Organizations</h2>
-            {initiative === 'gunviolence' ? (
+            {initiative === 'tngv' ? (
               <Logos
                 partners={[
                   'ldbpi',
@@ -439,9 +412,6 @@ export async function getStaticProps({
           caption
           videoId
         }
-        body {
-          document
-        }
         news {
             title
             key
@@ -493,7 +463,7 @@ export async function getStaticProps({
         }
       }`
   );
-  // console.log(result.slides[1].image);
+
   if (result.error) {
     return {
       props: {

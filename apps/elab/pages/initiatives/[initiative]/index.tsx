@@ -407,7 +407,7 @@ export default function GunViolence({
 }
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
-    paths: ['/initiatives/tngv', '/initiatives/climate'],
+    paths: ['/initiatives/tngv', '/initiatives/tnej'],
     fallback: false,
   };
 }

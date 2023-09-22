@@ -179,7 +179,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
               height="20"
               viewBox="0 -960 960 960"
               width="20"
-              className="inline"
+              className={`inline ${className}`}
             >
               <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
             </svg>
@@ -232,14 +232,8 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       />
 
       <NavLink
-        href="/initiatives/climate"
+        href="/initiatives/tnej"
         label="Transforming Narratives for Environmental Justice (TNEJ)"
-      />
-      <NavLink
-        href="/studios/?climate"
-        linkOverride="/studios/?climate"
-        label="TNEJ Studios"
-        subLink={true}
       />
       {/* <NavLink
         href="/studios/projects/?climate"
@@ -302,6 +296,102 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
           </motion.div>
         </motion.section>
       </>
+    );
+  };
+  const SubNavigation = ({
+    logo,
+    title,
+    bgClass,
+    textClass,
+    fillClass,
+    urlSuffix,
+  }: {
+    logo: React.ReactNode;
+    title: string;
+    bgClass: string;
+    textClass: string;
+    fillClass: string;
+    urlSuffix: string;
+  }): JSX.Element => {
+    return (
+      <motion.div
+        // initial={{ y: -10, opacity: 0 }}
+        // exit={{ opacity: 0 }}
+        // animate={{ y: 0, opacity: 1 }}
+        className="my-6 md:pl-24 lg:mt-12"
+      >
+        <div className="flex w-full flex-row">
+          {logo}
+          <div className="flex-grow">
+            <h2 className={`text-xl lg:text-4xl font-extrabold ${textClass}`}>
+              {title}
+            </h2>
+            <div
+              className={`hidden lg:flex flex-row justify-evenly mt-3 font-semibold ${bgClass} ${textClass}`}
+            >
+              <NavLink
+                href={`/initiatives/${urlSuffix}`}
+                label="About The Initiative"
+                subLink={true}
+                className={fillClass}
+              />
+              <NavLink
+                href={`/initiatives/${urlSuffix}/why-narrative-change`}
+                label="Why Narrative Change?"
+                subLink={true}
+                className={fillClass}
+              />
+              {/* <NavLink href="/studios/?tngv" label="Partners" subLink={true} /> */}
+              <NavLink
+                href={`/studios/?${urlSuffix}`}
+                label="Studios"
+                subLink={true}
+                className={fillClass}
+              />
+              <NavLink
+                href={`/studios/projects/?${urlSuffix}`}
+                label="Projects"
+                subLink={true}
+                className={fillClass}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`flex xl:hidden flex-row justify-around mx-6 py-3 font-semibold ${bgClass} ${textClass}`}
+        >
+          <div className="flex flex-col lg:flex-row">
+            <NavLink
+              href={`/initiatives/${urlSuffix}`}
+              label="About The Initiative"
+              subLink={true}
+              className="fill-purple"
+            />
+            <NavLink
+              href={`/initiatives/${urlSuffix}/why-narrative-change`}
+              label="Why Narrative Change?"
+              subLink={true}
+              className="fill-purple"
+            />
+            {/* <NavLink href="/studios/?tngv" label="Partners" subLink={true} /> */}
+          </div>
+          <div className="flex flex-col xl:flex-row">
+            <NavLink
+              href={`/studios/?${urlSuffix}`}
+              label="Studios"
+              subLink={true}
+              className="fill-purple"
+            />
+            <NavLink
+              href={`/studios/projects/?${urlSuffix}`}
+              label="Projects"
+              subLink={true}
+              className="fill-purple"
+            />
+          </div>
+        </div>
+      </motion.div>
     );
   };
   useEffect(() => {
@@ -556,27 +646,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
           </motion.svg>
         )}
         {currentTheme === Theme.climate && (
-          <motion.svg
-            viewBox="0 0 1920 1080"
-            width="81.459"
-            height="100"
-            initial={{ y: -10, opacity: 0 }}
-            exit={{ opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="ml-4"
-          >
-            <title>
-              Transforming Narratives for Environmental Justice logo
-            </title>
 
-            <g fill="#39b54a">
-              <path d="m1043.1 736.5v-441.4h303.1v95.8h-183.4v78.7h132.6v92.4h-132.6v78.7h183.4v95.8z" />
-              <path d="m1569.8 137.4c9.7-5.7 17.7-13.4 24.3-22.5 4.4 1 15.3 2 15.3 2-15.1 20.3-20.5 20-29.4 30.2 1.7 1.3 18.8 120.4-126.6 109.5-36.5-2.7-62.1 5.8-62.1 5.8-6.7-40.3 51.7-205.1 178.5-125z" />
-              <path d="m735.2 257.5v-147.2h-520.2v147.1h112.7c14 0 39.8-2.9 51.6.7v474.9h191.6v-430.1c0-12.5-2.5-35.1.7-45.5h163.6z" />
-              <path d="m925 298.5c-12.6 0-31.7-2.7-42.7.7v221.7h-1.7c-9.7-18.6-23.8-35.5-34.8-53.1-24.1-38.3-48.6-75.9-72.7-114.1-7.9-12.4-16.5-25.2-24.8-37.9-3.4-5.2-9.7-10.7-11.7-17.2h-78c-12.8 0-32.1-2.8-43.1.7v433.9h119.8v-215.7c6.1 2.7 8.8 11.7 12.2 16.5 8.2 12.7 16.8 25.7 25.4 38.7 24.7 36.7 48.7 74.1 73.4 111.1 8.2 12 16.1 23.7 24 36.3 3.1 4.8 9.9 13 9.9 13h78.6c11.9 0 33.5 2.7 43.3-.7v-392.3c0-12.6 2.7-31-.7-41.6z" />
-              <path d="m1390.2 295.1h144.6v462.3c0 49.4-3.6 92.4-25.5 128.8-22 36.4-45 64.5-84 84.2s-84.3 29.6-136 29.6c-46 0-87.6-8.2-125-24.5s-67-41.3-88.9-74.9-32.7-72.4-32.4-123.3h160.6c.5 20.2 4.7 34.1 12.5 48.4 7.8 14.4 18.6 25.3 32.4 32.9s30.1 11.4 49 11.4c19.9 0 36.7-4.3 50.5-12.9s24.3-21.3 31.5-38 10.8-37.3 10.8-61.8v-462.2z" />
-            </g>
-          </motion.svg>
         )} */}
         </div>
         {/* Desktop+ */}
@@ -883,13 +953,13 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
         </motion.nav>
       </nav>
       {currentTheme === Theme.gunviolence && (
-        <motion.div
-          initial={{ y: -10, opacity: 0 }}
-          exit={{ opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="my-6 md:pl-24 lg:mt-12"
-        >
-          <div className="flex w-full flex-row">
+        <SubNavigation
+          title="Transforming Narratives of Gun Violence"
+          textClass="text-purple"
+          bgClass="bg-purple/20"
+          urlSuffix="tngv"
+          fillClass="fill-purple"
+          logo={
             <svg
               viewBox="0 0.081 81.459 50"
               className="basis-1/2 lg:basis-36 mr-5"
@@ -979,76 +1049,40 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 ></path>
               </g>
             </svg>
-            <div className="flex-grow">
-              <h2 className="text-xl lg:text-4xl text-purple font-extrabold">
-                Transforming Narratives of Gun Violence
-              </h2>
-              <div className="hidden lg:flex flex-row justify-evenly mt-3 bg-purple/20 text-purple font-semibold">
-                <NavLink
-                  href="/initiatives/tngv"
-                  label="About The Initiative"
-                  subLink={true}
-                  className="fill-purple"
-                />
-                <NavLink
-                  href="/initiatives/tngv/why-narrative-change"
-                  label="Why Narrative Change?"
-                  subLink={true}
-                  className="fill-purple"
-                />
-                {/* <NavLink href="/studios/?tngv" label="Partners" subLink={true} /> */}
-                <NavLink
-                  href="/studios/?tngv"
-                  linkOverride="/studios/?tngv"
-                  label="Studios"
-                  subLink={true}
-                  className="fill-purple"
-                />
-                <NavLink
-                  href="/studios/projects/?tngv"
-                  linkOverride="/studios/projects/?tngv"
-                  label="Projects"
-                  subLink={true}
-                  className="fill-purple"
-                />
-              </div>
-            </div>
-          </div>
+          }
+        />
+      )}
+      {currentTheme === Theme.climate && (
+        <SubNavigation
+          title="Transforming Narratives for Environmental Justice"
+          textClass="text-leaf"
+          bgClass="bg-leaf/20"
+          urlSuffix="tnej"
+          fillClass="fill-leaf"
+          logo={
+            <motion.svg
+              viewBox="0 0 1920 1080"
+              width="81.459"
+              height="100"
+              className="basis-1/2 lg:basis-36 mr-5"
+              // initial={{ y: -10, opacity: 0 }}
+              // exit={{ opacity: 0 }}
+              // animate={{ y: 0, opacity: 1 }}
+            >
+              <title>
+                Transforming Narratives for Environmental Justice logo
+              </title>
 
-          <div className="flex xl:hidden flex-row justify-around mx-6 py-3 bg-purple/20 text-purple font-semibold">
-            <div className="flex flex-col lg:flex-row">
-              <NavLink
-                href="/initiatives/tngv"
-                label="About The Initiative"
-                subLink={true}
-                className="fill-purple"
-              />
-              <NavLink
-                href="/studios/?tngv"
-                label="Why Narrative Change?"
-                subLink={true}
-                className="fill-purple"
-              />
-              {/* <NavLink href="/studios/?tngv" label="Partners" subLink={true} /> */}
-            </div>
-            <div className="flex flex-col xl:flex-row">
-              <NavLink
-                href="/studios/?tngv"
-                linkOverride="/studios/?tngv"
-                label="Studios"
-                subLink={true}
-                className="fill-purple"
-              />
-              <NavLink
-                href="/studios/projects/?tngv"
-                linkOverride="/studios/projects/?tngv"
-                label="Projects"
-                subLink={true}
-                className="fill-purple"
-              />
-            </div>
-          </div>
-        </motion.div>
+              <g fill="#39b54a">
+                <path d="m1043.1 736.5v-441.4h303.1v95.8h-183.4v78.7h132.6v92.4h-132.6v78.7h183.4v95.8z" />
+                <path d="m1569.8 137.4c9.7-5.7 17.7-13.4 24.3-22.5 4.4 1 15.3 2 15.3 2-15.1 20.3-20.5 20-29.4 30.2 1.7 1.3 18.8 120.4-126.6 109.5-36.5-2.7-62.1 5.8-62.1 5.8-6.7-40.3 51.7-205.1 178.5-125z" />
+                <path d="m735.2 257.5v-147.2h-520.2v147.1h112.7c14 0 39.8-2.9 51.6.7v474.9h191.6v-430.1c0-12.5-2.5-35.1.7-45.5h163.6z" />
+                <path d="m925 298.5c-12.6 0-31.7-2.7-42.7.7v221.7h-1.7c-9.7-18.6-23.8-35.5-34.8-53.1-24.1-38.3-48.6-75.9-72.7-114.1-7.9-12.4-16.5-25.2-24.8-37.9-3.4-5.2-9.7-10.7-11.7-17.2h-78c-12.8 0-32.1-2.8-43.1.7v433.9h119.8v-215.7c6.1 2.7 8.8 11.7 12.2 16.5 8.2 12.7 16.8 25.7 25.4 38.7 24.7 36.7 48.7 74.1 73.4 111.1 8.2 12 16.1 23.7 24 36.3 3.1 4.8 9.9 13 9.9 13h78.6c11.9 0 33.5 2.7 43.3-.7v-392.3c0-12.6 2.7-31-.7-41.6z" />
+                <path d="m1390.2 295.1h144.6v462.3c0 49.4-3.6 92.4-25.5 128.8-22 36.4-45 64.5-84 84.2s-84.3 29.6-136 29.6c-46 0-87.6-8.2-125-24.5s-67-41.3-88.9-74.9-32.7-72.4-32.4-123.3h160.6c.5 20.2 4.7 34.1 12.5 48.4 7.8 14.4 18.6 25.3 32.4 32.9s30.1 11.4 49 11.4c19.9 0 36.7-4.3 50.5-12.9s24.3-21.3 31.5-38 10.8-37.3 10.8-61.8v-462.2z" />
+              </g>
+            </motion.svg>
+          }
+        />
       )}
     </>
   );

@@ -7,8 +7,8 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import _ from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Image, Query } from '@el-next/components';
-import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { CustomEase, StudioProject, Theme, Theming } from '@/types';
 
@@ -29,6 +29,7 @@ let preSelectedTheme = Theme.none;
 export default function StudioProjects({
   filters,
   studioProjects,
+  initiativeBlurbs,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
@@ -366,7 +367,14 @@ export default function StudioProjects({
             {showing}
           </div> */}
           {RenderFilters(filters)}
-
+          {haveGroupOpen('tngv') && (
+            <div className="w-full lg:w-1/2">
+              <DocumentRenderer
+                document={initiativeBlurbs[0].projectsBlurb.document}
+                // componentBlocks={Blocks(Theming[initiative])}
+              />
+            </div>
+          )}
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
               {count === 0 && (
@@ -437,20 +445,30 @@ export async function getStaticProps() {
 		}`
   );
 
+  const initiativeBlurbs = await Query(
+    'initiatives',
+    `initiatives {      
+        projectsBlurb {
+          document
+        }
+      }`
+  );
   if (studioProjects.error) {
     return {
       props: {
         error: studioProjects.error,
         studioProjects: null,
+        initiativeBlurbs: null,
         filters: null,
       },
     };
   }
-
+  console.log(initiativeBlurbs);
   return {
     props: {
       filters,
       studioProjects: studioProjects as StudioProject[],
+      initiativeBlurbs,
     },
   };
 }

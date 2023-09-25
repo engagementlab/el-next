@@ -31,7 +31,9 @@ type AboutPage = {
   body: { document: any };
   news: News[];
   events: Event[];
+  projectsBlurb?: { document: any };
   projects: StudioProject[];
+  studiosBlurb?: { document: any };
   studios: Studio[];
   research: ResearchProject[];
 };
@@ -153,9 +155,15 @@ export default function InitIndex({
                 />
 
                 {initiative === 'tngv' ? (
-                  <Logos partners={['ldbpi', 'mgh']} />
+                  <Logos
+                    partners={['ldbpi', 'mgh']}
+                    classOverride="flex flex-row justify-evenly items-center"
+                  />
                 ) : (
-                  <Logos partners={['ficdc', 'greenroots', 'sftt']} />
+                  <Logos
+                    partners={['ficdc', 'greenroots', 'sftt']}
+                    classOverride="flex flex-row justify-evenly items-center"
+                  />
                 )}
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
                   <h2 className={subHeadClass}>Jump to:</h2>
@@ -215,6 +223,14 @@ export default function InitIndex({
             {page.projects && page.projects.length > 0 && (
               <div id="projects">
                 <h2 className="font-bold text-4xl">Featured Projects</h2>
+                {page?.projectsBlurb && (
+                  <div className="w-full lg:w-1/2">
+                    <DocumentRenderer
+                      document={page?.projectsBlurb.document}
+                      componentBlocks={Blocks(Theming[initiative])}
+                    />
+                  </div>
+                )}
                 <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
                   {page.projects.map((item: StudioProject, i: number) => {
                     return (
@@ -266,7 +282,7 @@ export default function InitIndex({
           <Gutter noMarginY={false}>
             {page.studios && page.studios.length > 0 && (
               <div id="studios">
-                <h2 className="font-bold text-4xl">Recent Studios</h2>
+                <h2 className="font-bold text-4xl">Featured Studios</h2>
                 <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
                   {page.studios.map((item: Studio, i: number) => {
                     return (
@@ -433,6 +449,9 @@ export async function getStaticProps({
                 publicId
             }
             thumbAltText
+        }
+        projectsBlurb {
+          document
         }
         projects  {
             name

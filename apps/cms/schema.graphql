@@ -686,6 +686,8 @@ type InitiativesLanding {
   tngvi: InitiativesLanding_tngvi_Document
   tn4ej: InitiativesLanding_tn4ej_Document
   everythingElse: InitiativesLanding_everythingElse_Document
+  projectsBlurb: InitiativesLanding_projectsBlurb_Document
+  studiosBlurb: InitiativesLanding_studiosBlurb_Document
 }
 
 type InitiativesLanding_intro_Document {
@@ -701,6 +703,14 @@ type InitiativesLanding_tn4ej_Document {
 }
 
 type InitiativesLanding_everythingElse_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type InitiativesLanding_projectsBlurb_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type InitiativesLanding_studiosBlurb_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -735,6 +745,8 @@ input InitiativesLandingUpdateInput {
   tngvi: JSON
   tn4ej: JSON
   everythingElse: JSON
+  projectsBlurb: JSON
+  studiosBlurb: JSON
 }
 
 input InitiativesLandingUpdateArgs {
@@ -751,6 +763,8 @@ input InitiativesLandingCreateInput {
   tngvi: JSON
   tn4ej: JSON
   everythingElse: JSON
+  projectsBlurb: JSON
+  studiosBlurb: JSON
 }
 
 type LearningPartners {

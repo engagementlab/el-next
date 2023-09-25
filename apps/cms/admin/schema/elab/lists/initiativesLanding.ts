@@ -94,6 +94,14 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
       },
       componentBlocks,
     }),
+    projectsBlurb: document({
+      label: 'Projects Page Blurb',
+      formatting: true,
+    }),
+    studiosBlurb: document({
+      label: 'Studios Page Blurb',
+      formatting: true,
+    }),
   },
   ui: {
     hideCreate: true,

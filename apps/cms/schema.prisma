@@ -89,6 +89,8 @@ model InitiativesLanding {
   tngvi             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   tn4ej             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   everythingElse    Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projectsBlurb     Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studiosBlurb      Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model LearningPartners {

@@ -24,7 +24,7 @@ RUN --mount=type=bind,target=/docker-context \
 
 RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
     YARN_CACHE_FOLDER=/root/.yarn3-cache \
-    yarn install --immutable --inline-builds --ignore-engines
+    yarn install --immutable --inline-builds --ignore-engines --network-timeout 1000000000
 
 # Create CMS Runner target
 
@@ -51,7 +51,7 @@ RUN apt-get update && apt-get install -y openssl libssl-dev curl
 
 RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
     YARN_CACHE_FOLDER=/root/.yarn3-cache \
-    yarn install --immutable --inline-builds --ignore-scripts --ignore-engines
+    yarn install --immutable --inline-builds --ignore-scripts --ignore-engines --network-timeout 1000000000
 
 # Copy our favicon to the keystone module
 RUN cp favicon.ico ./node_modules/@keystone-6/core/favicon.ico

@@ -366,15 +366,14 @@ export default function StudioProjects({
           {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
             {showing}
           </div> */}
-          {RenderFilters(filters)}
-          {haveGroupOpen('tngv') && (
-            <div className="w-full lg:w-1/2">
+          {initiativeBlurbs.projectsBlurb && (
+            <div className="mx-6 w-full lg:w-1/2">
               <DocumentRenderer
-                document={initiativeBlurbs[0].projectsBlurb.document}
-                // componentBlocks={Blocks(Theming[initiative])}
+                document={initiativeBlurbs.projectsBlurb.document}
               />
             </div>
           )}
+          {RenderFilters(filters)}
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
               {count === 0 && (
@@ -446,8 +445,8 @@ export async function getStaticProps() {
   );
 
   const initiativeBlurbs = await Query(
-    'initiatives',
-    `initiatives {      
+    'initiativesLanding',
+    `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
         projectsBlurb {
           document
         }
@@ -463,7 +462,6 @@ export async function getStaticProps() {
       },
     };
   }
-  console.log(initiativeBlurbs);
   return {
     props: {
       filters,

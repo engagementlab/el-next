@@ -7,10 +7,11 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import _ from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+
 import { Image, Query } from '@el-next/components';
-import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { CustomEase, Studio, StudioProject, Theme, Theming } from '@/types';
+import { CustomEase, Studio, Theme, Theming } from '@/types';
 
 import Layout from '../../components/Layout';
 
@@ -25,6 +26,7 @@ let preSelectedFilter = '';
 let preSelectedTheme = Theme.none;
 export default function Studios({
   studios,
+  initiativeBlurbs,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
@@ -261,6 +263,13 @@ export default function Studios({
           {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
             {showing}
           </div> */}
+          {initiativeBlurbs.studiosBlurb && (
+            <div className="mx-6 w-full lg:w-1/2">
+              <DocumentRenderer
+                document={initiativeBlurbs.studiosBlurb.document}
+              />
+            </div>
+          )}
           {RenderFilters()}
 
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
@@ -313,12 +322,21 @@ export async function getStaticProps() {
       thumbAltText
 		}`
   );
+  const initiativeBlurbs = await Query(
+    'initiativesLanding',
+    `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
+        studiosBlurb {
+          document
+        }
+      }`
+  );
 
   if (studios.error) {
     return {
       props: {
         error: studios.error,
         studios: null,
+        initiativeBlurbs: null,
       },
     };
   }
@@ -326,6 +344,7 @@ export async function getStaticProps() {
   return {
     props: {
       studios: studios as Studio[],
+      initiativeBlurbs: initiativeBlurbs,
     },
   };
 }

@@ -1,13 +1,22 @@
 import * as React from 'react';
 import { Image } from '@el-next/components';
+import { HTMLProps } from 'react';
 
 type Props = {
-  all?: boolean;
   partners: string[];
+  all?: boolean;
+  classOverride?: HTMLProps<HTMLElement>['className'];
 };
-const Logos = ({ all = false, partners }: Props): JSX.Element => {
+const Logos = ({
+  all = false,
+  partners,
+  classOverride,
+}: Props): JSX.Element => {
+  const parentClass = classOverride
+    ? classOverride
+    : 'lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center';
   return (
-    <div className="lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center">
+    <div className={parentClass}>
       {(all || partners.includes('ldbpi')) && (
         <Image
           id="ldpni-logo"
@@ -22,7 +31,7 @@ const Logos = ({ all = false, partners }: Props): JSX.Element => {
           alt="MGH Center for Gun Violence Prevention logo"
           imgId="tngvi/logos/mgh-cgvp"
           width={150}
-          className="aspect-[3/2] mt-1"
+          className="aspect-[3/2] mt-1 h-fit"
         />
       )}
       {(all || partners.includes('magv')) && (

@@ -539,8 +539,10 @@ type Initiative {
   events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
   eventsCount(where: EventWhereInput! = {}): Int
   body: Initiative_body_Document
+  projectsBlurb: Initiative_projectsBlurb_Document
   projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectsCount(where: StudioProjectWhereInput! = {}): Int
+  studiosBlurb: Initiative_studiosBlurb_Document
   studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
   studiosCount(where: StudioWhereInput! = {}): Int
   research(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
@@ -552,6 +554,14 @@ type Initiative_intro_Document {
 }
 
 type Initiative_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Initiative_projectsBlurb_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Initiative_studiosBlurb_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -604,7 +614,9 @@ input InitiativeUpdateInput {
   news: NewsItemRelateToManyForUpdateInput
   events: EventRelateToManyForUpdateInput
   body: JSON
+  projectsBlurb: JSON
   projects: StudioProjectRelateToManyForUpdateInput
+  studiosBlurb: JSON
   studios: StudioRelateToManyForUpdateInput
   research: ResearchProjectRelateToManyForUpdateInput
 }
@@ -642,7 +654,9 @@ input InitiativeCreateInput {
   news: NewsItemRelateToManyForCreateInput
   events: EventRelateToManyForCreateInput
   body: JSON
+  projectsBlurb: JSON
   projects: StudioProjectRelateToManyForCreateInput
+  studiosBlurb: JSON
   studios: StudioRelateToManyForCreateInput
   research: ResearchProjectRelateToManyForCreateInput
 }

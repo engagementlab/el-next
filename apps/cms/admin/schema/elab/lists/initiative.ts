@@ -84,17 +84,25 @@ const Initiative: Lists.Initiative = list({
       },
       componentBlocks,
     }),
+    projectsBlurb: document({
+      label: 'Projects Intro Blurb',
+      formatting: true,
+    }),
     projects: relationship({
       ref: 'StudioProject.initiativesRelated',
       many: true,
       ui: { hideCreate: true },
       label: 'Featured Projects',
     }),
+    studiosBlurb: document({
+      label: 'Studios Intro Blurb',
+      formatting: true,
+    }),
     studios: relationship({
       ref: 'Studio.initiativesRelated',
       many: true,
       ui: { hideCreate: true },
-      label: 'Recent Studios',
+      label: 'Featured Studios',
     }),
     research: relationship({
       ref: 'ResearchProject.initiativesRelated',

@@ -22,9 +22,9 @@ RUN --mount=type=bind,target=/docker-context \
     --include='packages/components/*' \
     /docker-context/ /workspace-install/;
 
-RUN yarn install --immutable --inline-builds --ignore-engines --network-timeout 1000000000
-# --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
-# YARN_CACHE_FOLDER=/root/.yarn3-cache \
+RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
+    YARN_CACHE_FOLDER=/root/.yarn3-cache \
+    yarn install --network-timeout 1000000000
 
 # Create CMS Runner target
 
@@ -40,7 +40,10 @@ ENV APP_NAME=$APP_NAME
 
 WORKDIR /repo
 
-COPY --from=deps /workspace-install ./
+# COPY --from=deps /workspace-install ./
+COPY --from=deps /workspace-install/apps/cms ./apps/cms
+COPY --from=deps /workspace-install/node_modules ./node_modules/
+COPY --from=deps /workspace-install/packages/components ./packages/components
 
 WORKDIR /repo/apps/cms
 
@@ -48,11 +51,10 @@ RUN rm -f /repo/apps/cms/admin/schema/index.ts
 RUN ln -s /repo/apps/cms/admin/schema/$APP_NAME/index.ts /repo/apps/cms/admin/schema/index.ts
 
 RUN apt-get update && apt-get install -y openssl libssl-dev curl
-
-# --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
-#     YARN_CACHE_FOLDER=/root/.yarn3-cache \
-
-RUN yarn install --immutable --inline-builds --ignore-scripts --ignore-engines --network-timeout 1000000000
+RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
+    YARN_CACHE_FOLDER=/root/.yarn3-cache \
+    yarn install --network-timeout 1000000000
+# RUN yarn cache clean
 
 # Copy our favicon to the keystone module
 RUN cp favicon.ico ./node_modules/@keystone-6/core/favicon.ico
@@ -81,25 +83,25 @@ RUN yarn && yarn build
 CMD yarn start
 
 # QA build image
-FROM node:16 AS qa-image
+FROM node:16-slim AS qa-image
 
 ARG PORT=8081
 ARG CMS_ENDPOINT=cms-elab:3000
 ARG APP=elab
 WORKDIR /repo
 
-COPY --from=deps /workspace-install ./
+COPY --from=deps /workspace-install/apps/${APP} ./apps/${APP}
+COPY --from=deps /workspace-install/node_modules ./node_modules/
+COPY --from=deps /workspace-install/packages/components ./packages/components
 
 WORKDIR /repo/apps/${APP}
-
-COPY ./apps/${APP} ./
 
 ENV PORT ${PORT}
 ENV APP ${APP}
 ENV GRAPHQL_APP ${APP}
 ENV CMS_ENDPOINT ${CMS_ENDPOINT}
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0
-ENV NODE_ENV test
+ENV NODE_ENV production
 
 EXPOSE $PORT
 
@@ -107,4 +109,5 @@ EXPOSE $PORT
 CMD node ../../node_modules/wait-port/bin/wait-port ${CMS_ENDPOINT}; \
     yarn install --immutable --inline-builds --ignore-scripts && \
     yarn build && \
-    yarn dev
+    rm -rf .next/cache && \ 
+    yarn start

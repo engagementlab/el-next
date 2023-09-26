@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import _ from 'lodash';
+
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
@@ -346,5 +346,6 @@ export async function getStaticProps() {
       studios: studios as Studio[],
       initiativeBlurbs: initiativeBlurbs,
     },
+    revalidate: 5,
   };
 }

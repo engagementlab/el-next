@@ -120,5 +120,6 @@ export async function getStaticProps() {
     props: {
       items: mergedItems,
     },
+    revalidate: 5,
   };
 }

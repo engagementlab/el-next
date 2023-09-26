@@ -497,6 +497,7 @@ export async function getStaticProps() {
         error: events.error,
         event: null,
       },
+      revalidate: 5,
     };
   }
 

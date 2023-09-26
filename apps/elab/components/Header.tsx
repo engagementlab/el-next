@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useRef, useState } from 'react';
 import { Router, useRouter } from 'next/router';
 import Link from 'next/link';
-import _ from 'lodash';
 import { create } from 'zustand';
 import { useEffect } from 'react';
 

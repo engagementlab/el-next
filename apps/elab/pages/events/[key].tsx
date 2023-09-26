@@ -5,7 +5,6 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import _ from 'lodash';
 
 import { HeadingStyle } from '@el-next/components';
 import { Image, Query } from '@el-next/components';
@@ -179,5 +178,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     minute: '2-digit',
     timeZone: 'America/New_York',
   })}`;
-  return { props: { item, date } };
+
+  return { props: { item, date }, revalidate: 5 };
 }

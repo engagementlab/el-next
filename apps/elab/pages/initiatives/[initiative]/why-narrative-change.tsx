@@ -223,5 +223,6 @@ export async function getStaticProps({
       page,
       initiative,
     },
+    revalidate: 5,
   };
 }

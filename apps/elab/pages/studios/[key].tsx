@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 
-import _ from 'lodash';
 import { create } from 'zustand';
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
 
@@ -752,5 +751,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
-  return { props: { item } };
+  return { props: { item }, revalidate: 5 };
 }

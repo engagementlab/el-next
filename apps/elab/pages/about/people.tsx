@@ -1,12 +1,5 @@
-import {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from 'next';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
-
-import _ from 'lodash';
+import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
+import { Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import { motion } from 'framer-motion';
@@ -145,5 +138,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   }
   const people = itemResult as P[];
 
-  return { props: { people } };
+  return { props: { people }, revalidate: 5 };
 }

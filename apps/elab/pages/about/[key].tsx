@@ -6,8 +6,6 @@ import {
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 
-import _ from 'lodash';
-
 import Layout from '../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';
 import Logos from '@/components/Logos';
@@ -265,5 +263,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   }
   const item = itemResult[0] as About;
 
-  return { props: { item } };
+  return { props: { item }, revalidate: 5 };
 }

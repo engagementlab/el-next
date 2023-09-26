@@ -3,26 +3,15 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from 'next';
-import { useRouter } from 'next/router';
-import { useSearchParams } from 'next/navigation';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, Image, Query, Video } from '@el-next/components';
 
-import _ from 'lodash';
-import { create } from 'zustand';
-// import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { Button, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
-import { CTAButton } from '@/components/Buttons';
-import { Partner, ResearchProject, Theme } from '@/types';
-import { subscribeWithSelector } from 'zustand/middleware';
-import Logos from '@/components/Logos';
-import { useEffect } from 'react';
+import { ResearchProject } from '@/types';
 import Divider from '@/components/Divider';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 
 export default function Studio({
   item,
@@ -156,5 +145,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
-  return { props: { item } };
+  return { props: { item }, revalidate: 5 };
 }

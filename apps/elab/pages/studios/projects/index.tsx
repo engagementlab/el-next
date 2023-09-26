@@ -468,5 +468,6 @@ export async function getStaticProps() {
       studioProjects: studioProjects as StudioProject[],
       initiativeBlurbs,
     },
+    revalidate: 5,
   };
 }

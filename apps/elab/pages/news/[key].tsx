@@ -4,8 +4,6 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import Link from 'next/link';
-import _ from 'lodash';
 
 import { Image, Query } from '@el-next/components';
 
@@ -126,5 +124,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const item = itemResult[0] as NewsItem;
   const relatedItems = null;
 
-  return { props: { item, relatedItems } };
+  return { props: { item, relatedItems }, revalidate: 5 };
 }

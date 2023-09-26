@@ -4,24 +4,12 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
-
-import _ from 'lodash';
+import { motion } from 'framer-motion';
+import { Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
-import Logos from '@/components/Logos';
-import Divider from '@/components/Divider';
-import { motion } from 'framer-motion';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactFragment,
-  ReactNode,
-  ReactPortal,
-} from 'react';
 import { Person } from '@/types';
 
 export default function AboutPage({
@@ -145,5 +133,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   }
   const item = itemResult[0] as Person;
 
-  return { props: { item } };
+  return { props: { item }, revalidate: 5 };
 }

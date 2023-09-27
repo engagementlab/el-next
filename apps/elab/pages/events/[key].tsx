@@ -37,7 +37,10 @@ export default function Event({
     }
   }
   return (
-    <Layout error={error}>
+    <Layout
+      error={error}
+      breadcrumbs={[{ label: 'Back to News & Events', href: '/whats-new' }]}
+    >
       {item && (
         <div className="mt-14">
           {item.thumbnail ? (
@@ -57,7 +60,10 @@ export default function Event({
             {item.address && (
               <div className="text-coated font-medium">
                 <a
-                  href={`https://www.google.com/maps?q=${item.address}`}
+                  href={`https://www.google.com/maps?q=${item.address.replaceAll(
+                    '\n',
+                    ' '
+                  )}`}
                   target="_blank"
                   className="border-b-2 border-b-yellow"
                 >

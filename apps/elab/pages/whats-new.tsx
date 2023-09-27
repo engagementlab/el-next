@@ -1,16 +1,14 @@
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-
-import { Image, Query } from '@el-next/components';
-
-import Layout from '../components/Layout';
-import ImagePlaceholder from '../components/ImagePlaceholder';
-import { News, Event, Item } from '@/types';
 import { useRouter } from 'next/router';
+
+import { News, Event, Item, CustomEase } from '@/types';
+import { Query } from '@el-next/components';
 import { NewsEventRenderer } from '@/components/Renderers';
 
-const groupButtonStyle =
-  'flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1';
+import Layout from '../components/Layout';
+
+const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 text-green border-green hover:scale-110 hover:text-white hover:bg-green ${CustomEase}`;
 export default function WhatsNew({
   items,
   error,
@@ -34,7 +32,8 @@ export default function WhatsNew({
             return (
               <Link
                 href={`/${str.toLocaleLowerCase()}`}
-                className={`${groupButtonStyle} text-green border-green ${
+                key={`btn-${str.toLocaleLowerCase()}`}
+                className={`${groupButtonStyle} ${
                   filter === str.toLocaleLowerCase()
                     ? 'bg-green text-white'
                     : ''

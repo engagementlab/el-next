@@ -26,7 +26,10 @@ export default function NewsItem({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error}>
+    <Layout
+      error={error}
+      breadcrumbs={[{ label: 'Back to News & Events', href: '/whats-new' }]}
+    >
       {item && (
         <div className="mt-14">
           {item.thumbnail ? (

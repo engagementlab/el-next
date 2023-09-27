@@ -4,10 +4,8 @@ import { ParallaxBanner } from 'react-scroll-parallax';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import _ from 'lodash';
 
-import { Image } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 import { HeadingStyle } from '@el-next/components/headingStyle';
-
-import query from '../../../apollo-client';
 
 import { Blocks, Doc } from '../components/Renderers';
 
@@ -213,7 +211,7 @@ export default function Home({
   );
 }
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'homes',
     `homes {
       name

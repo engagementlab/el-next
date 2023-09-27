@@ -16,8 +16,6 @@ import type { Swiper as SwiperT } from 'swiper';
 import { FreeMode, Navigation, Thumbs } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import query from '../../../../apollo-client';
-
 import { Blocks, Doc, ImageOverride } from '../../components/Renderers';
 
 // Import Swiper styles
@@ -25,6 +23,7 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import { Query } from '@el-next/components';
 
 type Event = {
   name: string;
@@ -242,7 +241,7 @@ export default function Event({
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const items = (await query(
+  const items = (await Query(
     'events',
     ` events {
             key
@@ -261,7 +260,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
         name

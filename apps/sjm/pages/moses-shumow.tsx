@@ -2,9 +2,8 @@ import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import _ from 'lodash';
 
-import { Image } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 
-import query from '../../../apollo-client';
 import { Blocks, Doc } from '../components/Renderers';
 
 type About = {
@@ -74,7 +73,7 @@ export default function About({
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'abouts',
     `abouts {
         name

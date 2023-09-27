@@ -11,9 +11,8 @@ import { HeadingStyle } from '@el-next/components/headingStyle';
 
 import _ from 'lodash';
 
-import query from '../../../../apollo-client';
-
 import { Blocks, Doc } from '../../components/Renderers';
+import { Query } from '@el-next/components';
 
 type Award = {
   name: string;
@@ -128,7 +127,7 @@ export default function Award({
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const items = (await query(
+  const items = (await Query(
     'awards',
     `awards {
             key
@@ -147,7 +146,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'awards',
     `awards(where: { key: { equals: "${params!.key}" } }) {
         name

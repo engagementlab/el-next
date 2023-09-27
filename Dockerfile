@@ -1,8 +1,8 @@
 
 ARG NODE_VERSION=16
-ARG ALPINE_VERSION=3.17
+ARG ALPINE_VERSION=3.16.3
 
-FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS deps
+FROM node:${NODE_VERSION}-alpine AS deps
 RUN apk add --no-cache rsync openssl
 
 WORKDIR /workspace-install
@@ -51,9 +51,7 @@ RUN rm -f /repo/apps/cms/admin/schema/index.ts
 RUN ln -s /repo/apps/cms/admin/schema/$APP_NAME/index.ts /repo/apps/cms/admin/schema/index.ts
 
 RUN apt-get update && apt-get install -y openssl libssl-dev curl
-RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
-    YARN_CACHE_FOLDER=/root/.yarn3-cache \
-    yarn install --network-timeout 1000000000
+RUN yarn install --network-timeout 1000000000 --network-concurrency 1
 # RUN yarn cache clean
 
 # Copy our favicon to the keystone module

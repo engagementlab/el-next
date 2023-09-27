@@ -36,7 +36,7 @@ export const BlockRenderers = (styles?: { buttonClass?: string }) => {
         const publicId = props.image.publicId || props.image.image.publicId;
         const alt = props.image.alt || props.image.image?.alt;
 
-        return blockOverrides.imageOverride ? (
+        return blockOverrides && blockOverrides.imageOverride ? (
           blockOverrides.imageOverride(props)
         ) : (
           <Image
@@ -57,7 +57,7 @@ export const BlockRenderers = (styles?: { buttonClass?: string }) => {
         );
       },
       button: (props: any) => {
-        return blockOverrides.buttonOverride ? (
+        return blockOverrides && blockOverrides.buttonOverride ? (
           blockOverrides.buttonOverride(props)
         ) : (
           <Link href={props.link.props.node.children[0].text} passHref>

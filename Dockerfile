@@ -17,6 +17,8 @@ RUN --mount=type=bind,target=/docker-context \
     --exclude='node_modules' \
     --exclude='scripts' \
     --exclude='*/node_modules' \
+    --exclude='*.next' \
+    --exclude='*@next' \
     --include='package.json' \
     --include='*/' --exclude='apps/*' \
     --include='packages/components/*' \
@@ -24,10 +26,10 @@ RUN --mount=type=bind,target=/docker-context \
 
 RUN --mount=type=cache,target=/root/.yarn3-cache,id=yarn3-cache \
     YARN_CACHE_FOLDER=/root/.yarn3-cache \
-    yarn install --network-timeout 1000000000
+    yarn install --production --network-timeout 1000000000 && yarn cache clean && \ 
+    rm -rf node_modules/@next node_modules/typescript
 
 # Create CMS Runner target
-
 FROM node:${NODE_VERSION}-slim AS cms-runner
 
 ARG PORT=3000
@@ -51,8 +53,7 @@ RUN rm -f /repo/apps/cms/admin/schema/index.ts
 RUN ln -s /repo/apps/cms/admin/schema/$APP_NAME/index.ts /repo/apps/cms/admin/schema/index.ts
 
 RUN apt-get update && apt-get install -y openssl libssl-dev curl
-RUN yarn install --network-timeout 1000000000 --network-concurrency 1
-# RUN yarn cache clean
+RUN yarn install --network-timeout 1000000000 --network-concurrency 1 && yarn cache clean
 
 # Copy our favicon to the keystone module
 RUN cp favicon.ico ./node_modules/@keystone-6/core/favicon.ico
@@ -77,7 +78,6 @@ COPY ./apps/api ./
 EXPOSE $PORT
 
 RUN yarn && yarn build
-
 CMD yarn start
 
 # QA build image
@@ -103,9 +103,9 @@ ENV NODE_ENV production
 
 EXPOSE $PORT
 
+RUN rm -rf .next/cache
 ## Wait for CMS endpoint to respond
 CMD node ../../node_modules/wait-port/bin/wait-port ${CMS_ENDPOINT}; \
-    yarn install --immutable --inline-builds --ignore-scripts && \
+    yarn install --production --immutable --inline-builds --ignore-scripts && \
     yarn build && \
-    rm -rf .next/cache && \ 
     yarn start

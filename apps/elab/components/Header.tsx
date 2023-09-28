@@ -329,7 +329,11 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 subLink={true}
                 className={fillClass}
               />
-              {/* <NavLink href="/studios/?tngv" label="Partners" subLink={true} /> */}
+              <NavLink
+                href={`/initiatives/${urlSuffix}/partners`}
+                label="Partners"
+                subLink={true}
+              />
               <NavLink
                 href={`/studios/?${urlSuffix}`}
                 label="Studios"
@@ -773,13 +777,15 @@ ${
                           links={siiLinks}
                           label="Social Impact Initiatives"
                         />
-                        {/* <MobileAccordion
-          i={2}
-          expanded={expanded}
-          setExpanded={setExpanded}
-          links={researchLinks}
-          label="Research"
-        /> */}
+                        {process.env.NEXT_PUBLIC_STAGING === 'true' && (
+                          <MobileAccordion
+                            i={2}
+                            expanded={expanded}
+                            setExpanded={setExpanded}
+                            links={researchLinks}
+                            label="Research"
+                          />
+                        )}
                         <MobileAccordion
                           i={3}
                           expanded={expanded}

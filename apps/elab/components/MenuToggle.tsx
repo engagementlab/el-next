@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SVGMotionProps, motion } from 'framer-motion';
+import { SVGMotionProps, cubicBezier, motion } from 'framer-motion';
 
 const Path = (
   props: JSX.IntrinsicAttributes &
@@ -26,6 +26,13 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
       onClick={toggle}
       onHoverStart={hover}
       onHoverEnd={hover}
+      whileTap={{
+        scale: 1.2,
+        transition: {
+          ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+          duration: 0.3,
+        },
+      }}
       whileHover={{
         scale: 1.03,
         transition: { duration: 0.3 },

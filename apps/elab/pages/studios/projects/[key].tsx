@@ -143,7 +143,7 @@ export default function Studio({
         {item && (
           <div className="text-grey">
             <Gutter>
-              <h1 className="font-extrabold text-4xl text-slate">
+              <h1 className="font-extrabold text-6xl text-slate">
                 {item.name}
               </h1>
               <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7">

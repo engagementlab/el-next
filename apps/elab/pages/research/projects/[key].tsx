@@ -5,15 +5,16 @@ import {
 } from 'next';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, Query } from '@el-next/components';
+import { Button, Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 import { ResearchProject } from '@/types';
 import Divider from '@/components/Divider';
 import { motion } from 'framer-motion';
+import { CTAButton } from '@/components/Buttons';
 
-export default function Studio({
+export default function ResearchProject({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -23,11 +24,54 @@ export default function Studio({
       breadcrumbs={[{ label: 'Research Projects', href: '/research/projects' }]}
     >
       {item && (
-        <>
-          <h1>{item.name}</h1>
-
-          <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="w-3/4 lg:w-full mt-6">
+        <div className="text-grey">
+          <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
+          <div className="flex flex-col lg:flex-row items-center gap-x-4 mt-10">
+            <div className="lg:mx-3 w-1/2">
+              <Image
+                id="thumb"
+                alt={item.thumbnailAltText}
+                imgId={item.thumbnail.publicId}
+                transforms="f_auto,dpr_auto,c_fill,g_face,w_650"
+                width={650}
+              />
+            </div>
+            <div className="">
+              <div className="flex flex-col items-center">
+                <div className="my-6">
+                  <DocumentRenderer
+                    document={item.headingText.document}
+                    // componentBlocks={Blocks(theming)}
+                    // renderers={Doc(rendererOverrides)}
+                  />
+                </div>
+                {item.buttons &&
+                  item.buttons.length > 0 &&
+                  item.buttons.map((button) => (
+                    <CTAButton
+                      label={button.label}
+                      link={button.url}
+                      icon={button.icon}
+                      // theme={theming.theme}
+                      className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
+                    />
+                  ))}
+              </div>
+            </div>
+          </div>
+          <div>
+            {item.buttons &&
+              item.buttons.length > 0 &&
+              item.buttons.map((button) => (
+                <CTAButton
+                  label={button.label}
+                  link={button.url}
+                  icon={button.icon}
+                  // theme={theming.theme}
+                  className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
+                />
+              ))}
+            <div className="hidden lg:block w-3/4 lg:w-full">
               <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
                 Jump to:
               </p>
@@ -49,7 +93,9 @@ export default function Studio({
                 /> */}
             </div>
             <div id="content">
-              <h2>About the Project</h2>
+              <h2 className="text-xl font-extrabold uppercase my-4">
+                About the Project
+              </h2>
               <DocumentRenderer
                 document={item.content.document}
                 componentBlocks={Blocks()}
@@ -78,8 +124,8 @@ export default function Studio({
                   </div>
                 ))}
               </div> */}
-          </motion.div>
-        </>
+          </div>
+        </div>
       )}
     </Layout>
   );
@@ -113,14 +159,18 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'researchProjects',
     `researchProjects(where: { key: { equals: "${params!.key}" } }) {
         name
-        content {
+        headingText {
             document
         }
-        shortDescription
         thumbnail {
             publicId
         }
         thumbAltText
+        buttons
+        content {
+            document
+        }
+        shortDescription
     }`
   );
   if (itemResult.error) {

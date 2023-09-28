@@ -1,3 +1,4 @@
+import path from 'path';
 import { list, group } from '@keystone-6/core';
 import {
   checkbox,
@@ -10,13 +11,12 @@ import {
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
-import path from 'path';
 import { componentBlocks } from '../../../components/component-blocks';
 import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
-import { Partners, PartnersRelationship } from './partners';
+
 import { Flags } from '../flags';
 
 const ResearchProject: Lists.ResearchProject = list({
@@ -92,13 +92,10 @@ const ResearchProject: Lists.ResearchProject = list({
         }),
       },
     }),
-    headingText: text({
-      validation: {
-        isRequired: true,
-      },
+    headingText: document({
+      formatting: true,
       ui: {
         description: 'Text appearing next to heading image.',
-        displayMode: 'textarea',
       },
     }),
     buttons: json({

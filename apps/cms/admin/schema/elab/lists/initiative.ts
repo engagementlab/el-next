@@ -1,5 +1,6 @@
+import path from 'path';
 import { graphql, group, list } from '@keystone-6/core';
-import { relationship, text } from '@keystone-6/core/fields';
+import { json, relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 
 import { allowAll } from '@keystone-6/core/access';
@@ -83,6 +84,12 @@ const Initiative: Lists.Initiative = list({
         views: './admin/components/component-blocks',
       },
       componentBlocks,
+    }),
+    partners: json({
+      label: 'Partner Descriptions',
+      ui: {
+        views: path.join(process.cwd(), '/admin/components/partners.tsx'),
+      },
     }),
     projectsBlurb: document({
       label: 'Projects Intro Blurb',

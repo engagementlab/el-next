@@ -72,6 +72,7 @@ model Initiative {
   news          NewsItem[]        @relation("Initiative_news")
   events        Event[]           @relation("Event_initiativesWhatsNew")
   body          Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  partners      Json?
   projectsBlurb Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   projects      StudioProject[]   @relation("Initiative_projects")
   studiosBlurb  Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
@@ -171,7 +172,7 @@ model ResearchProject {
   thumbAltText        String       @default("")
   headingImage        Json?
   headingImageAltText String       @default("")
-  headingText         String       @default("")
+  headingText         Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   buttons             Json?
   shortDescription    String       @default("")
   blurb               Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")

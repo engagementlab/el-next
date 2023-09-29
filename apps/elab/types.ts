@@ -237,7 +237,11 @@ export type ResearchProject = {
   type: string;
   key: string;
   partners: string[];
+  buttons: any[];
   content: {
+    document: any;
+  };
+  headingText: {
     document: any;
   };
   shortDescription: string;

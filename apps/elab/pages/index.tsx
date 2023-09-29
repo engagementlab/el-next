@@ -497,7 +497,7 @@ export async function getStaticProps() {
         error: events.error,
         event: null,
       },
-      revalidate: 5,
+      revalidate: 1,
     };
   }
 
@@ -570,6 +570,7 @@ export async function getStaticProps() {
         error: news.error,
         newsItem: null,
       },
+      revalidate: 1,
     };
   }
 
@@ -606,5 +607,6 @@ export async function getStaticProps() {
       studioProject,
       mergedItems,
     },
+    revalidate: 1,
   };
 }

@@ -105,7 +105,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
@@ -133,5 +133,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   }
   const item = itemResult[0] as Person;
 
-  return { props: { item }, revalidate: 5 };
+  return { props: { item }, revalidate: 1 };
 }

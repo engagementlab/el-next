@@ -122,9 +122,10 @@ export default function Event({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const items = await Query(
     'events',
-    `events {
-            key
-        }`
+    `events(where: { enabled: { equals: true } }),
+     {
+      key
+     }`
   );
 
   if (items.error) {
@@ -140,7 +141,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
@@ -185,5 +186,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     timeZone: 'America/New_York',
   })}`;
 
-  return { props: { item, date }, revalidate: 5 };
+  return { props: { item, date }, revalidate: 1 };
 }

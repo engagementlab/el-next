@@ -138,5 +138,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   }
   const people = itemResult as P[];
 
-  return { props: { people }, revalidate: 5 };
+  return { props: { people }, revalidate: 1 };
 }

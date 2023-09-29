@@ -329,11 +329,11 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 subLink={true}
                 className={fillClass}
               />
-              <NavLink
+              {/* <NavLink
                 href={`/initiatives/${urlSuffix}/partners`}
                 label="Partners"
                 subLink={true}
-              />
+              /> */}
               <NavLink
                 href={`/studios/?${urlSuffix}`}
                 label="Studios"

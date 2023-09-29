@@ -346,6 +346,6 @@ export async function getStaticProps() {
       studios: studios as Studio[],
       initiativeBlurbs: initiativeBlurbs,
     },
-    revalidate: 5,
+    revalidate: 1,
   };
 }

@@ -105,6 +105,6 @@ export async function getStaticProps() {
     props: {
       researchProjects: researchProjects as MediaItem[],
     },
-    revalidate: 5,
+    revalidate: 1,
   };
 }

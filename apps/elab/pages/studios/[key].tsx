@@ -649,7 +649,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
@@ -751,5 +751,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
-  return { props: { item }, revalidate: 5 };
+  return { props: { item }, revalidate: 1 };
 }

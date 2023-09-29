@@ -355,6 +355,6 @@ export async function getStaticProps() {
       page,
       studios,
     },
-    revalidate: 5,
+    revalidate: 1,
   };
 }

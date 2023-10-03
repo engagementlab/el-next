@@ -308,7 +308,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
         // animate={{ y: 0, opacity: 1 }}
         className="my-6 md:pl-24 lg:mt-12"
       >
-        <div className="flex w-full flex-row">
+        <div className="flex w-full flex-row px-2">
           {logo}
           <div className="flex-grow">
             <h2 className={`text-xl lg:text-4xl font-extrabold ${textClass}`}>
@@ -351,35 +351,41 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
         </div>
 
         <div
-          className={`flex xl:hidden flex-row justify-around mx-6 py-3 font-semibold ${bgClass} ${textClass}`}
+          className={`flex lg:hidden flex-row justify-around mx-6 py-3 font-semibold ${bgClass} ${textClass}`}
         >
           <div className="flex flex-col lg:flex-row">
             <NavLink
               href={`/initiatives/${urlSuffix}`}
               label="About The Initiative"
               subLink={true}
-              className="fill-purple"
+              className={fillClass}
             />
             <NavLink
               href={`/initiatives/${urlSuffix}/why-narrative-change`}
               label="Why Narrative Change?"
               subLink={true}
-              className="fill-purple"
+              className={fillClass}
             />
-            {/* <NavLink href="/studios/?tngv" label="Partners" subLink={true} /> */}
+
+            <NavLink
+              href={`/initiatives/${urlSuffix}/partners`}
+              label="Partners"
+              subLink={true}
+              className={fillClass}
+            />
           </div>
           <div className="flex flex-col xl:flex-row">
             <NavLink
               href={`/studios/?${urlSuffix}`}
               label="Studios"
               subLink={true}
-              className="fill-purple"
+              className={fillClass}
             />
             <NavLink
               href={`/studios/projects/?${urlSuffix}`}
               label="Projects"
               subLink={true}
-              className="fill-purple"
+              className={fillClass}
             />
           </div>
         </div>

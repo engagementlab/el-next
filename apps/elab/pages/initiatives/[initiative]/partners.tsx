@@ -6,17 +6,19 @@ import { Theming } from '@/types';
 
 import { Gutter } from '@/components/Gutter';
 import Logos from '@/components/Logos';
+import Partners from '@/components/Partners';
 
 type AboutPage = {
-  partners: { key: string; description: string }[];
+  partners: { name: string; description: string }[];
 };
 
-export default function GunViolence({
+export default function PartnersPage({
   page,
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
+    // <></>
     <Layout error={error} fullBleed={true} theme={Theming[initiative].theme}>
       {page && (
         <div className="text-grey">
@@ -26,16 +28,26 @@ export default function GunViolence({
             </h2>
 
             <Gutter noMarginY={false}>
-              {page.partners.map((partner) => (
-                <div
-                  key={partner.key}
-                  className="flex flex-col-reverse lg:flex-row gap-x-5"
-                >
-                  <div className="w-full lg:w-1/2">
-                    <Logos partners={[partner.key]} />
-                  </div>
-                </div>
-              ))}
+              <div
+                // key={partner.name}
+                className="grid lg:grid-cols-3 gap-x-5 gap-y-8"
+              >
+                {page.partners &&
+                  page.partners.map((partner) => (
+                    <>
+                      <Logos partners={[partner.name]} classOverride="block" />
+
+                      <div className="col-span-2">
+                        <h3
+                          className={`text-xl font-extrabold uppercase ${Theming[initiative].heading}`}
+                        >
+                          {Partners({ partners: [partner.name] })}
+                        </h3>
+                        {partner.description}
+                      </div>
+                    </>
+                  ))}
+              </div>
             </Gutter>
           </div>
         </div>
@@ -46,7 +58,7 @@ export default function GunViolence({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
     paths: ['/initiatives/tngv/partners', '/initiatives/tnej/partners'],
-    fallback: false,
+    fallback: true,
   };
 }
 
@@ -84,6 +96,6 @@ export async function getStaticProps({
       page,
       initiative,
     },
-    revalidate: 5,
+    revalidate: 1,
   };
 }

@@ -38,7 +38,6 @@ const Layout = ({
     'bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]',
     'bg-gradient-to-b from-[#D7EFC1] to-leaf',
   ];
-
   return (
     <>
       <span
@@ -49,7 +48,7 @@ const Layout = ({
       ></span>
       {BG}
       <div className="relative md:mx-16">
-        <Header theme={theme} />
+        <Header theme={theme || 0} />
 
         {/* Breadcrumbs layout */}
         {breadcrumbs && (

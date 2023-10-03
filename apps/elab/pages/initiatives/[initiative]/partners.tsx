@@ -17,9 +17,14 @@ export default function PartnersPage({
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  console.log('ini', initiative, Theming[initiative]);
   return (
     // <></>
-    <Layout error={error} fullBleed={true} theme={Theming[initiative].theme}>
+    <Layout
+      error={error}
+      fullBleed={true}
+      theme={Theming[initiative] ? Theming[initiative].theme : 0}
+    >
       {page && (
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
@@ -28,16 +33,18 @@ export default function PartnersPage({
             </h2>
 
             <Gutter noMarginY={false}>
-              <div
-                // key={partner.name}
-                className="grid lg:grid-cols-3 gap-x-5 gap-y-8"
-              >
+              <div className="grid lg:grid-cols-3 gap-x-5 gap-y-8">
                 {page.partners &&
                   page.partners.map((partner) => (
                     <>
-                      <Logos partners={[partner.name]} classOverride="block" />
+                      <span key={`logo-${partner.name}`}>
+                        <Logos
+                          partners={[partner.name]}
+                          classOverride="block"
+                        />
+                      </span>
 
-                      <div className="col-span-2">
+                      <div className="col-span-2" key={`desc-${partner.name}`}>
                         <h3
                           className={`text-xl font-extrabold uppercase ${Theming[initiative].heading}`}
                         >
@@ -88,7 +95,6 @@ export async function getStaticProps({
       },
     };
   }
-
   const page = result as AboutPage;
 
   return {

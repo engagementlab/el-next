@@ -150,11 +150,14 @@ export default function Studio({
     (state) => state.currentSemester,
     (current) => {
       if (location.pathname.includes(current)) return;
-      history.replaceState(
-        {},
-        'Filtered Data',
-        `${location.pathname}?${current}`
-      );
+      history.replaceState({}, 'Studios', `${location.pathname}?${current}`);
+      router.events.on('routeChangeComplete', (e) => {
+        console.log(e);
+      });
+      router.push({
+        pathname: location.pathname,
+        query: current,
+      });
     }
   );
   useEffect(() => {
@@ -167,20 +170,6 @@ export default function Studio({
       else if (preSelectedSemester !== '') toggle(preSelectedSemester);
     }
   });
-
-  interface ThemeConfig {
-    [key: string]: {
-      text: string;
-      heading: string;
-      bg: string;
-      border: string;
-      fill: string;
-      gradient: string;
-      secodaryBg: string;
-      secodary: string;
-      theme: Theme;
-    };
-  }
 
   const GetLabel = (selectedSemester: Semester) => {
     if (selectedSemester.type === 'upcoming')

@@ -9,9 +9,8 @@ import { Button, Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
-import { ResearchProject } from '@/types';
+import { ResearchProject, Theme } from '@/types';
 import Divider from '@/components/Divider';
-import { motion } from 'framer-motion';
 import { CTAButton } from '@/components/Buttons';
 
 export default function ResearchProject({
@@ -26,37 +25,35 @@ export default function ResearchProject({
       {item && (
         <div className="text-grey">
           <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
-          <div className="flex flex-col lg:flex-row items-center gap-x-4 mt-10">
-            <div className="lg:mx-3 w-1/2">
+          <div className="flex flex-col-reverse lg:flex-row gap-x-5 mt-16">
+            <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
               <Image
                 id="thumb"
                 alt={item.thumbnailAltText}
                 imgId={item.thumbnail.publicId}
-                transforms="f_auto,dpr_auto,c_fill,g_face,w_650"
-                width={650}
+                transforms="f_auto,dpr_auto,c_fill,g_faces,w_450"
               />
             </div>
-            <div className="">
-              <div className="flex flex-col items-center">
-                <div className="my-6">
-                  <DocumentRenderer
-                    document={item.headingText.document}
-                    // componentBlocks={Blocks(theming)}
-                    // renderers={Doc(rendererOverrides)}
-                  />
-                </div>
-                {item.buttons &&
-                  item.buttons.length > 0 &&
-                  item.buttons.map((button) => (
-                    <CTAButton
-                      label={button.label}
-                      link={button.url}
-                      icon={button.icon}
-                      // theme={theming.theme}
-                      className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
-                    />
-                  ))}
+
+            <div className="flex flex-col items-center">
+              <div className="my-6">
+                <DocumentRenderer
+                  document={item.headingText.document}
+                  // componentBlocks={Blocks(theming)}
+                  // renderers={Doc(rendererOverrides)}
+                />
               </div>
+              {item.buttons &&
+                item.buttons.length > 0 &&
+                item.buttons.map((button) => (
+                  <CTAButton
+                    label={button.label}
+                    link={button.url}
+                    icon={button.icon}
+                    theme={Theme.none}
+                    className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
+                  />
+                ))}
             </div>
           </div>
           <div>

@@ -236,7 +236,8 @@ export type ResearchProject = {
   name: string;
   type: string;
   key: string;
-  partners: string[];
+  contact: string;
+
   buttons: any[];
   content: {
     document: any;
@@ -249,6 +250,22 @@ export type ResearchProject = {
     publicId: string;
   };
   thumbnailAltText: string;
+  projectLeads: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  partners: {
+    name: string;
+    key: string;
+    url: string;
+    logo: {
+      publicId: string;
+    };
+  }[];
 };
 
 export type Item = News & Event;

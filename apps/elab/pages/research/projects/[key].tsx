@@ -9,9 +9,10 @@ import { Button, Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
-import { ResearchProject, Theme } from '@/types';
+import { ResearchProject, Theme, Theming } from '@/types';
 import Divider from '@/components/Divider';
 import { CTAButton } from '@/components/Buttons';
+import { PeopleList } from '@/components/People';
 
 export default function ResearchProject({
   item,
@@ -57,17 +58,6 @@ export default function ResearchProject({
             </div>
           </div>
           <div>
-            {item.buttons &&
-              item.buttons.length > 0 &&
-              item.buttons.map((button) => (
-                <CTAButton
-                  label={button.label}
-                  link={button.url}
-                  icon={button.icon}
-                  // theme={theming.theme}
-                  className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
-                />
-              ))}
             <div className="hidden lg:block w-3/4 lg:w-full">
               <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
                 Jump to:
@@ -90,37 +80,47 @@ export default function ResearchProject({
                 /> */}
             </div>
             <div id="content">
-              <h2 className="text-xl font-extrabold uppercase my-4">
-                About the Project
-              </h2>
+              <h2 className="font-bold text-5xl my-3">About the Project</h2>
               <DocumentRenderer
                 document={item.content.document}
                 componentBlocks={Blocks()}
                 renderers={Doc()}
               />
-            </div>
-
-            <Divider />
-            {/* <div className="flex flex-wrap my-4">
-                {selectedSemester.learningPartners.map((person) => (
-                  <div
-                    className="flex flex-col w-1/5 ml-3"
-                    key={`thumb-${person.key}`}
-                  >
-                    <Image
-                      id={`thumb-${person.key}`}
-                      alt={`Photo of ${person.name}`}
-                      imgId={person.image.publicId}
-                      width={230}
-                      // aspectDefault={true}
-                      transforms="f_auto,dpr_auto,c_fill,g_face,r_max,h_230,w_230"
-                      className="rounded-full border-4 border-purple"
-                    />
-                    <p>{person.name}</p>
-                    <p>{person.title}</p>
-                  </div>
+            </div>{' '}
+            <h3
+              className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
+            >
+              Partners
+            </h3>
+            <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+              {item.partners &&
+                item.partners.length > 0 &&
+                item.partners.map((partner) => (
+                  <Image
+                    id={`partners-${partner.key}`}
+                    alt={`Logo image for ${partner.name}`}
+                    imgId={partner.logo.publicId}
+                    width={150}
+                  />
                 ))}
-              </div> */}
+            </div>
+            {item.projectLeads && item.projectLeads.length > 0 && (
+              <PeopleList
+                list={item.projectLeads}
+                heading="Project Leads"
+                theme={Theming['none']}
+                index={3}
+              />
+            )}{' '}
+            <h2
+              className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
+            >
+              Project Contact
+            </h2>
+            <p className="w-full">
+              For inquiries about this project, please contact&nbsp;
+              {item.contact}.
+            </p>
           </div>
         </div>
       )}
@@ -167,7 +167,24 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         content {
             document
         }
+        projectLeads {
+          name
+          key
+          title
+          image {
+              publicId
+          }
+        }
         shortDescription
+        contact
+        partners {
+          name
+          key
+          url
+          logo {
+              publicId
+          }
+        }
     }`
   );
   if (itemResult.error) {

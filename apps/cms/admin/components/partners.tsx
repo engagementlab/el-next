@@ -19,12 +19,15 @@ import {
 
 const Partners = [
   { key: 'ldbpi', name: 'Louis D. Brown Peace Institute' },
-  { key: 'mgh', name: 'MGH Center for Gun Violence Prevention' },
   {
-    key: 'magv',
+    key: 'mgh',
     name: 'Massachusetts General Hospital Gun Violence Prevention Center',
   },
-  { key: 'teenempowerment', name: 'The Center for Teen Empowerment' },
+  {
+    key: 'magv',
+    name: 'Massachusetts Coalition to Prevent Gun Violence',
+  },
+  { key: 'teenempowerment', name: 'Teen Empowerment' },
   { key: 'uncornered', name: 'Boston Uncornered' },
   { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative' },
   { key: 'greenroots', name: 'GreenRoots' },

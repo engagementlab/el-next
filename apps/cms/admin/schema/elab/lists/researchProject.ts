@@ -105,9 +105,6 @@ const ResearchProject: Lists.ResearchProject = list({
       },
     }),
     shortDescription: text({
-      validation: {
-        isRequired: true,
-      },
       ui: { description: 'Displays in project listing under thumbnail.' },
     }),
     blurb: document({

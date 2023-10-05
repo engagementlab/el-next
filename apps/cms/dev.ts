@@ -45,8 +45,8 @@ import yargs from 'yargs/yargs';
     exec(
       `ln -s ${__dirname}/admin/schema/${argv.app}/index.ts ${__dirname}/admin/schema/index.ts`
     );
-    exec(`yarn keystone dev --app ${argv.app}`);
-    // exec(`cd apps/${response.value}; yarn dev`, AppType.FRONTEND);
+    exec(`yarn keystone dev --app ${argv.app ? argv.app : 'elab'}`);
+    // exec(`cd apps/${response.value}; yarn > dev`, AppType.FRONTEND);
   } catch (error) {
     console.error(error);
   }

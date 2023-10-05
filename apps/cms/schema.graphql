@@ -1021,6 +1021,7 @@ input LearningPartnersRelateToManyForCreateInput {
 type Partner {
   id: ID!
   name: String
+  key: String
   url: String
   logo: CloudinaryImage_File
   researchProject(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
@@ -1029,6 +1030,7 @@ type Partner {
 
 input PartnerWhereUniqueInput {
   id: ID
+  key: String
 }
 
 input PartnerWhereInput {
@@ -1037,6 +1039,7 @@ input PartnerWhereInput {
   NOT: [PartnerWhereInput!]
   id: IDFilter
   name: StringFilter
+  key: StringFilter
   url: StringFilter
   researchProject: ResearchProjectManyRelationFilter
 }
@@ -1044,11 +1047,13 @@ input PartnerWhereInput {
 input PartnerOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  key: OrderDirection
   url: OrderDirection
 }
 
 input PartnerUpdateInput {
   name: String
+  key: String
   url: String
   logo: Upload
   researchProject: ResearchProjectRelateToManyForUpdateInput
@@ -1061,6 +1066,7 @@ input PartnerUpdateArgs {
 
 input PartnerCreateInput {
   name: String
+  key: String
   url: String
   logo: Upload
   researchProject: ResearchProjectRelateToManyForCreateInput

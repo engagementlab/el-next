@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
   BaseKeystoneTypeInfo,
   DatabaseConfig,
@@ -5,16 +6,7 @@ import {
 } from '@keystone-6/core/types';
 
 import yargs from 'yargs/yargs';
-
-import 'dotenv/config';
 import e from 'express';
-
-import { v2 as cloudinary } from 'cloudinary';
-
-import { getNews } from './routes/news';
-import _ from 'lodash';
-import cors from 'cors';
-import * as schema from './admin/schema';
 
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
@@ -24,15 +16,6 @@ const argv: any = yargs(process.argv.slice(2)).options({
     type: 'number',
   },
 }).argv;
-
-const port = argv.port || 3000;
-
-cloudinary.config({
-  cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-  api_key: `${process.env.CLOUDINARY_KEY}`,
-  api_secret: `${process.env.CLOUDINARY_SECRET}`,
-  secure: true,
-});
 
 let appName: string = '';
 // --app takes precedence over environment variables
@@ -49,6 +32,21 @@ if (appName === undefined || appName.length === 0)
 
 console.log('Found app name: ' + appName);
 
+import { v2 as cloudinary } from 'cloudinary';
+
+import { getNews } from './routes/news';
+import _ from 'lodash';
+import cors from 'cors';
+import schema from './schema';
+
+const port = argv.port || 3000;
+
+cloudinary.config({
+  cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+  api_key: `${process.env.CLOUDINARY_KEY}`,
+  api_secret: `${process.env.CLOUDINARY_SECRET}`,
+  secure: true,
+});
 declare module 'express-serve-static-core' {
   interface Request {
     logIn: any;

@@ -19,7 +19,7 @@ import { azConfig } from '../../azure';
 
 import { Flags } from '../flags';
 
-const ResearchProject: Lists.ResearchProject = list({
+export default list({
   access: allowAll,
   fields: {
     name: text({
@@ -137,6 +137,7 @@ const ResearchProject: Lists.ResearchProject = list({
         displayMode: 'cards',
         cardFields: ['name', 'logo'],
         inlineCreate: { fields: ['name', 'url', 'logo'] },
+        inlineEdit: { fields: ['name', 'url', 'logo'] },
       },
     }),
     projectLeads: relationship({
@@ -149,13 +150,6 @@ const ResearchProject: Lists.ResearchProject = list({
       },
     }),
     contact: text({
-      // validation: {
-      //   match: {
-      //     regex:
-      //       /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/gm,
-      //     explanation: 'Not a valid email address',
-      //   },
-      // },
       label: 'Contact Email',
     }),
     tools: json({
@@ -196,4 +190,3 @@ const ResearchProject: Lists.ResearchProject = list({
     },
   },
 });
-export default ResearchProject;

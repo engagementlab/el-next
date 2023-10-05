@@ -41,12 +41,12 @@ import yargs from 'yargs/yargs';
     });
   }
   try {
-    exec('rm -f admin/schema/index.ts');
     exec(
-      `ln -s ${__dirname}/admin/schema/${argv.app}/index.ts ${__dirname}/admin/schema/index.ts`
+      `echo "import * as schema from './admin/schema/${
+        argv.app ? argv.app : 'elab'
+      }'; export default schema;" > ./schema.ts`
     );
     exec(`yarn keystone dev --app ${argv.app ? argv.app : 'elab'}`);
-    // exec(`cd apps/${response.value}; yarn > dev`, AppType.FRONTEND);
   } catch (error) {
     console.error(error);
   }

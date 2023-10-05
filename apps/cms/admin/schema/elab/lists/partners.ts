@@ -7,6 +7,7 @@ import {
   text,
 } from '@keystone-6/core/fields';
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { CreateKey } from '../../hooks';
 
 export const PartnersSelect = multiselect({
   type: 'enum',
@@ -41,6 +42,18 @@ export default list({
         isRequired: true,
       },
     }),
+    key: text({
+      isIndexed: 'unique',
+      isFilterable: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
     url: text({ label: 'URL', ui: { description: 'Optional' } }),
     logo: cloudinaryImage({
       cloudinary: {
@@ -56,4 +69,22 @@ export default list({
     }),
   },
   ui: { label: 'Partner' },
+  hooks: {
+    resolveInput: async ({
+      listKey,
+      operation,
+      inputData,
+      item,
+      resolvedData,
+      context,
+    }) => {
+      if (resolvedData.name) {
+        resolvedData = {
+          ...resolvedData,
+          key: CreateKey(resolvedData.name),
+        };
+      }
+      return resolvedData;
+    },
+  },
 });

@@ -132,6 +132,7 @@ model NewsItem {
 model Partner {
   id              String            @id @default(cuid())
   name            String            @default("")
+  key             String            @unique @default("")
   url             String            @default("")
   logo            Json?
   researchProject ResearchProject[] @relation("Partner_researchProject")

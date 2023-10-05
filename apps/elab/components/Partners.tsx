@@ -8,10 +8,13 @@ type Props = {
 const Partners = ({ partners }: Props): string => {
   const names = [
     { key: 'ldbpi', name: 'Louis D. Brown Peace Institute' },
-    { key: 'mgh', name: 'MGH Center for Gun Violence Prevention' },
+    {
+      key: 'mgh',
+      name: 'Massachusetts General Hospital Gun Violence Prevention Center',
+    },
     {
       key: 'magv',
-      name: 'Massachusetts General Hospital Gun Violence Prevention Center',
+      name: 'Massachusetts Coalition to Prevent Gun Violence',
     },
     { key: 'teenempowerment', name: 'The Center for Teen Empowerment' },
     { key: 'uncornered', name: 'Boston Uncornered' },

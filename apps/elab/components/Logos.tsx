@@ -34,7 +34,7 @@ const Logos = ({
         >
           <Image
             id="mgh-logo"
-            alt="MGH Center for Gun Violence Prevention logo"
+            alt="Massachusetts General Hospital Gun Violence Prevention Center logo"
             imgId="tngvi/logos/mgh-cgvp"
             width={150}
             className="aspect-[3/2] mt-1 h-fit"

@@ -32,7 +32,7 @@ const CTAButton = ({
     {
       arrow: '#F6A536',
       hover:
-        'drop-shadow-[2px_3px_0px_#FFF1DB] text-yellow border-yellow drop-shadow-teal hover:bg-[#FFF1DB] hover:drop-shadow-[3px_7px_0px_#F6A536]',
+        'drop-shadow-[2px_3px_0px_#FFF1DB] text-yellow border-yellow drop-shadow-yellow hover:bg-[#FFF1DB] hover:drop-shadow-[3px_7px_0px_#F6A536]',
     },
     {
       arrow: ThemeColors[1].primaryHex,

@@ -26,7 +26,7 @@ type AboutPage = {
   everythingElse: { document: any };
 };
 
-const wrapperClass = 'rmy-0 xl:my-12 mt-14 mb-4 xl:mt-16 px-5 w-full';
+const wrapperClass = 'my-0 xl:my-12 mt-14 mb-4 xl:mt-16 px-5 w-full';
 const rendererOverrides = {
   paragraph: (children: ReactElement[]) => {
     return <p className={wrapperClass}>{children}</p>;
@@ -71,7 +71,7 @@ export default function Initiatives({
                 <Button
                   label="Everything Else"
                   anchorId="else"
-                  className="border-teal text-teal fill-yellow"
+                  className="border-yellow text-yellow fill-yellow"
                 />
               </div>
             </div>

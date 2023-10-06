@@ -13,6 +13,7 @@ import { ResearchProject, Theme, Theming } from '@/types';
 import Divider from '@/components/Divider';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
+import { Gutter } from '@/components/Gutter';
 
 export default function ResearchProject({
   item,
@@ -22,42 +23,43 @@ export default function ResearchProject({
     <Layout
       error={error}
       breadcrumbs={[{ label: 'Research Projects', href: '/research/projects' }]}
+      fullBleed={true}
     >
       {item && (
         <div className="text-grey">
-          <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
-          <div className="flex flex-col-reverse lg:flex-row gap-x-5 mt-16">
-            <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
-              <Image
-                id="thumb"
-                alt={item.thumbnailAltText}
-                imgId={item.thumbnail.publicId}
-                transforms="f_auto,dpr_auto,c_fill,g_faces,w_450"
-              />
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="my-6">
-                <DocumentRenderer
-                  document={item.headingText.document}
-                  // componentBlocks={Blocks(theming)}
-                  // renderers={Doc(rendererOverrides)}
+          <Gutter>
+            <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
+            <div className="flex flex-col-reverse lg:flex-row gap-x-5 mt-16">
+              <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
+                <Image
+                  id="thumb"
+                  alt={item.thumbnailAltText}
+                  imgId={item.thumbnail.publicId}
+                  transforms="f_auto,dpr_auto,c_fill,g_faces,w_450"
                 />
               </div>
-              {item.buttons &&
-                item.buttons.length > 0 &&
-                item.buttons.map((button) => (
-                  <CTAButton
-                    label={button.label}
-                    link={button.url}
-                    icon={button.icon}
-                    theme={Theme.none}
-                    className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
+
+              <div className="flex flex-col items-center">
+                <div className="my-6">
+                  <DocumentRenderer
+                    document={item.headingText.document}
+                    // componentBlocks={Blocks(theming)}
+                    // renderers={Doc(rendererOverrides)}
                   />
-                ))}
+                </div>
+                {item.buttons &&
+                  item.buttons.length > 0 &&
+                  item.buttons.map((button) => (
+                    <CTAButton
+                      label={button.label}
+                      link={button.url}
+                      icon={button.icon}
+                      theme={Theme.none}
+                      className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}
+                    />
+                  ))}
+              </div>
             </div>
-          </div>
-          <div>
             <div className="hidden lg:block w-3/4 lg:w-full">
               <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
                 Jump to:
@@ -79,6 +81,9 @@ export default function ResearchProject({
                   className="border-green-blue text-green-blue fill-green-blue"
                 /> */}
             </div>
+          </Gutter>
+          <Divider />
+          <Gutter>
             <div id="content">
               <h2 className="font-bold text-5xl my-3">About the Project</h2>
               <DocumentRenderer
@@ -121,7 +126,7 @@ export default function ResearchProject({
               For inquiries about this project, please contact&nbsp;
               {item.contact}.
             </p>
-          </div>
+          </Gutter>
         </div>
       )}
     </Layout>

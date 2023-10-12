@@ -4,7 +4,7 @@ import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import { Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
-import { News, Event, Item, InitiativeKeyMap } from '@/types';
+import { News, Event, Item, InitiativeKeyMap, Theming } from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
 export default function WhatsNew({
@@ -13,7 +13,7 @@ export default function WhatsNew({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error}>
+    <Layout error={error} theme={Theming[initiative].theme}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         {items && <WhatsNewRenderer items={items} initiative={initiative} />}
       </div>
@@ -23,7 +23,7 @@ export default function WhatsNew({
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
-    paths: ['/whats-new/tngv', '/whats-new/tnej'],
+    paths: ['/initiatives/tngv/whats-new', '/initiatives/tnej/whats-new'],
     fallback: false,
   };
 }
@@ -91,6 +91,7 @@ export async function getStaticProps({
       props: {
         error: events.error,
         events: null,
+        initiative: 'tngv',
       },
     };
   }
@@ -100,6 +101,7 @@ export async function getStaticProps({
       props: {
         error: newsItems.error,
         newsItems: null,
+        initiative: 'tngv',
       },
     };
   }

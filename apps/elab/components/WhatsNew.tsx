@@ -44,11 +44,12 @@ ${
             <>
               <div key={group.key} className="flex flex-row">
                 {/* Hide group selector if other is selected */}
-
                 <Link
-                  href={`/whats-new/${
-                    group.key !== initiative ? group.key : ''
-                  }`}
+                  href={
+                    group.key === initiative
+                      ? '/whats-new'
+                      : `/initiatives/${group.key}/whats-new`
+                  }
                   className={`inline-block`}
                 >
                   <div className={groupButtonStyle}>
@@ -57,7 +58,9 @@ ${
                       viewBox="185.411 115.41 11 11"
                       width="11"
                       height="11"
-                      className={`flex-shrink-0 ml-3`}
+                      className={`flex-shrink-0 ml-3 ${
+                        group.key !== initiative ? 'hidden' : 'block'
+                      }`}
                     >
                       <path
                         d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
@@ -73,15 +76,15 @@ ${
       </div>
       <div className="flex flex-row items-center mt-3 mb-5 gap-x-5">
         {['News', 'Events'].map((str) => {
+          const href = `/${
+            initiative ? `initiatives/${initiative}/` : ''
+          }${str.toLocaleLowerCase()}`;
+          const className = `${groupButtonStyle} text-green border-green ${
+            filter === str.toLocaleLowerCase() ? 'bg-green text-white' : ''
+          }`;
+
           return (
-            <Link
-              href={`/${
-                initiative ? initiative + '/' : ''
-              }${str.toLocaleLowerCase()}`}
-              className={`${groupButtonStyle} text-green border-green ${
-                filter === str.toLocaleLowerCase() ? 'bg-green text-white' : ''
-              }`}
-            >
+            <Link href={href} className={className}>
               <span>{str}</span>
             </Link>
           );

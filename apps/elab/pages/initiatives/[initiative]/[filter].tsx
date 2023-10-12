@@ -1,28 +1,24 @@
-'use client';
 import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
 
-import { Image, Query } from '@el-next/components';
+import { Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
-import { News, Event, Item, InitiativeKeyMap } from '@/types';
-import { useRouter } from 'next/router';
-import { NewsEventRenderer } from '@/components/Renderers';
+import { Item, InitiativeKeyMap, Theming } from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
 export default function WhatsNew({
   items,
-  type,
+  filter,
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error}>
+    <Layout error={error} theme={Theming[initiative].theme}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         {items && (
           <WhatsNewRenderer
             items={items}
-            filter={type}
+            filter={filter}
             initiative={initiative}
           />
         )}
@@ -34,10 +30,10 @@ export default function WhatsNew({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
     paths: [
-      '/whats-new/tngv/news',
-      '/whats-new/tnej/news',
-      '/whats-new/tngv/events',
-      '/whats-new/tnej/events',
+      '/initiatives/tngv/news',
+      '/initiatives/tnej/news',
+      '/initiatives/tngv/events',
+      '/initiatives/tnej/events',
     ],
     fallback: false,
   };
@@ -46,11 +42,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps({
   params,
 }: {
-  params: { initiative: string; type: string };
+  params: { initiative: string; filter: string };
 }) {
   let items = [];
 
-  if (params.type === 'news')
+  if (params.filter === 'news')
     items = await Query(
       'newsItems',
       `newsItems(
@@ -110,6 +106,7 @@ export async function getStaticProps({
       props: {
         error: items.error,
         items: null,
+        initiative: 'tngvi',
       },
     };
   }
@@ -119,7 +116,7 @@ export async function getStaticProps({
       items: (items as Item[]).filter((item) =>
         item.initiatives.includes(InitiativeKeyMap[params.initiative])
       ),
-      type: params.type,
+      filter: params.filter,
       initiative: params.initiative,
     },
     revalidate: 1,

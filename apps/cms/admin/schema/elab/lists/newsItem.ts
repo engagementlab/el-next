@@ -1,6 +1,3 @@
-import { DocumentRenderer } from '@keystone-6/document-renderer';
-import ReactDOMServer from 'react-dom/server';
-import React from 'react';
 import { graphql, list } from '@keystone-6/core';
 import {
   checkbox,

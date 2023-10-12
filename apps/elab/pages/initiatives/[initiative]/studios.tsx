@@ -104,7 +104,7 @@ export default function Studios({
                 <>
                   <div key={group.key} className="flex flex-row">
                     {/* Hide group selector if other is selected */}
-                    <a
+                    <Link
                       href={
                         haveGroupOpen(group.key)
                           ? '/studios'
@@ -128,7 +128,7 @@ export default function Studios({
                           ></path>
                         </svg>
                       </div>
-                    </a>
+                    </Link>
                   </div>
                 </>
               );

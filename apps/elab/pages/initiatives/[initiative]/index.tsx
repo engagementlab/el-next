@@ -267,7 +267,7 @@ export default function InitIndex({
                 </div>
                 <div className="flex justify-center lg:justify-end">
                   <MoreButton
-                    link={`/initiatives/${initiative}/projects`}
+                    link={`/initiatives/${initiative}/studios/projects`}
                     theme={Theming[initiative].theme}
                     label="See more projects"
                   />

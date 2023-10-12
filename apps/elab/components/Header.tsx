@@ -342,7 +342,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 className={fillClass}
               />
               <NavLink
-                href={`/studios/projects/?${urlSuffix}`}
+                href={`/initiatives/${urlSuffix}/studios/projects`}
                 label="Projects"
                 subLink={true}
                 className={fillClass}
@@ -389,7 +389,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
               className={fillClass}
             />
             <NavLink
-              href={`/studios/projects/?${urlSuffix}`}
+              href={`/initiatives/${urlSuffix}/studios/projects`}
               label="Projects"
               subLink={true}
               className={fillClass}

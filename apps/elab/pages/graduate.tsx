@@ -7,16 +7,7 @@ import { Button, HeadingStyle, Image, Query } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
-import { CTAButton } from '@/components/Buttons';
-import {
-  CustomEase,
-  News,
-  ResearchProject,
-  Studio,
-  StudioProject,
-  Theme,
-  Theming,
-} from '@/types';
+import { CustomEase, News, StudioProject } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';

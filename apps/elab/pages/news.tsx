@@ -14,12 +14,6 @@ export default function WhatsNew({
   items,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const router = useRouter();
-
-  let filter: string | null = null;
-  if (router.asPath.indexOf('news') > 0) filter = 'news';
-  else if (router.asPath.indexOf('events') > 0) filter = 'events';
-
   return (
     <Layout error={error}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">

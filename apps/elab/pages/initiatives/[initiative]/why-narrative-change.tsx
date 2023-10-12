@@ -19,12 +19,6 @@ import {
   Theming,
   Item,
 } from '@/types';
-import { CTAButton, MoreButton } from '@/components/Buttons';
-import Divider from '@/components/Divider';
-import Slideshow from '@/components/Slideshow';
-import Link from 'next/link';
-import Logos from '@/components/Logos';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { Blocks, Doc } from '@/components/Renderers';
 import { ReactNode } from 'react';
 import { Gutter } from '@/components/Gutter';

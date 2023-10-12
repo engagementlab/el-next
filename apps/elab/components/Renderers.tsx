@@ -113,8 +113,10 @@ const NewsEventRenderer = ({
   showIcon?: boolean;
 }) => {
   let borderColor = 'border-yellow';
-  if (item.initiatives[0] === 'gunviolence') borderColor = 'border-purple';
-  else if (item.initiatives[0] === 'climate') borderColor = 'border-leaf';
+  if (item.initiatives.length === 1) {
+    if (item.initiatives[0] === 'gunviolence') borderColor = 'border-purple';
+    else if (item.initiatives[0] === 'climate') borderColor = 'border-leaf';
+  }
   return (
     <div className="mt-6 lg:mt-0">
       <div className="relative">

@@ -17,9 +17,7 @@ export default function PartnersPage({
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log('ini', initiative, Theming[initiative]);
   return (
-    // <></>
     <Layout
       error={error}
       fullBleed={true}

@@ -170,7 +170,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         thumbAltText
         buttons
         content {
-            document
+           document(hydrateRelationships: true)
         }
         projectLeads {
           name

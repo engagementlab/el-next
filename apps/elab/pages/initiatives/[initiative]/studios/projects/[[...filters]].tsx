@@ -1,9 +1,7 @@
+'use client';
 import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
 import _ from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -14,164 +12,55 @@ import { CustomEase, StudioProject, Theme, Theming } from '@/types';
 
 import Layout from '../../../../../components/Layout';
 
-interface FilterState {
-  currentTheme: Theme;
-  currentFilters: never[];
-  filterGroupOpen: string;
-  toggle: (filter: any) => void;
-  toggleFilterGroupOpen: (groupKey: string) => void;
-  reset: () => void;
-}
+import { useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 
-let preSelectedGroup = '';
-let preSelectedFilters: never[] = [];
-let preSelectedTheme = Theme.none;
 export default function StudioProjects({
   filtersData,
+  filters,
   initiative,
   studioProjects,
   initiativeBlurbs,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Create store with Zustand
-  const useStore = create<FilterState>()(
-    subscribeWithSelector((set) => ({
-      currentTheme: preSelectedTheme || Theme.none,
-      // If defined, pre-populate filter store
-      currentFilters: preSelectedFilters || [],
-      filterGroupOpen: preSelectedGroup || '',
-      toggle: (filter: any) =>
-        set((state) => {
-          return state.currentFilters.includes(filter as never)
-            ? {
-                ...state,
-                currentFilters: state.currentFilters.filter(
-                  (e) => e !== filter
-                ),
-              }
-            : {
-                ...state,
-                currentFilters: [...state.currentFilters, filter as never],
-              };
-        }),
-      toggleFilterGroupOpen: (filterGroupKey: string) => {
-        set((state) => {
-          const group = filterGroupKey.toLocaleLowerCase();
-          let theme = Theme.none;
+  const search = searchParams.getAll('q');
+  // console.log(search);
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
 
-          if (state.filterGroupOpen !== group) {
-            if (group === 'tngv') {
-              theme = Theme.gunviolence;
-            } else if (group === 'tnej') {
-              theme = Theme.climate;
-            }
-          }
-          return {
-            ...state,
-            currentTheme: theme || Theme.none,
-            filterGroupOpen: state.filterGroupOpen === group ? '' : group,
-          };
-        });
-      },
-
-      reset: () =>
-        set({
-          filterGroupOpen: '',
-          currentFilters: [],
-          currentTheme: Theme.none,
-        }),
-    }))
-  );
-
-  // Alter URL when groups and filters change
-  useStore.subscribe(
-    (state) => state.filterGroupOpen,
-    (current) => {
-      const group = current.toLowerCase();
-
-      history.replaceState(
-        {},
-        'Filtered Data',
-        `${location.pathname}?${group}`
-      );
-    }
-  );
-  useStore.subscribe(
-    (state) => state.currentFilters,
-    (current) => {
-      // Preserve the current initiative key in path
-      const initiativeKey = location.search.split('/')[0];
-      // debugger;
-      history.replaceState(
-        {},
-        'Filtered Data',
-        `${location.pathname}${initiativeKey}/${current.join('/')}`
-      );
-    }
-  );
-  const toggleFilterGroupOpen = useStore(
-    (state) => state.toggleFilterGroupOpen
-  );
-  useEffect(() => {
-    // The preselected group will be in the query, if any
-    if (router.asPath.indexOf('?') > 0) {
-      let filtersAndGroup = router.asPath.substring(
-        router.asPath.indexOf('?'),
-        router.asPath.length
-      );
-      preSelectedGroup = (
-        filtersAndGroup.indexOf('/') > 0
-          ? filtersAndGroup.substring(0, filtersAndGroup.indexOf('/'))
-          : filtersAndGroup
-      ).replace('?', '');
-
-      if (preSelectedGroup === 'gunviolence') {
-        preSelectedTheme = Theme.gunviolence;
-      } else if (preSelectedGroup === 'climate') {
-        preSelectedTheme = Theme.climate;
+  const createQueryString = useCallback(
+    (value: string) => {
+      let existing = new URLSearchParams(document.location.search);
+      let newValue = [existing.get('q')] || [];
+      console.log('new', newValue, existing?.get('q'));
+      const params = new URLSearchParams();
+      // existing.delete('q');
+      if (existing.get('q')?.includes(value)) {
+        // newValue = newValue.replace(value, '')
+        newValue.push(existing.get('q'));
+        // params.set('q', newValue);
       }
+      newValue.push(value);
+      // newValue.forEach((value) => {
+      params.append('q', newValue.join(','));
+      // });
 
-      if (useStore.getState().currentTheme === Theme.none)
-        toggleFilterGroupOpen(preSelectedGroup);
-    }
-    // Call group-specific filters from the router path after the first key symbol
-    if (router.asPath.indexOf('?') > 0) {
-      const group = router.asPath.split('?')[1];
-      let filters = group.split('/');
-      if (group && filters.length > 1) {
-        filters.shift();
-
-        preSelectedFilters = filters as never[];
-      }
-    }
-  }, []);
+      return newValue.join(',');
+    },
+    [searchParams]
+  );
 
   const FilteredItems = (props: { items: StudioProject[] | null }) => {
-    // Store get/set
-    const {
-      currentFilters,
-      currentTheme,
-      filterGroupOpen,
-      toggleFilterGroupOpen,
-    } = useStore((state) => state);
-
-    const noGroupsOpen = () => {
-      return filterGroupOpen === '';
-    };
-    // const haveFilters = currentFilters.length > 0;
-
-    const haveSpecificFilter = (key: string) => {
-      return _.values(currentFilters).includes(key as never);
-    };
-
     const haveGroupOpen = (key: string) => {
       return key === initiative;
     };
-    const toggleFilter = useStore((state) => state.toggle);
-    const reset = useStore((state) => state.reset);
 
+    const haveSpecificFilter = (key: string) => {
+      return _.values(filters).includes(key as never);
+    };
     const filterGroups = [
       {
         key: 'tngv',
@@ -220,11 +109,11 @@ export default function StudioProjects({
                 />
               )}
             </div>
-            {noGroupsOpen() && (
+            {/* {noGroupsOpen() && (
               <hr
                 className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
               />
-            )}{' '}
+            )} */}
             <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
               {props.item.name}
             </h3>
@@ -282,43 +171,48 @@ export default function StudioProjects({
             })}
           </div>
 
-          {!noGroupsOpen() && (
-            <>
-              <div className="flex mt-2 ml-3 lg:ml-5 flex-grow">
-                <svg
-                  height="20"
-                  viewBox="0 -960 960 960"
-                  width="20"
-                  className="inline"
-                >
-                  <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
-                </svg>
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:flex flex-row items-center justify-start gap-x-1 transition-all">
-                  {filters.map((filter) => {
-                    const filterButtonStyle = `font-bold text-center border-2 border-${
-                      Theming[filterGroupOpen].bg
-                    } rounded-large px-3 py-1 ${
-                      !haveSpecificFilter(filter.key)
-                        ? `${Theming[filterGroupOpen].text}`
-                        : `text-white ${Theming[filterGroupOpen].bg}`
-                    } `;
-                    return (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          toggleFilter(filter.key);
-                          e.preventDefault();
-                        }}
-                        key={filter.key}
-                        className={filterButtonStyle}
-                      >
-                        {filter.name}
-                      </a>
-                    );
-                  })}
-                </div>
+          <>
+            <div className="flex mt-2 ml-3 lg:ml-5 flex-grow">
+              <svg
+                height="20"
+                viewBox="0 -960 960 960"
+                width="20"
+                className="inline"
+              >
+                <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
+              </svg>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:flex flex-row items-center justify-start gap-x-1 transition-all">
+                {filtersData.map((filter: { key: string; name: string }) => {
+                  const filterButtonStyle = `font-bold text-center border-2 border-${
+                    Theming[initiative].bg
+                  } rounded-large px-3 py-1 ${
+                    !haveSpecificFilter(filter.key)
+                      ? `${Theming[initiative].text}`
+                      : `text-white ${Theming[initiative].bg}`
+                  } `;
+                  return (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // router.push(`${router.asPath}/${filter.key}`);
+                        router.push(
+                          `/initiatives/${initiative}/studios/projects?q=${createQueryString(
+                            filter.key
+                          )}`,
+                          undefined,
+                          { shallow: true }
+                        );
+                      }}
+                      key={`filter-${filter.key}`}
+                      className={filterButtonStyle}
+                    >
+                      {filter.name}
+                    </button>
+                  );
+                })}
               </div>
-              <button
+            </div>
+            {/* <button
                 className="text-grey text-base uppercase leading-6 opacity-70 mt-4"
                 onClick={(e) => {
                   reset();
@@ -326,39 +220,16 @@ export default function StudioProjects({
                 }}
               >
                 CLEAR ALL FILTERS
-              </button>
-            </>
-          )}
+              </button> */}
+          </>
         </div>
       );
 
       return <div>{menu}</div>;
     };
 
-    let selectedFilters = useStore((state) => state.currentFilters);
-    const filteredItems = props.items
-      ? props.items.filter((item) => {
-          // If selected groups empty, show all...
-          const group =
-            item.initiative.toLowerCase() === 'gunviolence' ? 'tngv' : 'tnej';
-          return (
-            filterGroupOpen === '' ||
-            // ...otherwise, item's filters must match group and ALL selected sub-filters
-            (group === filterGroupOpen.toLowerCase() &&
-              _.every(
-                selectedFilters,
-                (r) => _.map(item.filters, 'key').indexOf(r) >= 0
-              ))
-          );
-        })
-      : [];
-
-    const count = filteredItems.length;
-    // Decide plural of item count
-    const showing = `Showing ${count}`;
-
     return (
-      <Layout error={error} theme={currentTheme}>
+      <Layout error={error} theme={Theming[initiative].theme}>
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studio Projects
@@ -376,15 +247,15 @@ export default function StudioProjects({
           {RenderFilters(filtersData)}
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
-              {count === 0 && (
+              {studioProjects?.length === 0 && (
                 <p className="w-full text-xl my-20 text-center">
                   Sorry, no matches found. Please try other filters.
                 </p>
               )}
               <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {count > 0 && (
+                {studioProjects && studioProjects?.length > 0 && (
                   <AnimatePresence>
-                    {filteredItems.map((item, i: number) => (
+                    {studioProjects.map((item, i: number) => (
                       <ItemRenderer key={i} item={item} />
                     ))}
                   </AnimatePresence>
@@ -413,7 +284,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps({
   params,
 }: {
-  params: { initiative: string; filters: string[] };
+  params: { initiative: string; filters?: string[] };
 }) {
   const filtersData = await Query(
     'filters',
@@ -429,7 +300,7 @@ export async function getStaticProps({
         error: filtersData.error,
         studioProjects: null,
         filtersData: null,
-        currentFilters: params.filters,
+        filters: null,
         initiative: 'tngv',
       },
     };
@@ -485,6 +356,7 @@ export async function getStaticProps({
       studioProjects: studioProjects as StudioProject[],
       initiativeBlurbs,
       initiative: params.initiative,
+      filters: params.filters ? params.filters : null,
     },
     revalidate: 1,
   };

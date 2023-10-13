@@ -88,7 +88,12 @@ export const Person = ({
             className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight} group-hover:border-8`}
           />
         ) : (
-          <ImagePlaceholder imageLabel="Person" width={250} height={250} />
+          <Image
+            id={`placeholder-${person.key}`}
+            alt="Person Placeholder image"
+            imgId="elab-home-v3.x/people/person-placeholder"
+            width={250}
+          />
         )}
         <p
           className={`border-b-2 mt-3 ${theme.text} text-2xl font-semibold group-hover:border-b-0 group-hover:text-green-blue`}
@@ -117,7 +122,12 @@ export const Person = ({
           className={`rounded-full border-4 mt-2 transition-all ${theme.borderLight}`}
         />
       ) : (
-        <ImagePlaceholder imageLabel="Person" width={150} height={150} />
+        <Image
+          id={`placeholder-${person.key}`}
+          alt="Person Placeholder image"
+          imgId="elab-home-v3.x/people/person-placeholder"
+          width={large ? 250 : 150}
+        />
       )}
       {/* 
       // border-b-2

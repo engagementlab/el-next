@@ -383,6 +383,7 @@ export default function InitIndex({
                   'magv',
                   'teenempowerment',
                   'uncornered',
+                  'wab2g',
                 ]}
               />
             ) : (

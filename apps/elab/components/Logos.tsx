@@ -14,7 +14,7 @@ const Logos = ({
 }: Props): JSX.Element => {
   const parentClass = classOverride
     ? classOverride
-    : 'lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center';
+    : 'lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center items-center';
   return (
     <div className={parentClass}>
       {(all || partners.includes('ldbpi')) && (
@@ -35,9 +35,9 @@ const Logos = ({
           <Image
             id="mgh-logo"
             alt="Massachusetts General Hospital Gun Violence Prevention Center logo"
-            imgId="tngvi/logos/mgh-cgvp"
-            width={150}
-            className="aspect-[3/2] mt-1 h-fit"
+            imgId="elab-home-v3.x/logos/mgh-gvpc"
+            width={350}
+            // className="aspect-[3/2] mt-1 h-fit"
           />
         </a>
       )}
@@ -94,6 +94,16 @@ const Logos = ({
               fill="#e1811c"
             />
           </svg>
+        </a>
+      )}
+      {(all || partners.includes('wab2g')) && (
+        <a href="https://www.wab2g.org/" target="_blank">
+          <Image
+            id="wab2g-logo"
+            alt="We Are Better Together Warren Daniel Hairston Project (WAB2G) logo"
+            imgId="elab-home-v3.x/logos/better-together"
+            width={170}
+          />
         </a>
       )}
       {(all || partners.includes('ficdc')) && (

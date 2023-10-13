@@ -204,7 +204,7 @@ export default function InitIndex({
                 />
               )}
             </div>
-            <h2 className={subHeadClass}>What's new</h2>
+            <h2 className={subHeadClass}>Featured News & Events</h2>
             {mergedItems && (
               <div className="xl:mx-32">
                 <Slideshow

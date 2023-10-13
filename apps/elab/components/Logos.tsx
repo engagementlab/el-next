@@ -14,7 +14,7 @@ const Logos = ({
 }: Props): JSX.Element => {
   const parentClass = classOverride
     ? classOverride
-    : 'lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center items-center';
+    : 'lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center justify-items-center';
   return (
     <div className={parentClass}>
       {(all || partners.includes('ldbpi')) && (

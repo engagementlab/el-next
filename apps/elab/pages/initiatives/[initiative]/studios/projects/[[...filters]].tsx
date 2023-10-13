@@ -33,25 +33,24 @@ export default function StudioProjects({
 
   const createQueryString = useCallback(
     (value: string) => {
-      const existing = new URLSearchParams(document.location.search)
-        .get('q')
-        ?.split(',');
-      const params = new URLSearchParams();
+      const existing =
+        new URLSearchParams(document.location.search).get('q')?.split(',') ||
+        [];
+      // const params = new URLSearchParams();
       let newValue: string[] = [];
       console.log('1', existing);
 
-      // existing.delete('q');
-      if (!existing?.includes(value)) {
-        // newValue = newValue.replace(value, '')
-        newValue.push(value);
-        // params.set('q', newValue);
-      }
-      // newValue.push(value);
-      newValue.forEach((value) => {
-        params.append('q', newValue.join(','));
+      existing?.forEach((v) => {
+        // console.log('2', v, value);
+        if (v != value) newValue.push(v);
       });
+      // if (existing.length === 0)
+      if (!existing.includes(value)) newValue.push(value);
+      // else newValue.
 
-      return params.toString();
+      console.log('3', newValue);
+      if (newValue[0].length === 0) newValue.shift();
+      return newValue.join(',');
     },
     [searchParams]
   );

@@ -157,12 +157,12 @@ export default function InitIndex({
                 {initiative === 'tngv' ? (
                   <Logos
                     partners={['ldbpi', 'mgh']}
-                    classOverride="flex flex-row justify-evenly items-center"
+                    classOverride="flex flex-col sm:flex-row justify-evenly items-center"
                   />
                 ) : (
                   <Logos
                     partners={['ficdc', 'greenroots', 'sftt']}
-                    classOverride="flex flex-row justify-evenly items-center"
+                    classOverride="flex flex-col sm:flex-row justify-evenly items-center"
                   />
                 )}
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
@@ -204,7 +204,7 @@ export default function InitIndex({
                 />
               )}
             </div>
-            <h2 className={subHeadClass}>Featured News & Events</h2>
+            <h2 className={`${subHeadClass} mt-20`}>Featured News & Events</h2>
             {mergedItems && (
               <div className="xl:mx-32">
                 <Slideshow
@@ -215,6 +215,12 @@ export default function InitIndex({
                 />
               </div>
             )}
+            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+              <MoreButton
+                label="See more news & events"
+                link={`/initiatives/${initiative}/whats-new/`}
+              />
+            </div>
           </div>
           {page.projects && page.projects.length > 0 && (
             <Divider color={Theming[initiative].secodary} />

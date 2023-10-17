@@ -36,6 +36,7 @@ export const PartnersSelect = multiselect({
 
 export default list({
   access: allowAll,
+
   fields: {
     name: text({
       validation: {
@@ -64,11 +65,33 @@ export default list({
       },
     }),
     researchProject: relationship({
-      ref: 'ResearchProject.partners',
+      ref: 'ResearchProject.collaborators',
       many: true,
+      // label: 'Partners / Funders',
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
+    researchProjectFunders: relationship({
+      // label: 'Partners / Funders',
+      ref: 'ResearchProject.funders',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
     }),
   },
-  ui: { label: 'Partner' },
+  ui: { label: 'Partners / Funders', singular: 'Partner/Funder' },
   hooks: {
     resolveInput: async ({
       listKey,

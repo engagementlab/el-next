@@ -129,10 +129,21 @@ export default list({
       },
       componentBlocks,
     }),
-    partners: relationship({
+    collaborators: relationship({
       ref: 'Partner.researchProject',
       many: true,
-      label: 'Partners',
+      label: 'Collaborators',
+      ui: {
+        displayMode: 'cards',
+        cardFields: ['name', 'logo'],
+        inlineCreate: { fields: ['name', 'url', 'logo'] },
+        inlineEdit: { fields: ['name', 'url', 'logo'] },
+      },
+    }),
+    funders: relationship({
+      ref: 'Partner.researchProjectFunders',
+      many: true,
+      label: 'Funders',
       ui: {
         displayMode: 'cards',
         cardFields: ['name', 'logo'],

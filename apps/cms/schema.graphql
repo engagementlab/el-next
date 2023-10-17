@@ -1026,6 +1026,8 @@ type Partner {
   logo: CloudinaryImage_File
   researchProject(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchProjectCount(where: ResearchProjectWhereInput! = {}): Int
+  researchProjectFunders(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
+  researchProjectFundersCount(where: ResearchProjectWhereInput! = {}): Int
 }
 
 input PartnerWhereUniqueInput {
@@ -1042,6 +1044,7 @@ input PartnerWhereInput {
   key: StringFilter
   url: StringFilter
   researchProject: ResearchProjectManyRelationFilter
+  researchProjectFunders: ResearchProjectManyRelationFilter
 }
 
 input PartnerOrderByInput {
@@ -1057,6 +1060,7 @@ input PartnerUpdateInput {
   url: String
   logo: Upload
   researchProject: ResearchProjectRelateToManyForUpdateInput
+  researchProjectFunders: ResearchProjectRelateToManyForUpdateInput
 }
 
 input PartnerUpdateArgs {
@@ -1070,6 +1074,7 @@ input PartnerCreateInput {
   url: String
   logo: Upload
   researchProject: ResearchProjectRelateToManyForCreateInput
+  researchProjectFunders: ResearchProjectRelateToManyForCreateInput
 }
 
 type Person {
@@ -1256,8 +1261,10 @@ type ResearchProject {
   shortDescription: String
   blurb: ResearchProject_blurb_Document
   content: ResearchProject_content_Document
-  partners(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
-  partnersCount(where: PartnerWhereInput! = {}): Int
+  collaborators(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
+  collaboratorsCount(where: PartnerWhereInput! = {}): Int
+  funders(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
+  fundersCount(where: PartnerWhereInput! = {}): Int
   projectLeads(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   projectLeadsCount(where: PersonWhereInput! = {}): Int
   contact: String
@@ -1302,7 +1309,8 @@ input ResearchProjectWhereInput {
   thumbAltText: StringFilter
   headingImageAltText: StringFilter
   shortDescription: StringFilter
-  partners: PartnerManyRelationFilter
+  collaborators: PartnerManyRelationFilter
+  funders: PartnerManyRelationFilter
   projectLeads: PersonManyRelationFilter
   contact: StringFilter
   initiativesRelated: InitiativeManyRelationFilter
@@ -1356,7 +1364,8 @@ input ResearchProjectUpdateInput {
   shortDescription: String
   blurb: JSON
   content: JSON
-  partners: PartnerRelateToManyForUpdateInput
+  collaborators: PartnerRelateToManyForUpdateInput
+  funders: PartnerRelateToManyForUpdateInput
   projectLeads: PersonRelateToManyForUpdateInput
   contact: String
   tools: JSON
@@ -1406,7 +1415,8 @@ input ResearchProjectCreateInput {
   shortDescription: String
   blurb: JSON
   content: JSON
-  partners: PartnerRelateToManyForCreateInput
+  collaborators: PartnerRelateToManyForCreateInput
+  funders: PartnerRelateToManyForCreateInput
   projectLeads: PersonRelateToManyForCreateInput
   contact: String
   tools: JSON

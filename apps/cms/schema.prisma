@@ -130,12 +130,13 @@ model NewsItem {
 }
 
 model Partner {
-  id              String            @id @default(cuid())
-  name            String            @default("")
-  key             String            @unique @default("")
-  url             String            @default("")
-  logo            Json?
-  researchProject ResearchProject[] @relation("Partner_researchProject")
+  id                     String            @id @default(cuid())
+  name                   String            @default("")
+  key                    String            @unique @default("")
+  url                    String            @default("")
+  logo                   Json?
+  researchProject        ResearchProject[] @relation("Partner_researchProject")
+  researchProjectFunders ResearchProject[] @relation("Partner_researchProjectFunders")
 }
 
 model Person {
@@ -178,7 +179,8 @@ model ResearchProject {
   shortDescription    String       @default("")
   blurb               Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   content             Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  partners            Partner[]    @relation("Partner_researchProject")
+  collaborators       Partner[]    @relation("Partner_researchProject")
+  funders             Partner[]    @relation("Partner_researchProjectFunders")
   projectLeads        Person[]     @relation("Person_researchLeads")
   contact             String       @default("")
   tools               Json?

@@ -55,6 +55,16 @@ export default list({
     mdProject: checkbox({
       label: 'Is MD Project',
       defaultValue: false,
+      ui: {
+        description:
+          'Specifies if this project was created as a masters thesis',
+      },
+    }),
+    years: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Project Year(s)',
     }),
     ...group({
       label: 'Images',

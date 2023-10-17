@@ -63,6 +63,7 @@ const Semester: Lists.Semester = list({
       },
     }),
     courseNumber: text({
+      label: 'Department(s)',
       validation: {
         isRequired: true,
       },

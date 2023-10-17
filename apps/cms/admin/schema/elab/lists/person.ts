@@ -43,6 +43,7 @@ const Person: Lists.Person = list({
         isRequired: true,
       },
     }),
+    secondaryTitle: text(),
     image: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,

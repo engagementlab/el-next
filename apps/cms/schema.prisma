@@ -146,6 +146,7 @@ model Person {
   createdDate        DateTime?
   enabled            Boolean           @default(true)
   title              String            @default("")
+  secondaryTitle     String            @default("")
   image              Json?
   category           String?
   orderInSection     Int?              @default(0)
@@ -170,6 +171,7 @@ model ResearchProject {
   flags               Json         @default("[]")
   filters             Filter[]     @relation("Filter_researchProjects")
   mdProject           Boolean      @default(false)
+  years               String       @default("")
   thumbnail           Json?
   thumbAltText        String       @default("")
   headingImage        Json?

@@ -69,6 +69,10 @@ const StudioProject: Lists.StudioProject = list({
     mdProject: checkbox({
       label: 'Is MD Project',
       defaultValue: false,
+      ui: {
+        description:
+          'Specifies if this project was created as a masters thesis',
+      },
     }),
     thumbnail: cloudinaryImage({
       cloudinary: {

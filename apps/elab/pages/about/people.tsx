@@ -4,7 +4,7 @@ import { Query } from '@el-next/components';
 import Layout from '../../components/Layout';
 import { motion } from 'framer-motion';
 import { Person } from '@/components/People';
-import { Person as P, Theming } from '@/types';
+import { Person as PersonT, Theming } from '@/types';
 
 export default function AboutPage({
   people,
@@ -33,21 +33,14 @@ export default function AboutPage({
                 .filter((person) => {
                   return person.category === 'core';
                 })
-                .map(
-                  (person: {
-                    key: any;
-                    name: string;
-                    image: { publicId: string };
-                    title: string;
-                  }) => (
-                    <Person
-                      key={person.key}
-                      person={person}
-                      theme={Theming['none']}
-                      large={true}
-                    />
-                  )
-                )}
+                .map((person: PersonT) => (
+                  <Person
+                    key={person.key}
+                    person={person}
+                    theme={Theming['none']}
+                    large={true}
+                  />
+                ))}
             </div>
             <h3
               className={`text-3xl font-extrabold uppercase mt-24 mb-4 ml-6 ${Theming['none'].heading}`}
@@ -85,21 +78,14 @@ export default function AboutPage({
                 .filter((person) => {
                   return person.category === 'fellow';
                 })
-                .map(
-                  (person: {
-                    key: any;
-                    name: string;
-                    image: { publicId: string };
-                    title: string;
-                  }) => (
-                    <Person
-                      key={person.key}
-                      person={person}
-                      theme={Theming['none']}
-                      large={true}
-                    />
-                  )
-                )}
+                .map((person: PersonT) => (
+                  <Person
+                    key={person.key}
+                    person={person}
+                    theme={Theming['none']}
+                    large={true}
+                  />
+                ))}
             </div>
           </motion.div>
         </>
@@ -122,6 +108,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             name
             key
             title
+            secondaryTitle
             image {
                 publicId
             }
@@ -136,7 +123,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       },
     };
   }
-  const people = itemResult as P[];
+  const people = itemResult as PersonT[];
 
   return { props: { people }, revalidate: 1 };
 }

@@ -236,6 +236,7 @@ export type ResearchProject = {
   name: string;
   type: string;
   key: string;
+  years: string;
   contact: string;
 
   buttons: any[];
@@ -283,6 +284,7 @@ export type Person = {
   name: string;
   key: string;
   title: string;
+  secondaryTitle?: string;
   image: {
     publicId: string;
   };

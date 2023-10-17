@@ -29,6 +29,7 @@ export default function ResearchProject({
         <div className="text-grey">
           <Gutter>
             <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
+            <h2>{item.years}</h2>
             <div className="flex flex-col-reverse lg:flex-row gap-x-5 mt-16">
               <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
                 <Image
@@ -92,7 +93,7 @@ export default function ResearchProject({
                 renderers={Doc()}
               />
             </div>
-            {item.collaborators && (
+            {item.collaborators && item.collaborators.length > 0 && (
               <>
                 <h3
                   className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
@@ -112,7 +113,7 @@ export default function ResearchProject({
                 </div>
               </>
             )}
-            {item.funders && (
+            {item.funders && item.funders.length > 0 && (
               <>
                 <h3
                   className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
@@ -184,6 +185,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'researchProjects',
     `researchProjects(where: { key: { equals: "${params!.key}" } }) {
         name
+        years
         headingText {
             document
         }
@@ -199,6 +201,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           name
           key
           title
+          secondaryTitle
           image {
               publicId
           }

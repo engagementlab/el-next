@@ -686,6 +686,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               name
               key
               title
+              secondaryTitle
               image {
                   publicId
               }
@@ -694,6 +695,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               name
               key
               title
+              secondaryTitle
               image {
                   publicId
               }
@@ -702,6 +704,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               name
               key
               title
+              secondaryTitle
               image {
                   publicId
               }  
@@ -710,6 +713,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               name
               key
               title
+              secondaryTitle
               image {
                   publicId
               }  

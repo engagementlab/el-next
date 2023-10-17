@@ -9,3 +9,4 @@ apps/sjm/.next
 .auth.env
 apps/elab/.next
 apps/elab/out
+apps/cms/admin/schema/index.ts

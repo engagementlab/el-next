@@ -351,7 +351,7 @@ export default function InitIndex({
                         {item.thumbnail ? (
                           <Image
                             id={`thumb-${i}`}
-                            alt={item.thumbnailAltText}
+                            alt={item.thumbAltText}
                             transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
                             imgId={item.thumbnail.publicId}
                             width={460}

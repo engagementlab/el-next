@@ -584,6 +584,8 @@ export async function getStaticProps() {
     (item) => item.flags && item.flags.includes('home')
   );
   const event = featuredEvents.length > 0 ? featuredEvents[0] : null;
+  // Here, we sort using news/events by reverse chronological date and then reverse that order,
+  // take the three most recent/upcoming, then reverse that back into reverse chronological
   const mergedItems = ([...(events as Event[]), ...(news as News[])] as Item[])
     .sort((a, b) => {
       let val = 0;
@@ -599,7 +601,8 @@ export async function getStaticProps() {
       return val;
     })
     .reverse()
-    .slice(0, 3);
+    .slice(0, 3)
+    .reverse();
   return {
     props: {
       event,

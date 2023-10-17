@@ -1,22 +1,15 @@
+import Link from 'next/link';
+import { Person as PersonT } from '@/types';
 import { Image } from '@el-next/components';
 import { Variants, motion } from 'framer-motion';
-import ImagePlaceholder from './ImagePlaceholder';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { CustomEase, ThemeConfig } from '@/types';
-import Link from 'next/link';
 
 interface State {
   peopleOpen: boolean[];
   togglePeople: (i: number) => void;
 }
-
-type PersonT = {
-  key: any;
-  name: string;
-  image: { publicId: string };
-  title: string;
-};
 
 // Create store with Zustand
 const useStore = create<State>()(
@@ -63,12 +56,7 @@ export const Person = ({
   theme,
   large,
 }: {
-  person: {
-    key: any;
-    name: string;
-    image: { publicId: string };
-    title: string;
-  };
+  person: PersonT;
   theme: ThemeConfig;
   large?: boolean;
 }): JSX.Element => {
@@ -100,9 +88,12 @@ export const Person = ({
         >
           {person.name}
         </p>
-        <p className="text-sm font-semibold mt-1">
+        <p className="text-md font-semibold mt-1">
           {person.title.replace(', Engagement Lab at Emerson College', '')}
         </p>
+        {person.secondaryTitle && (
+          <p className="text-sm mt-1">{person.secondaryTitle}</p>
+        )}
       </Link>
     );
   return (
@@ -133,7 +124,10 @@ export const Person = ({
       // border-b-2
        */}
       <p className={`mt-3 ${theme.text} text-lg`}>{person.name}</p>
-      <p className="text-sm mt-1">{person.title}</p>
+      <p className="text-sm font-semibold mt-1">{person.title}</p>
+      {person.secondaryTitle && (
+        <p className="text-sm mt-0 italic">{person.secondaryTitle}</p>
+      )}
     </div>
   );
 };
@@ -208,16 +202,9 @@ export const PeopleList = ({
                 .split(' ')[1]
                 .localeCompare(person2.name.split(' ')[1])
             )
-            .map(
-              (person: {
-                key: any;
-                name: string;
-                image: { publicId: string };
-                title: string;
-              }) => (
-                <Person key={person.key} person={person} theme={theme} />
-              )
-            )}
+            .map((person: PersonT) => (
+              <Person key={person.key} person={person} theme={theme} />
+            ))}
         </motion.div>
       </div>
     </div>

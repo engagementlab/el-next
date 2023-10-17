@@ -4,21 +4,11 @@ import { motion } from 'framer-motion';
 
 import { Image, Filtering, Query } from '@el-next/components';
 
-import { Theme } from '@/types';
+import { ResearchProject, Theme } from '@/types';
 import Layout from '../../../components/Layout';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 
-type MediaItem = {
-  name: string;
-  key: string;
-  shortDescription: string;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-};
-
-const ItemRenderer = (props: { item: MediaItem }) => {
+const ItemRenderer = (props: { item: ResearchProject }) => {
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -44,6 +34,8 @@ const ItemRenderer = (props: { item: MediaItem }) => {
         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
           {props.item.name}
         </h3>
+        <h2 className="text-sm">{props.item.years}</h2>
+
         <p>{props.item.shortDescription}</p>
       </Link>
     </motion.div>
@@ -83,12 +75,13 @@ export async function getStaticProps() {
 			}		
 		) {
 			name
+      years
 			key
 			shortDescription 
 			thumbnail { 
 				publicId
 			}
-            thumbAltText
+      thumbAltText
 		}`
   );
 
@@ -103,7 +96,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      researchProjects: researchProjects as MediaItem[],
+      researchProjects: researchProjects as ResearchProject[],
     },
     revalidate: 1,
   };

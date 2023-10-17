@@ -250,7 +250,7 @@ export type ResearchProject = {
   thumbnail: {
     publicId: string;
   };
-  thumbnailAltText: string;
+  thumbAltText: string;
   projectLeads: {
     name: string;
     key: string;

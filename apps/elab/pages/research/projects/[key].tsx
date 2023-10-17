@@ -34,7 +34,7 @@ export default function ResearchProject({
               <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
                 <Image
                   id="thumb"
-                  alt={item.thumbnailAltText}
+                  alt={item.thumbAltText}
                   imgId={item.thumbnail.publicId}
                   transforms="f_auto,dpr_auto,c_fill,g_faces,w_450"
                 />

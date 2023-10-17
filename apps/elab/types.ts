@@ -258,7 +258,15 @@ export type ResearchProject = {
       publicId: string;
     };
   }[];
-  partners: {
+  collaborators: {
+    name: string;
+    key: string;
+    url: string;
+    logo: {
+      publicId: string;
+    };
+  }[];
+  funders: {
     name: string;
     key: string;
     url: string;

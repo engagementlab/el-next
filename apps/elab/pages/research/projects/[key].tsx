@@ -91,24 +91,47 @@ export default function ResearchProject({
                 componentBlocks={Blocks()}
                 renderers={Doc()}
               />
-            </div>{' '}
-            <h3
-              className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
-            >
-              Partners
-            </h3>
-            <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
-              {item.partners &&
-                item.partners.length > 0 &&
-                item.partners.map((partner) => (
-                  <Image
-                    id={`partners-${partner.key}`}
-                    alt={`Logo image for ${partner.name}`}
-                    imgId={partner.logo.publicId}
-                    width={150}
-                  />
-                ))}
             </div>
+            {item.collaborators && (
+              <>
+                <h3
+                  className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
+                >
+                  Partners
+                </h3>
+                <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+                  {item.collaborators.length > 0 &&
+                    item.collaborators.map((collaborator) => (
+                      <Image
+                        id={`collaborators-${collaborator.key}`}
+                        alt={`Logo image for ${collaborator.name}`}
+                        imgId={collaborator.logo.publicId}
+                        width={150}
+                      />
+                    ))}
+                </div>
+              </>
+            )}
+            {item.funders && (
+              <>
+                <h3
+                  className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
+                >
+                  Funders
+                </h3>
+                <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+                  {item.funders.length > 0 &&
+                    item.funders.map((funder) => (
+                      <Image
+                        id={`funders-${funder.key}`}
+                        alt={`Logo image for ${funder.name}`}
+                        imgId={funder.logo.publicId}
+                        width={150}
+                      />
+                    ))}
+                </div>
+              </>
+            )}
             {item.projectLeads && item.projectLeads.length > 0 && (
               <PeopleList
                 list={item.projectLeads}
@@ -116,7 +139,7 @@ export default function ResearchProject({
                 theme={Theming['none']}
                 index={3}
               />
-            )}{' '}
+            )}
             <h2
               className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
             >
@@ -182,7 +205,15 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         }
         shortDescription
         contact
-        partners {
+        collaborators {
+          name
+          key
+          url
+          logo {
+              publicId
+          }
+        }
+        funders {
           name
           key
           url

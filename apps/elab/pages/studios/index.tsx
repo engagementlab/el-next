@@ -123,7 +123,7 @@ export default function Studios({
 
     const ItemRenderer = (props: { item: Studio }) => {
       let borderColor = 'border-yellow';
-      if (props.item.initiatives[0]) {
+      if (props.item.initiatives.length === 1) {
         if (props.item.initiatives[0] === 'gunviolence')
           borderColor = 'border-purple';
         else if (props.item.initiatives[0] === 'climate')

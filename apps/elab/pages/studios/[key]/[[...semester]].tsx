@@ -11,8 +11,8 @@ import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
 import { create } from 'zustand';
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
 
-import Layout from '../../components/Layout';
-import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';
+import Layout from '../../../components/Layout';
+import { Blocks, Doc, QuoteRenderer } from '../../../components/Renderers';
 import { CustomEase, Theme, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
@@ -89,87 +89,21 @@ type Semester = {
 
 type Studio = {
   name: string;
+  key: string;
   blurb: string;
   initiatives: string[];
   semesters: Semester[];
 };
-interface SemestersState {
-  currentSemester: string;
-  toggle: (semester: string) => void;
-  peopleOpen: boolean[];
-  togglePeople: (i: number) => void;
-}
-let preSelectedSemester = '';
-let preSelectedTheme = Theme.none;
-
-// Create store with Zustand
-const useStore = create<SemestersState>()(
-  subscribeWithSelector((set) => ({
-    //   currentTheme: preSelectedTheme || Theme.none,
-    // If defined, pre-populate filter store
-    currentSemester: preSelectedSemester || '',
-    toggle: (semester: string) =>
-      set((state) => {
-        // debugger;
-        return {
-          ...state,
-          currentSemester: semester,
-        };
-      }),
-    peopleOpen: [false, false, false, false],
-    togglePeople: (i: number) =>
-      set((state) => {
-        // debugger;
-        return {
-          ...state,
-          peopleOpen: state.peopleOpen.flatMap((section, ind) => {
-            if (ind === i) return !section;
-            return section;
-          }),
-        };
-      }),
-  }))
-);
 
 export default function Studio({
   item,
+  currentSemester,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { toggle, currentSemester, togglePeople, peopleOpen } = useStore(
-    (state) => state
-  );
-
   const selectedSemester = item?.semesters.find(
     (semester) => semester.key === currentSemester
   );
   const [semestersNavOpen, toggleMenuHover] = useCycle(false, true);
-  const router = useRouter();
-
-  // Alter URL on semester change
-  useStore.subscribe(
-    (state) => state.currentSemester,
-    (current) => {
-      if (location.pathname.includes(current)) return;
-      history.replaceState({}, 'Studios', `${location.pathname}?${current}`);
-      router.events.on('routeChangeComplete', (e) => {
-        console.log(e);
-      });
-      router.push({
-        pathname: location.pathname,
-        query: current,
-      });
-    }
-  );
-  useEffect(() => {
-    preSelectedSemester =
-      Object.keys(router.query).length === 2
-        ? Object.keys(router.query)[1]
-        : '';
-    if (currentSemester === '') {
-      if (item?.semesters.length === 1) toggle(item?.semesters[0].key);
-      else if (preSelectedSemester !== '') toggle(preSelectedSemester);
-    }
-  });
 
   const GetLabel = (selectedSemester: Semester) => {
     if (selectedSemester.type === 'upcoming')
@@ -197,6 +131,7 @@ export default function Studio({
         return QuoteRenderer(children, item, theme);
       },
     };
+
     return (
       <Layout
         error={error}
@@ -275,23 +210,14 @@ export default function Studio({
                                 se.type ? theme.heading : theme.text
                               }`}
                             >
-                              <a
-                                href="#"
-                                onClick={(e) => {
-                                  toggle(se.key);
-                                  toggleMenuHover();
-
-                                  e.preventDefault();
-                                }}
-                                key={se.key}
-                              >
+                              <Link href={`/studios/${item.key}/${se.key}`}>
                                 {se.type === 'upcoming' && 'Upcoming Semester'}
                                 {se.type === 'current' && 'Current Semester'}
                                 {se.type === null &&
                                   (se.buttonLabel
                                     ? se.buttonLabel
                                     : se.name.split(' - ')[0])}
-                              </a>
+                              </Link>
                             </p>
                           </li>
                         );
@@ -345,12 +271,8 @@ export default function Studio({
                       }
                         ${se.type ? 'text-teal' : theme.text}`}
                     ></div>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        toggle(se.key);
-                        e.preventDefault();
-                      }}
+                    <Link
+                      href={`/studios/${item.key}/${se.key}`}
                       className={buttonClass}
                     >
                       {se.type === 'upcoming' && 'Upcoming \n Semester'}
@@ -360,7 +282,7 @@ export default function Studio({
                         <br />,
                         se.name.split(' ')[1],
                       ]}
-                    </a>
+                    </Link>
                   </button>
                 );
               })}
@@ -642,11 +564,16 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   };
 }
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
+export async function getStaticProps({
+  params,
+}: {
+  params: { key: string; semester?: string };
+}) {
   const itemResult = await Query(
     'studios',
     `studios(where: { key: { equals: "${params!.key}" } }) {
         name
+        key
         blurb
         initiatives
         semesters {
@@ -740,5 +667,11 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
-  return { props: { item }, revalidate: 1 };
+  return {
+    props: {
+      item,
+      currentSemester: params.semester ? params.semester[0] : null,
+    },
+    revalidate: 1,
+  };
 }

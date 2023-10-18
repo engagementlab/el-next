@@ -168,10 +168,10 @@ export const PeopleList = ({
               togglePeople(index);
             }}
           >
-            <p className="uppercase">{heading}</p>
+            <p className="uppercase mt-0">{heading}</p>
 
             <svg
-              className={`transition-all ${CustomEase} duration-300 ${
+              className={`transition-all -translate-y-1 ${CustomEase} duration-300 ${
                 peopleOpen[index] ? 'rotate-180' : 'rotate-0'
               }`}
               height="40"

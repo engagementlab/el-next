@@ -26,30 +26,20 @@ export default function StudioProjects({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const search = searchParams.getAll('q');
-  // console.log(search);
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-
+  const filtersQuery = searchParams.getAll('q')[0];
   const createQueryString = useCallback(
     (value: string) => {
       const existing =
         new URLSearchParams(document.location.search).get('q')?.split(',') ||
         [];
-      // const params = new URLSearchParams();
       let newValue: string[] = [];
-      console.log('1', existing);
 
       existing?.forEach((v) => {
-        // console.log('2', v, value);
         if (v != value) newValue.push(v);
       });
-      // if (existing.length === 0)
       if (!existing.includes(value)) newValue.push(value);
-      // else newValue.
 
-      console.log('3', newValue);
-      if (newValue[0].length === 0) newValue.shift();
+      if (newValue.length > 0 && newValue[0].length === 0) newValue.shift();
       return newValue.join(',');
     },
     [searchParams]
@@ -61,7 +51,7 @@ export default function StudioProjects({
     };
 
     const haveSpecificFilter = (key: string) => {
-      return _.values(filters).includes(key as never);
+      return filtersQuery.split(',').includes(key as never);
     };
     const filterGroups = [
       {

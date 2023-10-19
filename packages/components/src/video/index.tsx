@@ -2,6 +2,7 @@ import Image, { ImageLoaderProps } from 'next/image';
 import React from 'react';
 import { useState } from 'react';
 import create from 'zustand';
+// import '@slightlyoff/lite-vimeo';
 
 interface VideoProps {
   videoUrl: string;
@@ -127,6 +128,7 @@ export const Video = ({
               allow="autoplay; fullscreen;"
               allowFullScreen
             ></iframe>
+            {/* <lite-vimeo videoid="364402896" /> */}
           </div>
         </div>
       )}

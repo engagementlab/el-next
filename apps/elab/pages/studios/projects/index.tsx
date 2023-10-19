@@ -250,14 +250,14 @@ export default function StudioProjects({
                   <div key={group.key} className="flex flex-row">
                     {/* Hide group selector if other is selected */}
                     <a
-                      href="#"
+                      href={
+                        haveGroupOpen(group.key)
+                          ? '/studios/projects'
+                          : `/initiatives/${group.key}/studios/projects`
+                      }
                       className={`inline-block ${
                         !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
                       } `}
-                      onClick={(e) => {
-                        toggleFilterGroupOpen(group.key);
-                        e.preventDefault();
-                      }}
                     >
                       <div className={groupButtonStyle}>
                         <span>{group.label}</span>

@@ -1,4 +1,4 @@
-import { InferGetStaticPropsType } from 'next';
+import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -11,103 +11,21 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { CustomEase, Studio, Theme, Theming } from '@/types';
+import { CustomEase, InitiativeKeyMap, Studio, Theme, Theming } from '@/types';
 
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 
-interface FilterState {
-  currentTheme: Theme;
-  selectedFilter: string;
-  toggle: (filter: any) => void;
-  reset: () => void;
-}
-
-let preSelectedFilter = '';
-let preSelectedTheme = Theme.none;
 export default function Studios({
   studios,
+  initiative,
   initiativeBlurbs,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const router = useRouter();
-
-  // Create store with Zustand
-  const useStore = create<FilterState>()(
-    subscribeWithSelector((set) => ({
-      currentTheme: preSelectedTheme || Theme.none,
-      // If defined, pre-populate filter store
-      selectedFilter: preSelectedFilter || '',
-      toggle: (filter: string) => {
-        set((state) => {
-          const group = filter.toLocaleLowerCase();
-          let theme = Theme.none;
-          // debugger;
-
-          if (state.selectedFilter !== group) {
-            if (group === 'tngv') {
-              theme = Theme.gunviolence;
-            } else if (group === 'tnej') {
-              theme = Theme.climate;
-            }
-          }
-          return {
-            ...state,
-            currentTheme: theme || Theme.none,
-            selectedFilter: state.selectedFilter === group ? '' : group,
-          };
-        });
-      },
-
-      reset: () =>
-        set({
-          selectedFilter: '',
-          currentTheme: Theme.none,
-        }),
-    }))
-  );
-
-  // Alter URL when filters change
-  useStore.subscribe(
-    (state) => state.selectedFilter,
-    (current) => {
-      history.replaceState({}, 'Filtered Data', `/studios?${current}`);
-    }
-  );
-  const toggle = useStore((state) => state.toggle);
-  useEffect(() => {
-    // The preselected group will be in the query, if any
-    if (router.asPath.indexOf('?') > 0) {
-      let filter = router.asPath.substring(
-        router.asPath.indexOf('?'),
-        router.asPath.length
-      );
-      preSelectedFilter = filter.replace('?', '');
-
-      if (preSelectedFilter === 'tngv') {
-        preSelectedTheme = Theme.gunviolence;
-      } else if (preSelectedFilter === 'tnej') {
-        preSelectedTheme = Theme.climate;
-      }
-
-      if (useStore.getState().currentTheme === Theme.none)
-        toggle(preSelectedFilter);
-    }
-  }, []);
-
   const FilteredItems = (props: { items: Studio[] | null }) => {
     // Store get/set
-    const { currentTheme, selectedFilter, toggle } = useStore((state) => state);
 
-    const noGroupsOpen = () => {
-      return selectedFilter === '';
-    };
-    // const haveFilters = currentFilters.length > 0;
-
-    const haveSpecificFilter = (key: string) => {
-      return selectedFilter === key;
-    };
     const haveGroupOpen = (key: string) => {
-      return selectedFilter.toLowerCase() === key.toLowerCase();
+      return key === initiative;
     };
 
     const filterGroups = [
@@ -123,7 +41,7 @@ export default function Studios({
 
     const ItemRenderer = (props: { item: Studio }) => {
       let borderColor = 'border-yellow';
-      if (props.item.initiatives.length === 1) {
+      if (props.item.initiatives[0]) {
         if (props.item.initiatives[0] === 'gunviolence')
           borderColor = 'border-purple';
         else if (props.item.initiatives[0] === 'climate')
@@ -155,11 +73,11 @@ export default function Studios({
                 />
               )}
             </div>
-            {noGroupsOpen() && (
+            {/* {noGroupsOpen() && (
               <hr
                 className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
               />
-            )}{' '}
+            )}{' '} */}
             <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
               {props.item.name}
             </h3>
@@ -186,19 +104,13 @@ export default function Studios({
                 <>
                   <div key={group.key} className="flex flex-row">
                     {/* Hide group selector if other is selected */}
-                    <a
+                    <Link
                       href={
                         haveGroupOpen(group.key)
                           ? '/studios'
                           : `/initiatives/${group.key}/studios`
                       }
-                      className={`inline-block ${
-                        !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
-                      } `}
-                      // onClick={(e) => {
-                      //   toggle(group.key);
-                      //   e.preventDefault();
-                      // }}
+                      className={`inline-block`}
                     >
                       <div className={groupButtonStyle}>
                         <span>{group.label}</span>
@@ -216,7 +128,7 @@ export default function Studios({
                           ></path>
                         </svg>
                       </div>
-                    </a>
+                    </Link>
                   </div>
                 </>
               );
@@ -228,41 +140,12 @@ export default function Studios({
       return <div>{menu}</div>;
     };
 
-    const filteredItems = props.items
-      ? props.items.filter((item) => {
-          // If selected groups empty, show all...
-
-          let group = '';
-          if (item.initiatives && item.initiatives.length > 0)
-            group =
-              item.initiatives[0].toLowerCase() === 'gunviolence'
-                ? 'tngv'
-                : 'tnej';
-
-          return (
-            selectedFilter === '' ||
-            // ...otherwise, item's filters must match group and ALL selected sub-filters
-
-            (item.initiatives &&
-              item.initiatives.length > 0 &&
-              group === selectedFilter)
-          );
-        })
-      : [];
-
-    const count = filteredItems.length;
-    // Decide plural of item count
-    const showing = `Showing ${count}`;
-
     return (
-      <Layout error={error} theme={currentTheme}>
+      <Layout error={error} theme={Theming[initiative].theme}>
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studios
           </h1>
-          {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
-            {showing}
-          </div> */}
           {initiativeBlurbs.studiosBlurb && (
             <div className="mx-6 w-full lg:w-1/2">
               <DocumentRenderer
@@ -274,16 +157,16 @@ export default function Studios({
 
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
-              {count === 0 && (
+              {studios?.length === 0 && (
                 <p className="w-full text-xl my-20 text-center">
                   Sorry, no matches found. Please try other filters.
                 </p>
               )}
 
               <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {count > 0 && (
+                {studios && studios?.length > 0 && (
                   <AnimatePresence>
-                    {filteredItems.map((item, i: number) => (
+                    {studios.map((item, i: number) => (
                       <ItemRenderer key={i} item={item} />
                     ))}
                   </AnimatePresence>
@@ -299,7 +182,18 @@ export default function Studios({
   return <FilteredItems items={studios} />;
 }
 
-export async function getStaticProps() {
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  return {
+    paths: ['/initiatives/tngv/studios', '/initiatives/tnej/studios'],
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({
+  params,
+}: {
+  params: { initiative: string };
+}) {
   const studios = await Query(
     'studios',
     `studios(
@@ -314,12 +208,12 @@ export async function getStaticProps() {
 		) {
 			name
 			key
-      initiatives
+            initiatives
 			shortDescription 
 			thumbnail { 
 				publicId
 			}
-      thumbAltText
+            thumbAltText
 		}`
   );
   const initiativeBlurbs = await Query(
@@ -336,14 +230,18 @@ export async function getStaticProps() {
       props: {
         error: studios.error,
         studios: null,
+        initiative: params.initiative,
         initiativeBlurbs: null,
       },
     };
   }
-
+  const items = studios.filter((item: Studio) =>
+    item.initiatives.includes(InitiativeKeyMap[params.initiative])
+  );
   return {
     props: {
-      studios: studios as Studio[],
+      studios: items as Studio[],
+      initiative: params.initiative,
       initiativeBlurbs: initiativeBlurbs,
     },
     revalidate: 1,

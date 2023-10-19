@@ -336,13 +336,13 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 subLink={true}
               />
               <NavLink
-                href={`/studios/?${urlSuffix}`}
+                href={`/initiatives/${urlSuffix}/studios`}
                 label="Studios"
                 subLink={true}
                 className={fillClass}
               />
               <NavLink
-                href={`/studios/projects/?${urlSuffix}`}
+                href={`/initiatives/${urlSuffix}/studios/projects`}
                 label="Projects"
                 subLink={true}
                 className={fillClass}
@@ -383,13 +383,13 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
           </div>
           <div className="flex flex-col xl:flex-row">
             <NavLink
-              href={`/studios/?${urlSuffix}`}
+              href={`/initiatives/${urlSuffix}/studios`}
               label="Studios"
               subLink={true}
               className={fillClass}
             />
             <NavLink
-              href={`/studios/projects/?${urlSuffix}`}
+              href={`/initiatives/${urlSuffix}/studios/projects`}
               label="Projects"
               subLink={true}
               className={fillClass}

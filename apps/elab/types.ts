@@ -77,7 +77,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
   },
   tnej: {
     arrow: '#00A494',
-    secodaryArrow: 'fill-green',
+    secodaryArrow: '#00A494',
     text: 'text-leaf',
     heading: 'text-yellow',
     border: 'border-yellow',
@@ -92,7 +92,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
   },
   teal: {
     arrow: '#00A494',
-    secodaryArrow: 'fill-teal',
+    secodaryArrow: '#00A494',
     text: 'text-teal',
     heading: 'text-yellow',
     border: 'border-teal',

@@ -49,6 +49,7 @@ function exec(command, appType: AppType) {
       }
     });
   }).catch((err) => {
+    console.error(err);
     throw new Error(err);
   });
 }
@@ -79,6 +80,7 @@ function exec(command, appType: AppType) {
   });
 
   try {
+    exec('npm run watch', AppType.FRONTEND);
     exec('cd apps/api; npm run dev', AppType.API);
     exec(`cd apps/cms; yarn dev --app ${response.value}`, AppType.CMS);
     exec(`cd apps/${response.value}; yarn dev`, AppType.FRONTEND);

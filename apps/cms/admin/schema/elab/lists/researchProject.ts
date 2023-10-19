@@ -191,6 +191,17 @@ export default list({
         },
       },
     }),
+    publicationRelated: relationship({
+      ref: 'Publication.relatedProject',
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   hooks: {
     resolveInput: async ({

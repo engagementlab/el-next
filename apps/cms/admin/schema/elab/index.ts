@@ -26,6 +26,7 @@ export { default as InitiativesLanding } from './lists/initiativesLanding';
 export { default as LearningPartners } from './lists/learningPartners';
 export { default as NewsItem } from './lists/newsItem';
 export { default as ResearchProject } from './lists/researchProject';
+export { default as Publication } from './lists/publication';
 export { default as StudioProject } from './lists/studioProject';
 export { default as Slide } from './lists/slide';
 export { default as Studio } from './lists/studio';

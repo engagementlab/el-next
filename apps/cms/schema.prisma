@@ -162,6 +162,21 @@ model Person {
   researchLeads      ResearchProject[] @relation("Person_researchLeads")
 }
 
+model Publication {
+  id               String           @id @default(cuid())
+  title            String           @default("")
+  key              String           @unique @default("")
+  createdDate      DateTime?
+  enabled          Boolean          @default(true)
+  year             String           @default("")
+  citations        Json             @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  file_filename    String?
+  file_filesize    Int?
+  buttons          Json?
+  relatedProject   ResearchProject? @relation("Publication_relatedProject", fields: [relatedProjectId], references: [id])
+  relatedProjectId String?          @unique @map("relatedProject")
+}
+
 model ResearchProject {
   id                  String       @id @default(cuid())
   name                String       @default("")
@@ -187,6 +202,7 @@ model ResearchProject {
   contact             String       @default("")
   tools               Json?
   initiativesRelated  Initiative[] @relation("Initiative_research")
+  publicationRelated  Publication? @relation("Publication_relatedProject")
 }
 
 model Semester {

@@ -53,7 +53,7 @@ const RefView = ({
           autoFocus
           id={`${field.path}=--ref-input`}
           placeholder="Paste the file ref here"
-          onChange={event => {
+          onChange={(event) => {
             onChange(event.target.value);
           }}
           css={{
@@ -107,7 +107,7 @@ export function Field({
       {value.kind === 'ref' ? (
         <RefView
           field={field}
-          onChange={ref => {
+          onChange={(ref) => {
             onChange?.({
               kind: 'ref',
               data: { ref },
@@ -155,10 +155,13 @@ function FileView({
 }) {
   const { addToast } = useToasts();
   const onSuccess = () => {
-    addToast({ title: 'Copied file ref to clipboard', tone: 'positive' });
+    addToast({ title: 'Copied file URL to clipboard', tone: 'positive' });
   };
   const onFailure = () => {
-    addToast({ title: 'Failed to copy file ref to clipboard', tone: 'negative' });
+    addToast({
+      title: 'Failed to copy file ref to clipboard',
+      tone: 'negative',
+    });
   };
 
   const copyRef = () => {
@@ -168,16 +171,16 @@ function FileView({
 
     if (navigator) {
       // use the new navigator.clipboard API if it exists
-      navigator.clipboard.writeText(value?.data.ref).then(onSuccess, onFailure);
+      navigator.clipboard.writeText(value?.data.url).then(onSuccess, onFailure);
       return;
     } else {
       // Fallback to a library that leverages document.execCommand
       // for browser versions that dont' support the navigator object.
       // As document.execCommand
       try {
-        copy(value?.data.ref);
+        copy(value?.data.url);
       } catch (e) {
-        addToast({ title: 'Faild to oopy to clipboard', tone: 'negative' });
+        addToast({ title: 'Failed to copy to clipboard', tone: 'negative' });
       }
 
       return;
@@ -196,7 +199,7 @@ function FileView({
                   </a>
                 </Text>
                 <Button size="small" tone="passive" onClick={copyRef}>
-                  Copy Ref
+                  Copy URL
                 </Button>
               </Stack>
               <Text size="xsmall">{bytes(value.data.filesize)}</Text>
@@ -211,7 +214,7 @@ function FileView({
             >
               Change
             </Button>
-            {value.kind !== 'upload' ? (
+            {/* {value.kind !== 'upload' ? (
               <Button
                 size="small"
                 tone="passive"
@@ -225,7 +228,7 @@ function FileView({
               >
                 Paste Ref
               </Button>
-            ) : null}
+            ) : null} */}
             {value.kind === 'from-server' && (
               <Button
                 size="small"
@@ -276,7 +279,7 @@ function FileView({
         >
           Upload File
         </Button>
-        <Button
+        {/* <Button
           size="small"
           tone="passive"
           disabled={onChange === undefined}
@@ -291,7 +294,7 @@ function FileView({
           }}
         >
           Paste Ref
-        </Button>
+        </Button> */}
         {value.kind === 'remove' && value.previous && (
           <Button
             size="small"
@@ -325,7 +328,11 @@ function createErrorMessage(value: FileValue, forceValidation?: boolean) {
   }
 }
 
-export function validateFile({ validity }: { validity: ValidityState }): string | undefined {
+export function validateFile({
+  validity,
+}: {
+  validity: ValidityState;
+}): string | undefined {
   if (!validity.valid) {
     return 'Something went wrong, please reload and try again.';
   }

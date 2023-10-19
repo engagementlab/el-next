@@ -1247,6 +1247,109 @@ input SemesterRelateToManyForCreateInput {
   connect: [SemesterWhereUniqueInput!]
 }
 
+type Publication {
+  id: ID!
+  title: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  year: String
+  citations: Publication_citations_Document
+  file: AzureStorageFileFieldOutput
+  buttons: JSON
+  relatedProject: ResearchProject
+}
+
+type Publication_citations_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+interface AzureStorageFileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
+}
+
+input PublicationWhereUniqueInput {
+  id: ID
+  key: String
+}
+
+type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
+}
+
+input PublicationWhereInput {
+  AND: [PublicationWhereInput!]
+  OR: [PublicationWhereInput!]
+  NOT: [PublicationWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  key: StringFilter
+  createdDate: DateTimeNullableFilter
+  enabled: BooleanFilter
+  year: StringFilter
+  relatedProject: ResearchProjectWhereInput
+}
+
+input PublicationOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  key: OrderDirection
+  createdDate: OrderDirection
+  enabled: OrderDirection
+  year: OrderDirection
+}
+
+input PublicationUpdateInput {
+  title: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  year: String
+  citations: JSON
+  file: AzureStorageFileFieldInput
+  buttons: JSON
+  relatedProject: ResearchProjectRelateToOneForUpdateInput
+}
+
+input AzureStorageFileFieldInput {
+  upload: Upload
+  ref: String
+}
+
+input ResearchProjectRelateToOneForUpdateInput {
+  create: ResearchProjectCreateInput
+  connect: ResearchProjectWhereUniqueInput
+  disconnect: Boolean
+}
+
+input PublicationUpdateArgs {
+  where: PublicationWhereUniqueInput!
+  data: PublicationUpdateInput!
+}
+
+input PublicationCreateInput {
+  title: String
+  key: String
+  createdDate: DateTime
+  enabled: Boolean
+  year: String
+  citations: JSON
+  file: AzureStorageFileFieldInput
+  buttons: JSON
+  relatedProject: ResearchProjectRelateToOneForCreateInput
+}
+
+input ResearchProjectRelateToOneForCreateInput {
+  create: ResearchProjectCreateInput
+  connect: ResearchProjectWhereUniqueInput
+}
+
 type ResearchProject {
   id: ID!
   name: String
@@ -1277,6 +1380,7 @@ type ResearchProject {
   tools: JSON
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
+  publicationRelated: Publication
 }
 
 enum ResearchProjectFlagType {
@@ -1321,6 +1425,7 @@ input ResearchProjectWhereInput {
   projectLeads: PersonManyRelationFilter
   contact: StringFilter
   initiativesRelated: InitiativeManyRelationFilter
+  publicationRelated: PublicationWhereInput
 }
 
 input FilterManyRelationFilter {
@@ -1379,6 +1484,7 @@ input ResearchProjectUpdateInput {
   contact: String
   tools: JSON
   initiativesRelated: InitiativeRelateToManyForUpdateInput
+  publicationRelated: PublicationRelateToOneForUpdateInput
 }
 
 input FilterRelateToManyForUpdateInput {
@@ -1400,6 +1506,12 @@ input PersonRelateToManyForUpdateInput {
   set: [PersonWhereUniqueInput!]
   create: [PersonCreateInput!]
   connect: [PersonWhereUniqueInput!]
+}
+
+input PublicationRelateToOneForUpdateInput {
+  create: PublicationCreateInput
+  connect: PublicationWhereUniqueInput
+  disconnect: Boolean
 }
 
 input ResearchProjectUpdateArgs {
@@ -1431,6 +1543,7 @@ input ResearchProjectCreateInput {
   contact: String
   tools: JSON
   initiativesRelated: InitiativeRelateToManyForCreateInput
+  publicationRelated: PublicationRelateToOneForCreateInput
 }
 
 input FilterRelateToManyForCreateInput {
@@ -1446,6 +1559,11 @@ input PartnerRelateToManyForCreateInput {
 input PersonRelateToManyForCreateInput {
   create: [PersonCreateInput!]
   connect: [PersonWhereUniqueInput!]
+}
+
+input PublicationRelateToOneForCreateInput {
+  create: PublicationCreateInput
+  connect: PublicationWhereUniqueInput
 }
 
 type Semester {
@@ -2194,6 +2312,12 @@ type Mutation {
   updatePeople(data: [PersonUpdateArgs!]!): [Person]
   deletePerson(where: PersonWhereUniqueInput!): Person
   deletePeople(where: [PersonWhereUniqueInput!]!): [Person]
+  createPublication(data: PublicationCreateInput!): Publication
+  createPublications(data: [PublicationCreateInput!]!): [Publication]
+  updatePublication(where: PublicationWhereUniqueInput!, data: PublicationUpdateInput!): Publication
+  updatePublications(data: [PublicationUpdateArgs!]!): [Publication]
+  deletePublication(where: PublicationWhereUniqueInput!): Publication
+  deletePublications(where: [PublicationWhereUniqueInput!]!): [Publication]
   createResearchProject(data: ResearchProjectCreateInput!): ResearchProject
   createResearchProjects(data: [ResearchProjectCreateInput!]!): [ResearchProject]
   updateResearchProject(where: ResearchProjectWhereUniqueInput!, data: ResearchProjectUpdateInput!): ResearchProject
@@ -2269,6 +2393,9 @@ type Query {
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
+  publications(where: PublicationWhereInput! = {}, orderBy: [PublicationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PublicationWhereUniqueInput): [Publication!]
+  publication(where: PublicationWhereUniqueInput!): Publication
+  publicationsCount(where: PublicationWhereInput! = {}): Int
   researchProjects(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchProject(where: ResearchProjectWhereUniqueInput!): ResearchProject
   researchProjectsCount(where: ResearchProjectWhereInput! = {}): Int

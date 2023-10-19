@@ -8,7 +8,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { CustomEase, StudioProject, Theme, Theming } from '@/types';
+import {
+  CustomEase,
+  InitiativeKeyMap,
+  StudioProject,
+  Theme,
+  Theming,
+} from '@/types';
 
 import Layout from '../../../../../components/Layout';
 
@@ -51,7 +57,9 @@ export default function StudioProjects({
     };
 
     const haveSpecificFilter = (key: string) => {
-      return filtersQuery.split(',').includes(key as never);
+      return filtersQuery
+        ? filtersQuery.split(',').includes(key as never)
+        : false;
     };
     const filterGroups = [
       {
@@ -77,6 +85,7 @@ export default function StudioProjects({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="w-full"
+          key={`project-${props.item.key}`}
         >
           <Link
             href={`/studios/projects/${props.item.key}`}
@@ -101,11 +110,7 @@ export default function StudioProjects({
                 />
               )}
             </div>
-            {/* {noGroupsOpen() && (
-              <hr
-                className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
-              />
-            )} */}
+
             <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
               {props.item.name}
             </h3>
@@ -129,36 +134,34 @@ export default function StudioProjects({
               }
  `;
               return (
-                <>
-                  <div key={group.key} className="flex flex-row">
-                    {/* Hide group selector if other is selected */}
-                    <Link
-                      href={
-                        haveGroupOpen(group.key)
-                          ? '/studios/projects'
-                          : `/initiatives/${group.key}/studios/projects`
-                      }
-                      className={`inline-block`}
-                    >
-                      <div className={groupButtonStyle}>
-                        <span>{group.label}</span>
-                        <svg
-                          viewBox="185.411 115.41 11 11"
-                          width="11"
-                          height="11"
-                          className={`flex-shrink-0 ml-3 ${
-                            !haveGroupOpen(group.key) ? 'hidden' : 'block'
-                          }`}
-                        >
-                          <path
-                            d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
-                            className="fill-white"
-                          ></path>
-                        </svg>
-                      </div>
-                    </Link>
-                  </div>
-                </>
+                <div key={group.key} className="flex flex-row">
+                  {/* Hide group selector if other is selected */}
+                  <Link
+                    href={
+                      haveGroupOpen(group.key)
+                        ? '/studios/projects'
+                        : `/initiatives/${group.key}/studios/projects`
+                    }
+                    className={`inline-block`}
+                  >
+                    <div className={groupButtonStyle}>
+                      <span>{group.label}</span>
+                      <svg
+                        viewBox="185.411 115.41 11 11"
+                        width="11"
+                        height="11"
+                        className={`flex-shrink-0 ml-3 ${
+                          !haveGroupOpen(group.key) ? 'hidden' : 'block'
+                        }`}
+                      >
+                        <path
+                          d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
+                          className="fill-white"
+                        ></path>
+                      </svg>
+                    </div>
+                  </Link>
+                </div>
               );
             })}
           </div>
@@ -220,6 +223,18 @@ export default function StudioProjects({
       return <div>{menu}</div>;
     };
 
+    const filteredProjects = studioProjects
+      ? studioProjects.filter((item) => {
+          // console.log(_.map(item.filters, 'key').indexOf(filtersQuery));
+          return !filtersQuery
+            ? true
+            : _.some(
+                filtersQuery.split(','),
+                (r) => _.map(item.filters, 'key').indexOf(r) >= 0
+              );
+        })
+      : [];
+
     return (
       <Layout error={error} theme={Theming[initiative].theme}>
         <div className="flex flex-col">
@@ -239,15 +254,15 @@ export default function StudioProjects({
           {RenderFilters(filtersData)}
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
-              {studioProjects?.length === 0 && (
+              {filteredProjects?.length === 0 && (
                 <p className="w-full text-xl my-20 text-center">
                   Sorry, no matches found. Please try other filters.
                 </p>
               )}
               <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {studioProjects && studioProjects?.length > 0 && (
+                {filteredProjects && filteredProjects?.length > 0 && (
                   <AnimatePresence>
-                    {studioProjects.map((item, i: number) => (
+                    {filteredProjects.map((item, i: number) => (
                       <ItemRenderer key={i} item={item} />
                     ))}
                   </AnimatePresence>
@@ -281,9 +296,9 @@ export async function getStaticProps({
   const filtersData = await Query(
     'filters',
     `filters {
-            key
-            name
-        }`
+          key
+          name
+      }`
   );
 
   if (filtersData.error) {
@@ -342,10 +357,15 @@ export async function getStaticProps({
       },
     };
   }
+
+  const items = (studioProjects as StudioProject[]).filter(
+    (item: StudioProject) =>
+      item.initiative === InitiativeKeyMap[params.initiative]
+  );
   return {
     props: {
       filtersData,
-      studioProjects: studioProjects as StudioProject[],
+      studioProjects: items,
       initiativeBlurbs,
       initiative: params.initiative,
       filters: params.filters ? params.filters : null,

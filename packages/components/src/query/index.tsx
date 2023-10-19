@@ -4,7 +4,7 @@ import { ApolloClient, gql, InMemoryCache, ServerError } from '@apollo/client';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
 import { ErrorClass } from '..';
-import { capitalCase } from 'change-case';
+// import { capitalCase } from 'change-case';
 
 export type TError = {
   class: ErrorClass;
@@ -48,7 +48,7 @@ export const Query = async (name: string, queryStr: string) => {
         class: ErrorClass.empty,
         message: Object.keys(result.data)
           .map((key) => {
-            return capitalCase(key);
+            return key;
           })
           .join(', '),
       };

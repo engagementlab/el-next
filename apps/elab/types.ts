@@ -277,6 +277,19 @@ export type ResearchProject = {
   }[];
 };
 
+export type Publication = {
+  title: string;
+  citations: any;
+  buttons: {
+    label: string;
+    url: string;
+    icon: string;
+  }[];
+  relatedProject?: {
+    key: string;
+  };
+};
+
 export type Item = News & Event;
 
 type Category = 'core' | 'studentstaff' | 'fellow';

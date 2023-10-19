@@ -1,15 +1,11 @@
 import { InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 
-import { News, Event, Item, CustomEase, Theming } from '@/types';
+import { News, Event, Item } from '@/types';
 import { Query } from '@el-next/components';
-import { NewsEventRenderer } from '@/components/Renderers';
 
 import Layout from '../../components/Layout';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
-const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 text-green border-green hover:scale-110 hover:text-white hover:bg-green ${CustomEase}`;
 export default function WhatsNew({
   items,
   error,

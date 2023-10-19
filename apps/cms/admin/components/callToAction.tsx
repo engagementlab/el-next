@@ -237,7 +237,7 @@ export const Field = ({
                 <div className={styles.list.dataLabel}>{relatedTool.label}</div>
                 <div className={styles.list.dataHref}>
                   <Link href={relatedTool.url} target="_blank">
-                    {relatedTool.url}
+                    {relatedTool.url.substring(0, 30)}...
                   </Link>
                 </div>
                 <div className={styles.list.dataLabel}>

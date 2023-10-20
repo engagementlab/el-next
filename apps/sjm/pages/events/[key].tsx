@@ -85,6 +85,8 @@ const agendaRendererOverrides = {
 export default function Event({
   item,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (!item) return;
+
   const [bgImg1, setBgImg1] = useState('');
   const [bgImg2, setBgImg2] = useState('');
 

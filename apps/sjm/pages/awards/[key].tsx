@@ -66,6 +66,7 @@ export default function Award({
   item,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [bgImg1, setBgImg1] = useState('');
+  if (!item) return;
 
   useEffect(() => {
     if (item.bgImage1)

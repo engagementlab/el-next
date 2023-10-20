@@ -33,13 +33,13 @@ export default function Publications({
               Object.keys(items).map((year: string) => {
                 return (
                   <>
-                    <h2>{year}</h2>
+                    <h2 className="font-bold text-teal my-5">{year}</h2>
                     {items[year].map((item) => (
                       <>
-                        <h2 className="text-yellow text-4xl font-bold">
+                        <h3 className="text-yellow text-4xl font-bold mb-0 pb-0">
                           {item.title}
-                        </h2>
-                        <div className="text-2xl font-medium">
+                        </h3>
+                        <div className="text-2xl font-medium mt-0">
                           <DocumentRenderer
                             document={item.citations.document}
                           />

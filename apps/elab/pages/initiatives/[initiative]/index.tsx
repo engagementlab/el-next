@@ -154,14 +154,9 @@ export default function InitIndex({
                   renderers={Doc()}
                 />
 
-                {initiative === 'tngv' ? (
+                {initiative === 'tngv' && (
                   <Logos
                     partners={['ldbpi', 'mgh']}
-                    classOverride="flex flex-col sm:flex-row justify-evenly items-center"
-                  />
-                ) : (
-                  <Logos
-                    partners={['ficdc', 'greenroots', 'sftt']}
                     classOverride="flex flex-col sm:flex-row justify-evenly items-center"
                   />
                 )}

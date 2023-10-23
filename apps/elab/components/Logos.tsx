@@ -115,7 +115,7 @@ const Logos = ({
             id="ficdc-logo"
             alt="Fairmount Indigo CDC Collaborative logo"
             imgId="elab-home-v3.x/logos/ficdc"
-            width={180}
+            width={300}
           />
         </a>
       )}
@@ -135,7 +135,7 @@ const Logos = ({
             id="sftt-logo"
             alt="Speak for the Trees logo"
             imgId="elab-home-v3.x/logos/sftt"
-            width={180}
+            width={350}
           />
         </a>
       )}

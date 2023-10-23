@@ -35,7 +35,10 @@ export default function PartnersPage({
                 {page.partners &&
                   page.partners.map((partner) => (
                     <>
-                      <span key={`logo-${partner.name}`}>
+                      <span
+                        className="flex justify-center"
+                        key={`logo-${partner.name}`}
+                      >
                         <Logos
                           partners={[partner.name]}
                           classOverride="block"

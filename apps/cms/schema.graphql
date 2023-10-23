@@ -1610,6 +1610,7 @@ enum SemesterPartnerType {
   swbcdc
   teenempowerment
   boston
+  zoone
 }
 
 type Semester_coCreation_Document {
@@ -2027,6 +2028,7 @@ enum StudioProjectPartnerType {
   swbcdc
   teenempowerment
   boston
+  zoone
 }
 
 type StudioProject_coCreation_Document {

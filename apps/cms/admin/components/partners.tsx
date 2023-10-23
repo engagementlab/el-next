@@ -32,6 +32,7 @@ const Partners = [
   { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative' },
   { key: 'greenroots', name: 'GreenRoots' },
   { key: 'sftt', name: 'Speak for the Trees' },
+  { key: 'zoone', name: 'Zoo New England' },
 ];
 interface Button {
   name: string;

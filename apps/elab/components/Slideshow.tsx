@@ -99,7 +99,7 @@ const Slideshow = ({
                 <div
                   id={`slide-${index}`}
                   key={`slide-${index}`}
-                  className="w-full"
+                  className="w-full text-center"
                 >
                   {ContentRenderer ? (
                     <ContentRenderer slide={slide} />
@@ -115,7 +115,7 @@ const Slideshow = ({
                       />
                     </div>
                   ) : slide.caption ? (
-                    <div className="relative">
+                    <div className="flex relative justify-center">
                       <Image
                         id={'img-' + slide.image.publicId}
                         alt={slide.altText}

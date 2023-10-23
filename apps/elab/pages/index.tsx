@@ -607,7 +607,7 @@ export async function getStaticProps() {
     props: {
       event,
       newsItem,
-      studioProject,
+      studioProject: studioProject || null,
       mergedItems,
     },
     revalidate: 1,

@@ -41,18 +41,6 @@ const Logos = ({
           />
         </a>
       )}
-      {(all || partners.includes('magv')) && (
-        <a href="https://www.mapreventgunviolence.org/" target="_blank">
-          <Image
-            id="magv-logo"
-            alt="Massachusetts Coalition to Prevent Gun Violence logo"
-            imgId="elab-home-v3.x/logos/magv"
-            width={200}
-            className="mt-1"
-          />
-        </a>
-      )}
-
       {(all || partners.includes('teenempowerment')) && (
         <a href="https://teenempowerment.org/" target="_blank">
           <Image
@@ -94,6 +82,17 @@ const Logos = ({
               fill="#e1811c"
             />
           </svg>
+        </a>
+      )}
+      {(all || partners.includes('magv')) && (
+        <a href="https://www.mapreventgunviolence.org/" target="_blank">
+          <Image
+            id="magv-logo"
+            alt="Massachusetts Coalition to Prevent Gun Violence logo"
+            imgId="elab-home-v3.x/logos/magv"
+            width={200}
+            className="mt-1"
+          />
         </a>
       )}
       {(all || partners.includes('wab2g')) && (

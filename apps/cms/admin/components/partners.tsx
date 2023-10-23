@@ -33,6 +33,7 @@ const Partners = [
   { key: 'greenroots', name: 'GreenRoots' },
   { key: 'sftt', name: 'Speak for the Trees' },
   { key: 'zoone', name: 'Zoo New England' },
+  { key: 'wabt', name: 'We Are Better Together' },
 ];
 interface Button {
   name: string;

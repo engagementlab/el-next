@@ -181,7 +181,6 @@ const Person: Lists.Person = list({
         },
       },
     }),
-
     researchLeads: relationship({
       ref: 'ResearchProject.projectLeads',
       many: true,
@@ -194,13 +193,14 @@ const Person: Lists.Person = list({
         },
       },
     }),
-    /*     semesters: relationship({
-      ref: 'Semester.associatedPeople',
+    initiatives: relationship({
+      label: 'Associated Initiatives',
+      ref: 'Initiative.associatedPeople',
       many: true,
       ui: {
         hideCreate: true,
       },
-    }), */
+    }),
   },
   ui: {
     listView: {

@@ -65,19 +65,20 @@ model Graduate {
 }
 
 model Initiative {
-  id            String            @id @default(cuid())
-  name          String            @unique @default("Initiative Name")
-  intro         Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  slides        Slide[]           @relation("Initiative_slides")
-  news          NewsItem[]        @relation("Initiative_news")
-  events        Event[]           @relation("Event_initiativesWhatsNew")
-  body          Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  partners      Json?
-  projectsBlurb Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  projects      StudioProject[]   @relation("Initiative_projects")
-  studiosBlurb  Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studios       Studio[]          @relation("Initiative_studios")
-  research      ResearchProject[] @relation("Initiative_research")
+  id               String            @id @default(cuid())
+  name             String            @unique @default("Initiative Name")
+  intro            Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  slides           Slide[]           @relation("Initiative_slides")
+  news             NewsItem[]        @relation("Initiative_news")
+  events           Event[]           @relation("Event_initiativesWhatsNew")
+  body             Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  partners         Json?
+  projectsBlurb    Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projects         StudioProject[]   @relation("Initiative_projects")
+  studiosBlurb     Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studios          Studio[]          @relation("Initiative_studios")
+  research         ResearchProject[] @relation("Initiative_research")
+  associatedPeople Person[]          @relation("Initiative_associatedPeople")
 }
 
 model InitiativesLanding {
@@ -160,6 +161,7 @@ model Person {
   projectInstructors StudioProject[]   @relation("Person_projectInstructors")
   projectStaff       StudioProject[]   @relation("Person_projectStaff")
   researchLeads      ResearchProject[] @relation("Person_researchLeads")
+  initiatives        Initiative[]      @relation("Initiative_associatedPeople")
 }
 
 model Publication {

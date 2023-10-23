@@ -548,6 +548,8 @@ type Initiative {
   studiosCount(where: StudioWhereInput! = {}): Int
   research(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchCount(where: ResearchProjectWhereInput! = {}): Int
+  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  associatedPeopleCount(where: PersonWhereInput! = {}): Int
 }
 
 type Initiative_intro_Document {
@@ -583,6 +585,7 @@ input InitiativeWhereInput {
   projects: StudioProjectManyRelationFilter
   studios: StudioManyRelationFilter
   research: ResearchProjectManyRelationFilter
+  associatedPeople: PersonManyRelationFilter
 }
 
 input SlideManyRelationFilter {
@@ -603,6 +606,12 @@ input StudioManyRelationFilter {
   none: StudioWhereInput
 }
 
+input PersonManyRelationFilter {
+  every: PersonWhereInput
+  some: PersonWhereInput
+  none: PersonWhereInput
+}
+
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -621,6 +630,7 @@ input InitiativeUpdateInput {
   studiosBlurb: JSON
   studios: StudioRelateToManyForUpdateInput
   research: ResearchProjectRelateToManyForUpdateInput
+  associatedPeople: PersonRelateToManyForUpdateInput
 }
 
 input SlideRelateToManyForUpdateInput {
@@ -644,6 +654,13 @@ input StudioRelateToManyForUpdateInput {
   connect: [StudioWhereUniqueInput!]
 }
 
+input PersonRelateToManyForUpdateInput {
+  disconnect: [PersonWhereUniqueInput!]
+  set: [PersonWhereUniqueInput!]
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
+}
+
 input InitiativeUpdateArgs {
   where: InitiativeWhereUniqueInput!
   data: InitiativeUpdateInput!
@@ -662,6 +679,7 @@ input InitiativeCreateInput {
   studiosBlurb: JSON
   studios: StudioRelateToManyForCreateInput
   research: ResearchProjectRelateToManyForCreateInput
+  associatedPeople: PersonRelateToManyForCreateInput
 }
 
 input SlideRelateToManyForCreateInput {
@@ -677,6 +695,11 @@ input EventRelateToManyForCreateInput {
 input StudioRelateToManyForCreateInput {
   create: [StudioCreateInput!]
   connect: [StudioWhereUniqueInput!]
+}
+
+input PersonRelateToManyForCreateInput {
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 type InitiativesLanding {
@@ -1107,6 +1130,8 @@ type Person {
   projectStaffCount(where: StudioProjectWhereInput! = {}): Int
   researchLeads(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchLeadsCount(where: ResearchProjectWhereInput! = {}): Int
+  initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
+  initiativesCount(where: InitiativeWhereInput! = {}): Int
 }
 
 type Person_content_Document {
@@ -1140,6 +1165,7 @@ input PersonWhereInput {
   projectInstructors: StudioProjectManyRelationFilter
   projectStaff: StudioProjectManyRelationFilter
   researchLeads: ResearchProjectManyRelationFilter
+  initiatives: InitiativeManyRelationFilter
 }
 
 input StringNullableFilter {
@@ -1206,6 +1232,7 @@ input PersonUpdateInput {
   projectInstructors: StudioProjectRelateToManyForUpdateInput
   projectStaff: StudioProjectRelateToManyForUpdateInput
   researchLeads: ResearchProjectRelateToManyForUpdateInput
+  initiatives: InitiativeRelateToManyForUpdateInput
 }
 
 input SemesterRelateToManyForUpdateInput {
@@ -1240,6 +1267,7 @@ input PersonCreateInput {
   projectInstructors: StudioProjectRelateToManyForCreateInput
   projectStaff: StudioProjectRelateToManyForCreateInput
   researchLeads: ResearchProjectRelateToManyForCreateInput
+  initiatives: InitiativeRelateToManyForCreateInput
 }
 
 input SemesterRelateToManyForCreateInput {
@@ -1440,12 +1468,6 @@ input PartnerManyRelationFilter {
   none: PartnerWhereInput
 }
 
-input PersonManyRelationFilter {
-  every: PersonWhereInput
-  some: PersonWhereInput
-  none: PersonWhereInput
-}
-
 input ResearchProjectOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -1501,13 +1523,6 @@ input PartnerRelateToManyForUpdateInput {
   connect: [PartnerWhereUniqueInput!]
 }
 
-input PersonRelateToManyForUpdateInput {
-  disconnect: [PersonWhereUniqueInput!]
-  set: [PersonWhereUniqueInput!]
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
 input PublicationRelateToOneForUpdateInput {
   create: PublicationCreateInput
   connect: PublicationWhereUniqueInput
@@ -1554,11 +1569,6 @@ input FilterRelateToManyForCreateInput {
 input PartnerRelateToManyForCreateInput {
   create: [PartnerCreateInput!]
   connect: [PartnerWhereUniqueInput!]
-}
-
-input PersonRelateToManyForCreateInput {
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
 }
 
 input PublicationRelateToOneForCreateInput {

@@ -117,6 +117,18 @@ const Initiative: Lists.Initiative = list({
       ui: { hideCreate: true },
       label: 'Related Research',
     }),
+    associatedPeople: relationship({
+      ref: 'Person.initiatives',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   ui: {
     // hideCreate: true,

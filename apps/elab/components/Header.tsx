@@ -233,8 +233,10 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   );
   const researchLinks = (
     <>
-      <NavLink href="/research/projects" label="Research Projects" />
-      <NavLink href="/publications" label="Publications" disabled={true} />
+      {process.env.NEXT_PUBLIC_STAGING === 'true' && (
+        <NavLink href="/research/projects" label="Research Projects" />
+      )}
+      <NavLink href="/publications" label="Publications" />
     </>
   );
   const whatsNewLinks = (
@@ -685,33 +687,31 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                   </motion.div>
                 </motion.div>
 
-                {process.env.NEXT_PUBLIC_STAGING === 'true' && (
-                  <motion.div
-                    className="group relative"
-                    onMouseEnter={() => {
-                      toggleHoverResearch();
-                    }}
-                    onHoverEnd={() => {
-                      toggleHoverResearch();
-                    }}
-                  >
-                    <div className="w-40 text-center cursor-`pointer`">
-                      <span
-                        className={`w-[70px] border-green-blue ${navHeaderClass}`}
-                      >
-                        Research
-                      </span>
-                    </div>
-                    <motion.div
-                      className={`bg-[#BBEBE7] w-40 ${navSubClass}`}
-                      initial="exit"
-                      animate={hoverResearch ? 'enter' : 'exit'}
-                      variants={subMenuAnimate}
+                <motion.div
+                  className="group relative"
+                  onMouseEnter={() => {
+                    toggleHoverResearch();
+                  }}
+                  onHoverEnd={() => {
+                    toggleHoverResearch();
+                  }}
+                >
+                  <div className="w-40 text-center cursor-`pointer`">
+                    <span
+                      className={`w-[70px] border-green-blue ${navHeaderClass}`}
                     >
-                      {researchLinks}
-                    </motion.div>
+                      Research
+                    </span>
+                  </div>
+                  <motion.div
+                    className={`bg-[#BBEBE7] w-40 ${navSubClass}`}
+                    initial="exit"
+                    animate={hoverResearch ? 'enter' : 'exit'}
+                    variants={subMenuAnimate}
+                  >
+                    {researchLinks}
                   </motion.div>
-                )}
+                </motion.div>
 
                 <motion.div
                   className="group relative"
@@ -727,20 +727,13 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                     className="block w-36 text-center relative z-10"
                   >
                     <span
-                      className={`w-[86px] ${
-                        process.env.NEXT_PUBLIC_STAGING === 'true'
-                          ? 'border-yellow'
-                          : 'border-green-blue'
-                      } ${navHeaderClass}`}
+                      className={`w-[86px] border-yellow ${navHeaderClass}`}
                     >
                       What’s New
                     </span>
                   </Link>
                   <motion.div
-                    className={`
-${
-  process.env.NEXT_PUBLIC_STAGING === 'true' ? 'bg-[#FFEACB]' : 'bg-[#BBEBE7]'
-} w-36 ${navSubClass}`}
+                    className={`bg-[#FFEACB] w-36 ${navSubClass}`}
                     initial="exit"
                     animate={hoverNews ? 'enter' : 'exit'}
                     variants={subMenuAnimate}

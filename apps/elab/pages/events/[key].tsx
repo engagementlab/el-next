@@ -64,7 +64,18 @@ export default function Event({
               <h1 className="text-coated text-4xl font-extrabold mt-5">
                 {item.name}
               </h1>
-              <div className="text-coated font-medium my-5">{date}</div>
+              <div className="text-coated font-medium my-5">{`${new Date(
+                item.eventDate
+              ).toLocaleDateString('en-US', {
+                weekday: 'long',
+              })}, ${new Date(item.eventDate).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}, ${new Date(item.eventDate).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`}</div>
               {item.address && (
                 <div className="text-coated font-medium">
                   <a
@@ -201,7 +212,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   })}, ${new Date(item.eventDate).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'America/New_York',
   })}`;
 
   return { props: { item, date }, revalidate: 1 };

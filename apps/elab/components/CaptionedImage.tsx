@@ -19,7 +19,7 @@ const CaptionedImage = ({
   return (
     <div className="max-w-full">
       <div className="overflow-x-hidden sm:overflow-x-visible">
-        <div className="relative w-[105%] max-w-[105%]">
+        <div className="relative">
           {!imgId ? (
             <img
               className={`relative md:w-full -left-3 sm:max-w-xs xl:max-w-full sm:left-[5%] md:left-0`}

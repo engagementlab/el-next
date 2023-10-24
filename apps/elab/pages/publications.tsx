@@ -18,6 +18,12 @@ export default function Publications({
   items,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  // Reverse years order from _.groupBy
+  const years = items
+    ? Object.keys(items).sort(
+        (a, b) => (b as unknown as number) - (a as unknown as number)
+      )
+    : [];
   return (
     <Layout error={error} fullBleed={true}>
       <div className="text-slate">
@@ -30,7 +36,7 @@ export default function Publications({
         <Gutter>
           <div className="flex flex-col mx-6">
             {items &&
-              Object.keys(items).map((year: string) => {
+              years.map((year: string) => {
                 return (
                   <>
                     <h2 className="font-bold text-teal my-5">{year}</h2>
@@ -39,27 +45,29 @@ export default function Publications({
                         <h3 className="text-yellow text-4xl font-bold mb-0 pb-0">
                           {item.title}
                         </h3>
-                        <div className="text-2xl font-medium mt-0">
+                        <div className="text-2xl font-medium -mt-3">
                           <DocumentRenderer
                             document={item.citations.document}
                           />
                         </div>
-                        <div className="flex flex-row gap-x-5 md:pl-10 my-4">
-                          {item.buttons.map(
-                            (button: {
-                              url: string;
-                              label: string;
-                              icon: string | undefined;
-                            }) => (
-                              <CTAButton
-                                link={button.url}
-                                label={button.label}
-                                theme={2}
-                                icon={button.icon}
-                                className={`flex flex-row gap-x-3 items-center fill-teal`}
-                              />
-                            )
-                          )}
+                        <div className="flex flex-row gap-x-5 md:pl-10 mt-4 mb-16">
+                          {item.buttons &&
+                            item.buttons.length > 0 &&
+                            item.buttons.map(
+                              (button: {
+                                url: string;
+                                label: string;
+                                icon: string | undefined;
+                              }) => (
+                                <CTAButton
+                                  link={button.url}
+                                  label={button.label}
+                                  theme={2}
+                                  icon={button.icon}
+                                  className={`flex flex-row gap-x-3 items-center fill-teal`}
+                                />
+                              )
+                            )}
                           {item.relatedProject && (
                             <CTAButton
                               link={`/research/projects/${item.relatedProject.key}`}

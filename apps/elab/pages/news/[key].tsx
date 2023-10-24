@@ -62,7 +62,12 @@ export default function NewsItem({
                   year: 'numeric',
                 })}
               </div>
-              <p>{item.summary}</p>
+
+              <DocumentRenderer
+                document={item.blurb.document}
+                componentBlocks={Blocks()}
+                renderers={Doc()}
+              />
             </div>
           </div>
 
@@ -107,7 +112,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'newsItems',
     `newsItems(where: { key: { equals: "${params!.key}" } }) {
        title 
-       summary
+       blurb { document }
        publishDate
        source
        thumbnail { 

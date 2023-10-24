@@ -77,7 +77,12 @@ export default function Event({
                   >
                     {item.address}
                   </a>
-                  <p>{item.summary}</p>
+
+                  <DocumentRenderer
+                    document={item.blurb.document}
+                    componentBlocks={Blocks()}
+                    renderers={Doc()}
+                  />
                 </div>
               )}
             </div>
@@ -162,6 +167,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
        name
+       blurb { document }
        eventDate
        address
        registrationLink
@@ -173,7 +179,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        thumbnail { 
            publicId 
        }
-       summary
       }`
   );
 

@@ -19,7 +19,6 @@ var video_dist_elNextComponentsVideo = require('../video/dist/el-next-components
 require('cross-fetch/polyfill');
 var client = require('@apollo/client');
 var errors = require('@apollo/client/errors');
-var changeCase = require('change-case');
 var jsxRuntime = require('react/jsx-runtime');
 require('next/link');
 require('react-scroll');
@@ -470,6 +469,8 @@ function _asyncToGenerator(fn) {
 }
 
 var _templateObject;
+// import { capitalCase } from 'change-case';
+
 var apollo = new client.ApolloClient({
   uri: process.env.GRAPHQL_APP ? "https://cms.elab.emerson.edu/".concat(process.env.GRAPHQL_APP, "/api/graphql") : 'http://localhost:3000/api/graphql',
   cache: new client.InMemoryCache(),
@@ -509,7 +510,7 @@ var Query = /*#__PURE__*/function () {
           error = {
             "class": ErrorClass.empty,
             message: Object.keys(result.data).map(function (key) {
-              return changeCase.capitalCase(key);
+              return key;
             }).join(', ')
           };
           return _context.abrupt("return", {

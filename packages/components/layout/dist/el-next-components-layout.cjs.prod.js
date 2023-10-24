@@ -32,7 +32,6 @@ require('../../headingStyle/dist/el-next-components-headingStyle.cjs.prod.js');
 require('cross-fetch/polyfill');
 require('@apollo/client');
 require('@apollo/client/errors');
-require('change-case');
 
 
 

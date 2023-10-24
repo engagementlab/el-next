@@ -43,34 +43,46 @@ export default function Event({
     >
       {item && (
         <div className="mt-14">
-          {item.thumbnail ? (
-            <Image
-              id="header-img"
-              alt={item.thumbAltText}
-              imgId={item.thumbnail.publicId}
-            />
-          ) : (
-            <ImagePlaceholder imageLabel="Header" width={1280} height={350} />
-          )}
-          <div className="px-4 xl:px-8">
-            <h1 className="text-coated text-2xl font-extrabold mt-5">
-              {item.name}
-            </h1>
-            <div className="text-coated font-medium">{date}</div>
-            {item.address && (
-              <div className="text-coated font-medium">
-                <a
-                  href={`https://www.google.com/maps?q=${item.address.replaceAll(
-                    '\n',
-                    ' '
-                  )}`}
-                  target="_blank"
-                  className="border-b-2 border-b-yellow"
-                >
-                  {item.address}
-                </a>
-              </div>
-            )}
+          <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">
+            <div className="w-full xl:w-1/2 flex-shrink-0">
+              {item.thumbnail ? (
+                <Image
+                  id="header-img"
+                  alt={item.thumbAltText}
+                  imgId={item.thumbnail.publicId}
+                />
+              ) : (
+                <ImagePlaceholder
+                  imageLabel="Header"
+                  width={1280}
+                  height={350}
+                />
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <h1 className="text-coated text-4xl font-extrabold mt-5">
+                {item.name}
+              </h1>
+              <div className="text-coated font-medium my-5">{date}</div>
+              {item.address && (
+                <div className="text-coated font-medium">
+                  <a
+                    href={`https://www.google.com/maps?q=${item.address.replaceAll(
+                      '\n',
+                      ' '
+                    )}`}
+                    target="_blank"
+                    className="border-b-2 border-b-yellow"
+                  >
+                    {item.address}
+                  </a>
+                  <p>{item.summary}</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="px-4 xl:px-8 mt-10">
             <DocumentRenderer
               document={item.content.document}
               componentBlocks={Blocks()}
@@ -161,6 +173,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        thumbnail { 
            publicId 
        }
+       summary
       }`
   );
 

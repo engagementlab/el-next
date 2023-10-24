@@ -215,6 +215,7 @@ export type News = {
   thumbAltText: string;
   externalLink?: string;
   summary: string;
+  source: string;
 };
 export type Event = {
   name: string;

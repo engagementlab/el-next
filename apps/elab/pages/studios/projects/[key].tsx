@@ -372,7 +372,7 @@ export default function Studio({
                       index={3}
                     />
                   )}
-                </div>{' '}
+                </div>
               </div>
             </Gutter>
           </div>

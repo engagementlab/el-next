@@ -11,6 +11,7 @@ import {
   StudioProject,
   Theming,
   Item,
+  Person as PersonT,
 } from '@/types';
 
 import { CTAButton, MoreButton } from '@/components/Buttons';
@@ -22,6 +23,7 @@ import { Button, Query, Image } from '@el-next/components';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
+import { PeopleList, Person } from '@/components/People';
 
 type AboutPage = {
   intro: {
@@ -36,6 +38,14 @@ type AboutPage = {
   studiosBlurb?: { document: any };
   studios: Studio[];
   research: ResearchProject[];
+  associatedPeople?: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
 };
 
 export default function InitIndex({
@@ -391,6 +401,36 @@ export default function InitIndex({
               <Logos partners={['ficdc', 'greenroots', 'sftt']} />
             )}
           </Gutter>
+          {page.associatedPeople && page.associatedPeople.length > 0 && (
+            <>
+              <Divider color={Theming[initiative].secodary} />
+              <Gutter noMarginY={false}>
+                <>
+                  <h2 className="text-3xl font-bold">Learning Partners</h2>
+
+                  <div className="flex-wrap my-4 gap-x-14 gap-y-5 flex">
+                    {page.associatedPeople
+                      .sort((person1: PersonT, person2: PersonT) =>
+                        person1.name
+                          .split(' ')
+                          [person1.name.split(' ').length - 1].localeCompare(
+                            person2.name.split(' ')[
+                              person2.name.split(' ').length - 1
+                            ]
+                          )
+                      )
+                      .map((person: PersonT) => (
+                        <Person
+                          key={person.key}
+                          person={person}
+                          theme={Theming[initiative]}
+                        />
+                      ))}
+                  </div>
+                </>
+              </Gutter>
+            </>
+          )}
         </div>
       )}
     </Layout>
@@ -481,6 +521,15 @@ export async function getStaticProps({
                 publicId
             }
             thumbAltText
+        }
+        associatedPeople {
+            name
+            key
+            title
+            secondaryTitle
+            image {
+                publicId
+            }  
         }
       }`
   );

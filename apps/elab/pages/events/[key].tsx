@@ -104,13 +104,14 @@ export default function Event({
               componentBlocks={Blocks()}
               renderers={Doc(rendererOverrides)}
             />
-            {item.registrationLink && (
-              <CTAButton
-                label="RSVP Today"
-                link={item.registrationLink}
-                theme={theme}
-              />
-            )}
+            {item.registrationLink &&
+              new Date(item.eventDate) >= new Date() && (
+                <CTAButton
+                  label="RSVP Today"
+                  link={item.registrationLink}
+                  theme={theme}
+                />
+              )}
             {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>

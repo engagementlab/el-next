@@ -275,10 +275,10 @@ export default function Home({
             exit={{ opacity: 0 }}
           >
             <Divider noMarginY={true} />
-            <h1 className="text-3xl lg:text-7xl text-grey bg-white font-bold py-16 md:px-20 xl:px-24 px-5 w-full">
+            <h1 className="text-3xl lg:text-7xl text-grey font-bold py-16 md:px-20 xl:px-24 px-5 w-full">
               Featured
             </h1>
-            <div className="flex flex-col bg-white px-5 mb-10 md:px-20 xl:px-24 w-full">
+            <div className="flex flex-col px-5 mb-10 md:px-20 xl:px-24 w-full">
               {/* Featured event */}
               {event && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">

@@ -189,6 +189,7 @@ export default function AboutPage({
             </div>
 
             {item.content.document &&
+              item.content.document[0].children[0].text &&
               item.content.document[0].children[0].text.length > 0 && (
                 <div className="my-6 scale-x-[1.169]">
                   <Divider />

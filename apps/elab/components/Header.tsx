@@ -161,7 +161,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
           onClick={() => {
             toggleNavOpen(false);
           }}
-          className="mt-3 xl:my-1 wide:mt-1 group/navlink"
+          className="my-2 xl:my-1 wide:mt-1 group/navlink"
         >
           {subLink && (
             <svg
@@ -359,10 +359,11 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
           </div>
         </div>
 
+        {/* Non-desktop */}
         <div
-          className={`flex lg:hidden flex-row justify-around mx-6 py-3 font-semibold ${bgClass} ${textClass}`}
+          className={`flex lg:hidden flex-row justify-around mx-3 sm:mx-6 mt-4 py-3 font-semibold ${bgClass} ${textClass}`}
         >
-          <div className="flex flex-col lg:flex-row">
+          <div className="flex flex-col xl:flex-row">
             <NavLink
               href={`/initiatives/${urlSuffix}`}
               label="About The Initiative"

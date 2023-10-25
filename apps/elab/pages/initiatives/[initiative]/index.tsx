@@ -408,7 +408,7 @@ export default function InitIndex({
                 <>
                   <h2 className="text-3xl font-bold">Learning Partners</h2>
 
-                  <div className="flex-wrap my-4 gap-x-14 gap-y-5 flex">
+                  <div className="flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
                     {page.associatedPeople
                       .sort((person1: PersonT, person2: PersonT) =>
                         person1.name

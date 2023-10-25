@@ -22,6 +22,7 @@ import {
 } from 'react';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Theming } from '@/types';
+import { Gutter } from '@/components/Gutter';
 
 type About = {
   name: string;
@@ -45,7 +46,7 @@ export default function AboutPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const rendererOverrides = {
     layout: (layout: number[], children: any[]) => {
-      const flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row mx-6';
+      const flexClass = 'flex gap-x-5 flex-col-reverse xl:flex-row mx-6';
       if (layout[0] === 1 && layout[1] === 1) {
         return (
           <div className={flexClass}>
@@ -80,7 +81,7 @@ export default function AboutPage({
     },
     divider: () => {
       return (
-        <div className="my-6">
+        <div className="my-6 scale-x-[1.169]">
           <Divider />
         </div>
       );
@@ -145,28 +146,29 @@ export default function AboutPage({
             <h1 className="m-6 font-extrabold text-4xl xl:text-6xl text-slate">
               {item.name}
             </h1>
-
             <div className="flex flex-col lg:flex-row">
-              <div className="m-6 w-1/2">
+              <div className="m-6 lg:w-1/2">
                 <DocumentRenderer
                   document={item.intro.document}
                   componentBlocks={Blocks()}
                   renderers={Doc(rendererOverrides)}
                 />
-                <div className="hidden lg:flex flex-col flex-wrap m-6 ">
-                  <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
-                    Jump to:
-                  </p>
-                  {jumpLinks.map((link, i) => {
-                    return (
-                      <Button
-                        label={link.text}
-                        anchorId={link.id}
-                        className="border-teal text-teal fill-yellow text-sm"
-                      />
-                    );
-                  })}
-                </div>
+                {jumpLinks && jumpLinks.length > 0 && (
+                  <div className="hidden lg:flex flex-col flex-wrap m-6">
+                    <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
+                      Jump to:
+                    </p>
+                    {jumpLinks.map((link, i) => {
+                      return (
+                        <Button
+                          label={link.text}
+                          anchorId={link.id}
+                          className="border-teal text-teal fill-yellow text-sm"
+                        />
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div className="max-w-lg">
                 {item.headingImage ? (
@@ -186,9 +188,12 @@ export default function AboutPage({
               </div>
             </div>
 
-            <div className="my-6">
-              <Divider />
-            </div>
+            {item.content.document &&
+              item.content.document[0].children[0].text.length > 0 && (
+                <div className="my-6 scale-x-[1.169]">
+                  <Divider />
+                </div>
+              )}
             <div id="content">
               <DocumentRenderer
                 document={item.content.document}

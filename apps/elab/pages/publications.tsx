@@ -10,10 +10,6 @@ import { Gutter } from '@/components/Gutter';
 import { CTAButton } from '@/components/Buttons';
 import _ from 'lodash';
 
-// type PublicationsGrouped = {
-//   [year: string]: Publication[];
-// };
-
 export default function Publications({
   items,
   error,
@@ -64,6 +60,7 @@ export default function Publications({
                                   label={button.label}
                                   theme={2}
                                   icon={button.icon}
+                                  iconClassName="max-w-[24px] scale-50 origin-left"
                                   className={`flex flex-row gap-x-3 items-center fill-teal`}
                                 />
                               )

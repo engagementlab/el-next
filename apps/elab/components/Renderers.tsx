@@ -52,7 +52,7 @@ let AppBlocks = (theme: ThemeConfig) => {
     },
     iconLink: (props: any) => {
       return (
-        <Link href={props.url}>
+        <Link href={props.url} target="_blank">
           <button
             className={`flex flex-row gap-x-2 my-2 group items-center ${theme?.text} `}
           >

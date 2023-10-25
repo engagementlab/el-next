@@ -2,10 +2,11 @@ import * as React from 'react';
 
 type Props = {
   icons: string[] | undefined;
+  className?: string | undefined;
 };
-export const Icons = ({ icons }: Props): JSX.Element => {
+export const Icons = ({ icons, className }: Props): JSX.Element => {
   return (
-    <>
+    <span className={className || ''}>
       {icons?.includes('news') && (
         <svg viewBox="120 -840 48 50.014" width="48" height="30">
           <path d="M 124 -789.986 C 122.933 -789.986 122 -790.402 121.2 -791.236 C 120.4 -792.069 120 -793.042 120 -794.153 L 120 -835.832 C 120 -836.944 120.4 -837.916 121.2 -838.75 C 122 -839.583 122.933 -840 124 -840 L 154.8 -840 L 168 -826.246 L 168 -794.153 C 168 -793.042 167.6 -792.069 166.8 -791.236 C 166 -790.402 165.067 -789.986 164 -789.986 L 124 -789.986 Z M 124 -794.153 L 164 -794.153 L 164 -823.924 L 152.6 -823.924 L 152.6 -835.832 L 124 -835.832 L 124 -794.153 Z M 130.6 -801.864 L 157.4 -801.864 L 157.4 -806.032 L 130.6 -806.032 L 130.6 -801.864 Z M 130.6 -823.954 L 144 -823.954 L 144 -828.122 L 130.6 -828.122 L 130.6 -823.954 Z M 130.6 -812.909 L 157.4 -812.909 L 157.4 -817.077 L 130.6 -817.077 L 130.6 -812.909 Z M 124 -835.832 L 124 -823.924 L 124 -835.832 L 124 -794.153 L 124 -835.832 Z"></path>
@@ -39,12 +40,20 @@ export const Icons = ({ icons }: Props): JSX.Element => {
       )}
       {icons?.includes('website') && (
         <svg height="48" viewBox="0 -960 960 960" width="48">
-          <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h279v60H180v600h600v-279h60v279q0 24-18 42t-42 18H180Zm202-219-42-43 398-398H519v-60h321v321h-60v-218L382-339Z" />
+          <path d="M 180 -120 C 164 -120 150 -126 138 -138 C 126 -150 120 -164 120 -180 L 120 -780 C 120 -796 126 -810 138 -822 C 150 -834 164 -840 180 -840 L 459 -840 L 459 -780 L 180 -780 L 180 -180 L 780 -180 L 780 -459 L 840 -459 L 840 -180 C 840 -164 834 -150 822 -138 C 810 -126 796 -120 780 -120 L 180 -120 Z"></path>
+          <path
+            d="M 382 -339 L 340 -382 L 738 -780 L 519 -780 L 519 -840 L 840 -840 L 840 -519 L 780 -519 L 780 -737 L 382 -339 Z"
+            className="transition-all group-hover:translate-x-5 group-hover:-translate-y-5"
+          ></path>
         </svg>
       )}
       {icons?.includes('app') && (
-        <svg height="48" viewBox="0 -960 960 960" width="48">
-          <path d="M480-313 287-506l43-43 120 120v-371h60v371l120-120 43 43-193 193ZM220-160q-24 0-42-18t-18-42v-143h60v143h520v-143h60v143q0 24-18 42t-42 18H220Z" />
+        <svg height="48" width="48" viewBox="0 -960 960 960">
+          <path
+            d="M 480 -313 L 287 -506 L 330 -549 L 450 -429 L 450 -800 L 510 -800 L 510 -429 L 630 -549 L 673 -506 L 480 -313 Z"
+            className="transition-all group-hover:translate-y-10"
+          ></path>
+          <path d="M 220 -160 C 204 -160 190 -166 178 -178 C 166 -190 160 -204 160 -220 L 160 -363 L 220 -363 L 220 -220 L 740 -220 L 740 -363 L 800 -363 L 800 -220 C 800 -204 794 -190 782 -178 C 770 -166 756 -160 740 -160 L 220 -160 Z"></path>
         </svg>
       )}
       {icons?.includes('video') && (
@@ -58,6 +67,6 @@ export const Icons = ({ icons }: Props): JSX.Element => {
         </svg>
       )}
       {icons?.includes('arrow') && <>➝</>}
-    </>
+    </span>
   );
 };

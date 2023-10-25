@@ -14,7 +14,7 @@ const Logos = ({
 }: Props): JSX.Element => {
   const parentClass = classOverride
     ? classOverride
-    : 'lg:ml-5 grid sm:grid-cols-2 md:grid-cols-4 xl:gap-y-2 lg:gap-2 justify-center justify-items-center';
+    : 'lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center';
   return (
     <div className={parentClass}>
       {(all || partners.includes('ldbpi')) && (
@@ -31,13 +31,13 @@ const Logos = ({
         <a
           href="https://www.massgeneral.org/gun-violence-prevention"
           target="_blank"
+          className="flex items-center"
         >
           <Image
             id="mgh-logo"
             alt="Massachusetts General Hospital Gun Violence Prevention Center logo"
             imgId="elab-home-v3.x/logos/mgh-gvpc"
             width={350}
-            // className="aspect-[3/2] mt-1 h-fit"
           />
         </a>
       )}
@@ -85,7 +85,11 @@ const Logos = ({
         </a>
       )}
       {(all || partners.includes('magv')) && (
-        <a href="https://www.mapreventgunviolence.org/" target="_blank">
+        <a
+          href="https://www.mapreventgunviolence.org/"
+          target="_blank"
+          className="flex items-center"
+        >
           <Image
             id="magv-logo"
             alt="Massachusetts Coalition to Prevent Gun Violence logo"
@@ -129,7 +133,7 @@ const Logos = ({
         </a>
       )}
       {(all || partners.includes('sftt')) && (
-        <a href="https://treeboston.org/" target="_blank">
+        <a href="https://treeboston.org/" target="_blank" className="max-w-xs">
           <Image
             id="sftt-logo"
             alt="Speak for the Trees logo"

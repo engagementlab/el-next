@@ -17,6 +17,7 @@ type Props = {
   theme?: Theme;
   icon?: string;
   className?: string;
+  iconClassName?: string;
   onClick?(): void;
 };
 
@@ -26,6 +27,7 @@ const CTAButton = ({
   theme = 0,
   icon,
   className,
+  iconClassName,
   onClick,
 }: Props): JSX.Element => {
   const themeConfig = [
@@ -58,7 +60,7 @@ const CTAButton = ({
       onClick={onClick}
       icon={
         icon ? (
-          <Icons icons={[icon]} />
+          <Icons icons={[icon]} className={iconClassName} />
         ) : (
           <svg
             className="h-4 w-6 inline-block group-hover:translate-x-1 transition-transform"

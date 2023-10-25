@@ -64,8 +64,9 @@ var Button = function Button(_ref) {
     onClick: onClick,
     children: [label, " ", icon]
   });
+  var linkFormatted = link.replace('elabhome.blob.core.windows.net', 'files.elab.works');
   return /*#__PURE__*/jsxRuntime.jsxs(Link__default["default"], {
-    href: link,
+    href: linkFormatted,
     passHref: true,
     className: "group ".concat(classOverride || classStr),
     children: [label, " ", icon]

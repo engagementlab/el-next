@@ -101,8 +101,16 @@ export const Button = ({
         {label} {icon}
       </button>
     );
+  const linkFormatted = link.replace(
+    'elabhome.blob.core.windows.net',
+    'files.elab.works'
+  );
   return (
-    <Link href={link} passHref className={`group ${classOverride || classStr}`}>
+    <Link
+      href={linkFormatted}
+      passHref
+      className={`group ${classOverride || classStr}`}
+    >
       {label} {icon}
     </Link>
   );

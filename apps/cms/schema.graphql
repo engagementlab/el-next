@@ -4,15 +4,125 @@
 type About {
   id: ID!
   name: String
-  key: String
   intro: About_intro_Document
-  headingImage: CloudinaryImage_File
-  headingImageAltText: String
-  headingImageCaption: String
-  content: About_content_Document
+  books: About_books_Document
+  selectWritings: About_selectWritings_Document
 }
 
 type About_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_books_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type About_selectWritings_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input AboutWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input AboutWhereInput {
+  AND: [AboutWhereInput!]
+  OR: [AboutWhereInput!]
+  NOT: [AboutWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input IDFilter {
+  equals: ID
+  in: [ID!]
+  notIn: [ID!]
+  lt: ID
+  lte: ID
+  gt: ID
+  gte: ID
+  not: IDFilter
+}
+
+input StringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input NestedStringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringFilter
+}
+
+input AboutOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+enum OrderDirection {
+  asc
+  desc
+}
+
+input AboutUpdateInput {
+  name: String
+  intro: JSON
+  books: JSON
+  selectWritings: JSON
+}
+
+input AboutUpdateArgs {
+  where: AboutWhereUniqueInput!
+  data: AboutUpdateInput!
+}
+
+input AboutCreateInput {
+  name: String
+  intro: JSON
+  books: JSON
+  selectWritings: JSON
+}
+
+type Award {
+  id: ID!
+  name: String
+  key: String
+  intro: Award_intro_Document
+  apply: Award_apply_Document
+  bgImage1: CloudinaryImage_File
+  pastRecipients: Award_pastRecipients_Document
+}
+
+type Award_intro_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Award_apply_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -65,154 +175,90 @@ input CloudinaryImageFormat {
   transformation: String
 }
 
-type About_content_Document {
+type Award_pastRecipients_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-input AboutWhereUniqueInput {
+input AwardWhereUniqueInput {
   id: ID
   name: String
+  key: String
 }
 
-input AboutWhereInput {
-  AND: [AboutWhereInput!]
-  OR: [AboutWhereInput!]
-  NOT: [AboutWhereInput!]
+input AwardWhereInput {
+  AND: [AwardWhereInput!]
+  OR: [AwardWhereInput!]
+  NOT: [AwardWhereInput!]
   id: IDFilter
   name: StringFilter
   key: StringFilter
-  headingImageAltText: StringFilter
-  headingImageCaption: StringFilter
 }
 
-input IDFilter {
-  equals: ID
-  in: [ID!]
-  notIn: [ID!]
-  lt: ID
-  lte: ID
-  gt: ID
-  gte: ID
-  not: IDFilter
-}
-
-input StringFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  mode: QueryMode
-  not: NestedStringFilter
-}
-
-enum QueryMode {
-  default
-  insensitive
-}
-
-input NestedStringFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  not: NestedStringFilter
-}
-
-input AboutOrderByInput {
+input AwardOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
-  headingImageAltText: OrderDirection
-  headingImageCaption: OrderDirection
 }
 
-enum OrderDirection {
-  asc
-  desc
-}
-
-input AboutUpdateInput {
+input AwardUpdateInput {
   name: String
   key: String
   intro: JSON
-  headingImage: Upload
-  headingImageAltText: String
-  headingImageCaption: String
-  content: JSON
+  apply: JSON
+  bgImage1: Upload
+  pastRecipients: JSON
 }
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
-input AboutUpdateArgs {
-  where: AboutWhereUniqueInput!
-  data: AboutUpdateInput!
+input AwardUpdateArgs {
+  where: AwardWhereUniqueInput!
+  data: AwardUpdateInput!
 }
 
-input AboutCreateInput {
+input AwardCreateInput {
   name: String
   key: String
   intro: JSON
-  headingImage: Upload
-  headingImageAltText: String
-  headingImageCaption: String
-  content: JSON
+  apply: JSON
+  bgImage1: Upload
+  pastRecipients: JSON
 }
 
 type Event {
   id: ID!
   name: String
   key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [EventFlagType!]
-  initiatives: [EventInitiativeType!]
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  summary: String
-  eventDate: DateTime
-  registrationLink: String
-  address: String
-  blurb: Event_blurb_Document
-  content: Event_content_Document
-  initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
+  intro: Event_intro_Document
+  bgImage1: CloudinaryImage_File
+  agenda: Event_agenda_Document
+  awards: Event_awards_Document
+  bgImage2: CloudinaryImage_File
+  location: Event_location_Document
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GallerySlideWhereUniqueInput): [GallerySlide!]
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
 }
 
-scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
-
-enum EventFlagType {
-  home
-  section
-}
-
-enum EventInitiativeType {
-  gunviolence
-  climate
-}
-
-type Event_blurb_Document {
+type Event_intro_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-type Event_content_Document {
+type Event_agenda_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_awards_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_location_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input EventWhereUniqueInput {
   id: ID
+  name: String
   key: String
 }
 
@@ -223,14 +269,204 @@ input EventWhereInput {
   id: IDFilter
   name: StringFilter
   key: StringFilter
+  gallerySlides: GallerySlideManyRelationFilter
+}
+
+input GallerySlideManyRelationFilter {
+  every: GallerySlideWhereInput
+  some: GallerySlideWhereInput
+  none: GallerySlideWhereInput
+}
+
+input EventOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  key: OrderDirection
+}
+
+input EventUpdateInput {
+  name: String
+  key: String
+  intro: JSON
+  bgImage1: Upload
+  agenda: JSON
+  awards: JSON
+  bgImage2: Upload
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForUpdateInput
+}
+
+input GallerySlideRelateToManyForUpdateInput {
+  disconnect: [GallerySlideWhereUniqueInput!]
+  set: [GallerySlideWhereUniqueInput!]
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+input EventUpdateArgs {
+  where: EventWhereUniqueInput!
+  data: EventUpdateInput!
+}
+
+input EventCreateInput {
+  name: String
+  key: String
+  intro: JSON
+  bgImage1: Upload
+  agenda: JSON
+  awards: JSON
+  bgImage2: Upload
+  location: JSON
+  gallerySlides: GallerySlideRelateToManyForCreateInput
+}
+
+input GallerySlideRelateToManyForCreateInput {
+  create: [GallerySlideCreateInput!]
+  connect: [GallerySlideWhereUniqueInput!]
+}
+
+type GallerySlide {
+  id: ID!
+  gallerySlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
+  gallerySlidesCount(where: EventWhereInput! = {}): Int
+  image: CloudinaryImage_File
+  altText: String
+  caption: String
+}
+
+input GallerySlideWhereUniqueInput {
+  id: ID
+}
+
+input GallerySlideWhereInput {
+  AND: [GallerySlideWhereInput!]
+  OR: [GallerySlideWhereInput!]
+  NOT: [GallerySlideWhereInput!]
+  id: IDFilter
+  gallerySlides: EventManyRelationFilter
+  altText: StringFilter
+  caption: StringFilter
+}
+
+input EventManyRelationFilter {
+  every: EventWhereInput
+  some: EventWhereInput
+  none: EventWhereInput
+}
+
+input GallerySlideOrderByInput {
+  id: OrderDirection
+  altText: OrderDirection
+  caption: OrderDirection
+}
+
+input GallerySlideUpdateInput {
+  gallerySlides: EventRelateToManyForUpdateInput
+  image: Upload
+  altText: String
+  caption: String
+}
+
+input EventRelateToManyForUpdateInput {
+  disconnect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input GallerySlideUpdateArgs {
+  where: GallerySlideWhereUniqueInput!
+  data: GallerySlideUpdateInput!
+}
+
+input GallerySlideCreateInput {
+  gallerySlides: EventRelateToManyForCreateInput
+  image: Upload
+  altText: String
+  caption: String
+}
+
+input EventRelateToManyForCreateInput {
+  create: [EventCreateInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+type Home {
+  id: ID!
+  name: String
+  content: Home_content_Document
+}
+
+type Home_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input HomeWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input HomeWhereInput {
+  AND: [HomeWhereInput!]
+  OR: [HomeWhereInput!]
+  NOT: [HomeWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input HomeOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input HomeUpdateInput {
+  name: String
+  content: JSON
+}
+
+input HomeUpdateArgs {
+  where: HomeWhereUniqueInput!
+  data: HomeUpdateInput!
+}
+
+input HomeCreateInput {
+  name: String
+  content: JSON
+}
+
+type Person {
+  id: ID!
+  name: String
+  key: String
+  title: String
+  createdDate: DateTime
+  enabled: Boolean
+  image: CloudinaryImage_File
+  blurb: String
+  content: Person_content_Document
+}
+
+scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+type Person_content_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input PersonWhereUniqueInput {
+  id: ID
+}
+
+input PersonWhereInput {
+  AND: [PersonWhereInput!]
+  OR: [PersonWhereInput!]
+  NOT: [PersonWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  key: StringFilter
+  title: StringFilter
   createdDate: DateTimeNullableFilter
   enabled: BooleanFilter
-  thumbAltText: StringFilter
-  summary: StringFilter
-  eventDate: DateTimeFilter
-  registrationLink: StringFilter
-  address: StringFilter
-  initiativesWhatsNew: InitiativeManyRelationFilter
+  blurb: StringFilter
 }
 
 input DateTimeNullableFilter {
@@ -249,1013 +485,25 @@ input BooleanFilter {
   not: BooleanFilter
 }
 
-input DateTimeFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeFilter
-}
-
-input InitiativeManyRelationFilter {
-  every: InitiativeWhereInput
-  some: InitiativeWhereInput
-  none: InitiativeWhereInput
-}
-
-input EventOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  thumbAltText: OrderDirection
-  summary: OrderDirection
-  eventDate: OrderDirection
-  registrationLink: OrderDirection
-  address: OrderDirection
-}
-
-input EventUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [EventFlagType!]
-  initiatives: [EventInitiativeType!]
-  thumbnail: Upload
-  thumbAltText: String
-  summary: String
-  eventDate: DateTime
-  registrationLink: String
-  address: String
-  blurb: JSON
-  content: JSON
-  initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
-}
-
-input InitiativeRelateToManyForUpdateInput {
-  disconnect: [InitiativeWhereUniqueInput!]
-  set: [InitiativeWhereUniqueInput!]
-  create: [InitiativeCreateInput!]
-  connect: [InitiativeWhereUniqueInput!]
-}
-
-input EventUpdateArgs {
-  where: EventWhereUniqueInput!
-  data: EventUpdateInput!
-}
-
-input EventCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [EventFlagType!]
-  initiatives: [EventInitiativeType!]
-  thumbnail: Upload
-  thumbAltText: String
-  summary: String
-  eventDate: DateTime
-  registrationLink: String
-  address: String
-  blurb: JSON
-  content: JSON
-  initiativesWhatsNew: InitiativeRelateToManyForCreateInput
-}
-
-input InitiativeRelateToManyForCreateInput {
-  create: [InitiativeCreateInput!]
-  connect: [InitiativeWhereUniqueInput!]
-}
-
-type Filter {
-  id: ID!
-  name: String
-  key: String
-  enabled: Boolean
-  studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
-  researchProjects(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchProjectsCount(where: ResearchProjectWhereInput! = {}): Int
-}
-
-input FilterWhereUniqueInput {
-  id: ID
-}
-
-input FilterWhereInput {
-  AND: [FilterWhereInput!]
-  OR: [FilterWhereInput!]
-  NOT: [FilterWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  enabled: BooleanFilter
-  studioProjects: StudioProjectManyRelationFilter
-  researchProjects: ResearchProjectManyRelationFilter
-}
-
-input StudioProjectManyRelationFilter {
-  every: StudioProjectWhereInput
-  some: StudioProjectWhereInput
-  none: StudioProjectWhereInput
-}
-
-input ResearchProjectManyRelationFilter {
-  every: ResearchProjectWhereInput
-  some: ResearchProjectWhereInput
-  none: ResearchProjectWhereInput
-}
-
-input FilterOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  enabled: OrderDirection
-}
-
-input FilterUpdateInput {
-  name: String
-  key: String
-  enabled: Boolean
-  studioProjects: StudioProjectRelateToManyForUpdateInput
-  researchProjects: ResearchProjectRelateToManyForUpdateInput
-}
-
-input StudioProjectRelateToManyForUpdateInput {
-  disconnect: [StudioProjectWhereUniqueInput!]
-  set: [StudioProjectWhereUniqueInput!]
-  create: [StudioProjectCreateInput!]
-  connect: [StudioProjectWhereUniqueInput!]
-}
-
-input ResearchProjectRelateToManyForUpdateInput {
-  disconnect: [ResearchProjectWhereUniqueInput!]
-  set: [ResearchProjectWhereUniqueInput!]
-  create: [ResearchProjectCreateInput!]
-  connect: [ResearchProjectWhereUniqueInput!]
-}
-
-input FilterUpdateArgs {
-  where: FilterWhereUniqueInput!
-  data: FilterUpdateInput!
-}
-
-input FilterCreateInput {
-  name: String
-  key: String
-  enabled: Boolean
-  studioProjects: StudioProjectRelateToManyForCreateInput
-  researchProjects: ResearchProjectRelateToManyForCreateInput
-}
-
-input StudioProjectRelateToManyForCreateInput {
-  create: [StudioProjectCreateInput!]
-  connect: [StudioProjectWhereUniqueInput!]
-}
-
-input ResearchProjectRelateToManyForCreateInput {
-  create: [ResearchProjectCreateInput!]
-  connect: [ResearchProjectWhereUniqueInput!]
-}
-
-type Graduate {
-  id: ID!
-  name: String
-  intro: Graduate_intro_Document
-  introImage: CloudinaryImage_File
-  introImageAltText: String
-  introImageCaption: String
-  mediaDesign: Graduate_mediaDesign_Document
-  currentStudents(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  currentStudentsCount(where: PersonWhereInput! = {}): Int
-  alumni: Graduate_alumni_Document
-  symposium: Graduate_symposium_Document
-  salzburg: Graduate_salzburg_Document
-  projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
-  alumniSpotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
-  alumniSpotlightCount(where: NewsItemWhereInput! = {}): Int
-}
-
-type Graduate_intro_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Graduate_mediaDesign_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Graduate_alumni_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Graduate_symposium_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Graduate_salzburg_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input GraduateWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input GraduateWhereInput {
-  AND: [GraduateWhereInput!]
-  OR: [GraduateWhereInput!]
-  NOT: [GraduateWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  introImageAltText: StringFilter
-  introImageCaption: StringFilter
-  currentStudents: PersonManyRelationFilter
-  projectSpotlight: StudioProjectManyRelationFilter
-  alumniSpotlight: NewsItemManyRelationFilter
-}
-
-input PersonManyRelationFilter {
-  every: PersonWhereInput
-  some: PersonWhereInput
-  none: PersonWhereInput
-}
-
-input NewsItemManyRelationFilter {
-  every: NewsItemWhereInput
-  some: NewsItemWhereInput
-  none: NewsItemWhereInput
-}
-
-input GraduateOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  introImageAltText: OrderDirection
-  introImageCaption: OrderDirection
-}
-
-input GraduateUpdateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  mediaDesign: JSON
-  currentStudents: PersonRelateToManyForUpdateInput
-  alumni: JSON
-  symposium: JSON
-  salzburg: JSON
-  projectSpotlight: StudioProjectRelateToManyForUpdateInput
-  alumniSpotlight: NewsItemRelateToManyForUpdateInput
-}
-
-input PersonRelateToManyForUpdateInput {
-  disconnect: [PersonWhereUniqueInput!]
-  set: [PersonWhereUniqueInput!]
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
-input NewsItemRelateToManyForUpdateInput {
-  disconnect: [NewsItemWhereUniqueInput!]
-  set: [NewsItemWhereUniqueInput!]
-  create: [NewsItemCreateInput!]
-  connect: [NewsItemWhereUniqueInput!]
-}
-
-input GraduateUpdateArgs {
-  where: GraduateWhereUniqueInput!
-  data: GraduateUpdateInput!
-}
-
-input GraduateCreateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  mediaDesign: JSON
-  currentStudents: PersonRelateToManyForCreateInput
-  alumni: JSON
-  symposium: JSON
-  salzburg: JSON
-  projectSpotlight: StudioProjectRelateToManyForCreateInput
-  alumniSpotlight: NewsItemRelateToManyForCreateInput
-}
-
-input PersonRelateToManyForCreateInput {
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
-input NewsItemRelateToManyForCreateInput {
-  create: [NewsItemCreateInput!]
-  connect: [NewsItemWhereUniqueInput!]
-}
-
-type Initiative {
-  id: ID!
-  name: String
-  intro: Initiative_intro_Document
-  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
-  slidesCount(where: SlideWhereInput! = {}): Int
-  news(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
-  newsCount(where: NewsItemWhereInput! = {}): Int
-  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
-  eventsCount(where: EventWhereInput! = {}): Int
-  body: Initiative_body_Document
-  partners: JSON
-  projectsBlurb: Initiative_projectsBlurb_Document
-  projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectsCount(where: StudioProjectWhereInput! = {}): Int
-  studiosBlurb: Initiative_studiosBlurb_Document
-  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
-  studiosCount(where: StudioWhereInput! = {}): Int
-  research(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchCount(where: ResearchProjectWhereInput! = {}): Int
-  associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  associatedPeopleCount(where: PersonWhereInput! = {}): Int
-}
-
-type Initiative_intro_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Initiative_body_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Initiative_projectsBlurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Initiative_studiosBlurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input InitiativeWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input InitiativeWhereInput {
-  AND: [InitiativeWhereInput!]
-  OR: [InitiativeWhereInput!]
-  NOT: [InitiativeWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  slides: SlideManyRelationFilter
-  news: NewsItemManyRelationFilter
-  events: EventManyRelationFilter
-  projects: StudioProjectManyRelationFilter
-  studios: StudioManyRelationFilter
-  research: ResearchProjectManyRelationFilter
-  associatedPeople: PersonManyRelationFilter
-}
-
-input SlideManyRelationFilter {
-  every: SlideWhereInput
-  some: SlideWhereInput
-  none: SlideWhereInput
-}
-
-input EventManyRelationFilter {
-  every: EventWhereInput
-  some: EventWhereInput
-  none: EventWhereInput
-}
-
-input StudioManyRelationFilter {
-  every: StudioWhereInput
-  some: StudioWhereInput
-  none: StudioWhereInput
-}
-
-input InitiativeOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input InitiativeUpdateInput {
-  name: String
-  intro: JSON
-  slides: SlideRelateToManyForUpdateInput
-  news: NewsItemRelateToManyForUpdateInput
-  events: EventRelateToManyForUpdateInput
-  body: JSON
-  partners: JSON
-  projectsBlurb: JSON
-  projects: StudioProjectRelateToManyForUpdateInput
-  studiosBlurb: JSON
-  studios: StudioRelateToManyForUpdateInput
-  research: ResearchProjectRelateToManyForUpdateInput
-  associatedPeople: PersonRelateToManyForUpdateInput
-}
-
-input SlideRelateToManyForUpdateInput {
-  disconnect: [SlideWhereUniqueInput!]
-  set: [SlideWhereUniqueInput!]
-  create: [SlideCreateInput!]
-  connect: [SlideWhereUniqueInput!]
-}
-
-input EventRelateToManyForUpdateInput {
-  disconnect: [EventWhereUniqueInput!]
-  set: [EventWhereUniqueInput!]
-  create: [EventCreateInput!]
-  connect: [EventWhereUniqueInput!]
-}
-
-input StudioRelateToManyForUpdateInput {
-  disconnect: [StudioWhereUniqueInput!]
-  set: [StudioWhereUniqueInput!]
-  create: [StudioCreateInput!]
-  connect: [StudioWhereUniqueInput!]
-}
-
-input InitiativeUpdateArgs {
-  where: InitiativeWhereUniqueInput!
-  data: InitiativeUpdateInput!
-}
-
-input InitiativeCreateInput {
-  name: String
-  intro: JSON
-  slides: SlideRelateToManyForCreateInput
-  news: NewsItemRelateToManyForCreateInput
-  events: EventRelateToManyForCreateInput
-  body: JSON
-  partners: JSON
-  projectsBlurb: JSON
-  projects: StudioProjectRelateToManyForCreateInput
-  studiosBlurb: JSON
-  studios: StudioRelateToManyForCreateInput
-  research: ResearchProjectRelateToManyForCreateInput
-  associatedPeople: PersonRelateToManyForCreateInput
-}
-
-input SlideRelateToManyForCreateInput {
-  create: [SlideCreateInput!]
-  connect: [SlideWhereUniqueInput!]
-}
-
-input EventRelateToManyForCreateInput {
-  create: [EventCreateInput!]
-  connect: [EventWhereUniqueInput!]
-}
-
-input StudioRelateToManyForCreateInput {
-  create: [StudioCreateInput!]
-  connect: [StudioWhereUniqueInput!]
-}
-
-type InitiativesLanding {
-  id: ID!
-  name: String
-  intro: InitiativesLanding_intro_Document
-  introImage: CloudinaryImage_File
-  introImageAltText: String
-  introImageCaption: String
-  tngvi: InitiativesLanding_tngvi_Document
-  tn4ej: InitiativesLanding_tn4ej_Document
-  everythingElse: InitiativesLanding_everythingElse_Document
-  projectsBlurb: InitiativesLanding_projectsBlurb_Document
-  studiosBlurb: InitiativesLanding_studiosBlurb_Document
-}
-
-type InitiativesLanding_intro_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type InitiativesLanding_tngvi_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type InitiativesLanding_tn4ej_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type InitiativesLanding_everythingElse_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type InitiativesLanding_projectsBlurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type InitiativesLanding_studiosBlurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input InitiativesLandingWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input InitiativesLandingWhereInput {
-  AND: [InitiativesLandingWhereInput!]
-  OR: [InitiativesLandingWhereInput!]
-  NOT: [InitiativesLandingWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  introImageAltText: StringFilter
-  introImageCaption: StringFilter
-}
-
-input InitiativesLandingOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  introImageAltText: OrderDirection
-  introImageCaption: OrderDirection
-}
-
-input InitiativesLandingUpdateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  tngvi: JSON
-  tn4ej: JSON
-  everythingElse: JSON
-  projectsBlurb: JSON
-  studiosBlurb: JSON
-}
-
-input InitiativesLandingUpdateArgs {
-  where: InitiativesLandingWhereUniqueInput!
-  data: InitiativesLandingUpdateInput!
-}
-
-input InitiativesLandingCreateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  tngvi: JSON
-  tn4ej: JSON
-  everythingElse: JSON
-  projectsBlurb: JSON
-  studiosBlurb: JSON
-}
-
-type LearningPartners {
-  id: ID!
-  name: String
-  intro: LearningPartners_intro_Document
-  introImage: CloudinaryImage_File
-  introImageAltText: String
-  introImageCaption: String
-  what: LearningPartners_what_Document
-  benefits: LearningPartners_benefits_Document
-  spotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
-  spotlightCount(where: NewsItemWhereInput! = {}): Int
-}
-
-type LearningPartners_intro_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type LearningPartners_what_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type LearningPartners_benefits_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input LearningPartnersWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input LearningPartnersWhereInput {
-  AND: [LearningPartnersWhereInput!]
-  OR: [LearningPartnersWhereInput!]
-  NOT: [LearningPartnersWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  introImageAltText: StringFilter
-  introImageCaption: StringFilter
-  spotlight: NewsItemManyRelationFilter
-}
-
-input LearningPartnersOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  introImageAltText: OrderDirection
-  introImageCaption: OrderDirection
-}
-
-input LearningPartnersUpdateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  what: JSON
-  benefits: JSON
-  spotlight: NewsItemRelateToManyForUpdateInput
-}
-
-input LearningPartnersUpdateArgs {
-  where: LearningPartnersWhereUniqueInput!
-  data: LearningPartnersUpdateInput!
-}
-
-input LearningPartnersCreateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  what: JSON
-  benefits: JSON
-  spotlight: NewsItemRelateToManyForCreateInput
-}
-
-type NewsItem {
-  id: ID!
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [NewsItemFlagType!]
-  initiatives: [NewsItemInitiativeType!]
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  summary: String
-  publishDate: DateTime
-  source: String
-  linkHelper: HelperFieldOutput
-  externalLink: String
-  blurb: NewsItem_blurb_Document
-  body: NewsItem_body_Document
-  alumni(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
-  alumniCount(where: GraduateWhereInput! = {}): Int
-  learningPartners(where: LearningPartnersWhereInput! = {}, orderBy: [LearningPartnersOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LearningPartnersWhereUniqueInput): [LearningPartners!]
-  learningPartnersCount(where: LearningPartnersWhereInput! = {}): Int
-  initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
-}
-
-enum NewsItemFlagType {
-  home
-  section
-}
-
-enum NewsItemInitiativeType {
-  gunviolence
-  climate
-}
-
-type HelperFieldOutput {
-  html: String
-  iconType: String
-}
-
-type NewsItem_blurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type NewsItem_body_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input NewsItemWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input NewsItemWhereInput {
-  AND: [NewsItemWhereInput!]
-  OR: [NewsItemWhereInput!]
-  NOT: [NewsItemWhereInput!]
-  id: IDFilter
-  title: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  thumbAltText: StringFilter
-  summary: StringFilter
-  publishDate: DateTimeFilter
-  source: StringFilter
-  externalLink: StringFilter
-  alumni: GraduateManyRelationFilter
-  learningPartners: LearningPartnersManyRelationFilter
-  initiativesWhatsNew: InitiativeManyRelationFilter
-}
-
-input GraduateManyRelationFilter {
-  every: GraduateWhereInput
-  some: GraduateWhereInput
-  none: GraduateWhereInput
-}
-
-input LearningPartnersManyRelationFilter {
-  every: LearningPartnersWhereInput
-  some: LearningPartnersWhereInput
-  none: LearningPartnersWhereInput
-}
-
-input NewsItemOrderByInput {
-  id: OrderDirection
-  title: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  thumbAltText: OrderDirection
-  summary: OrderDirection
-  publishDate: OrderDirection
-  source: OrderDirection
-  externalLink: OrderDirection
-}
-
-input NewsItemUpdateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [NewsItemFlagType!]
-  initiatives: [NewsItemInitiativeType!]
-  thumbnail: Upload
-  thumbAltText: String
-  summary: String
-  publishDate: DateTime
-  source: String
-  linkHelper: HelperFieldInput
-  externalLink: String
-  blurb: JSON
-  body: JSON
-  alumni: GraduateRelateToManyForUpdateInput
-  learningPartners: LearningPartnersRelateToManyForUpdateInput
-  initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
-}
-
-input GraduateRelateToManyForUpdateInput {
-  disconnect: [GraduateWhereUniqueInput!]
-  set: [GraduateWhereUniqueInput!]
-  create: [GraduateCreateInput!]
-  connect: [GraduateWhereUniqueInput!]
-}
-
-input LearningPartnersRelateToManyForUpdateInput {
-  disconnect: [LearningPartnersWhereUniqueInput!]
-  set: [LearningPartnersWhereUniqueInput!]
-  create: [LearningPartnersCreateInput!]
-  connect: [LearningPartnersWhereUniqueInput!]
-}
-
-input NewsItemUpdateArgs {
-  where: NewsItemWhereUniqueInput!
-  data: NewsItemUpdateInput!
-}
-
-input NewsItemCreateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [NewsItemFlagType!]
-  initiatives: [NewsItemInitiativeType!]
-  thumbnail: Upload
-  thumbAltText: String
-  summary: String
-  publishDate: DateTime
-  source: String
-  linkHelper: HelperFieldInput
-  externalLink: String
-  blurb: JSON
-  body: JSON
-  alumni: GraduateRelateToManyForCreateInput
-  learningPartners: LearningPartnersRelateToManyForCreateInput
-  initiativesWhatsNew: InitiativeRelateToManyForCreateInput
-}
-
-input GraduateRelateToManyForCreateInput {
-  create: [GraduateCreateInput!]
-  connect: [GraduateWhereUniqueInput!]
-}
-
-input LearningPartnersRelateToManyForCreateInput {
-  create: [LearningPartnersCreateInput!]
-  connect: [LearningPartnersWhereUniqueInput!]
-}
-
-type Partner {
-  id: ID!
-  name: String
-  key: String
-  url: String
-  logo: CloudinaryImage_File
-  researchProject(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchProjectCount(where: ResearchProjectWhereInput! = {}): Int
-  researchProjectFunders(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchProjectFundersCount(where: ResearchProjectWhereInput! = {}): Int
-}
-
-input PartnerWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input PartnerWhereInput {
-  AND: [PartnerWhereInput!]
-  OR: [PartnerWhereInput!]
-  NOT: [PartnerWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  url: StringFilter
-  researchProject: ResearchProjectManyRelationFilter
-  researchProjectFunders: ResearchProjectManyRelationFilter
-}
-
-input PartnerOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  url: OrderDirection
-}
-
-input PartnerUpdateInput {
-  name: String
-  key: String
-  url: String
-  logo: Upload
-  researchProject: ResearchProjectRelateToManyForUpdateInput
-  researchProjectFunders: ResearchProjectRelateToManyForUpdateInput
-}
-
-input PartnerUpdateArgs {
-  where: PartnerWhereUniqueInput!
-  data: PartnerUpdateInput!
-}
-
-input PartnerCreateInput {
-  name: String
-  key: String
-  url: String
-  logo: Upload
-  researchProject: ResearchProjectRelateToManyForCreateInput
-  researchProjectFunders: ResearchProjectRelateToManyForCreateInput
-}
-
-type Person {
-  id: ID!
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  title: String
-  secondaryTitle: String
-  image: CloudinaryImage_File
-  category: String
-  orderInSection: Int
-  content: Person_content_Document
-  studioInstructors(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  studioInstructorsCount(where: SemesterWhereInput! = {}): Int
-  learningPartners(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  learningPartnersCount(where: SemesterWhereInput! = {}): Int
-  studioStudents(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  studioStudentsCount(where: SemesterWhereInput! = {}): Int
-  studioStaff(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  studioStaffCount(where: SemesterWhereInput! = {}): Int
-  projectStudents(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectStudentsCount(where: StudioProjectWhereInput! = {}): Int
-  projectPartners(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectPartnersCount(where: StudioProjectWhereInput! = {}): Int
-  projectInstructors(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectInstructorsCount(where: StudioProjectWhereInput! = {}): Int
-  projectStaff(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectStaffCount(where: StudioProjectWhereInput! = {}): Int
-  researchLeads(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchLeadsCount(where: ResearchProjectWhereInput! = {}): Int
-  mdStudents(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
-  mdStudentsCount(where: GraduateWhereInput! = {}): Int
-  initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativesCount(where: InitiativeWhereInput! = {}): Int
-}
-
-type Person_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input PersonWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input PersonWhereInput {
-  AND: [PersonWhereInput!]
-  OR: [PersonWhereInput!]
-  NOT: [PersonWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  title: StringFilter
-  secondaryTitle: StringFilter
-  category: StringNullableFilter
-  orderInSection: IntNullableFilter
-  studioInstructors: SemesterManyRelationFilter
-  learningPartners: SemesterManyRelationFilter
-  studioStudents: SemesterManyRelationFilter
-  studioStaff: SemesterManyRelationFilter
-  projectStudents: StudioProjectManyRelationFilter
-  projectPartners: StudioProjectManyRelationFilter
-  projectInstructors: StudioProjectManyRelationFilter
-  projectStaff: StudioProjectManyRelationFilter
-  researchLeads: ResearchProjectManyRelationFilter
-  mdStudents: GraduateManyRelationFilter
-  initiatives: InitiativeManyRelationFilter
-}
-
-input StringNullableFilter {
-  equals: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
-  mode: QueryMode
-  not: StringNullableFilter
-}
-
-input IntNullableFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntNullableFilter
-}
-
-input SemesterManyRelationFilter {
-  every: SemesterWhereInput
-  some: SemesterWhereInput
-  none: SemesterWhereInput
-}
-
 input PersonOrderByInput {
   id: OrderDirection
   name: OrderDirection
   key: OrderDirection
+  title: OrderDirection
   createdDate: OrderDirection
   enabled: OrderDirection
-  title: OrderDirection
-  secondaryTitle: OrderDirection
-  category: OrderDirection
-  orderInSection: OrderDirection
+  blurb: OrderDirection
 }
 
 input PersonUpdateInput {
   name: String
   key: String
+  title: String
   createdDate: DateTime
   enabled: Boolean
-  title: String
-  secondaryTitle: String
   image: Upload
-  category: String
-  orderInSection: Int
+  blurb: String
   content: JSON
-  studioInstructors: SemesterRelateToManyForUpdateInput
-  learningPartners: SemesterRelateToManyForUpdateInput
-  studioStudents: SemesterRelateToManyForUpdateInput
-  studioStaff: SemesterRelateToManyForUpdateInput
-  projectStudents: StudioProjectRelateToManyForUpdateInput
-  projectPartners: StudioProjectRelateToManyForUpdateInput
-  projectInstructors: StudioProjectRelateToManyForUpdateInput
-  projectStaff: StudioProjectRelateToManyForUpdateInput
-  researchLeads: ResearchProjectRelateToManyForUpdateInput
-  mdStudents: GraduateRelateToManyForUpdateInput
-  initiatives: InitiativeRelateToManyForUpdateInput
-}
-
-input SemesterRelateToManyForUpdateInput {
-  disconnect: [SemesterWhereUniqueInput!]
-  set: [SemesterWhereUniqueInput!]
-  create: [SemesterCreateInput!]
-  connect: [SemesterWhereUniqueInput!]
 }
 
 input PersonUpdateArgs {
@@ -1266,517 +514,28 @@ input PersonUpdateArgs {
 input PersonCreateInput {
   name: String
   key: String
+  title: String
   createdDate: DateTime
   enabled: Boolean
-  title: String
-  secondaryTitle: String
   image: Upload
-  category: String
-  orderInSection: Int
+  blurb: String
   content: JSON
-  studioInstructors: SemesterRelateToManyForCreateInput
-  learningPartners: SemesterRelateToManyForCreateInput
-  studioStudents: SemesterRelateToManyForCreateInput
-  studioStaff: SemesterRelateToManyForCreateInput
-  projectStudents: StudioProjectRelateToManyForCreateInput
-  projectPartners: StudioProjectRelateToManyForCreateInput
-  projectInstructors: StudioProjectRelateToManyForCreateInput
-  projectStaff: StudioProjectRelateToManyForCreateInput
-  researchLeads: ResearchProjectRelateToManyForCreateInput
-  mdStudents: GraduateRelateToManyForCreateInput
-  initiatives: InitiativeRelateToManyForCreateInput
-}
-
-input SemesterRelateToManyForCreateInput {
-  create: [SemesterCreateInput!]
-  connect: [SemesterWhereUniqueInput!]
-}
-
-type Publication {
-  id: ID!
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  year: String
-  citations: Publication_citations_Document
-  file: AzureStorageFileFieldOutput
-  buttons: JSON
-  relatedProject: ResearchProject
-}
-
-type Publication_citations_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-interface AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
-input PublicationWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
-input PublicationWhereInput {
-  AND: [PublicationWhereInput!]
-  OR: [PublicationWhereInput!]
-  NOT: [PublicationWhereInput!]
-  id: IDFilter
-  title: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  year: StringFilter
-  relatedProject: ResearchProjectWhereInput
-}
-
-input PublicationOrderByInput {
-  id: OrderDirection
-  title: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  year: OrderDirection
-}
-
-input PublicationUpdateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  year: String
-  citations: JSON
-  file: AzureStorageFileFieldInput
-  buttons: JSON
-  relatedProject: ResearchProjectRelateToOneForUpdateInput
-}
-
-input AzureStorageFileFieldInput {
-  upload: Upload
-  ref: String
-}
-
-input ResearchProjectRelateToOneForUpdateInput {
-  create: ResearchProjectCreateInput
-  connect: ResearchProjectWhereUniqueInput
-  disconnect: Boolean
-}
-
-input PublicationUpdateArgs {
-  where: PublicationWhereUniqueInput!
-  data: PublicationUpdateInput!
-}
-
-input PublicationCreateInput {
-  title: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  year: String
-  citations: JSON
-  file: AzureStorageFileFieldInput
-  buttons: JSON
-  relatedProject: ResearchProjectRelateToOneForCreateInput
-}
-
-input ResearchProjectRelateToOneForCreateInput {
-  create: ResearchProjectCreateInput
-  connect: ResearchProjectWhereUniqueInput
-}
-
-type ResearchProject {
-  id: ID!
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [ResearchProjectFlagType!]
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
-  mdProject: Boolean
-  years: String
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  headingImage: CloudinaryImage_File
-  headingImageAltText: String
-  headingText: ResearchProject_headingText_Document
-  buttons: JSON
-  shortDescription: String
-  blurb: ResearchProject_blurb_Document
-  content: ResearchProject_content_Document
-  collaborators(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
-  collaboratorsCount(where: PartnerWhereInput! = {}): Int
-  funders(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
-  fundersCount(where: PartnerWhereInput! = {}): Int
-  projectLeads(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  projectLeadsCount(where: PersonWhereInput! = {}): Int
-  contact: String
-  tools: JSON
-  initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
-  publicationRelated: Publication
-}
-
-enum ResearchProjectFlagType {
-  home
-  section
-}
-
-type ResearchProject_headingText_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type ResearchProject_blurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type ResearchProject_content_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input ResearchProjectWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input ResearchProjectWhereInput {
-  AND: [ResearchProjectWhereInput!]
-  OR: [ResearchProjectWhereInput!]
-  NOT: [ResearchProjectWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  filters: FilterManyRelationFilter
-  mdProject: BooleanFilter
-  years: StringFilter
-  thumbAltText: StringFilter
-  headingImageAltText: StringFilter
-  shortDescription: StringFilter
-  collaborators: PartnerManyRelationFilter
-  funders: PartnerManyRelationFilter
-  projectLeads: PersonManyRelationFilter
-  contact: StringFilter
-  initiativesRelated: InitiativeManyRelationFilter
-  publicationRelated: PublicationWhereInput
-}
-
-input FilterManyRelationFilter {
-  every: FilterWhereInput
-  some: FilterWhereInput
-  none: FilterWhereInput
-}
-
-input PartnerManyRelationFilter {
-  every: PartnerWhereInput
-  some: PartnerWhereInput
-  none: PartnerWhereInput
-}
-
-input ResearchProjectOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  mdProject: OrderDirection
-  years: OrderDirection
-  thumbAltText: OrderDirection
-  headingImageAltText: OrderDirection
-  shortDescription: OrderDirection
-  contact: OrderDirection
-}
-
-input ResearchProjectUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [ResearchProjectFlagType!]
-  filters: FilterRelateToManyForUpdateInput
-  mdProject: Boolean
-  years: String
-  thumbnail: Upload
-  thumbAltText: String
-  headingImage: Upload
-  headingImageAltText: String
-  headingText: JSON
-  buttons: JSON
-  shortDescription: String
-  blurb: JSON
-  content: JSON
-  collaborators: PartnerRelateToManyForUpdateInput
-  funders: PartnerRelateToManyForUpdateInput
-  projectLeads: PersonRelateToManyForUpdateInput
-  contact: String
-  tools: JSON
-  initiativesRelated: InitiativeRelateToManyForUpdateInput
-  publicationRelated: PublicationRelateToOneForUpdateInput
-}
-
-input FilterRelateToManyForUpdateInput {
-  disconnect: [FilterWhereUniqueInput!]
-  set: [FilterWhereUniqueInput!]
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
-}
-
-input PartnerRelateToManyForUpdateInput {
-  disconnect: [PartnerWhereUniqueInput!]
-  set: [PartnerWhereUniqueInput!]
-  create: [PartnerCreateInput!]
-  connect: [PartnerWhereUniqueInput!]
-}
-
-input PublicationRelateToOneForUpdateInput {
-  create: PublicationCreateInput
-  connect: PublicationWhereUniqueInput
-  disconnect: Boolean
-}
-
-input ResearchProjectUpdateArgs {
-  where: ResearchProjectWhereUniqueInput!
-  data: ResearchProjectUpdateInput!
-}
-
-input ResearchProjectCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  flags: [ResearchProjectFlagType!]
-  filters: FilterRelateToManyForCreateInput
-  mdProject: Boolean
-  years: String
-  thumbnail: Upload
-  thumbAltText: String
-  headingImage: Upload
-  headingImageAltText: String
-  headingText: JSON
-  buttons: JSON
-  shortDescription: String
-  blurb: JSON
-  content: JSON
-  collaborators: PartnerRelateToManyForCreateInput
-  funders: PartnerRelateToManyForCreateInput
-  projectLeads: PersonRelateToManyForCreateInput
-  contact: String
-  tools: JSON
-  initiativesRelated: InitiativeRelateToManyForCreateInput
-  publicationRelated: PublicationRelateToOneForCreateInput
-}
-
-input FilterRelateToManyForCreateInput {
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
-}
-
-input PartnerRelateToManyForCreateInput {
-  create: [PartnerCreateInput!]
-  connect: [PartnerWhereUniqueInput!]
-}
-
-input PublicationRelateToOneForCreateInput {
-  create: PublicationCreateInput
-  connect: PublicationWhereUniqueInput
-}
-
-type Semester {
-  id: ID!
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  buttonLabel: String
-  studio: Studio
-  type: SemesterTypeType
-  courseNumber: String
-  instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  instructorsCount(where: PersonWhereInput! = {}): Int
-  slides: Slideshow
-  description: String
-  partners: [SemesterPartnerType!]
-  coCreation: Semester_coCreation_Document
-  impact: Semester_impact_Document
-  projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectsCount(where: StudioProjectWhereInput! = {}): Int
-  learningPartners(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  learningPartnersCount(where: PersonWhereInput! = {}): Int
-  studioStudents(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  studioStudentsCount(where: PersonWhereInput! = {}): Int
-  studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  studioStaffCount(where: PersonWhereInput! = {}): Int
-  contact: String
-}
-
-enum SemesterTypeType {
-  current
-  upcoming
-}
-
-enum SemesterPartnerType {
-  uncornered
-  ficdc
-  greenroots
-  ldbpi
-  mgh
-  magv
-  sftt
-  swbcdc
-  teenempowerment
-  boston
-  zoone
-}
-
-type Semester_coCreation_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Semester_impact_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input SemesterWhereUniqueInput {
-  id: ID
-}
-
-input SemesterWhereInput {
-  AND: [SemesterWhereInput!]
-  OR: [SemesterWhereInput!]
-  NOT: [SemesterWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  buttonLabel: StringFilter
-  studio: StudioWhereInput
-  type: SemesterTypeTypeNullableFilter
-  courseNumber: StringFilter
-  instructors: PersonManyRelationFilter
-  slides: SlideshowWhereInput
-  description: StringFilter
-  projects: StudioProjectManyRelationFilter
-  learningPartners: PersonManyRelationFilter
-  studioStudents: PersonManyRelationFilter
-  studioStaff: PersonManyRelationFilter
-  contact: StringFilter
-}
-
-input SemesterTypeTypeNullableFilter {
-  equals: SemesterTypeType
-  in: [SemesterTypeType!]
-  notIn: [SemesterTypeType!]
-  not: SemesterTypeTypeNullableFilter
-}
-
-input SemesterOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  buttonLabel: OrderDirection
-  type: OrderDirection
-  courseNumber: OrderDirection
-  description: OrderDirection
-  contact: OrderDirection
-}
-
-input SemesterUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  buttonLabel: String
-  studio: StudioRelateToOneForUpdateInput
-  type: SemesterTypeType
-  courseNumber: String
-  instructors: PersonRelateToManyForUpdateInput
-  slides: SlideshowRelateToOneForUpdateInput
-  description: String
-  partners: [SemesterPartnerType!]
-  coCreation: JSON
-  impact: JSON
-  projects: StudioProjectRelateToManyForUpdateInput
-  learningPartners: PersonRelateToManyForUpdateInput
-  studioStudents: PersonRelateToManyForUpdateInput
-  studioStaff: PersonRelateToManyForUpdateInput
-  contact: String
-}
-
-input StudioRelateToOneForUpdateInput {
-  create: StudioCreateInput
-  connect: StudioWhereUniqueInput
-  disconnect: Boolean
-}
-
-input SlideshowRelateToOneForUpdateInput {
-  create: SlideshowCreateInput
-  connect: SlideshowWhereUniqueInput
-  disconnect: Boolean
-}
-
-input SemesterUpdateArgs {
-  where: SemesterWhereUniqueInput!
-  data: SemesterUpdateInput!
-}
-
-input SemesterCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  buttonLabel: String
-  studio: StudioRelateToOneForCreateInput
-  type: SemesterTypeType
-  courseNumber: String
-  instructors: PersonRelateToManyForCreateInput
-  slides: SlideshowRelateToOneForCreateInput
-  description: String
-  partners: [SemesterPartnerType!]
-  coCreation: JSON
-  impact: JSON
-  projects: StudioProjectRelateToManyForCreateInput
-  learningPartners: PersonRelateToManyForCreateInput
-  studioStudents: PersonRelateToManyForCreateInput
-  studioStaff: PersonRelateToManyForCreateInput
-  contact: String
-}
-
-input StudioRelateToOneForCreateInput {
-  create: StudioCreateInput
-  connect: StudioWhereUniqueInput
-}
-
-input SlideshowRelateToOneForCreateInput {
-  create: SlideshowCreateInput
-  connect: SlideshowWhereUniqueInput
 }
 
 type Slide {
   id: ID!
   slideshowSlides(where: SlideshowWhereInput! = {}, orderBy: [SlideshowOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideshowWhereUniqueInput): [Slideshow!]
   slideshowSlidesCount(where: SlideshowWhereInput! = {}): Int
-  initiativeSlides(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
   image: CloudinaryImage_File
   helper: HelperFieldOutput
   altText: String
   caption: String
   videoId: String
+}
+
+type HelperFieldOutput {
+  html: String
+  iconType: String
 }
 
 input SlideWhereUniqueInput {
@@ -1789,7 +548,6 @@ input SlideWhereInput {
   NOT: [SlideWhereInput!]
   id: IDFilter
   slideshowSlides: SlideshowManyRelationFilter
-  initiativeSlides: InitiativeManyRelationFilter
   altText: StringFilter
   caption: StringFilter
   videoId: StringFilter
@@ -1810,7 +568,6 @@ input SlideOrderByInput {
 
 input SlideUpdateInput {
   slideshowSlides: SlideshowRelateToManyForUpdateInput
-  initiativeSlides: InitiativeRelateToManyForUpdateInput
   image: Upload
   helper: HelperFieldInput
   altText: String
@@ -1825,6 +582,11 @@ input SlideshowRelateToManyForUpdateInput {
   connect: [SlideshowWhereUniqueInput!]
 }
 
+input HelperFieldInput {
+  html: String
+  iconType: String
+}
+
 input SlideUpdateArgs {
   where: SlideWhereUniqueInput!
   data: SlideUpdateInput!
@@ -1832,7 +594,6 @@ input SlideUpdateArgs {
 
 input SlideCreateInput {
   slideshowSlides: SlideshowRelateToManyForCreateInput
-  initiativeSlides: InitiativeRelateToManyForCreateInput
   image: Upload
   helper: HelperFieldInput
   altText: String
@@ -1851,8 +612,6 @@ type Slideshow {
   key: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
-  semesterSlides(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  semesterSlidesCount(where: SemesterWhereInput! = {}): Int
 }
 
 input SlideshowWhereUniqueInput {
@@ -1868,7 +627,12 @@ input SlideshowWhereInput {
   name: StringFilter
   key: StringFilter
   slides: SlideManyRelationFilter
-  semesterSlides: SemesterManyRelationFilter
+}
+
+input SlideManyRelationFilter {
+  every: SlideWhereInput
+  some: SlideWhereInput
+  none: SlideWhereInput
 }
 
 input SlideshowOrderByInput {
@@ -1881,7 +645,13 @@ input SlideshowUpdateInput {
   name: String
   key: String
   slides: SlideRelateToManyForUpdateInput
-  semesterSlides: SemesterRelateToManyForUpdateInput
+}
+
+input SlideRelateToManyForUpdateInput {
+  disconnect: [SlideWhereUniqueInput!]
+  set: [SlideWhereUniqueInput!]
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
 }
 
 input SlideshowUpdateArgs {
@@ -1893,386 +663,11 @@ input SlideshowCreateInput {
   name: String
   key: String
   slides: SlideRelateToManyForCreateInput
-  semesterSlides: SemesterRelateToManyForCreateInput
 }
 
-type Studio {
-  id: ID!
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  shortDescription: String
-  blurb: String
-  semesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  semestersCount(where: SemesterWhereInput! = {}): Int
-  initiatives: [StudioInitiativeType!]
-  initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
-}
-
-enum StudioInitiativeType {
-  gunviolence
-  climate
-  incarceration
-}
-
-input StudioWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input StudioWhereInput {
-  AND: [StudioWhereInput!]
-  OR: [StudioWhereInput!]
-  NOT: [StudioWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  thumbAltText: StringFilter
-  shortDescription: StringFilter
-  blurb: StringFilter
-  semesters: SemesterManyRelationFilter
-  initiativesRelated: InitiativeManyRelationFilter
-}
-
-input StudioOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  thumbAltText: OrderDirection
-  shortDescription: OrderDirection
-  blurb: OrderDirection
-}
-
-input StudioUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: Upload
-  thumbAltText: String
-  shortDescription: String
-  blurb: String
-  semesters: SemesterRelateToManyForUpdateInput
-  initiatives: [StudioInitiativeType!]
-  initiativesRelated: InitiativeRelateToManyForUpdateInput
-}
-
-input StudioUpdateArgs {
-  where: StudioWhereUniqueInput!
-  data: StudioUpdateInput!
-}
-
-input StudioCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  thumbnail: Upload
-  thumbAltText: String
-  shortDescription: String
-  blurb: String
-  semesters: SemesterRelateToManyForCreateInput
-  initiatives: [StudioInitiativeType!]
-  initiativesRelated: InitiativeRelateToManyForCreateInput
-}
-
-type StudioProject {
-  id: ID!
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  initiative: StudioProjectInitiativeType
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
-  flags: [StudioProjectFlagType!]
-  mdProject: Boolean
-  thumbnail: CloudinaryImage_File
-  thumbAltText: String
-  shortDescription: String
-  videoId: String
-  trailerId: String
-  trailerThumbnail: CloudinaryImage_File
-  trailerThumbAltText: String
-  about: StudioProject_about_Document
-  buttons: JSON
-  blurb: StudioProject_blurb_Document
-  partners: [StudioProjectPartnerType!]
-  coCreation: StudioProject_coCreation_Document
-  impact: StudioProject_impact_Document
-  learningPartners(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  learningPartnersCount(where: PersonWhereInput! = {}): Int
-  studioStudents(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  studioStudentsCount(where: PersonWhereInput! = {}): Int
-  studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  studioStaffCount(where: PersonWhereInput! = {}): Int
-  instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
-  instructorsCount(where: PersonWhereInput! = {}): Int
-  semester(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  semesterCount(where: SemesterWhereInput! = {}): Int
-  undergrad(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
-  undergradCount(where: UndergraduateWhereInput! = {}): Int
-  grad(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
-  gradCount(where: GraduateWhereInput! = {}): Int
-  initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
-}
-
-enum StudioProjectInitiativeType {
-  gunviolence
-  climate
-}
-
-enum StudioProjectFlagType {
-  home
-  section
-}
-
-type StudioProject_about_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type StudioProject_blurb_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-enum StudioProjectPartnerType {
-  uncornered
-  ficdc
-  greenroots
-  ldbpi
-  mgh
-  magv
-  sftt
-  swbcdc
-  teenempowerment
-  boston
-  zoone
-}
-
-type StudioProject_coCreation_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type StudioProject_impact_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input StudioProjectWhereUniqueInput {
-  id: ID
-  key: String
-}
-
-input StudioProjectWhereInput {
-  AND: [StudioProjectWhereInput!]
-  OR: [StudioProjectWhereInput!]
-  NOT: [StudioProjectWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  key: StringFilter
-  createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
-  initiative: StudioProjectInitiativeTypeNullableFilter
-  filters: FilterManyRelationFilter
-  mdProject: BooleanFilter
-  thumbAltText: StringFilter
-  shortDescription: StringFilter
-  videoId: StringFilter
-  trailerId: StringFilter
-  trailerThumbAltText: StringFilter
-  learningPartners: PersonManyRelationFilter
-  studioStudents: PersonManyRelationFilter
-  studioStaff: PersonManyRelationFilter
-  instructors: PersonManyRelationFilter
-  semester: SemesterManyRelationFilter
-  undergrad: UndergraduateManyRelationFilter
-  grad: GraduateManyRelationFilter
-  initiativesRelated: InitiativeManyRelationFilter
-}
-
-input StudioProjectInitiativeTypeNullableFilter {
-  equals: StudioProjectInitiativeType
-  in: [StudioProjectInitiativeType!]
-  notIn: [StudioProjectInitiativeType!]
-  not: StudioProjectInitiativeTypeNullableFilter
-}
-
-input UndergraduateManyRelationFilter {
-  every: UndergraduateWhereInput
-  some: UndergraduateWhereInput
-  none: UndergraduateWhereInput
-}
-
-input StudioProjectOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  key: OrderDirection
-  createdDate: OrderDirection
-  enabled: OrderDirection
-  initiative: OrderDirection
-  mdProject: OrderDirection
-  thumbAltText: OrderDirection
-  shortDescription: OrderDirection
-  videoId: OrderDirection
-  trailerId: OrderDirection
-  trailerThumbAltText: OrderDirection
-}
-
-input StudioProjectUpdateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  initiative: StudioProjectInitiativeType
-  filters: FilterRelateToManyForUpdateInput
-  flags: [StudioProjectFlagType!]
-  mdProject: Boolean
-  thumbnail: Upload
-  thumbAltText: String
-  shortDescription: String
-  videoId: String
-  trailerId: String
-  trailerThumbnail: Upload
-  trailerThumbAltText: String
-  about: JSON
-  buttons: JSON
-  blurb: JSON
-  partners: [StudioProjectPartnerType!]
-  coCreation: JSON
-  impact: JSON
-  learningPartners: PersonRelateToManyForUpdateInput
-  studioStudents: PersonRelateToManyForUpdateInput
-  studioStaff: PersonRelateToManyForUpdateInput
-  instructors: PersonRelateToManyForUpdateInput
-  semester: SemesterRelateToManyForUpdateInput
-  undergrad: UndergraduateRelateToManyForUpdateInput
-  grad: GraduateRelateToManyForUpdateInput
-  initiativesRelated: InitiativeRelateToManyForUpdateInput
-}
-
-input UndergraduateRelateToManyForUpdateInput {
-  disconnect: [UndergraduateWhereUniqueInput!]
-  set: [UndergraduateWhereUniqueInput!]
-  create: [UndergraduateCreateInput!]
-  connect: [UndergraduateWhereUniqueInput!]
-}
-
-input StudioProjectUpdateArgs {
-  where: StudioProjectWhereUniqueInput!
-  data: StudioProjectUpdateInput!
-}
-
-input StudioProjectCreateInput {
-  name: String
-  key: String
-  createdDate: DateTime
-  enabled: Boolean
-  initiative: StudioProjectInitiativeType
-  filters: FilterRelateToManyForCreateInput
-  flags: [StudioProjectFlagType!]
-  mdProject: Boolean
-  thumbnail: Upload
-  thumbAltText: String
-  shortDescription: String
-  videoId: String
-  trailerId: String
-  trailerThumbnail: Upload
-  trailerThumbAltText: String
-  about: JSON
-  buttons: JSON
-  blurb: JSON
-  partners: [StudioProjectPartnerType!]
-  coCreation: JSON
-  impact: JSON
-  learningPartners: PersonRelateToManyForCreateInput
-  studioStudents: PersonRelateToManyForCreateInput
-  studioStaff: PersonRelateToManyForCreateInput
-  instructors: PersonRelateToManyForCreateInput
-  semester: SemesterRelateToManyForCreateInput
-  undergrad: UndergraduateRelateToManyForCreateInput
-  grad: GraduateRelateToManyForCreateInput
-  initiativesRelated: InitiativeRelateToManyForCreateInput
-}
-
-input UndergraduateRelateToManyForCreateInput {
-  create: [UndergraduateCreateInput!]
-  connect: [UndergraduateWhereUniqueInput!]
-}
-
-type Undergraduate {
-  id: ID!
-  name: String
-  intro: Undergraduate_intro_Document
-  introImage: CloudinaryImage_File
-  introImageAltText: String
-  introImageCaption: String
-  socialImpactDesign: Undergraduate_socialImpactDesign_Document
-  projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
-}
-
-type Undergraduate_intro_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-type Undergraduate_socialImpactDesign_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input UndergraduateWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-input UndergraduateWhereInput {
-  AND: [UndergraduateWhereInput!]
-  OR: [UndergraduateWhereInput!]
-  NOT: [UndergraduateWhereInput!]
-  id: IDFilter
-  name: StringFilter
-  introImageAltText: StringFilter
-  introImageCaption: StringFilter
-  projectSpotlight: StudioProjectManyRelationFilter
-}
-
-input UndergraduateOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-  introImageAltText: OrderDirection
-  introImageCaption: OrderDirection
-}
-
-input UndergraduateUpdateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  socialImpactDesign: JSON
-  projectSpotlight: StudioProjectRelateToManyForUpdateInput
-}
-
-input UndergraduateUpdateArgs {
-  where: UndergraduateWhereUniqueInput!
-  data: UndergraduateUpdateInput!
-}
-
-input UndergraduateCreateInput {
-  name: String
-  intro: JSON
-  introImage: Upload
-  introImageAltText: String
-  introImageCaption: String
-  socialImpactDesign: JSON
-  projectSpotlight: StudioProjectRelateToManyForCreateInput
+input SlideRelateToManyForCreateInput {
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
 }
 
 """
@@ -2287,78 +682,36 @@ type Mutation {
   updateAbouts(data: [AboutUpdateArgs!]!): [About]
   deleteAbout(where: AboutWhereUniqueInput!): About
   deleteAbouts(where: [AboutWhereUniqueInput!]!): [About]
+  createAward(data: AwardCreateInput!): Award
+  createAwards(data: [AwardCreateInput!]!): [Award]
+  updateAward(where: AwardWhereUniqueInput!, data: AwardUpdateInput!): Award
+  updateAwards(data: [AwardUpdateArgs!]!): [Award]
+  deleteAward(where: AwardWhereUniqueInput!): Award
+  deleteAwards(where: [AwardWhereUniqueInput!]!): [Award]
   createEvent(data: EventCreateInput!): Event
   createEvents(data: [EventCreateInput!]!): [Event]
   updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
   updateEvents(data: [EventUpdateArgs!]!): [Event]
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
-  createFilter(data: FilterCreateInput!): Filter
-  createFilters(data: [FilterCreateInput!]!): [Filter]
-  updateFilter(where: FilterWhereUniqueInput!, data: FilterUpdateInput!): Filter
-  updateFilters(data: [FilterUpdateArgs!]!): [Filter]
-  deleteFilter(where: FilterWhereUniqueInput!): Filter
-  deleteFilters(where: [FilterWhereUniqueInput!]!): [Filter]
-  createGraduate(data: GraduateCreateInput!): Graduate
-  createGraduates(data: [GraduateCreateInput!]!): [Graduate]
-  updateGraduate(where: GraduateWhereUniqueInput!, data: GraduateUpdateInput!): Graduate
-  updateGraduates(data: [GraduateUpdateArgs!]!): [Graduate]
-  deleteGraduate(where: GraduateWhereUniqueInput!): Graduate
-  deleteGraduates(where: [GraduateWhereUniqueInput!]!): [Graduate]
-  createInitiative(data: InitiativeCreateInput!): Initiative
-  createInitiatives(data: [InitiativeCreateInput!]!): [Initiative]
-  updateInitiative(where: InitiativeWhereUniqueInput!, data: InitiativeUpdateInput!): Initiative
-  updateInitiatives(data: [InitiativeUpdateArgs!]!): [Initiative]
-  deleteInitiative(where: InitiativeWhereUniqueInput!): Initiative
-  deleteInitiatives(where: [InitiativeWhereUniqueInput!]!): [Initiative]
-  createInitiativesLanding(data: InitiativesLandingCreateInput!): InitiativesLanding
-  createInitiativesLandings(data: [InitiativesLandingCreateInput!]!): [InitiativesLanding]
-  updateInitiativesLanding(where: InitiativesLandingWhereUniqueInput!, data: InitiativesLandingUpdateInput!): InitiativesLanding
-  updateInitiativesLandings(data: [InitiativesLandingUpdateArgs!]!): [InitiativesLanding]
-  deleteInitiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
-  deleteInitiativesLandings(where: [InitiativesLandingWhereUniqueInput!]!): [InitiativesLanding]
-  createLearningPartners(data: LearningPartnersCreateInput!): LearningPartners
-  createLearningPartner(data: [LearningPartnersCreateInput!]!): [LearningPartners]
-  updateLearningPartners(where: LearningPartnersWhereUniqueInput!, data: LearningPartnersUpdateInput!): LearningPartners
-  updateLearningPartner(data: [LearningPartnersUpdateArgs!]!): [LearningPartners]
-  deleteLearningPartners(where: LearningPartnersWhereUniqueInput!): LearningPartners
-  deleteLearningPartner(where: [LearningPartnersWhereUniqueInput!]!): [LearningPartners]
-  createNewsItem(data: NewsItemCreateInput!): NewsItem
-  createNewsItems(data: [NewsItemCreateInput!]!): [NewsItem]
-  updateNewsItem(where: NewsItemWhereUniqueInput!, data: NewsItemUpdateInput!): NewsItem
-  updateNewsItems(data: [NewsItemUpdateArgs!]!): [NewsItem]
-  deleteNewsItem(where: NewsItemWhereUniqueInput!): NewsItem
-  deleteNewsItems(where: [NewsItemWhereUniqueInput!]!): [NewsItem]
-  createPartner(data: PartnerCreateInput!): Partner
-  createPartners(data: [PartnerCreateInput!]!): [Partner]
-  updatePartner(where: PartnerWhereUniqueInput!, data: PartnerUpdateInput!): Partner
-  updatePartners(data: [PartnerUpdateArgs!]!): [Partner]
-  deletePartner(where: PartnerWhereUniqueInput!): Partner
-  deletePartners(where: [PartnerWhereUniqueInput!]!): [Partner]
+  createGallerySlide(data: GallerySlideCreateInput!): GallerySlide
+  createGallerySlides(data: [GallerySlideCreateInput!]!): [GallerySlide]
+  updateGallerySlide(where: GallerySlideWhereUniqueInput!, data: GallerySlideUpdateInput!): GallerySlide
+  updateGallerySlides(data: [GallerySlideUpdateArgs!]!): [GallerySlide]
+  deleteGallerySlide(where: GallerySlideWhereUniqueInput!): GallerySlide
+  deleteGallerySlides(where: [GallerySlideWhereUniqueInput!]!): [GallerySlide]
+  createHome(data: HomeCreateInput!): Home
+  createHomes(data: [HomeCreateInput!]!): [Home]
+  updateHome(where: HomeWhereUniqueInput!, data: HomeUpdateInput!): Home
+  updateHomes(data: [HomeUpdateArgs!]!): [Home]
+  deleteHome(where: HomeWhereUniqueInput!): Home
+  deleteHomes(where: [HomeWhereUniqueInput!]!): [Home]
   createPerson(data: PersonCreateInput!): Person
   createPeople(data: [PersonCreateInput!]!): [Person]
   updatePerson(where: PersonWhereUniqueInput!, data: PersonUpdateInput!): Person
   updatePeople(data: [PersonUpdateArgs!]!): [Person]
   deletePerson(where: PersonWhereUniqueInput!): Person
   deletePeople(where: [PersonWhereUniqueInput!]!): [Person]
-  createPublication(data: PublicationCreateInput!): Publication
-  createPublications(data: [PublicationCreateInput!]!): [Publication]
-  updatePublication(where: PublicationWhereUniqueInput!, data: PublicationUpdateInput!): Publication
-  updatePublications(data: [PublicationUpdateArgs!]!): [Publication]
-  deletePublication(where: PublicationWhereUniqueInput!): Publication
-  deletePublications(where: [PublicationWhereUniqueInput!]!): [Publication]
-  createResearchProject(data: ResearchProjectCreateInput!): ResearchProject
-  createResearchProjects(data: [ResearchProjectCreateInput!]!): [ResearchProject]
-  updateResearchProject(where: ResearchProjectWhereUniqueInput!, data: ResearchProjectUpdateInput!): ResearchProject
-  updateResearchProjects(data: [ResearchProjectUpdateArgs!]!): [ResearchProject]
-  deleteResearchProject(where: ResearchProjectWhereUniqueInput!): ResearchProject
-  deleteResearchProjects(where: [ResearchProjectWhereUniqueInput!]!): [ResearchProject]
-  createSemester(data: SemesterCreateInput!): Semester
-  createSemesters(data: [SemesterCreateInput!]!): [Semester]
-  updateSemester(where: SemesterWhereUniqueInput!, data: SemesterUpdateInput!): Semester
-  updateSemesters(data: [SemesterUpdateArgs!]!): [Semester]
-  deleteSemester(where: SemesterWhereUniqueInput!): Semester
-  deleteSemesters(where: [SemesterWhereUniqueInput!]!): [Semester]
   createSlide(data: SlideCreateInput!): Slide
   createSlides(data: [SlideCreateInput!]!): [Slide]
   updateSlide(where: SlideWhereUniqueInput!, data: SlideUpdateInput!): Slide
@@ -2371,81 +724,33 @@ type Mutation {
   updateSlideshows(data: [SlideshowUpdateArgs!]!): [Slideshow]
   deleteSlideshow(where: SlideshowWhereUniqueInput!): Slideshow
   deleteSlideshows(where: [SlideshowWhereUniqueInput!]!): [Slideshow]
-  createStudio(data: StudioCreateInput!): Studio
-  createStudios(data: [StudioCreateInput!]!): [Studio]
-  updateStudio(where: StudioWhereUniqueInput!, data: StudioUpdateInput!): Studio
-  updateStudios(data: [StudioUpdateArgs!]!): [Studio]
-  deleteStudio(where: StudioWhereUniqueInput!): Studio
-  deleteStudios(where: [StudioWhereUniqueInput!]!): [Studio]
-  createStudioProject(data: StudioProjectCreateInput!): StudioProject
-  createStudioProjects(data: [StudioProjectCreateInput!]!): [StudioProject]
-  updateStudioProject(where: StudioProjectWhereUniqueInput!, data: StudioProjectUpdateInput!): StudioProject
-  updateStudioProjects(data: [StudioProjectUpdateArgs!]!): [StudioProject]
-  deleteStudioProject(where: StudioProjectWhereUniqueInput!): StudioProject
-  deleteStudioProjects(where: [StudioProjectWhereUniqueInput!]!): [StudioProject]
-  createUndergraduate(data: UndergraduateCreateInput!): Undergraduate
-  createUndergraduates(data: [UndergraduateCreateInput!]!): [Undergraduate]
-  updateUndergraduate(where: UndergraduateWhereUniqueInput!, data: UndergraduateUpdateInput!): Undergraduate
-  updateUndergraduates(data: [UndergraduateUpdateArgs!]!): [Undergraduate]
-  deleteUndergraduate(where: UndergraduateWhereUniqueInput!): Undergraduate
-  deleteUndergraduates(where: [UndergraduateWhereUniqueInput!]!): [Undergraduate]
 }
 
 type Query {
   abouts(where: AboutWhereInput! = {}, orderBy: [AboutOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AboutWhereUniqueInput): [About!]
   about(where: AboutWhereUniqueInput!): About
   aboutsCount(where: AboutWhereInput! = {}): Int
+  awards(where: AwardWhereInput! = {}, orderBy: [AwardOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AwardWhereUniqueInput): [Award!]
+  award(where: AwardWhereUniqueInput!): Award
+  awardsCount(where: AwardWhereInput! = {}): Int
   events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filter(where: FilterWhereUniqueInput!): Filter
-  filtersCount(where: FilterWhereInput! = {}): Int
-  graduates(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
-  graduate(where: GraduateWhereUniqueInput!): Graduate
-  graduatesCount(where: GraduateWhereInput! = {}): Int
-  initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
-  initiative(where: InitiativeWhereUniqueInput!): Initiative
-  initiativesCount(where: InitiativeWhereInput! = {}): Int
-  initiativesLandings(where: InitiativesLandingWhereInput! = {}, orderBy: [InitiativesLandingOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativesLandingWhereUniqueInput): [InitiativesLanding!]
-  initiativesLanding(where: InitiativesLandingWhereUniqueInput!): InitiativesLanding
-  initiativesLandingsCount(where: InitiativesLandingWhereInput! = {}): Int
-  learningPartner(where: LearningPartnersWhereInput! = {}, orderBy: [LearningPartnersOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LearningPartnersWhereUniqueInput): [LearningPartners!]
-  learningPartners(where: LearningPartnersWhereUniqueInput!): LearningPartners
-  learningPartnerCount(where: LearningPartnersWhereInput! = {}): Int
-  newsItems(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
-  newsItem(where: NewsItemWhereUniqueInput!): NewsItem
-  newsItemsCount(where: NewsItemWhereInput! = {}): Int
-  partners(where: PartnerWhereInput! = {}, orderBy: [PartnerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PartnerWhereUniqueInput): [Partner!]
-  partner(where: PartnerWhereUniqueInput!): Partner
-  partnersCount(where: PartnerWhereInput! = {}): Int
+  gallerySlides(where: GallerySlideWhereInput! = {}, orderBy: [GallerySlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GallerySlideWhereUniqueInput): [GallerySlide!]
+  gallerySlide(where: GallerySlideWhereUniqueInput!): GallerySlide
+  gallerySlidesCount(where: GallerySlideWhereInput! = {}): Int
+  homes(where: HomeWhereInput! = {}, orderBy: [HomeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: HomeWhereUniqueInput): [Home!]
+  home(where: HomeWhereUniqueInput!): Home
+  homesCount(where: HomeWhereInput! = {}): Int
   people(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   person(where: PersonWhereUniqueInput!): Person
   peopleCount(where: PersonWhereInput! = {}): Int
-  publications(where: PublicationWhereInput! = {}, orderBy: [PublicationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PublicationWhereUniqueInput): [Publication!]
-  publication(where: PublicationWhereUniqueInput!): Publication
-  publicationsCount(where: PublicationWhereInput! = {}): Int
-  researchProjects(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchProject(where: ResearchProjectWhereUniqueInput!): ResearchProject
-  researchProjectsCount(where: ResearchProjectWhereInput! = {}): Int
-  semesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
-  semester(where: SemesterWhereUniqueInput!): Semester
-  semestersCount(where: SemesterWhereInput! = {}): Int
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slide(where: SlideWhereUniqueInput!): Slide
   slidesCount(where: SlideWhereInput! = {}): Int
   slideshows(where: SlideshowWhereInput! = {}, orderBy: [SlideshowOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideshowWhereUniqueInput): [Slideshow!]
   slideshow(where: SlideshowWhereUniqueInput!): Slideshow
   slideshowsCount(where: SlideshowWhereInput! = {}): Int
-  studios(where: StudioWhereInput! = {}, orderBy: [StudioOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioWhereUniqueInput): [Studio!]
-  studio(where: StudioWhereUniqueInput!): Studio
-  studiosCount(where: StudioWhereInput! = {}): Int
-  studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  studioProject(where: StudioProjectWhereUniqueInput!): StudioProject
-  studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
-  undergraduates(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
-  undergraduate(where: UndergraduateWhereUniqueInput!): Undergraduate
-  undergraduatesCount(where: UndergraduateWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 

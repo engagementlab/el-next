@@ -658,45 +658,6 @@ export const componentBlocks = {
       }),
     },
   }),
-  video: component({
-    preview: (props) => {
-      return (
-        <div>
-          {/* {Object.keys(props.fields.video.value)} */}
-          {!props.fields.video.value.label ? (
-            <span>
-              Click <em>Edit</em>
-            </span>
-          ) : (
-            <>
-              <>
-                {props.fields.video.value.label}
-                <br />
-              </>
-              <img
-                style={{ width: '150px' }}
-                src={props.fields.video.value.thumbSm as unknown as string}
-              />
-            </>
-          )}
-        </div>
-      );
-    },
-    label: 'Video',
-    schema: {
-      video: videoSelect({
-        label: 'Video',
-        defaultValue: {
-          video: {
-            label: 'Click "Edit" and select.',
-            value: '',
-            thumbSm: '',
-            thumb: '',
-          },
-        },
-      }),
-    },
-  }),
   button: component({
     preview: (props) => {
       return (

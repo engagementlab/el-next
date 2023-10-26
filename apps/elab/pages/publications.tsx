@@ -60,7 +60,11 @@ export default function Publications({
                                   label={button.label}
                                   theme={2}
                                   icon={button.icon}
-                                  iconClassName="max-w-[24px] scale-50 origin-left"
+                                  iconClassName={
+                                    button.icon !== 'arrow'
+                                      ? 'max-w-[24px] scale-50 origin-left'
+                                      : ''
+                                  }
                                   className={`flex flex-row gap-x-3 items-center fill-teal`}
                                 />
                               )

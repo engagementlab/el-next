@@ -193,6 +193,18 @@ const Person: Lists.Person = list({
         },
       },
     }),
+    mdStudents: relationship({
+      ref: 'Graduate.currentStudents',
+      many: true,
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
     initiatives: relationship({
       label: 'Associated Initiatives',
       ref: 'Initiative.associatedPeople',

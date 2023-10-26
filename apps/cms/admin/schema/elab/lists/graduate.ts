@@ -68,6 +68,21 @@ const Graduate: Lists.Graduate = list({
       },
       componentBlocks,
     }),
+    currentStudents: relationship({
+      ref: 'Person.mdStudents',
+      many: true,
+    }),
+    alumni: document({
+      formatting: true,
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+      ],
+      ui: {
+        views: './admin/components/component-blocks',
+      },
+      componentBlocks,
+    }),
     symposium: document({
       formatting: true,
       links: true,

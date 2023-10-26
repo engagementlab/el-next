@@ -58,6 +58,8 @@ model Graduate {
   introImageAltText String          @default("")
   introImageCaption String          @default("")
   mediaDesign       Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  currentStudents   Person[]        @relation("Graduate_currentStudents")
+  alumni            Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   symposium         Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   salzburg          Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   projectSpotlight  StudioProject[] @relation("Graduate_projectSpotlight")
@@ -161,6 +163,7 @@ model Person {
   projectInstructors StudioProject[]   @relation("Person_projectInstructors")
   projectStaff       StudioProject[]   @relation("Person_projectStaff")
   researchLeads      ResearchProject[] @relation("Person_researchLeads")
+  mdStudents         Graduate[]        @relation("Graduate_currentStudents")
   initiatives        Initiative[]      @relation("Initiative_associatedPeople")
 }
 

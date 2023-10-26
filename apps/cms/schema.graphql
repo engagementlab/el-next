@@ -431,6 +431,9 @@ type Graduate {
   introImageAltText: String
   introImageCaption: String
   mediaDesign: Graduate_mediaDesign_Document
+  currentStudents(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
+  currentStudentsCount(where: PersonWhereInput! = {}): Int
+  alumni: Graduate_alumni_Document
   symposium: Graduate_symposium_Document
   salzburg: Graduate_salzburg_Document
   projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
@@ -444,6 +447,10 @@ type Graduate_intro_Document {
 }
 
 type Graduate_mediaDesign_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Graduate_alumni_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -468,8 +475,15 @@ input GraduateWhereInput {
   name: StringFilter
   introImageAltText: StringFilter
   introImageCaption: StringFilter
+  currentStudents: PersonManyRelationFilter
   projectSpotlight: StudioProjectManyRelationFilter
   alumniSpotlight: NewsItemManyRelationFilter
+}
+
+input PersonManyRelationFilter {
+  every: PersonWhereInput
+  some: PersonWhereInput
+  none: PersonWhereInput
 }
 
 input NewsItemManyRelationFilter {
@@ -492,10 +506,19 @@ input GraduateUpdateInput {
   introImageAltText: String
   introImageCaption: String
   mediaDesign: JSON
+  currentStudents: PersonRelateToManyForUpdateInput
+  alumni: JSON
   symposium: JSON
   salzburg: JSON
   projectSpotlight: StudioProjectRelateToManyForUpdateInput
   alumniSpotlight: NewsItemRelateToManyForUpdateInput
+}
+
+input PersonRelateToManyForUpdateInput {
+  disconnect: [PersonWhereUniqueInput!]
+  set: [PersonWhereUniqueInput!]
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 input NewsItemRelateToManyForUpdateInput {
@@ -517,10 +540,17 @@ input GraduateCreateInput {
   introImageAltText: String
   introImageCaption: String
   mediaDesign: JSON
+  currentStudents: PersonRelateToManyForCreateInput
+  alumni: JSON
   symposium: JSON
   salzburg: JSON
   projectSpotlight: StudioProjectRelateToManyForCreateInput
   alumniSpotlight: NewsItemRelateToManyForCreateInput
+}
+
+input PersonRelateToManyForCreateInput {
+  create: [PersonCreateInput!]
+  connect: [PersonWhereUniqueInput!]
 }
 
 input NewsItemRelateToManyForCreateInput {
@@ -606,12 +636,6 @@ input StudioManyRelationFilter {
   none: StudioWhereInput
 }
 
-input PersonManyRelationFilter {
-  every: PersonWhereInput
-  some: PersonWhereInput
-  none: PersonWhereInput
-}
-
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -654,13 +678,6 @@ input StudioRelateToManyForUpdateInput {
   connect: [StudioWhereUniqueInput!]
 }
 
-input PersonRelateToManyForUpdateInput {
-  disconnect: [PersonWhereUniqueInput!]
-  set: [PersonWhereUniqueInput!]
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
-}
-
 input InitiativeUpdateArgs {
   where: InitiativeWhereUniqueInput!
   data: InitiativeUpdateInput!
@@ -695,11 +712,6 @@ input EventRelateToManyForCreateInput {
 input StudioRelateToManyForCreateInput {
   create: [StudioCreateInput!]
   connect: [StudioWhereUniqueInput!]
-}
-
-input PersonRelateToManyForCreateInput {
-  create: [PersonCreateInput!]
-  connect: [PersonWhereUniqueInput!]
 }
 
 type InitiativesLanding {
@@ -1130,6 +1142,8 @@ type Person {
   projectStaffCount(where: StudioProjectWhereInput! = {}): Int
   researchLeads(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
   researchLeadsCount(where: ResearchProjectWhereInput! = {}): Int
+  mdStudents(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
+  mdStudentsCount(where: GraduateWhereInput! = {}): Int
   initiatives(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesCount(where: InitiativeWhereInput! = {}): Int
 }
@@ -1165,6 +1179,7 @@ input PersonWhereInput {
   projectInstructors: StudioProjectManyRelationFilter
   projectStaff: StudioProjectManyRelationFilter
   researchLeads: ResearchProjectManyRelationFilter
+  mdStudents: GraduateManyRelationFilter
   initiatives: InitiativeManyRelationFilter
 }
 
@@ -1232,6 +1247,7 @@ input PersonUpdateInput {
   projectInstructors: StudioProjectRelateToManyForUpdateInput
   projectStaff: StudioProjectRelateToManyForUpdateInput
   researchLeads: ResearchProjectRelateToManyForUpdateInput
+  mdStudents: GraduateRelateToManyForUpdateInput
   initiatives: InitiativeRelateToManyForUpdateInput
 }
 
@@ -1267,6 +1283,7 @@ input PersonCreateInput {
   projectInstructors: StudioProjectRelateToManyForCreateInput
   projectStaff: StudioProjectRelateToManyForCreateInput
   researchLeads: ResearchProjectRelateToManyForCreateInput
+  mdStudents: GraduateRelateToManyForCreateInput
   initiatives: InitiativeRelateToManyForCreateInput
 }
 

@@ -7,12 +7,20 @@ import { Button, HeadingStyle, Image, Query } from '@el-next/components';
 // import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
-import { CustomEase, News, StudioProject } from '@/types';
+import {
+  CustomEase,
+  News,
+  StudioProject,
+  Person as PersonT,
+  Theme,
+  Theming,
+} from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Link from 'next/link';
+import { Person } from '@/components/People';
 
 type GradPage = {
   intro: { document: any };
@@ -27,6 +35,17 @@ type GradPage = {
 
   projectSpotlight: StudioProject[];
   alumniSpotlight: News[];
+  alumni: {
+    document: any;
+  };
+  currentStudents: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
 };
 
 const rendererOverrides = {
@@ -66,15 +85,20 @@ export default function Initiatives({
                   className="border-teal text-teal fill-yellow"
                 />
                 <Button
+                  label="Current Students"
+                  anchorId="students"
+                  className="border-teal text-teal fill-yellow"
+                />
+                <Button
+                  label="Alumni"
+                  anchorId="alumni"
+                  className="border-teal text-teal fill-yellow"
+                />
+                <Button
                   label="Social Justice + Media Symposium"
                   anchorId="sjm"
                   className="border-teal text-teal fill-yellow"
                 />
-                {/* <Button
-                  label="Alumni Spotlight"
-                  anchorId="alumni"
-                  className="border-teal text-teal fill-yellow"
-                /> */}
               </div>
             </div>
             <div className="flex justify-center my-12 w-full lg:w-3/5 max-w-xl">
@@ -87,7 +111,6 @@ export default function Initiatives({
             </div>
           </div>
           <Divider />
-
           <div id="ma">
             <Gutter>
               <div className="flex flex-col lg:flex-row-reverse lg:items-center justify-center gap-x-10">
@@ -154,6 +177,48 @@ export default function Initiatives({
               />
             </Gutter>
           </div>
+
+          {page.currentStudents && page.currentStudents.length > 0 && (
+            <>
+              <Divider />
+              <Gutter>
+                <>
+                  <h2 className="font-bold text-4xl">Current Students</h2>
+
+                  <div className="flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+                    {page.currentStudents
+                      .sort((person1: PersonT, person2: PersonT) =>
+                        person1.name
+                          .split(' ')
+                          [person1.name.split(' ').length - 1].localeCompare(
+                            person2.name.split(' ')[
+                              person2.name.split(' ').length - 1
+                            ]
+                          )
+                      )
+                      .map((person: PersonT) => (
+                        <Person
+                          key={person.key}
+                          person={person}
+                          theme={Theming['none']}
+                        />
+                      ))}
+                  </div>
+                </>
+              </Gutter>
+            </>
+          )}
+          <Divider />
+          <div id="alumni">
+            <Gutter>
+              <h2 className="font-bold text-4xl">Alumni</h2>
+              <DocumentRenderer
+                document={page.alumni.document}
+                componentBlocks={Blocks()}
+                renderers={Doc()}
+              />
+            </Gutter>
+          </div>
           <Divider />
           <div id="sjm">
             <Gutter>
@@ -179,7 +244,6 @@ export default function Initiatives({
             </Gutter>
           </div>
           <Divider />
-
           <Gutter>
             <h2 className="font-bold text-4xl">
               Salzburg Creativity, Media and Global Change Program
@@ -190,7 +254,6 @@ export default function Initiatives({
               renderers={Doc()}
             />
           </Gutter>
-
           {page.projectSpotlight && page.projectSpotlight.length > 0 && (
             <Divider />
           )}
@@ -247,7 +310,6 @@ export default function Initiatives({
           {page.alumniSpotlight && page.alumniSpotlight.length > 0 && (
             <Divider />
           )}
-
           <Gutter>
             {page.alumniSpotlight && page.alumniSpotlight.length > 0 && (
               <div id="alumni">
@@ -323,6 +385,17 @@ export async function getStaticProps() {
             }
             thumbAltText
             initiatives
+        }
+        currentStudents {
+          name
+          key
+          title
+          image {
+              publicId
+          }
+        }
+        alumni {
+          document
         }
       }
     `

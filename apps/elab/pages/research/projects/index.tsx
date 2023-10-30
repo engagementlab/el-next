@@ -2,7 +2,8 @@ import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import { Image, Filtering, Query } from '@el-next/components';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { Image, Query } from '@el-next/components';
 
 import { ResearchProject, Theme } from '@/types';
 import Layout from '../../../components/Layout';
@@ -43,13 +44,19 @@ const ItemRenderer = (props: { item: ResearchProject }) => {
 };
 
 export default function MediaArchive({
+  blurb,
   researchProjects,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout error={error} theme={Theme.none}>
       <div className="flex flex-col">
-        <div className="w-full">
+        {blurb && (
+          <div className="mx-6 w-full lg:w-1/2">
+            <DocumentRenderer document={blurb.document} />
+          </div>
+        )}
+        <div className="w-full mt-7">
           <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2">
             {researchProjects?.map((item, i: number) => (
               <ItemRenderer key={i} item={item} />
@@ -84,19 +91,38 @@ export async function getStaticProps() {
       thumbAltText
 		}`
   );
+  const blurb = await Query(
+    'initiativesLanding',
+    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
+        researchProjectsBlurb {
+          document
+        }
+      }`
+  );
 
   if (researchProjects.error) {
     return {
       props: {
         error: researchProjects.error,
         researchProjects: null,
+        blurb: null,
       },
     };
   }
 
+  if (blurb.error) {
+    return {
+      props: {
+        error: blurb.error,
+        blurb: null,
+        researchProjects: null,
+      },
+    };
+  }
   return {
     props: {
       researchProjects: researchProjects as ResearchProject[],
+      blurb: blurb.researchProjectsBlurb,
     },
     revalidate: 1,
   };

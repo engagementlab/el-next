@@ -243,7 +243,7 @@ export default function Initiatives({
 export async function getStaticProps() {
   const result = await Query(
     'initiativesLanding',
-    `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
+    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
         intro {
           document
         }

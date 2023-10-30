@@ -1,20 +1,15 @@
-import { ReactElement, ReactNode, useEffect } from 'react';
-import {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from 'next';
-import { useRouter } from 'next/router';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
+import { ReactElement, ReactNode } from 'react';
+import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 
-import { create } from 'zustand';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { Button, HeadingStyle, Image, Query } from '@el-next/components';
+
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../../components/Renderers';
-import { CustomEase, Theme, Theming } from '@/types';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { CustomEase, Theming } from '@/types';
+
 import Logos from '@/components/Logos';
 import Divider from '@/components/Divider';
 import Link from 'next/link';
@@ -100,6 +95,23 @@ export default function Studio({
   currentSemester,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  let sortedSemesters = item?.semesters
+    .filter((v) => v.type !== 'current')
+    .sort((a, b) => {
+      // Get year from semester key
+      const aYr = a.key.match(/\d{4}/gm);
+      const bYr = b.key.match(/\d{4}/gm);
+
+      if (aYr && bYr) {
+        // If years match, use fall vs spring
+        if (aYr[0] === bYr[0]) return a.key.includes('fall') ? -1 : 1;
+        return parseInt(aYr[0]) - parseInt(bYr[0]);
+      }
+      return 0;
+    });
+  const current = item?.semesters.filter((v) => v.type === 'current')[0];
+  if (current && sortedSemesters) sortedSemesters.push(current);
+
   const selectedSemester = item?.semesters.find(
     (semester) => semester.key === currentSemester
   );
@@ -198,7 +210,7 @@ export default function Studio({
                     <ul
                       className={`w-full list-none uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${theme.border}`}
                     >
-                      {item.semesters.map((se) => {
+                      {sortedSemesters?.map((se) => {
                         return (
                           <li>
                             <p
@@ -226,7 +238,7 @@ export default function Studio({
 
             {/* LARGE screens */}
             <div className="hidden xl:flex flex-row">
-              {item.semesters.map((se) => {
+              {sortedSemesters?.map((se) => {
                 const linkBaseClass =
                   'absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ';
                 let initiativeClass = 'group-hover:bg-yellow';
@@ -538,24 +550,33 @@ export default function Studio({
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const items = await Query(
+  const studios = await Query(
     'studios',
     `studios {
         key
+        semesters {
+          key
+        }
     }`
   );
-  if (items.error) {
+  if (studios.error) {
     return {
       paths: [],
       fallback: true,
     };
   }
-  const paths = (items as { key: string }[])
+  let semesterPaths: string[] = [];
+  const paths = (studios as { key: string; semesters: { key: string }[] }[])
     .filter(({ key }) => !!key)
-    .map(({ key }) => `/studios/${key}`);
+    .map(({ key, semesters }) => {
+      semesters.map((semester) => {
+        semesterPaths.push(`/studios/${key}/${semester.key}`);
+      });
+      return `/studios/${key}`;
+    });
 
   return {
-    paths,
+    paths: paths.concat(semesterPaths),
     fallback: true,
   };
 }

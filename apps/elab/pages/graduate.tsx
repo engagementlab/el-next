@@ -84,16 +84,22 @@ export default function Initiatives({
                   anchorId="ma"
                   className="border-teal text-teal fill-yellow"
                 />
-                <Button
-                  label="Current Students"
-                  anchorId="students"
-                  className="border-teal text-teal fill-yellow"
-                />
-                <Button
-                  label="Alumni"
-                  anchorId="alumni"
-                  className="border-teal text-teal fill-yellow"
-                />
+                {page.currentStudents && page.currentStudents.length > 0 && (
+                  <Button
+                    label="Current Students"
+                    anchorId="students"
+                    className="border-teal text-teal fill-yellow"
+                  />
+                )}
+                {page.alumni.document &&
+                  page.alumni.document[0].children[0].text &&
+                  page.alumni.document[0].children[0].text.length > 0 && (
+                    <Button
+                      label="Alumni"
+                      anchorId="alumni"
+                      className="border-teal text-teal fill-yellow"
+                    />
+                  )}
                 <Button
                   label="Social Justice + Media Symposium"
                   anchorId="sjm"
@@ -208,17 +214,24 @@ export default function Initiatives({
               </Gutter>
             </>
           )}
-          <Divider />
-          <div id="alumni">
-            <Gutter>
-              <h2 className="font-bold text-4xl">Alumni</h2>
-              <DocumentRenderer
-                document={page.alumni.document}
-                componentBlocks={Blocks()}
-                renderers={Doc()}
-              />
-            </Gutter>
-          </div>
+
+          {page.alumni.document &&
+            page.alumni.document[0].children[0].text &&
+            page.alumni.document[0].children[0].text.length > 0 && (
+              <>
+                <Divider />
+                <div id="alumni">
+                  <Gutter>
+                    <h2 className="font-bold text-4xl">Alumni</h2>
+                    <DocumentRenderer
+                      document={page.alumni.document}
+                      componentBlocks={Blocks()}
+                      renderers={Doc()}
+                    />
+                  </Gutter>
+                </div>
+              </>
+            )}
           <Divider />
           <div id="sjm">
             <Gutter>

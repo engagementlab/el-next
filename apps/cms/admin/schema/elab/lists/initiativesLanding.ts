@@ -13,7 +13,7 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
     name: text({
       isIndexed: 'unique',
       isFilterable: true,
-      defaultValue: 'Initiatives Landing Page',
+      defaultValue: 'Blurbs',
       ui: {
         createView: {
           fieldMode: 'hidden',
@@ -24,7 +24,7 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
       },
     }),
     ...group({
-      label: 'Intro Fields',
+      label: 'Initiatives Landing Page Fields',
       fields: {
         intro: document({
           formatting: true,
@@ -35,7 +35,6 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
           componentBlocks,
         }),
         introImage: cloudinaryImage({
-          //   label: 'Thumbnail/Header Image',
           cloudinary: {
             cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
             apiKey: `${process.env.CLOUDINARY_KEY}`,
@@ -51,48 +50,49 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
           ui: { description: 'Describe appearance of Intro Image' },
         }),
         introImageCaption: text(),
+
+        tngvi: document({
+          formatting: true,
+          links: true,
+          layouts: [
+            [1, 1],
+            [2, 1],
+            [1, 2],
+          ],
+          ui: {
+            views: './admin/components/component-blocks',
+          },
+          label: 'TNGVI Summary',
+          componentBlocks,
+        }),
+        tn4ej: document({
+          formatting: true,
+          links: true,
+          layouts: [
+            [1, 1],
+            [2, 1],
+            [1, 2],
+          ],
+          ui: {
+            views: './admin/components/component-blocks',
+          },
+          label: 'TN4EJ Summary',
+          componentBlocks,
+        }),
+        everythingElse: document({
+          formatting: true,
+          links: true,
+          layouts: [
+            [1, 1],
+            [2, 1],
+            [1, 2],
+          ],
+          ui: {
+            views: './admin/components/component-blocks',
+          },
+          componentBlocks,
+        }),
       },
-    }),
-    tngvi: document({
-      formatting: true,
-      links: true,
-      layouts: [
-        [1, 1],
-        [2, 1],
-        [1, 2],
-      ],
-      ui: {
-        views: './admin/components/component-blocks',
-      },
-      label: 'TNGVI Summary',
-      componentBlocks,
-    }),
-    tn4ej: document({
-      formatting: true,
-      links: true,
-      layouts: [
-        [1, 1],
-        [2, 1],
-        [1, 2],
-      ],
-      ui: {
-        views: './admin/components/component-blocks',
-      },
-      label: 'TN4EJ Summary',
-      componentBlocks,
-    }),
-    everythingElse: document({
-      formatting: true,
-      links: true,
-      layouts: [
-        [1, 1],
-        [2, 1],
-        [1, 2],
-      ],
-      ui: {
-        views: './admin/components/component-blocks',
-      },
-      componentBlocks,
     }),
     projectsBlurb: document({
       label: 'Projects Page Blurb',
@@ -102,6 +102,10 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
       label: 'Studios Page Blurb',
       formatting: true,
     }),
+    researchProjectsBlurb: document({
+      label: 'Research Projects Blurb',
+      formatting: true,
+    }),
   },
   ui: {
     hideCreate: true,
@@ -109,7 +113,7 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
     listView: {
       initialColumns: ['name'],
     },
-    label: 'Initiatives Landing',
+    label: 'Blurbs',
   },
 });
 export default InitiativesLanding;

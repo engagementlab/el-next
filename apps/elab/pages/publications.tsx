@@ -12,6 +12,7 @@ import _ from 'lodash';
 
 export default function Publications({
   items,
+  blurb,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   // Reverse years order from _.groupBy
@@ -27,6 +28,11 @@ export default function Publications({
           <h1 className="m-6 font-extrabold text-4xl xl:text-6xl">
             Publications
           </h1>
+          {blurb && (
+            <div className="mx-6 w-full lg:w-1/2">
+              <DocumentRenderer document={blurb.document} />
+            </div>
+          )}
         </Gutter>
         <Divider />
         <Gutter>
@@ -61,7 +67,8 @@ export default function Publications({
                                   theme={2}
                                   icon={button.icon}
                                   iconClassName={
-                                    button.icon !== 'arrow'
+                                    button.icon !== 'arrow' &&
+                                    button.icon !== 'book'
                                       ? 'max-w-[24px] scale-50 origin-left'
                                       : ''
                                   }
@@ -123,12 +130,31 @@ export async function getStaticProps() {
       },
     };
   }
+  const blurb = await Query(
+    'initiativesLanding',
+    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
+        publicationsBlurb {
+          document
+        }
+      }`
+  );
+
+  if (blurb.error) {
+    return {
+      props: {
+        error: blurb.error,
+        blurb: null,
+        publications: null,
+      },
+    };
+  }
 
   return {
     props: {
       items: _.groupBy(publications, 'year') as unknown as {
         [key: string]: Publication[];
       },
+      blurb: blurb.publicationsBlurb,
     },
     revalidate: 1,
   };

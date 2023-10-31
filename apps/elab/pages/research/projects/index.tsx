@@ -51,6 +51,9 @@ export default function MediaArchive({
   return (
     <Layout error={error} theme={Theme.none}>
       <div className="flex flex-col">
+        <h1 className="m-6 font-extrabold text-4xl xl:text-6xl">
+          Research Projects
+        </h1>
         {blurb && (
           <div className="mx-6 w-full lg:w-1/2">
             <DocumentRenderer document={blurb.document} />

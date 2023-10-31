@@ -106,6 +106,10 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
       label: 'Research Projects Blurb',
       formatting: true,
     }),
+    publicationsBlurb: document({
+      label: 'Publications Blurb',
+      formatting: true,
+    }),
   },
   ui: {
     hideCreate: true,

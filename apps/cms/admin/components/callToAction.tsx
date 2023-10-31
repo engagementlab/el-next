@@ -149,7 +149,7 @@ export const Field = ({
   return (
     <FieldContainer>
       <>
-        <hr style={{ height: '3px', width: '100%', background: '#FF0001' }} />
+        <hr style={{ height: '3px', width: '100%', background: '#5EB89E' }} />
       </>
       <FieldLabel>{field.label}</FieldLabel>
       {onChange && (

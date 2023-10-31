@@ -727,6 +727,7 @@ type InitiativesLanding {
   projectsBlurb: InitiativesLanding_projectsBlurb_Document
   studiosBlurb: InitiativesLanding_studiosBlurb_Document
   researchProjectsBlurb: InitiativesLanding_researchProjectsBlurb_Document
+  publicationsBlurb: InitiativesLanding_publicationsBlurb_Document
 }
 
 type InitiativesLanding_intro_Document {
@@ -754,6 +755,10 @@ type InitiativesLanding_studiosBlurb_Document {
 }
 
 type InitiativesLanding_researchProjectsBlurb_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type InitiativesLanding_publicationsBlurb_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
@@ -791,6 +796,7 @@ input InitiativesLandingUpdateInput {
   projectsBlurb: JSON
   studiosBlurb: JSON
   researchProjectsBlurb: JSON
+  publicationsBlurb: JSON
 }
 
 input InitiativesLandingUpdateArgs {
@@ -810,6 +816,7 @@ input InitiativesLandingCreateInput {
   projectsBlurb: JSON
   studiosBlurb: JSON
   researchProjectsBlurb: JSON
+  publicationsBlurb: JSON
 }
 
 type LearningPartners {

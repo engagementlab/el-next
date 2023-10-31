@@ -57,7 +57,7 @@ const About: Lists.About = list({
     headingImageCaption: text(),
     content: document({
       formatting: {
-        headingLevels: [2, 3],
+        headingLevels: true,
         inlineMarks: true,
         listTypes: true,
         alignment: true,

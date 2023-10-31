@@ -89,7 +89,7 @@ const Event: Lists.Event = list({
     }),
     content: document({
       formatting: {
-        headingLevels: [2, 3, 4],
+        headingLevels: true,
         inlineMarks: true,
         listTypes: true,
         alignment: true,

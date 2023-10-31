@@ -110,7 +110,7 @@ const NewsItem: Lists.NewsItem = list({
     }),
     body: document({
       formatting: {
-        headingLevels: [3, 4],
+        headingLevels: true,
         inlineMarks: true,
         listTypes: true,
         alignment: true,

@@ -561,7 +561,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 </g>
               </g>
             </motion.svg>
-            {process.env.NODE_ENV !== 'production' && (
+            {process.env.NEXT_PUBLIC_STAGING === 'true' && (
               <div className="group">
                 <div
                   className={`flex justify-center text-center font-bold ${

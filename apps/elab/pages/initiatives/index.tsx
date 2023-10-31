@@ -76,7 +76,7 @@ export default function Initiatives({
               </div>
             </div>
             {/* </Gutter> */}
-            <div className="flex justify-center my-12 xl:max-w-md">
+            <div className="flex justify-center my-12 xl:max-w-xl">
               {page.introImage ? (
                 <CaptionedImage
                   alt={page.introImageAltText}

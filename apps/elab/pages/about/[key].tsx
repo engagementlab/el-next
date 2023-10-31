@@ -17,12 +17,10 @@ import {
   Key,
   ReactElement,
   ReactFragment,
-  ReactNode,
   ReactPortal,
 } from 'react';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Theming } from '@/types';
-import { Gutter } from '@/components/Gutter';
 
 type About = {
   name: string;

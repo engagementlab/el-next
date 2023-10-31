@@ -334,7 +334,7 @@ export default function Studio({
             <Divider color="bg-green" />
             <Gutter>
               <h2 className="font-bold text-5xl my-3" id="team">
-                Project Team
+                Studio Participants
               </h2>
               {item.studioStudents && item.studioStudents.length > 0 && (
                 <PeopleList

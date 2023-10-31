@@ -8,7 +8,7 @@ import { AnimatePresence, motion, useCycle } from 'framer-motion';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../../components/Renderers';
-import { CustomEase, Theming } from '@/types';
+import { CustomEase, Theme, ThemeColors, Theming } from '@/types';
 
 import Logos from '@/components/Logos';
 import Divider from '@/components/Divider';
@@ -136,6 +136,7 @@ export default function Studio({
       heading: (level: number, children: ReactNode, textAlign: any) => {
         const customRenderers = {
           3: `text-xl font-extrabold uppercase my-4 ${theme.heading}`,
+          5: `text-lg font-extrabold my-4 ${ThemeColors[theme.theme].primary}`,
         };
         return HeadingStyle({ level, children, textAlign, customRenderers });
       },

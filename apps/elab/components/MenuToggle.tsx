@@ -23,7 +23,7 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
   };
   return (
     <motion.button
-      onClick={toggle}
+      onTap={toggle}
       onHoverStart={hover}
       onHoverEnd={hover}
       whileTap={{

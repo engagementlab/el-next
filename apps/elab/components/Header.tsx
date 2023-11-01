@@ -1,7 +1,7 @@
 // 'use client';
 import * as React from 'react';
-import { useRef, useState } from 'react';
-import { Router, useRouter } from 'next/router';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { create } from 'zustand';
 import { useEffect } from 'react';
@@ -770,7 +770,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
               </div>
             </div>
             {/* Non-desktop */}
-            <motion.nav className="block xl:hidden">
+            <motion.nav className="block xl:hidden select-none">
               <MenuToggle
                 toggle={() => {
                   toggleNavOpen(!navOpen);
@@ -812,6 +812,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                           i={1}
                           expanded={expanded}
                           setExpanded={setExpanded}
+                          Advancing
                           links={siiLinks}
                           label="Social Impact Initiatives"
                         />

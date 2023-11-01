@@ -30,7 +30,7 @@ export const useScrollBlock = (): [() => void, () => void] => {
     html.style.overflow = 'hidden'; /* [2] */
     body.style.position = 'relative'; /* [1] */
     body.style.overflow = 'hidden'; /* [2] */
-    body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
+    // body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
 
     // scrollBlocked.current = true;
   };

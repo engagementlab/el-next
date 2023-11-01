@@ -64,21 +64,21 @@ const subMenuAnimate: Variants = {
     y: 0,
     height: 'auto',
     transition: {
-      duration: 0.7,
+      duration: 1.7,
       ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
     },
     display: 'flex',
   },
   exitMobile: {
     opacity: 0,
-    y: -20,
+    // y: '-100%',
     height: 0,
     transition: {
-      duration: 0.7,
+      duration: 4.7,
       ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
     },
     transitionEnd: {
-      display: 'none',
+      // display: 'none',
     },
   },
 };
@@ -142,7 +142,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   const [hoverResearch, toggleHoverResearch] = useCycle(false, true);
   const [hoverNews, toggleHoverNews] = useCycle(false, true);
 
-  const [expanded, setExpanded] = useState<false | number>(-1);
+  const [expanded, setExpanded] = useState<number>(-1);
 
   const { navOpen, toggleNavOpen, showNav, toggleShowNav } = useStore();
   const [currentTheme, setTheme] = useState(Theme.none);
@@ -255,8 +255,8 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
     label,
   }: {
     i: number;
-    expanded: number | false;
-    setExpanded: React.Dispatch<React.SetStateAction<number | false>>;
+    expanded: number;
+    setExpanded: React.Dispatch<React.SetStateAction<number>>;
     links: React.ReactElement;
     label: string;
   }) => {
@@ -266,25 +266,35 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
         <motion.header
           className="text-2xl font-light mt-3"
           initial={false}
-          onClick={() => setExpanded(isOpen ? false : i)}
+          onClick={() => setExpanded(isOpen ? -1 : i)}
         >
           {label}
         </motion.header>
-        <motion.section
-          animate={isOpen ? 'enterMobile' : 'exitMobile'}
-          initial="exitMobile"
-          variants={subMenuAnimate}
-        >
-          <motion.div
-            variants={{
-              open: { scale: 1 },
-            }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col font-semibold ml-5"
-          >
-            {links}
-          </motion.div>
-        </motion.section>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.section
+              key={`section-${i}`}
+              animate="enterMobile"
+              initial="exitMobile"
+              exit="exitMobile"
+              variants={subMenuAnimate}
+              transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
+              // className="overflow-y-hidden"
+            >
+              <motion.div
+                variants={
+                  {
+                    // open: { scale: 1 },
+                  }
+                }
+                transition={{ duration: 0.8 }}
+                className="flex flex-col font-semibold ml-5"
+              >
+                {links}
+              </motion.div>
+            </motion.section>
+          )}
+        </AnimatePresence>
       </>
     );
   };
@@ -812,7 +822,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                           i={1}
                           expanded={expanded}
                           setExpanded={setExpanded}
-                          Advancing
                           links={siiLinks}
                           label="Social Impact Initiatives"
                         />

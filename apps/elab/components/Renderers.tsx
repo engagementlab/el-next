@@ -1,4 +1,9 @@
-import { BlockRenderers, DocRenderers, Image } from '@el-next/components';
+import {
+  BlockRenderers,
+  DocRenderers,
+  HeadingStyle,
+  Image,
+} from '@el-next/components';
 import { CTAButton } from './Buttons';
 import { CustomEase, Item, Theme, ThemeConfig, Theming } from '@/types';
 import CaptionedImage from './CaptionedImage';
@@ -6,7 +11,7 @@ import Slideshow from './Slideshow';
 import Link from 'next/link';
 import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -100,6 +105,34 @@ const Blocks = (theme?: ThemeConfig) => {
 const Doc: any = DocRenderers({
   linkClass: 'border-b-green-blue text-green-blue hover:border-b-0',
 });
+
+const Heading = (
+  level: number,
+  children: ReactNode,
+  textAlign: any,
+  renderers?: { [x: number]: string },
+  theme?: ThemeConfig
+) => {
+  let customRenderers = {
+    2:
+      renderers && renderers[2]
+        ? renderers[2]
+        : 'text-3xl font-bold tracking-wide my-4',
+    3:
+      renderers && renderers[3]
+        ? renderers[3]
+        : 'text-xl font-extrabold uppercase my-4',
+    4:
+      renderers && renderers[4]
+        ? renderers[4]
+        : 'text-lg font-bold mt-4 pl-4 pb-4 text-red border-red border-l-2 border-b-2',
+    5:
+      renderers && renderers[5]
+        ? renderers[5]
+        : `text-lg font-extrabold my-4 ${theme?.text}`,
+  };
+  return HeadingStyle({ level, children, textAlign, customRenderers });
+};
 
 const NewsEventRenderer = ({
   external,
@@ -287,4 +320,5 @@ const QuoteRenderer = (
       </p>
     );
 };
-export { Blocks, Doc, NewsEventRenderer, QuoteRenderer };
+
+export { Blocks, Doc, Heading, NewsEventRenderer, QuoteRenderer };

@@ -19,7 +19,7 @@ import {
   Theming,
   Item,
 } from '@/types';
-import { Blocks, Doc } from '@/components/Renderers';
+import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { ReactNode } from 'react';
 import { Gutter } from '@/components/Gutter';
 
@@ -61,13 +61,8 @@ export default function GunViolence({
                       children: ReactNode,
                       textAlign: any
                     ) => {
-                      return HeadingStyle({
-                        level,
-                        children,
-                        textAlign,
-                        customRenderers: {
-                          2: `font-bold text-4xl`,
-                        },
+                      return Heading(level, children, textAlign, {
+                        2: `font-bold text-4xl`,
                       });
                     },
                   })}

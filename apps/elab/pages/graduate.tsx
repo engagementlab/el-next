@@ -16,7 +16,7 @@ import {
   Theming,
 } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
-import { Blocks, Doc } from '@/components/Renderers';
+import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Link from 'next/link';
@@ -53,7 +53,7 @@ const rendererOverrides = {
     const customRenderers = {
       4: `text-lg font-bold mt-4 pl-4 pb-4 text-red border-red border-l-2 border-b-2`,
     };
-    return HeadingStyle({ level, children, textAlign, customRenderers });
+    return Heading(level, children, textAlign, customRenderers);
   },
 };
 
@@ -169,14 +169,8 @@ export default function Initiatives({
                     children: ReactNode,
                     textAlign: any
                   ) => {
-                    const customRenderers = {
+                    return Heading(level, children, textAlign, {
                       4: `font-bold my-2 uppercase text-yellow`,
-                    };
-                    return HeadingStyle({
-                      level,
-                      children,
-                      textAlign,
-                      customRenderers,
                     });
                   },
                 })}

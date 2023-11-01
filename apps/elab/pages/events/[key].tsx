@@ -6,21 +6,20 @@ import {
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { HeadingStyle } from '@el-next/components';
 import { Image, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
-import { Blocks, Doc } from '../../components/Renderers';
+import { Blocks, Doc, Heading } from '../../components/Renderers';
 
-import { Event, Theme, Theming } from '@/types';
+import { Event, Theme } from '@/types';
 import { CTAButton } from '@/components/Buttons';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
     const customRenderers = {
       4: 'font-semibold text-[18px] text-coated',
     };
-    return HeadingStyle({ level, children, textAlign, customRenderers });
+    return Heading(level, children, textAlign, customRenderers);
   },
 };
 

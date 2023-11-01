@@ -2,12 +2,17 @@ import { ReactElement, ReactNode } from 'react';
 import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, HeadingStyle, Image, Query } from '@el-next/components';
+import { Button, Image, Query } from '@el-next/components';
 
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
 
 import Layout from '../../../components/Layout';
-import { Blocks, Doc, QuoteRenderer } from '../../../components/Renderers';
+import {
+  Blocks,
+  Doc,
+  Heading,
+  QuoteRenderer,
+} from '../../../components/Renderers';
 import { CustomEase, Theme, ThemeColors, Theming } from '@/types';
 
 import Logos from '@/components/Logos';
@@ -138,7 +143,7 @@ export default function Studio({
           3: `text-xl font-extrabold uppercase my-4 ${theme.heading}`,
           5: `text-lg font-extrabold my-4 ${ThemeColors[theme.theme].primary}`,
         };
-        return HeadingStyle({ level, children, textAlign, customRenderers });
+        return Heading(level, children, textAlign, customRenderers, theme);
       },
       quote: (children: ReactElement[]) => {
         return QuoteRenderer(children, item, theme);
@@ -155,87 +160,86 @@ export default function Studio({
           <div className="mx-6 text-grey">
             <h1 className="font-extrabold text-4xl">{item.name}</h1>
             <p className="my-6">{item.blurb}</p>
-            <div className="">
-              <div className="flex items-center uppercase mb-2">
-                <svg height="36" viewBox="0 -960 960 960" width="36">
-                  <path d="m627-287 45-45-159-160v-201h-60v225l174 181ZM480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-82 31.5-155t86-127.5Q252-817 325-848.5T480-880q82 0 155 31.5t127.5 86Q817-708 848.5-635T880-480q0 82-31.5 155t-86 127.5Q708-143 635-111.5T480-80Zm0-400Zm0 340q140 0 240-100t100-240q0-140-100-240T480-820q-140 0-240 100T140-480q0 140 100 240t240 100Z" />
-                </svg>
-                <p className="ml-2 mt-0">CHOOSE A SEMESTER TO EXPLORE:</p>
-              </div>
-              <div
-                className={`relative z-10 border-l-[1px] border-r-[1px] border-t-[1px] w-full h-[67px] xl:hidden ${
+
+            <div className="flex items-center uppercase mb-2">
+              <svg height="36" viewBox="0 -960 960 960" width="36">
+                <path d="m627-287 45-45-159-160v-201h-60v225l174 181ZM480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-82 31.5-155t86-127.5Q252-817 325-848.5T480-880q82 0 155 31.5t127.5 86Q817-708 848.5-635T880-480q0 82-31.5 155t-86 127.5Q708-143 635-111.5T480-80Zm0-400Zm0 340q140 0 240-100t100-240q0-140-100-240T480-820q-140 0-240 100T140-480q0 140 100 240t240 100Z" />
+              </svg>
+              <p className="ml-2 mt-0">CHOOSE A SEMESTER TO EXPLORE:</p>
+            </div>
+            <div
+              className={`relative z-10 border-l-[1px] border-r-[1px] border-t-[1px] w-full h-[67px] xl:hidden ${
+                !semestersNavOpen && 'border-b-[1px]'
+              } ${theme.border}`}
+            >
+              <button
+                className={`absolute z-10 mt-2 ml-2 mr-2 pb-2 pr-2 w-full uppercase font-extrabold border-l-[1px] border-r-[1px] border-t-[1px] ${
                   !semestersNavOpen && 'border-b-[1px]'
-                } ${theme.border}`}
+                } ${theme.border} ${theme.text}`}
+                onClick={() => {
+                  toggleMenuHover();
+                }}
               >
-                <button
-                  className={`absolute z-10 mt-2 ml-2 mr-2 pb-2 pr-2 w-full uppercase font-extrabold border-l-[1px] border-r-[1px] border-t-[1px] ${
-                    !semestersNavOpen && 'border-b-[1px]'
-                  } ${theme.border} ${theme.text}`}
-                  onClick={() => {
-                    toggleMenuHover();
+                <div className="flex items-center justify-between p-2 w-full">
+                  <span>
+                    {selectedSemester ? GetLabel(selectedSemester) : 'Select'}
+                  </span>
+                  <svg
+                    className={`transition-transform ${CustomEase} duration-300 ${
+                      semestersNavOpen && 'rotate-180'
+                    } ${theme.fill}`}
+                    viewBox="0 -960 960 960"
+                    width="40"
+                    height="40"
+                  >
+                    <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {semestersNavOpen && (
+                <motion.div
+                  className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full -top-1/2 opacity-0 ${theme.border}`}
+                  animate={{
+                    opacity: 1,
+                    top: 0,
+                    transition: { ease: 'easeOut', duration: 0.3 },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    top: -40,
+                    transition: { duration: 0.3 },
                   }}
                 >
-                  <div className="flex items-center justify-between p-2 w-full">
-                    <span>
-                      {selectedSemester ? GetLabel(selectedSemester) : 'Select'}
-                    </span>
-                    <svg
-                      className={`transition-transform ${CustomEase} duration-300 ${
-                        semestersNavOpen && 'rotate-180'
-                      } ${theme.fill}`}
-                      viewBox="0 -960 960 960"
-                      width="40"
-                      height="40"
-                    >
-                      <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
-                    </svg>
-                  </div>
-                </button>
-              </div>
-
-              <AnimatePresence>
-                {semestersNavOpen && (
-                  <motion.div
-                    className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full -top-1/2 opacity-0 ${theme.border}`}
-                    animate={{
-                      opacity: 1,
-                      top: 0,
-                      transition: { ease: 'easeOut', duration: 0.3 },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      top: -40,
-                      transition: { duration: 0.3 },
-                    }}
+                  <ul
+                    className={`w-full list-none uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${theme.border}`}
                   >
-                    <ul
-                      className={`w-full list-none uppercase border-l-[1px] border-r-[1px] border-b-[1px] ml-2 mb-2 ${theme.border}`}
-                    >
-                      {sortedSemesters?.map((se) => {
-                        return (
-                          <li>
-                            <p
-                              className={`p-2 m-0 cursor-pointer font-semibold ${
-                                se.type ? theme.heading : theme.text
-                              }`}
-                            >
-                              <Link href={`/studios/${item.key}/${se.key}`}>
-                                {se.type === 'upcoming' && 'Upcoming Semester'}
-                                {se.type === 'current' && 'Current Semester'}
-                                {se.type === null &&
-                                  (se.buttonLabel
-                                    ? se.buttonLabel
-                                    : se.name.split(' - ')[0])}
-                              </Link>
-                            </p>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                    {sortedSemesters?.map((se) => {
+                      return (
+                        <li>
+                          <p
+                            className={`p-2 m-0 cursor-pointer font-semibold ${
+                              se.type ? theme.heading : theme.text
+                            }`}
+                          >
+                            <Link href={`/studios/${item.key}/${se.key}`}>
+                              {se.type === 'upcoming' && 'Upcoming Semester'}
+                              {se.type === 'current' && 'Current Semester'}
+                              {se.type === null &&
+                                (se.buttonLabel
+                                  ? se.buttonLabel
+                                  : se.name.split(' - ')[0])}
+                            </Link>
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* LARGE screens */}
             <div className="hidden xl:flex flex-row">

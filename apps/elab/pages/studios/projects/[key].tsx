@@ -4,12 +4,17 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
+import { Button, Image, Query, Video } from '@el-next/components';
 
 import { create } from 'zustand';
 
 import Layout from '../../../components/Layout';
-import { Blocks, Doc, QuoteRenderer } from '../../../components/Renderers';
+import {
+  Blocks,
+  Doc,
+  Heading,
+  QuoteRenderer,
+} from '../../../components/Renderers';
 
 import { CustomEase, StudioProject, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
@@ -127,7 +132,7 @@ export default function Studio({
         const customRenderers = {
           3: `text-xl font-extrabold uppercase my-4 ${theming.heading}`,
         };
-        return HeadingStyle({ level, children, textAlign, customRenderers });
+        return Heading(level, children, textAlign, customRenderers);
       },
       quote: (children: ReactElement[]) => {
         return QuoteRenderer(children, item, theming);

@@ -133,6 +133,7 @@ export type StudioProject = {
   name: string;
   key: string;
   flags: string[];
+  order: number;
   initiative: string;
   blurb: { document: any };
 
@@ -205,6 +206,7 @@ export type News = {
   title: string;
   key: string;
   flags: string[];
+  order: number;
   initiatives: string[];
   publishDate: string;
   blurb: { document: any };
@@ -221,6 +223,7 @@ export type Event = {
   name: string;
   key: string;
   flags: string[];
+  order: number;
   initiatives: string[];
   eventDate: string;
   blurb: { document: any };

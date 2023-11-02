@@ -25,6 +25,7 @@ import Player from '@vimeo/player';
 import { Gutter } from '@/components/Gutter';
 import Link from 'next/link';
 import { NewsEventRenderer } from '@/components/Renderers';
+import _ from 'lodash';
 
 type Home = {
   newsItem?: News;
@@ -32,7 +33,7 @@ type Home = {
 
 export default function Home({
   featuredItems,
-  mergedItems,
+  recentItems,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [vidH, setVideoHeight] = useState(0);
@@ -116,7 +117,6 @@ export default function Home({
           viewport={{ root: targetRef, amount: 'all' }}
           onViewportEnter={() => {
             if (didScroll) setWordIndex(index);
-            // console.log(index, scrollYProgress.get());
           }}
           className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
         >
@@ -290,44 +290,60 @@ export default function Home({
               {featuredItems &&
                 featuredItems.map((item: Item, i: number) => {
                   let icon = item.publishDate ? 'news' : 'event';
-                  let CTA = (
-                    <CTAButton
-                      label="Learn more"
-                      link={`/events/${item.key}`}
-                      theme={Theme.climate}
-                    />
-                  );
-                  //   item.publishDate ? (
-
-                  // ) : (
-                  //   <CTAButton
-                  //     label="Read news"
-                  //     link={`/news/${item.key}`}
-                  //     theme={Theme.climate}
-                  //   />
-                  // );
                   if (item.filters) {
                     icon = item.filters?.map((f) => {
                       return f.key;
                     })[0];
-                    CTA = (
-                      <CTAButton
-                        label="Learn more"
-                        link={`/studios/projects/${item.key}`}
-                        theme={Theming[InitiativeKeyMap[item.initiative]].theme}
-                      />
-                    );
                   }
 
+                  let CTA = () => {
+                    if (item.filters)
+                      return (
+                        <CTAButton
+                          label="Learn more"
+                          link={`/studios/projects/${item.key}`}
+                          theme={
+                            Theming[
+                              item.initiative === 'gunviolence'
+                                ? 'tngv'
+                                : 'tnej'
+                            ].theme
+                          }
+                        />
+                      );
+                    else
+                      return item.publishDate ? (
+                        <CTAButton
+                          label="Read news"
+                          link={`/news/${item.key}`}
+                          theme={Theme.climate}
+                        />
+                      ) : (
+                        <CTAButton
+                          label="Learn more"
+                          link={`/events/${item.key}`}
+                          theme={Theme.climate}
+                        />
+                      );
+                  };
+
                   return (
-                    <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
+                    <div
+                      className={`flex flex-col-reverse justify-between items-center my-7 ${
+                        i % 2 === 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'
+                      }`}
+                    >
                       <div className="flex fill-grey lg:w-4/5 px-5">
-                        <div className="w-1/12 mr-3 hidden lg:block">
+                        <div
+                          className={`w-1/12 hidden lg:block ${
+                            i % 2 === 0 ? 'ml-3' : 'mr-3'
+                          }`}
+                        >
                           <Icons icons={[icon]} />
                         </div>
-                        <div className="flex flex-col  text-grey">
+                        <div className="flex flex-col text-grey">
                           <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
-                            <div className="mr-3 block lg:hidden">
+                            <div className="mr-3 flex items-center lg:hidden">
                               <Icons icons={[icon]} />
                             </div>
                             <span>{item.title || item.name}</span>
@@ -353,89 +369,17 @@ export default function Home({
                           </div>
                         </div>
                       </div>
-                      {/* <BleedImage
-                    id={`thumb-${event.key}`}
-                    alt={event.thumbAltText}
-                    imgId={event.thumbnail.publicId}
-                    transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
-                    width={650}
-                    className="mb-6 lg:mb-0"
-                  /> */}
+                      <BleedImage
+                        id={`thumb-${item.key}`}
+                        alt={item.thumbAltText}
+                        imgId={item.thumbnail.publicId}
+                        transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
+                        width={650}
+                        className="mb-6 lg:mb-0"
+                      />
                     </div>
                   );
                 })}
-
-              {/* {studioProject && (
-                <div className="flex flex-col justify-between items-center lg:flex-row my-7">
-                  <BleedImage
-                    id={`thumb-${studioProject.key}`}
-                    alt={studioProject.thumbAltText}
-                    imgId={studioProject.thumbnail.publicId}
-                    transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
-                    width={650}
-                    className="mb-6 lg:mb-0"
-                  />
-                  <div className="flex fill-grey lg:w-4/5 px-5 ml-4">
-                    <div className="mr-3 hidden lg:block">
-                      <Icons
-                        icons={studioProject.filters?.map((f) => {
-                          return f.key;
-                        })}
-                      />
-                    </div>
-                    <div className="flex flex-col  text-grey">
-                      <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
-                        <div className="mr-3 block lg:hidden">
-                          <Icons
-                            icons={studioProject.filters?.map((f) => {
-                              return f.key;
-                            })}
-                          />
-                        </div>
-                        <span>{studioProject.name}</span>
-                      </h2>
-                      <DocumentRenderer
-                        document={studioProject.blurb.document}
-                      />
-
-                      <div className="mt-8">
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-
-              {newsItem && (
-                <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
-                  <div className="flex fill-grey lg:w-4/5 px-5">
-                    <div className="w-1/12 mr-3 hidden lg:block">
-                      <Icons icons={[]} />
-                    </div>
-                    <div className="flex flex-col  text-grey">
-                      <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
-                        <div className="mr-3 block lg:hidden">
-                          <Icons icons={['news']} />
-                        </div>
-                        <span>{newsItem.title}</span>
-                      </h2>
-                      <DocumentRenderer document={newsItem.blurb.document} />
-                      <div className="mt-8">
-                        
-                      </div>
-                    </div>
-                  </div>
-                  <BleedImage
-                    id={`thumb-${newsItem.key}`}
-                    alt={newsItem.thumbAltText}
-                    imgId={newsItem.thumbnail.publicId}
-                    transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
-                    width={650}
-                    className="mb-6 lg:mb-0"
-                  />
-                </div>
-              )} */}
             </div>
             <Divider />
             <Gutter>
@@ -444,8 +388,8 @@ export default function Home({
               </h1>
               {/* News/events */}
               <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                {mergedItems &&
-                  mergedItems.map((item: Item, i: number) => {
+                {recentItems &&
+                  recentItems.map((item: Item, i: number) => {
                     return (
                       <div key={i}>
                         <div className="flex-shrink">
@@ -614,15 +558,17 @@ export async function getStaticProps() {
   const featuredEvents = (events as Event[]).filter(
     (item) => item.flags && item.flags.includes('home')
   );
-  const event = featuredEvents.length > 0 ? featuredEvents : null;
-  const featuredItems = [
-    ...(featuredEvents as Event[]),
-    ...(featuredNewsItems as News[]),
-    ...(featuredStudioProjects as StudioProject[]),
-  ] as Item[];
+  const featuredItems = _.sortBy(
+    [
+      ...(featuredEvents as Event[]),
+      ...(featuredNewsItems as News[]),
+      ...(featuredStudioProjects as StudioProject[]),
+    ] as Item[],
+    'order'
+  );
   // Here, we sort using news/events by reverse chronological date and then reverse that order,
   // take the three most recent/upcoming, then reverse that back into reverse chronological
-  const mergedItems = ([...(events as Event[]), ...(news as News[])] as Item[])
+  const recentItems = ([...(events as Event[]), ...(news as News[])] as Item[])
     .sort((a, b) => {
       let val = 0;
       if (a.publishDate && b.publishDate)
@@ -642,7 +588,7 @@ export async function getStaticProps() {
   return {
     props: {
       featuredItems,
-      mergedItems,
+      recentItems,
     },
     revalidate: 1,
   };

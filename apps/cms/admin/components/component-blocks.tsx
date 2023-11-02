@@ -837,7 +837,7 @@ export const componentBlocks = {
         listKey: 'Slideshow',
         label: 'Select:',
         selection:
-          'key name slides { image {publicId} altText caption videoId }',
+          'key name slides { image {publicId} altText caption videoId order }',
       }),
     },
   }),

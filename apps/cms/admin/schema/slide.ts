@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { json, relationship, text } from '@keystone-6/core/fields';
+import { integer, json, relationship, text } from '@keystone-6/core/fields';
 import { allowAll } from '@keystone-6/core/access';
 
 import { Lists } from '.keystone/types';
@@ -54,6 +54,9 @@ const Slide: Lists.Slide = list({
       ui: {
         description: 'Use the image field to specify thumbnail.',
       },
+    }),
+    order: integer({
+      defaultValue: 0,
     }),
   },
   ui: {

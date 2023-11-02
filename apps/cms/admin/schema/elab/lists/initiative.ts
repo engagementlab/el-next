@@ -33,6 +33,13 @@ const Initiative: Lists.Initiative = list({
     //     listView: { fieldMode: 'hidden' },
     //   },
     // }),
+    videoId: text({
+      label: 'Intro Video ID',
+      ui: {
+        description:
+          'Vimeo video ID. If specified, takes precedence over slideshow',
+      },
+    }),
     ...group({
       label: 'Intro Slideshow',
       fields: {
@@ -43,12 +50,12 @@ const Initiative: Lists.Initiative = list({
             description:
               'A slide can be either an image or video. If you define both, only the image will display. ',
             displayMode: 'cards',
-            cardFields: ['image', 'altText', 'caption', 'videoId'],
+            cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
             inlineCreate: {
-              fields: ['image', 'altText', 'caption', 'videoId'],
+              fields: ['image', 'altText', 'caption', 'videoId', 'order'],
             },
             inlineEdit: {
-              fields: ['image', 'altText', 'caption', 'videoId'],
+              fields: ['image', 'altText', 'caption', 'videoId', 'order'],
             },
           },
         }),

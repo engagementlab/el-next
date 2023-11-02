@@ -33,12 +33,12 @@ const Fields = {
       description:
         'A slide can be either an image or video. If you define both, only the image will display.',
       displayMode: 'cards',
-      cardFields: ['image', 'altText', 'caption', 'videoId'],
+      cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
       inlineCreate: {
-        fields: ['image', 'helper', 'altText', 'caption', 'videoId'],
+        fields: ['image', 'helper', 'altText', 'caption', 'videoId', 'order'],
       },
       inlineEdit: {
-        fields: ['image', 'altText', 'caption', 'videoId'],
+        fields: ['image', 'altText', 'caption', 'videoId', 'order'],
       },
     },
   }),

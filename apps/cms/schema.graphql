@@ -562,6 +562,7 @@ type Initiative {
   id: ID!
   name: String
   intro: Initiative_intro_Document
+  videoId: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
   news(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
@@ -609,6 +610,7 @@ input InitiativeWhereInput {
   NOT: [InitiativeWhereInput!]
   id: IDFilter
   name: StringFilter
+  videoId: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
   events: EventManyRelationFilter
@@ -639,11 +641,13 @@ input StudioManyRelationFilter {
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  videoId: OrderDirection
 }
 
 input InitiativeUpdateInput {
   name: String
   intro: JSON
+  videoId: String
   slides: SlideRelateToManyForUpdateInput
   news: NewsItemRelateToManyForUpdateInput
   events: EventRelateToManyForUpdateInput
@@ -686,6 +690,7 @@ input InitiativeUpdateArgs {
 input InitiativeCreateInput {
   name: String
   intro: JSON
+  videoId: String
   slides: SlideRelateToManyForCreateInput
   news: NewsItemRelateToManyForCreateInput
   events: EventRelateToManyForCreateInput
@@ -1791,6 +1796,7 @@ type Slide {
   altText: String
   caption: String
   videoId: String
+  order: Int
 }
 
 input SlideWhereUniqueInput {
@@ -1807,6 +1813,7 @@ input SlideWhereInput {
   altText: StringFilter
   caption: StringFilter
   videoId: StringFilter
+  order: IntNullableFilter
 }
 
 input SlideshowManyRelationFilter {
@@ -1820,6 +1827,7 @@ input SlideOrderByInput {
   altText: OrderDirection
   caption: OrderDirection
   videoId: OrderDirection
+  order: OrderDirection
 }
 
 input SlideUpdateInput {
@@ -1830,6 +1838,7 @@ input SlideUpdateInput {
   altText: String
   caption: String
   videoId: String
+  order: Int
 }
 
 input SlideshowRelateToManyForUpdateInput {
@@ -1852,6 +1861,7 @@ input SlideCreateInput {
   altText: String
   caption: String
   videoId: String
+  order: Int
 }
 
 input SlideshowRelateToManyForCreateInput {

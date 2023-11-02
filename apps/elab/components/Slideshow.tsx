@@ -4,6 +4,7 @@ import * as React from 'react';
 import { HTMLProps } from 'react';
 import CaptionedImage from './CaptionedImage';
 import { ThemeConfig } from '@/types';
+import _ from 'lodash';
 
 type Props = {
   slides: any[];
@@ -94,7 +95,7 @@ const Slideshow = ({
               }
             }}
           >
-            {slides.map((slide, index) => {
+            {_.orderBy(slides, 'order').map((slide, index) => {
               return index === slideIndex ? (
                 <div
                   id={`slide-${index}`}

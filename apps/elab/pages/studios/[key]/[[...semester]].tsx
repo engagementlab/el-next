@@ -614,6 +614,7 @@ export async function getStaticProps({
                 }
                 caption
                 videoId
+                order
               }
             }
             coCreation {

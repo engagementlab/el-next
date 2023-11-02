@@ -469,6 +469,7 @@ export async function getStaticProps({
           altText
           caption
           videoId
+          order
         }
         news {
             title

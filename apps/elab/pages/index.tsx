@@ -5,7 +5,16 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 import Layout from '../components/Layout';
 import { CTAButton, MoreButton } from '@/components/Buttons';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { CustomEase, Event, Item, News, StudioProject, Theme } from '@/types';
+import {
+  CustomEase,
+  Event,
+  InitiativeKeyMap,
+  Item,
+  News,
+  StudioProject,
+  Theme,
+  Theming,
+} from '@/types';
 
 import { Image, Query } from '@el-next/components';
 import Divider from '@/components/Divider';
@@ -22,9 +31,7 @@ type Home = {
 };
 
 export default function Home({
-  newsItem,
-  studioProject,
-  event,
+  featuredItems,
   mergedItems,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -280,57 +287,85 @@ export default function Home({
             </h1>
             <div className="flex flex-col px-5 mb-10 md:px-20 xl:px-24 w-full">
               {/* Featured event */}
-              {event && (
-                <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
-                  <div className="flex fill-grey lg:w-4/5 px-5">
-                    <div className="w-1/12 mr-3 hidden lg:block">
-                      <Icons icons={['event']} />
-                    </div>
-                    <div className="flex flex-col  text-grey">
-                      <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
-                        <div className="mr-3 block lg:hidden">
-                          <Icons icons={['event']} />
+              {featuredItems &&
+                featuredItems.map((item: Item, i: number) => {
+                  let icon = item.publishDate ? 'news' : 'event';
+                  let CTA = (
+                    <CTAButton
+                      label="Learn more"
+                      link={`/events/${item.key}`}
+                      theme={Theme.climate}
+                    />
+                  );
+                  //   item.publishDate ? (
+
+                  // ) : (
+                  //   <CTAButton
+                  //     label="Read news"
+                  //     link={`/news/${item.key}`}
+                  //     theme={Theme.climate}
+                  //   />
+                  // );
+                  if (item.filters) {
+                    icon = item.filters?.map((f) => {
+                      return f.key;
+                    })[0];
+                    CTA = (
+                      <CTAButton
+                        label="Learn more"
+                        link={`/studios/projects/${item.key}`}
+                        theme={Theming[InitiativeKeyMap[item.initiative]].theme}
+                      />
+                    );
+                  }
+
+                  return (
+                    <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
+                      <div className="flex fill-grey lg:w-4/5 px-5">
+                        <div className="w-1/12 mr-3 hidden lg:block">
+                          <Icons icons={[icon]} />
                         </div>
-                        <span>{event.name}</span>
-                      </h2>
-                      {event.eventDate &&
-                        `${new Date(event.eventDate).toLocaleDateString(
-                          'en-US',
-                          {
-                            weekday: 'long',
-                          }
-                        )} ${new Date(event.eventDate).toLocaleDateString(
-                          'en-US',
-                          {
-                            month: 'long',
-                            day: 'numeric',
-                          }
-                        )}`}
+                        <div className="flex flex-col  text-grey">
+                          <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
+                            <div className="mr-3 block lg:hidden">
+                              <Icons icons={[icon]} />
+                            </div>
+                            <span>{item.title || item.name}</span>
+                          </h2>
+                          {item.eventDate &&
+                            `${new Date(item.eventDate).toLocaleDateString(
+                              'en-US',
+                              {
+                                weekday: 'long',
+                              }
+                            )} ${new Date(item.eventDate).toLocaleDateString(
+                              'en-US',
+                              {
+                                month: 'long',
+                                day: 'numeric',
+                              }
+                            )}`}
 
-                      <DocumentRenderer document={event.blurb.document} />
+                          <DocumentRenderer document={item.blurb.document} />
 
-                      <div className="mt-8">
-                        <CTAButton
-                          label="Learn more"
-                          link={`/events/${event.key}`}
-                          theme={Theme.climate}
-                        />
+                          <div className="mt-8">
+                            <CTA />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <BleedImage
+                      {/* <BleedImage
                     id={`thumb-${event.key}`}
                     alt={event.thumbAltText}
                     imgId={event.thumbnail.publicId}
                     transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
                     width={650}
                     className="mb-6 lg:mb-0"
-                  />
-                </div>
-              )}
+                  /> */}
+                    </div>
+                  );
+                })}
 
-              {/* Featured studio project */}
-              {studioProject && (
+              {/* {studioProject && (
                 <div className="flex flex-col justify-between items-center lg:flex-row my-7">
                   <BleedImage
                     id={`thumb-${studioProject.key}`}
@@ -364,23 +399,19 @@ export default function Home({
                       />
 
                       <div className="mt-8">
-                        <CTAButton
-                          label="Learn more"
-                          link={`/studios/projects/${studioProject.key}`}
-                          theme={Theme.gunviolence}
-                        />
+
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Featured news */}
+
               {newsItem && (
                 <div className="flex flex-col-reverse justify-between items-center lg:flex-row my-7">
                   <div className="flex fill-grey lg:w-4/5 px-5">
                     <div className="w-1/12 mr-3 hidden lg:block">
-                      <Icons icons={['news']} />
+                      <Icons icons={[]} />
                     </div>
                     <div className="flex flex-col  text-grey">
                       <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
@@ -391,11 +422,7 @@ export default function Home({
                       </h2>
                       <DocumentRenderer document={newsItem.blurb.document} />
                       <div className="mt-8">
-                        <CTAButton
-                          label="Read news"
-                          link={`/news/${newsItem.key}`}
-                          theme={Theme.climate}
-                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -408,7 +435,7 @@ export default function Home({
                     className="mb-6 lg:mb-0"
                   />
                 </div>
-              )}
+              )} */}
             </div>
             <Divider />
             <Gutter>
@@ -483,6 +510,7 @@ export async function getStaticProps() {
             document
           }
           flags
+          order
           thumbnail { 
             publicId
           }
@@ -515,7 +543,9 @@ export async function getStaticProps() {
             blurb {
               document
             }
+            initiative
             flags
+            order
             thumbnail { 
               publicId
             }
@@ -553,6 +583,7 @@ export async function getStaticProps() {
           document
         }
         flags
+        order
         initiatives
         publishDate
         externalLink
@@ -574,16 +605,21 @@ export async function getStaticProps() {
     };
   }
 
-  const newsItem = (news as News[]).filter(
+  const featuredNewsItems = (news as News[]).filter(
     (item) => item.flags && item.flags.includes('home')
-  )[0];
-  const studioProject = (studioProjects as StudioProject[]).filter(
+  );
+  const featuredStudioProjects = (studioProjects as StudioProject[]).filter(
     (item) => item.flags && item.flags.includes('home')
-  )[0];
+  );
   const featuredEvents = (events as Event[]).filter(
     (item) => item.flags && item.flags.includes('home')
   );
-  const event = featuredEvents.length > 0 ? featuredEvents[0] : null;
+  const event = featuredEvents.length > 0 ? featuredEvents : null;
+  const featuredItems = [
+    ...(featuredEvents as Event[]),
+    ...(featuredNewsItems as News[]),
+    ...(featuredStudioProjects as StudioProject[]),
+  ] as Item[];
   // Here, we sort using news/events by reverse chronological date and then reverse that order,
   // take the three most recent/upcoming, then reverse that back into reverse chronological
   const mergedItems = ([...(events as Event[]), ...(news as News[])] as Item[])
@@ -605,9 +641,7 @@ export async function getStaticProps() {
     .reverse();
   return {
     props: {
-      event,
-      newsItem,
-      studioProject: studioProject || null,
+      featuredItems,
       mergedItems,
     },
     revalidate: 1,

@@ -291,7 +291,7 @@ export type Publication = {
   };
 };
 
-export type Item = News & Event;
+export type Item = News & Event & StudioProject;
 
 type Category = 'core' | 'studentstaff' | 'fellow';
 export type Person = {

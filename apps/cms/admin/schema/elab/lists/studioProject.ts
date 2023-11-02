@@ -21,6 +21,7 @@ import { PartnersSelect } from './partners';
 import { Flags } from '../flags';
 import { helper, HelperIcon } from '../../../components/helper';
 import { boolean } from 'yargs';
+import { Featuring } from '../featuring';
 
 const StudioProject: Lists.StudioProject = list({
   access: allowAll,
@@ -65,7 +66,6 @@ const StudioProject: Lists.StudioProject = list({
         displayMode: 'select',
       },
     }),
-    flags: Flags,
     mdProject: checkbox({
       label: 'Is MD Project',
       defaultValue: false,
@@ -197,6 +197,7 @@ const StudioProject: Lists.StudioProject = list({
       ref: 'Person.projectInstructors',
       many: true,
     }),
+    ...group(Featuring),
     semester: relationship({
       ref: 'Semester.projects',
       many: true,

@@ -1,4 +1,4 @@
-import { graphql, list } from '@keystone-6/core';
+import { graphql, group, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
@@ -17,6 +17,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { helper, HelperIcon } from '../../../components/helper';
 import { Flags } from '../flags';
+import { Featuring } from '../featuring';
 
 const NewsItem: Lists.NewsItem = list({
   access: allowAll,
@@ -42,7 +43,6 @@ const NewsItem: Lists.NewsItem = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    flags: Flags,
     initiatives: multiselect({
       type: 'enum',
       options: [
@@ -131,6 +131,7 @@ const NewsItem: Lists.NewsItem = list({
       },
       componentBlocks,
     }),
+    ...group(Featuring),
     alumni: relationship({
       ref: 'Graduate.alumniSpotlight',
       many: true,

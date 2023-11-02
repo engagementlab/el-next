@@ -28,7 +28,6 @@ model Event {
   key                 String       @unique @default("")
   createdDate         DateTime?
   enabled             Boolean      @default(true)
-  flags               Json         @default("[]")
   initiatives         Json         @default("[]")
   thumbnail           Json?
   thumbAltText        String       @default("")
@@ -38,6 +37,8 @@ model Event {
   address             String       @default("")
   blurb               Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   content             Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  flags               Json         @default("[]")
+  order               Int?         @default(0)
   initiativesWhatsNew Initiative[] @relation("Event_initiativesWhatsNew")
 }
 
@@ -118,7 +119,6 @@ model NewsItem {
   key                 String             @unique @default("")
   createdDate         DateTime?
   enabled             Boolean            @default(true)
-  flags               Json               @default("[]")
   initiatives         Json               @default("[]")
   thumbnail           Json?
   thumbAltText        String             @default("")
@@ -130,6 +130,8 @@ model NewsItem {
   externalLink        String             @default("")
   blurb               Json               @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   body                Json               @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  flags               Json               @default("[]")
+  order               Int?               @default(0)
   alumni              Graduate[]         @relation("Graduate_alumniSpotlight")
   learningPartners    LearningPartners[] @relation("LearningPartners_spotlight")
   initiativesWhatsNew Initiative[]       @relation("Initiative_news")
@@ -285,7 +287,6 @@ model StudioProject {
   enabled             Boolean                     @default(true)
   initiative          StudioProjectInitiativeType @default(gunviolence)
   filters             Filter[]                    @relation("Filter_studioProjects")
-  flags               Json                        @default("[]")
   mdProject           Boolean                     @default(false)
   thumbnail           Json?
   thumbAltText        String                      @default("")
@@ -304,6 +305,8 @@ model StudioProject {
   studioStudents      Person[]                    @relation("Person_projectStudents")
   studioStaff         Person[]                    @relation("Person_projectStaff")
   instructors         Person[]                    @relation("Person_projectInstructors")
+  flags               Json                        @default("[]")
+  order               Int?                        @default(0)
   semester            Semester[]                  @relation("Semester_projects")
   undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
   grad                Graduate[]                  @relation("Graduate_projectSpotlight")

@@ -1,4 +1,4 @@
-import { list } from '@keystone-6/core';
+import { group, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
@@ -14,6 +14,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { Flags } from '../flags';
+import { Featuring } from '../featuring';
 
 const Event: Lists.Event = list({
   access: allowAll,
@@ -39,7 +40,6 @@ const Event: Lists.Event = list({
     enabled: checkbox({
       defaultValue: true,
     }),
-    flags: Flags,
     initiatives: multiselect({
       type: 'enum',
       options: [
@@ -111,6 +111,7 @@ const Event: Lists.Event = list({
 
       componentBlocks,
     }),
+    ...group(Featuring),
     initiativesWhatsNew: relationship({
       ref: 'Initiative.events',
       many: true,

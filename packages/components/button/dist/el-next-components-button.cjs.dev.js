@@ -19,6 +19,7 @@ var Button = function Button(_ref) {
   var className = _ref.className,
     hoverColor = _ref.hoverColor,
     link = _ref.link,
+    external = _ref.external,
     label = _ref.label,
     margin = _ref.margin,
     anchorId = _ref.anchorId,
@@ -68,6 +69,7 @@ var Button = function Button(_ref) {
   return /*#__PURE__*/jsxRuntime.jsxs(Link__default["default"], {
     href: linkFormatted,
     passHref: true,
+    target: external ? '_blank' : '_self',
     className: "group ".concat(classOverride || classStr),
     children: [label, " ", icon]
   });

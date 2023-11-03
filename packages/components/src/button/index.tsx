@@ -22,6 +22,10 @@ interface ButtonProps {
    */
   label: string;
   /**
+   * Open in new window
+   */
+  external?: boolean;
+  /**
    * Optional tailwindcss class suffix
    */
   className?: string;
@@ -50,6 +54,7 @@ export const Button = ({
   className,
   hoverColor,
   link,
+  external,
   label,
   margin,
   anchorId,
@@ -109,6 +114,7 @@ export const Button = ({
     <Link
       href={linkFormatted}
       passHref
+      target={external ? '_blank' : '_self'}
       className={`group ${classOverride || classStr}`}
     >
       {label} {icon}

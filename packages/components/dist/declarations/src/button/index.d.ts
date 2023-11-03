@@ -18,6 +18,10 @@ interface ButtonProps {
      */
     label: string;
     /**
+     * Open in new window
+     */
+    external?: boolean;
+    /**
      * Optional tailwindcss class suffix
      */
     className?: string;
@@ -41,5 +45,5 @@ interface ButtonProps {
  * Return a <button> element wrapped in <Link>
  * @returns {JSX.Element} Element
  */
-export declare const Button: ({ className, hoverColor, link, label, margin, anchorId, classOverride, icon, onClick, }: ButtonProps) => JSX.Element;
+export declare const Button: ({ className, hoverColor, link, external, label, margin, anchorId, classOverride, icon, onClick, }: ButtonProps) => JSX.Element;
 export {};

@@ -45,7 +45,7 @@ export const Video = ({
       className={
         isSlide
           ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8'
-          : 'absolute video w-full h-full min-h-[inherit] lg:mb-8'
+          : 'video w-full h-full min-h-[inherit] lg:mb-8'
       }
     >
       {videoOpen || play || !thumbUrl ? (
@@ -56,7 +56,7 @@ export const Video = ({
             toggleOpen(true);
             e.preventDefault();
           }}
-          className="group"
+          className="group relative"
           style={{ height: 'inherit' }}
         >
           <Image

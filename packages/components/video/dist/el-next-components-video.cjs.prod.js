@@ -84,13 +84,13 @@ var Video = function Video(_ref2) {
   });
   var buttonSize = isSlide ? 75 : 150;
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
-    className: isSlide ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8' : 'absolute video w-full h-full min-h-[inherit] lg:mb-8',
+    className: isSlide ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8' : 'video w-full h-full min-h-[inherit] lg:mb-8',
     children: [videoOpen || play || !thumbUrl ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
       onClick: function onClick(e) {
         toggleOpen(true);
         e.preventDefault();
       },
-      className: "group",
+      className: "group relative",
       style: {
         height: 'inherit'
       },

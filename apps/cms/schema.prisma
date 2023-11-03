@@ -72,6 +72,8 @@ model Initiative {
   name             String            @unique @default("Initiative Name")
   intro            Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   videoId          String            @default("")
+  videoThumbnail   Json?
+  videoCaption     Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   slides           Slide[]           @relation("Initiative_slides")
   news             NewsItem[]        @relation("Initiative_news")
   events           Event[]           @relation("Event_initiativesWhatsNew")

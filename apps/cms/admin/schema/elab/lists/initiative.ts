@@ -7,6 +7,7 @@ import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import { helper, HelperIcon } from '../../../components/helper';
 import { componentBlocks } from '../../../components';
+import { cloudinaryImage } from '../../../components/cloudinary';
 // import { HelperIcon, helper } from '../../../components/helper';
 
 const Initiative: Lists.Initiative = list({
@@ -33,16 +34,29 @@ const Initiative: Lists.Initiative = list({
     //     listView: { fieldMode: 'hidden' },
     //   },
     // }),
-    videoId: text({
-      label: 'Intro Video ID',
-      ui: {
-        description:
-          'Vimeo video ID. If specified, takes precedence over slideshow',
-      },
-    }),
     ...group({
-      label: 'Intro Slideshow',
+      label: 'Intro Video/Slideshow',
       fields: {
+        videoId: text({
+          label: 'Intro Video ID',
+          ui: {
+            description:
+              'Vimeo video ID. If specified, takes precedence over slideshow',
+          },
+        }),
+        videoThumbnail: cloudinaryImage({
+          label: 'Intro Video Thumbnail',
+          cloudinary: {
+            cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+            apiKey: `${process.env.CLOUDINARY_KEY}`,
+            apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+            folder: 'elab-home-v3.x/studios/projects',
+          },
+        }),
+        videoCaption: document({
+          label: 'Intro Video Caption',
+          formatting: true,
+        }),
         slides: relationship({
           ref: 'Slide.initiativeSlides',
           many: true,

@@ -12,6 +12,7 @@ import {
   Theming,
   Item,
   Person as PersonT,
+  CustomEase,
 } from '@/types';
 
 import { CTAButton, MoreButton } from '@/components/Buttons';
@@ -19,17 +20,24 @@ import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
 import Logos from '@/components/Logos';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { Button, Query, Image } from '@el-next/components';
+import { Button, Query, Image, Video } from '@el-next/components';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
-import { PeopleList, Person } from '@/components/People';
+import { Person } from '@/components/People';
 
 type AboutPage = {
   intro: {
     document: any;
   };
-  slides: any[];
+  slides?: any[];
+  videoId?: string;
+  videoCaption?: {
+    document: any;
+  };
+  videoThumbnail?: {
+    publicUrl: string;
+  };
   body: { document: any };
   news: News[];
   events: Event[];
@@ -122,6 +130,7 @@ export default function InitIndex({
               props.slide.registrationLink ? (
                 <CTAButton
                   label="RSVP Today"
+                  external={true}
                   link={props.slide.registrationLink}
                   theme={Theming[initiative].theme}
                 />
@@ -200,13 +209,35 @@ export default function InitIndex({
                   </div>
                 </div>
               </div>
-              {/* <Button label="→ Projects" link="/archive?tngv" /> */}
-              {page?.slides && page?.slides.length > 0 && (
-                <Slideshow
-                  slides={page?.slides}
-                  theme={Theming[initiative]}
-                  className={`${Theming[initiative].bg} bg-opacity-50`}
-                />
+              {page.videoId ? (
+                <div className="relative transition-all duration-500 max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-1/5">
+                  <div className="group w-full min-h-[inherit]">
+                    <div id="video" className={`min-h-[inherit]`}>
+                      <Video
+                        videoLabel=""
+                        videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
+                        thumbUrl={page.videoThumbnail?.publicUrl}
+                      />
+                    </div>
+                  </div>
+                  {page?.videoCaption && (
+                    <div className={Theming[initiative].text}>
+                      <DocumentRenderer
+                        document={page?.videoCaption.document}
+                        componentBlocks={Blocks(Theming[initiative])}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                page?.slides &&
+                page?.slides.length > 0 && (
+                  <Slideshow
+                    slides={page?.slides}
+                    theme={Theming[initiative]}
+                    className={`${Theming[initiative].bg} bg-opacity-50`}
+                  />
+                )
               )}
             </div>
             <h2 className={`${subHeadClass} mt-20`}>Featured News & Events</h2>
@@ -459,6 +490,13 @@ export async function getStaticProps({
     'initiative',
     `initiative(where: { name: "${objectName}" }) {      
         intro {
+          document
+        }
+        videoId
+        videoThumbnail {
+          publicUrl
+        }
+        videoCaption {
           document
         }
         slides {

@@ -11,6 +11,10 @@ type Props = {
    */
   link: string;
   /**
+   * Open in new window
+   */
+  external?: boolean;
+  /**
    * The button's label
    */
   label: string;
@@ -23,6 +27,7 @@ type Props = {
 
 const CTAButton = ({
   link,
+  external,
   label,
   theme = 0,
   icon,
@@ -57,6 +62,7 @@ const CTAButton = ({
     <Button
       label={label}
       link={link}
+      external={external}
       onClick={onClick}
       icon={
         icon ? (

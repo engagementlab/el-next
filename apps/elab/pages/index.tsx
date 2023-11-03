@@ -336,7 +336,7 @@ export default function Home({
                       <div className="flex fill-grey lg:w-4/5 px-5">
                         <div
                           className={`w-1/12 hidden lg:block ${
-                            i % 2 === 0 ? 'ml-3' : 'mr-3'
+                            i % 2 === 0 ? 'mx-3' : 'mr-3'
                           }`}
                         >
                           <Icons icons={[icon]} />

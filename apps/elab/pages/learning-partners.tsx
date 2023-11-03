@@ -2,13 +2,12 @@ import { ReactElement, ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Button, HeadingStyle, Image, Query } from '@el-next/components';
+import { Button, Image, Query } from '@el-next/components';
 
 // import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
-import { CTAButton } from '@/components/Buttons';
-import { News, Studio, StudioProject, Theme, Theming } from '@/types';
+import { News } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';

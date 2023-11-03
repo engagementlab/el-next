@@ -254,6 +254,7 @@ export default function Studio({
                       item.buttons.map((button) => (
                         <CTAButton
                           label={button.label}
+                          external={true}
                           link={button.url}
                           icon={button.icon}
                           theme={theming.theme}
@@ -438,7 +439,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             videoId
             partners
             coCreation {
-            document(hydrateRelationships: true)
+              document(hydrateRelationships: true)
             }
             impact {
             document(hydrateRelationships: true)

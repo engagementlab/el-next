@@ -63,6 +63,7 @@ export default function Publications({
                               }) => (
                                 <CTAButton
                                   link={button.url}
+                                  external={true}
                                   label={button.label}
                                   theme={2}
                                   icon={button.icon}

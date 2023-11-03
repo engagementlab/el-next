@@ -1,13 +1,8 @@
-import {
-  GetStaticPathsResult,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from 'next';
+import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Button, HeadingStyle, Query, Image, Video } from '@el-next/components';
+import { Query } from '@el-next/components';
 
-// import query from '../../../../apollo-client';
 import Layout from '../../../components/Layout';
 import {
   News,

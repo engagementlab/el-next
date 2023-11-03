@@ -107,6 +107,7 @@ export default function Event({
               new Date(item.eventDate) >= new Date() && (
                 <CTAButton
                   label="RSVP Today"
+                  external={true}
                   link={item.registrationLink}
                   theme={theme}
                 />

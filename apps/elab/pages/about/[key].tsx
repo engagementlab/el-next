@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, HeadingStyle, Image, Query, Video } from '@el-next/components';
+import { Button, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';

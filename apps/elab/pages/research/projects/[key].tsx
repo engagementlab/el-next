@@ -54,6 +54,7 @@ export default function ResearchProject({
                     <CTAButton
                       label={button.label}
                       link={button.url}
+                      external={true}
                       icon={button.icon}
                       theme={Theme.none}
                       className={`flex flex-row-reverse gap-x-3 items-center text-3xl font-semibold mb-8`}

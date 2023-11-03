@@ -2,7 +2,6 @@ import { Image, Video } from '@el-next/components';
 import { AnimatePresence, motion, wrap } from 'framer-motion';
 import * as React from 'react';
 import { HTMLProps } from 'react';
-import CaptionedImage from './CaptionedImage';
 import { ThemeConfig } from '@/types';
 import _ from 'lodash';
 
@@ -100,7 +99,7 @@ const Slideshow = ({
                 <div
                   id={`slide-${index}`}
                   key={`slide-${index}`}
-                  className="w-full text-center"
+                  className="w-full"
                 >
                   {ContentRenderer ? (
                     <ContentRenderer slide={slide} />

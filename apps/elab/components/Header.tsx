@@ -793,8 +793,8 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                                 opacity: 1,
                                 y: 0,
                                 transition: {
-                                  duration: 0.2,
-                                  delay: 0.2 * (i + 1),
+                                  duration: 0.1,
+                                  delay: 0.1 * (i + 1),
 
                                   ease: [0.04, 0.62, 0.23, 0.98],
                                 },

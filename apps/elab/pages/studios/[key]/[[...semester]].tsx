@@ -324,18 +324,39 @@ export default function Studio({
 
                         <p>
                           <span className="font-bold tracking-wider">
-                            INSTRUCTOR(S):
+                            PROFESSOR
+                            {selectedSemester.instructors.length > 1 && (
+                              <span>S</span>
+                            )}
+                            :
                           </span>
                           <br />
                           {selectedSemester.instructors
                             .map((i) => i.name)
                             .join(', ')}
                         </p>
-                        <p className="my-2">
+                        <p>
                           <span className="font-bold tracking-wider">
-                            PARTNER(S):&nbsp;
+                            PARTNER ORGANIZATION
+                            {selectedSemester.partners.length > 1 && (
+                              <span>S</span>
+                            )}
+                            :&nbsp;
                           </span>
                           {Partners({ partners: selectedSemester.partners })}
+                        </p>
+                        <p>
+                          <span className="font-bold tracking-wider">
+                            LEARNING PARTNER
+                            {selectedSemester.learningPartners.length > 1 && (
+                              <span>S</span>
+                            )}
+                            :
+                          </span>
+                          <br />
+                          {selectedSemester.learningPartners
+                            .map((i) => i.name)
+                            .join(', ')}
                         </p>
                         <p className="my-2">{selectedSemester.description}</p>
                       </div>
@@ -504,7 +525,7 @@ export default function Studio({
                           selectedSemester.instructors.length > 0 && (
                             <PeopleList
                               list={selectedSemester.instructors}
-                              heading="Studio Instructors"
+                              heading="Studio Professors"
                               theme={theme}
                               index={2}
                             />
@@ -529,7 +550,7 @@ export default function Studio({
                     </h2>
                     <p className="w-full">
                       Are you an Emerson student interested in enrolling in this
-                      course in the future? Please contact the instructor
+                      course in the future? Please contact the professor
                       at&nbsp;{selectedSemester.contact}&nbsp;to learn more!
                     </p>
                     {selectedSemester.partners &&
@@ -540,7 +561,9 @@ export default function Studio({
                           >
                             {selectedSemester.name} Partners
                           </h2>
-                          <Logos partners={selectedSemester.partners} />
+                          <div className="px-6">
+                            <Logos partners={selectedSemester.partners} />
+                          </div>
                         </>
                       )}
                   </div>

@@ -546,7 +546,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
               </g>
             </motion.svg>
             {process.env.NEXT_PUBLIC_STAGING === 'true' && (
-              <div className="group relative z-50">
+              <div className="group relative z-40">
                 <div
                   className={`flex justify-center text-center font-bold ${
                     router.asPath === '/' ? 'text-white' : 'text-green-blue'

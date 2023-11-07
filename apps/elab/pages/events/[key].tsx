@@ -93,6 +93,16 @@ export default function Event({
                     componentBlocks={Blocks()}
                     renderers={Doc()}
                   />
+                  {item.registrationLink &&
+                    new Date(item.eventDate) >= new Date() && (
+                      <CTAButton
+                        label="RSVP Today"
+                        external={true}
+                        link={item.registrationLink}
+                        theme={theme}
+                        className="max-w-[150px]"
+                      />
+                    )}
                 </div>
               )}
             </div>
@@ -103,15 +113,6 @@ export default function Event({
               componentBlocks={Blocks()}
               renderers={Doc(rendererOverrides)}
             />
-            {item.registrationLink &&
-              new Date(item.eventDate) >= new Date() && (
-                <CTAButton
-                  label="RSVP Today"
-                  external={true}
-                  link={item.registrationLink}
-                  theme={theme}
-                />
-              )}
             {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>

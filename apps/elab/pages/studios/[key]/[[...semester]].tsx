@@ -559,7 +559,10 @@ export default function Studio({
                           <h2
                             className={`text-xl font-extrabold uppercase mb-3 mt-8 ${theme.heading}`}
                           >
-                            {selectedSemester.name} Partners
+                            {selectedSemester.name} Partner
+                            {selectedSemester.partners.length > 1 && (
+                              <span>s</span>
+                            )}
                           </h2>
                           <div className="px-6">
                             <Logos partners={selectedSemester.partners} />

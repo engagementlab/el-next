@@ -111,8 +111,6 @@ const useStore = create<NavState>((set) => ({
   menuButtonHover: false,
   toggleNavOpen: (open: boolean) =>
     set((state) => {
-      // debugger;
-      // document.body.style.overflow = open ? 'hidden' : 'visible';
       if (open) {
         window.scrollTo(0, 0);
         blockScroll();
@@ -142,7 +140,12 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   const [hoverResearch, toggleHoverResearch] = useCycle(false, true);
   const [hoverNews, toggleHoverNews] = useCycle(false, true);
 
-  const [expanded, setExpanded] = useState<number>(-1);
+  const [expanded, setExpanded] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
 
   const { navOpen, toggleNavOpen, showNav, toggleShowNav } = useStore();
   const [currentTheme, setTheme] = useState(Theme.none);
@@ -247,57 +250,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       {/* <NavLink href="/newsletter" label="Join Newsletter" disabled={true} /> */}
     </>
   );
-  const MobileAccordion = ({
-    i,
-    expanded,
-    setExpanded,
-    links,
-    label,
-  }: {
-    i: number;
-    expanded: number;
-    setExpanded: React.Dispatch<React.SetStateAction<number>>;
-    links: React.ReactElement;
-    label: string;
-  }) => {
-    const isOpen = i === expanded;
-    return (
-      <>
-        <motion.header
-          className="text-2xl font-light mt-3"
-          initial={false}
-          onClick={() => setExpanded(isOpen ? -1 : i)}
-        >
-          {label}
-        </motion.header>
-        <AnimatePresence>
-          {isOpen && (
-            <motion.section
-              key={`section-${i}`}
-              animate="enterMobile"
-              initial="exitMobile"
-              exit="exitMobile"
-              variants={subMenuAnimate}
-              transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
-              // className="overflow-y-hidden"
-            >
-              <motion.div
-                variants={
-                  {
-                    // open: { scale: 1 },
-                  }
-                }
-                transition={{ duration: 0.8 }}
-                className="flex flex-col font-semibold ml-5"
-              >
-                {links}
-              </motion.div>
-            </motion.section>
-          )}
-        </AnimatePresence>
-      </>
-    );
-  };
+
   const SubNavigation = ({
     logo,
     title,
@@ -418,6 +371,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       </motion.div>
     );
   };
+
   useEffect(() => {
     if (!showNav) toggleShowNav(true);
     setTheme(theme);
@@ -429,6 +383,26 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
     });
   });
 
+  let MobileNavSections = [
+    {
+      label: 'About',
+      links: aboutLinks,
+    },
+    {
+      label: 'Social Impact Initiatives',
+      links: siiLinks,
+    },
+  ];
+  if (process.env.NEXT_PUBLIC_STAGING === 'true')
+    MobileNavSections.push({
+      label: 'Research',
+      links: researchLinks,
+    });
+
+  MobileNavSections.push({
+    label: "What's New",
+    links: whatsNewLinks,
+  });
   return (
     <>
       <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16">
@@ -572,7 +546,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
               </g>
             </motion.svg>
             {process.env.NEXT_PUBLIC_STAGING === 'true' && (
-              <div className="group">
+              <div className="group relative z-50">
                 <div
                   className={`flex justify-center text-center font-bold ${
                     router.asPath === '/' ? 'text-white' : 'text-green-blue'
@@ -779,6 +753,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 </motion.div>
               </div>
             </div>
+
             {/* Non-desktop */}
             <motion.nav className="block xl:hidden select-none">
               <MenuToggle
@@ -789,60 +764,105 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                 isHover={menuButtonHover}
                 isOpen={navOpen}
               />
-              <AnimatePresence>
+              <AnimatePresence
+                onExitComplete={() => setExpanded([false, false, false, false])}
+              >
                 {navOpen && (
                   <motion.aside
                     className="absolute w-full h-full top-0 left-0 bottom-0 pl-8 pr-20 pt-16 wide:pt-7 z-40 text-white font-bold bg-gradient-to-b from-[#00A494] to-[#438EA0]"
                     animate={{
-                      borderRadius: 0,
                       opacity: 1,
-                      top: 0,
-                      right: 0,
+                      y: 0,
                       transition: {
                         ease: 'easeOut',
-                        delay: 0.7,
-                        duration: 5.3,
+                        duration: 0.3,
                       },
                     }}
-                    exit={{
-                      transition: { delay: 0.2, duration: 1.15 },
-                    }}
+                    initial={{ opacity: 0, y: '-1%' }}
+                    exit={{ opacity: 0, y: '-1%' }}
+                    transition={{ type: 'tween' }}
                   >
                     <section className="flex flex-col landscape:flex-row gap-x-16 gap-y-16">
-                      <div>
+                      <div className=" landscape:min-w-[50%]">
                         <h2 className="uppercase">Main Menu</h2>
-                        <MobileAccordion
-                          i={0}
-                          expanded={expanded}
-                          setExpanded={setExpanded}
-                          links={aboutLinks}
-                          label="About"
-                        />
-                        <MobileAccordion
-                          i={1}
-                          expanded={expanded}
-                          setExpanded={setExpanded}
-                          links={siiLinks}
-                          label="Social Impact Initiatives"
-                        />
-                        {process.env.NEXT_PUBLIC_STAGING === 'true' && (
-                          <MobileAccordion
-                            i={2}
-                            expanded={expanded}
-                            setExpanded={setExpanded}
-                            links={researchLinks}
-                            label="Research"
-                          />
-                        )}
-                        <MobileAccordion
-                          i={3}
-                          expanded={expanded}
-                          setExpanded={setExpanded}
-                          links={whatsNewLinks}
-                          label="What's New"
-                        />
+                        {MobileNavSections.map((section, i) => (
+                          <>
+                            <motion.header
+                              className="text-2xl font-light mt-3 origin-left"
+                              animate={{
+                                opacity: 1,
+                                y: 0,
+                                transition: {
+                                  duration: 0.2,
+                                  delay: 0.2 * (i + 1),
+
+                                  ease: [0.04, 0.62, 0.23, 0.98],
+                                },
+                              }}
+                              initial={{ opacity: 0, y: '-40%' }}
+                              exit={{ opacity: 0, y: '-11%' }}
+                              whileTap={{
+                                scale: 1.034,
+                                transition: {
+                                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                                  duration: 0.3,
+                                },
+                              }}
+                              onClick={() =>
+                                setExpanded(
+                                  expanded.flatMap((v, eI) => {
+                                    return expanded[i] ? false : eI === i;
+                                  })
+                                )
+                              }
+                            >
+                              {section.label}
+                            </motion.header>
+                            <AnimatePresence mode="wait">
+                              {expanded[i] && (
+                                <motion.section
+                                  key={`section-${i}`}
+                                  initial={{ height: 0, y: '-11%', opacity: 0 }}
+                                  animate={{ height: 'auto', y: 0, opacity: 1 }}
+                                  exit={{ height: 0, y: '-11%', opacity: 0 }}
+                                  variants={subMenuAnimate}
+                                  // transition={{ type: 'tween', duration: 0.5 }}
+                                  transition={{
+                                    type: 'spring',
+                                    duration: 0.4,
+                                    ease: [0.04, 0.62, 0.23, 0.98],
+                                  }}
+                                >
+                                  <motion.div
+                                    variants={
+                                      {
+                                        // open: { scale: 1 },
+                                      }
+                                    }
+                                    transition={{ duration: 0.8 }}
+                                    className="flex flex-col font-semibold ml-5"
+                                  >
+                                    {section.links}
+                                  </motion.div>
+                                </motion.section>
+                              )}
+                            </AnimatePresence>
+                          </>
+                        ))}
                       </div>
-                      <div className="flex flex-col font-light text-[13px] flex-shrink-0">
+                      <motion.div
+                        className="flex flex-col font-light text-[13px] flex-shrink-0"
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          transition: {
+                            duration: 0.4,
+                            ease: 'easeInOut',
+                          },
+                        }}
+                        initial={{ opacity: 0, x: '-5%' }}
+                        exit={{ opacity: 0, y: '-10%' }}
+                      >
                         <span className="uppercase font-bold mb-4">
                           Our Curriculum:
                         </span>
@@ -912,7 +932,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                             Learning Partners
                           </span>
                         </Link>
-                      </div>
+                      </motion.div>
                     </section>
                   </motion.aside>
                 )}

@@ -5,13 +5,23 @@ import {
   Image,
 } from '@el-next/components';
 import { CTAButton } from './Buttons';
-import { CustomEase, Item, Theme, ThemeConfig, Theming } from '@/types';
+import {
+  CustomEase,
+  Item,
+  Studio,
+  StudioProject,
+  StudioUnion,
+  Theme,
+  ThemeConfig,
+  Theming,
+} from '@/types';
 import CaptionedImage from './CaptionedImage';
 import Slideshow from './Slideshow';
 import Link from 'next/link';
 import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
 import { ReactElement, ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -281,6 +291,123 @@ const NewsEventRenderer = ({
     </div>
   );
 };
+
+const StudioGenericItemRenderer = (props: {
+  key: number;
+  item: StudioUnion;
+  showBorder: boolean;
+}) => {
+  let borderColor = 'border-yellow';
+  if ('initiatives' in props.item && props.item.initiatives.length === 1) {
+    if (props.item.initiatives[0] === 'gunviolence')
+      borderColor = 'border-purple';
+    else if (props.item.initiatives[0] === 'climate')
+      borderColor = 'border-leaf';
+  } else {
+    if (props.item.initiative === 'gunviolence') borderColor = 'border-purple';
+    else if (props.item.initiative === 'climate') borderColor = 'border-leaf';
+  }
+  return (
+    <motion.div
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full"
+    >
+      <Link
+        href={
+          'trailerId' in props.item
+            ? `/studios/projects/${props.item.key}`
+            : `/studios/${(props.item as Studio).key}`
+        }
+        className="group relative"
+      >
+        <div>
+          {props.item.thumbnail ? (
+            <Image
+              id={`thumb-${props.item.key}`}
+              alt={props.item.thumbAltText}
+              transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+              imgId={props.item.thumbnail.publicId}
+              width={460}
+              maxWidthDisable={true}
+              className="w-full"
+            />
+          ) : (
+            <ImagePlaceholder
+              imageLabel="Studio/Studio Project"
+              width={335}
+              height={200}
+            />
+          )}
+        </div>
+        {props.showBorder && (
+          <hr
+            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+          />
+        )}{' '}
+        <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+          {props.item.name}
+        </h3>
+        <p>{props.item.shortDescription}</p>
+      </Link>
+    </motion.div>
+  );
+};
+
+// const StudioProjectRenderer = (props: {
+//   key: number;
+//   item: StudioProject;
+//   showBorder: boolean;
+// }) => {
+//   let borderColor = 'border-yellow';
+//   if (props.item.initiative) {
+//     if (props.item.initiative === 'gunviolence') borderColor = 'border-purple';
+//     else if (props.item.initiative === 'climate') borderColor = 'border-leaf';
+//   }
+//   return (
+//     <motion.div
+//       key={props.key}
+//       animate={{ opacity: 1 }}
+//       exit={{ opacity: 0 }}
+//       className="w-full"
+//     >
+//       <Link
+//         href={`/studios/projects/${props.item.key}`}
+//         className="group relative"
+//       >
+//         <div>
+//           {props.item.thumbnail ? (
+//             <Image
+//               id={`thumb-${props.item.key}`}
+//               alt={props.item.thumbAltText}
+//               transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+//               imgId={props.item.thumbnail.publicId}
+//               width={460}
+//               maxWidthDisable={true}
+//               className="w-full"
+//             />
+//           ) : (
+//             <ImagePlaceholder
+//               imageLabel="Studio Project"
+//               width={335}
+//               height={200}
+//             />
+//           )}
+//         </div>
+//         {props.showBorder && (
+//           <hr
+//             className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+//           />
+//         )}
+//         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+//           {props.item.name}
+//         </h3>
+//         <p>{props.item.shortDescription}</p>
+//       </Link>
+//     </motion.div>
+//   );
+// };
+
 const QuoteRenderer = (
   children: ReactElement[],
   item: any,
@@ -321,4 +448,11 @@ const QuoteRenderer = (
     );
 };
 
-export { Blocks, Doc, Heading, NewsEventRenderer, QuoteRenderer };
+export {
+  Blocks,
+  Doc,
+  Heading,
+  NewsEventRenderer,
+  StudioGenericItemRenderer,
+  QuoteRenderer,
+};

@@ -11,9 +11,10 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { CustomEase, Studio, Theme, Theming } from '@/types';
+import { CustomEase, Studio, StudioUnion, Theme, Theming } from '@/types';
 
 import Layout from '../../components/Layout';
+import { StudioGenericItemRenderer } from '@/components/Renderers';
 
 interface FilterState {
   currentTheme: Theme;
@@ -121,53 +122,6 @@ export default function Studios({
       },
     ];
 
-    const ItemRenderer = (props: { item: Studio }) => {
-      let borderColor = 'border-yellow';
-      if (props.item.initiatives.length === 1) {
-        if (props.item.initiatives[0] === 'gunviolence')
-          borderColor = 'border-purple';
-        else if (props.item.initiatives[0] === 'climate')
-          borderColor = 'border-leaf';
-      }
-      return (
-        <motion.div
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="w-full"
-        >
-          <Link href={`/studios/${props.item.key}`} className="group relative">
-            <div>
-              {props.item.thumbnail ? (
-                <Image
-                  id={`thumb-${props.item.key}`}
-                  alt={props.item.thumbAltText}
-                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                  imgId={props.item.thumbnail.publicId}
-                  width={460}
-                  maxWidthDisable={true}
-                  className="w-full"
-                />
-              ) : (
-                <ImagePlaceholder
-                  imageLabel="Studio Project"
-                  width={335}
-                  height={200}
-                />
-              )}
-            </div>
-            {noGroupsOpen() && (
-              <hr
-                className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
-              />
-            )}{' '}
-            <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-              {props.item.name}
-            </h3>
-            <p>{props.item.shortDescription}</p>
-          </Link>
-        </motion.div>
-      );
-    };
     const RenderFilters = () => {
       const menu = (
         <div className="mx-6 mt-7">
@@ -284,7 +238,11 @@ export default function Studios({
                 {count > 0 && (
                   <AnimatePresence>
                     {filteredItems.map((item, i: number) => (
-                      <ItemRenderer key={i} item={item} />
+                      <StudioGenericItemRenderer
+                        key={i}
+                        item={item as StudioUnion}
+                        showBorder={noGroupsOpen()}
+                      />
                     ))}
                   </AnimatePresence>
                 )}

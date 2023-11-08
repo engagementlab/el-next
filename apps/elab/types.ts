@@ -122,6 +122,8 @@ export enum Partner {
 export type Studio = {
   name: string;
   key: string;
+  flags: string[];
+  order: number;
   initiatives: string[];
   shortDescription: string;
   thumbnail: {
@@ -202,6 +204,8 @@ export type StudioProject = {
     };
   }[];
 };
+export type StudioUnion = Studio & StudioProject;
+
 export type News = {
   title: string;
   key: string;

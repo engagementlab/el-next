@@ -1,39 +1,43 @@
 import { useState, useRef, useEffect } from 'react';
+import { InferGetStaticPropsType } from 'next';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
+import Player from '@vimeo/player';
+import _ from 'lodash';
 
+import { Query } from '@el-next/components';
 import Layout from '../components/Layout';
-import { CTAButton, MoreButton } from '@/components/Buttons';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
+
+import Divider from '@/components/Divider';
+import { Gutter } from '@/components/Gutter';
+import {
+  NewsEventRenderer,
+  StudioGenericItemRenderer,
+} from '@/components/Renderers';
+
 import {
   CustomEase,
   Event,
-  InitiativeKeyMap,
   Item,
   News,
+  Studio,
   StudioProject,
+  StudioUnion,
   Theme,
   Theming,
 } from '@/types';
-
-import { Image, Query } from '@el-next/components';
-import Divider from '@/components/Divider';
-import { InferGetStaticPropsType } from 'next';
-import BleedImage from '@/components/BleedImage';
-import { Icons } from '@/components/Icons';
-import Player from '@vimeo/player';
-import { Gutter } from '@/components/Gutter';
-import Link from 'next/link';
-import { NewsEventRenderer } from '@/components/Renderers';
-import _ from 'lodash';
+import { CTAButton, MoreButton } from '@/components/Buttons';
+import ImagePlaceholder from '@/components/ImagePlaceholder';
 
 type Home = {
   newsItem?: News;
 };
 
 export default function Home({
-  featuredItems,
-  recentItems,
+  upcomingEvents,
+  recentNews,
+  studioProjects,
+  studios,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [vidH, setVideoHeight] = useState(0);
@@ -64,6 +68,7 @@ export default function Home({
       muted: true,
       loop: true,
       responsive: true,
+      quality: '720p',
     });
 
     player.on('loaded', () => {
@@ -150,6 +155,16 @@ export default function Home({
             style={{ height: showVideo ? videoOverlayHeight : 'auto' }}
           >
             {!showVideo && (
+              //           <div className="absolute top-0 w-full">
+              //             <img
+              //               srcSet={`
+              //     https://vumbnail.com/855473995_large.jpg 640w,
+              //     https://vumbnail.com/855473995_medium.jpg 200w,
+              //     https://vumbnail.com/855473995_small.jpg 100w
+              // `}
+              //               sizes="(max-width: 1400px) 100vw, 1400px"
+              //               src="https://vumbnail.com/855473995.jpg"
+              //             />
               <svg
                 width="100"
                 height="100"
@@ -169,6 +184,7 @@ export default function Home({
                   className="animate-spin origin-center"
                 />
               </svg>
+              // </div>
             )}
           </div>
         </div>
@@ -194,7 +210,7 @@ export default function Home({
                 <div className="inline-flex flex-col font-extrabold">
                   <div className="overflow-hidden h-8 md:h-12">
                     <div
-                      className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left  ${
+                      className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left ${
                         wordIndex !== 0
                           ? wordIndex === 1
                             ? 'translate-y-[-33%]'
@@ -202,15 +218,11 @@ export default function Home({
                           : ''
                       }`}
                     >
-                      <motion.span className="text-yellow" initial="onscreen">
+                      <motion.span className="text-yellow">
                         storytelling
-                      </motion.span>{' '}
-                      <motion.span className="text-green" initial="onscreen">
-                        research
                       </motion.span>
-                      <motion.span className="text-red" initial="onscreen">
-                        design
-                      </motion.span>
+                      <motion.span className="text-green">research</motion.span>
+                      <motion.span className="text-red">design</motion.span>
                     </div>
                   </div>
                   <div
@@ -282,118 +294,17 @@ export default function Home({
             exit={{ opacity: 0 }}
           >
             <Divider noMarginY={true} />
-            <h1 className="text-3xl lg:text-7xl text-grey font-bold py-16 md:px-20 xl:px-24 px-5 w-full">
-              Featured
-            </h1>
-            <div className="flex flex-col px-5 mb-10 md:px-20 xl:px-24 w-full">
-              {/* Featured event */}
-              {featuredItems &&
-                featuredItems.map((item: Item, i: number) => {
-                  let icon = item.publishDate ? 'news' : 'event';
-                  if (item.filters) {
-                    icon = item.filters?.map((f) => {
-                      return f.key;
-                    })[0];
-                  }
-
-                  let CTA = () => {
-                    if (item.filters)
-                      return (
-                        <CTAButton
-                          label="Learn more"
-                          link={`/studios/projects/${item.key}`}
-                          theme={
-                            Theming[
-                              item.initiative === 'gunviolence'
-                                ? 'tngv'
-                                : 'tnej'
-                            ].theme
-                          }
-                        />
-                      );
-                    else
-                      return item.publishDate ? (
-                        <CTAButton
-                          label="Read news"
-                          link={`/news/${item.key}`}
-                          theme={Theme.climate}
-                        />
-                      ) : (
-                        <CTAButton
-                          label="Learn more"
-                          link={`/events/${item.key}`}
-                          theme={Theme.climate}
-                        />
-                      );
-                  };
-
-                  return (
-                    <div
-                      className={`flex flex-col-reverse justify-between items-center my-7 ${
-                        i % 2 === 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'
-                      }`}
-                    >
-                      <div className="flex fill-grey lg:w-4/5 px-5">
-                        <div
-                          className={`w-1/12 hidden lg:block ${
-                            i % 2 === 0 ? 'mx-3' : 'mr-3'
-                          }`}
-                        >
-                          <Icons icons={[icon]} />
-                        </div>
-                        <div className="flex flex-col text-grey">
-                          <h2 className="flex flex-shrink flex-row text-2xl lg:text-3xl text-grey font-bold">
-                            <div className="mr-3 flex items-center lg:hidden">
-                              <Icons icons={[icon]} />
-                            </div>
-                            <span>{item.title || item.name}</span>
-                          </h2>
-                          {item.eventDate &&
-                            `${new Date(item.eventDate).toLocaleDateString(
-                              'en-US',
-                              {
-                                weekday: 'long',
-                              }
-                            )} ${new Date(item.eventDate).toLocaleDateString(
-                              'en-US',
-                              {
-                                month: 'long',
-                                day: 'numeric',
-                              }
-                            )}`}
-
-                          <DocumentRenderer document={item.blurb.document} />
-
-                          <div className="mt-8">
-                            <CTA />
-                          </div>
-                        </div>
-                      </div>
-                      <BleedImage
-                        id={`thumb-${item.key}`}
-                        alt={item.thumbAltText}
-                        imgId={item.thumbnail.publicId}
-                        transforms="f_auto,dpr_auto,c_fill,g_faces,h_290,w_460"
-                        width={650}
-                        className="mb-6 lg:mb-0"
-                      />
-                    </div>
-                  );
-                })}
-            </div>
-            <Divider />
-            <Gutter>
-              <h1 className="text-3xl lg:text-7xl text-grey font-bold my-14">
-                News & Events
-              </h1>
-              {/* News/events */}
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                {recentItems &&
-                  recentItems.map((item: Item, i: number) => {
+            {upcomingEvents && upcomingEvents.length > 0 && (
+              <Gutter>
+                <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                  Upcoming Events
+                </h2>
+                <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                  {upcomingEvents.map((item: Event, i: number) => {
                     return (
                       <div key={i}>
                         <div className="flex-shrink">
-                          {item.externalLink ? (
+                          {/* {item.externalLink ? (
                             <a className="group" href={item.externalLink}>
                               <NewsEventRenderer
                                 item={item}
@@ -402,30 +313,111 @@ export default function Home({
                                 showIcon={true}
                               />
                             </a>
-                          ) : (
-                            <Link
-                              href={`/${item.eventDate ? 'events' : 'news'}/${
-                                item.key
-                              }`}
-                              className="group"
-                            >
-                              <NewsEventRenderer
-                                item={item}
-                                i={i}
-                                external={false}
-                                showIcon={true}
-                              />
-                            </Link>
-                          )}
+                          ) : ( */}
+                          <Link href={`/events/${item.key}`} className="group">
+                            <NewsEventRenderer item={item as Item} i={i} />
+                          </Link>
                         </div>
                       </div>
                     );
                   })}
-              </div>
-              <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
-                <MoreButton label="See more news & events" link="/whats-new" />
-              </div>
-            </Gutter>
+                </div>
+                <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                  <MoreButton label="See more events" link="/events" />
+                </div>
+              </Gutter>
+            )}
+            {recentNews && recentNews.length > 0 && (
+              <>
+                <Divider />
+                <Gutter>
+                  <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                    Recent News
+                  </h2>
+                  <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                    {recentNews.map((item: News, i: number) => {
+                      return (
+                        <div key={i}>
+                          <div className="flex-shrink">
+                            {item.externalLink ? (
+                              <a className="group" href={item.externalLink}>
+                                <NewsEventRenderer
+                                  item={item as Item}
+                                  i={i}
+                                  external={true}
+                                />
+                              </a>
+                            ) : (
+                              <Link
+                                href={`/news/${item.key}`}
+                                className="group"
+                              >
+                                <NewsEventRenderer item={item as Item} i={i} />
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                    <MoreButton label="See more news" link="/news" />
+                  </div>
+                </Gutter>
+              </>
+            )}
+            {studioProjects && studioProjects.length > 0 && (
+              <>
+                <Divider />
+                <Gutter>
+                  <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                    Featured Studio Projects
+                  </h2>
+                  <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                    {studioProjects?.map((item: StudioProject, i: number) => {
+                      return (
+                        <StudioGenericItemRenderer
+                          key={i}
+                          item={item as StudioUnion}
+                          showBorder={true}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-center lg:justify-end">
+                    <MoreButton
+                      link={`/studios/projects`}
+                      label="See more projects"
+                    />
+                  </div>
+                </Gutter>
+              </>
+            )}
+
+            {studios && studios.length > 0 && (
+              <>
+                <Divider />
+                <Gutter>
+                  <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                    Featured Social Impact Studios
+                  </h2>
+                  <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                    {studios.map((item: Studio, i: number) => {
+                      return (
+                        <StudioGenericItemRenderer
+                          key={i}
+                          item={item as StudioUnion}
+                          showBorder={true}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-center lg:justify-end">
+                    <MoreButton link={`/studios`} label="See more studios" />
+                  </div>
+                </Gutter>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -453,8 +445,6 @@ export async function getStaticProps() {
           blurb {
             document
           }
-          flags
-          order
           thumbnail { 
             publicId
           }
@@ -470,42 +460,6 @@ export async function getStaticProps() {
         event: null,
       },
       revalidate: 1,
-    };
-  }
-
-  const studioProjects = await Query(
-    'studioProjects',
-    `studioProjects(
-      where: {
-              enabled: {
-                  equals: true
-              },
-            },
-        ) { 
-            name
-            key
-            blurb {
-              document
-            }
-            initiative
-            flags
-            order
-            thumbnail { 
-              publicId
-            }
-            thumbAltText
-            filters {
-              key
-            }
-        }`
-  );
-
-  if (studioProjects.error) {
-    return {
-      props: {
-        error: studioProjects.error,
-        studioProject: null,
-      },
     };
   }
 
@@ -526,8 +480,6 @@ export async function getStaticProps() {
         blurb {
           document
         }
-        flags
-        order
         initiatives
         publishDate
         externalLink
@@ -549,46 +501,91 @@ export async function getStaticProps() {
     };
   }
 
-  const featuredNewsItems = (news as News[]).filter(
-    (item) => item.flags && item.flags.includes('home')
+  const studioProjects = await Query(
+    'studioProjects',
+    `studioProjects(
+      where: {
+              enabled: {
+                  equals: true
+              }
+            },
+        ) { 
+            name
+            key
+            flags
+            order
+            shortDescription
+            initiative
+            thumbnail { 
+              publicId
+            }
+            thumbAltText
+            filters {
+              key
+            }
+        }`
   );
-  const featuredStudioProjects = (studioProjects as StudioProject[]).filter(
-    (item) => item.flags && item.flags.includes('home')
+
+  if (studioProjects.error) {
+    return {
+      props: {
+        error: studioProjects.error,
+        studioProject: null,
+      },
+    };
+  }
+  const studios = await Query(
+    'studios',
+    `studios(
+			where: {
+				enabled: {
+					equals: true
+				}
+			}
+		) {
+			name
+			key
+      flags
+      order
+      initiatives
+			shortDescription 
+			thumbnail { 
+				publicId
+			}
+      thumbAltText
+		}`
   );
-  const featuredEvents = (events as Event[]).filter(
-    (item) => item.flags && item.flags.includes('home')
-  );
-  const featuredItems = _.sortBy(
-    [
-      ...(featuredEvents as Event[]),
-      ...(featuredNewsItems as News[]),
-      ...(featuredStudioProjects as StudioProject[]),
-    ] as Item[],
+  if (studios.error) {
+    return {
+      props: {
+        error: studios.error,
+        studios: null,
+      },
+    };
+  }
+
+  // const studioProjects = studioProjects ;
+  const upcomingEvents = (events as Event[]).slice(0, 3).reverse();
+  const recentNews = (news as News[]).slice(0, 3);
+  const featuredStudioProjects = _.orderBy(
+    (studioProjects as StudioProject[]).filter(
+      (item) => item.flags && item.flags.includes('home')
+    ),
     'order'
   );
-  // Here, we sort using news/events by reverse chronological date and then reverse that order,
-  // take the three most recent/upcoming, then reverse that back into reverse chronological
-  const recentItems = ([...(events as Event[]), ...(news as News[])] as Item[])
-    .sort((a, b) => {
-      let val = 0;
-      if (a.publishDate && b.publishDate)
-        val = Date.parse(a.publishDate) - Date.parse(b.publishDate);
-      else if (a.eventDate && b.eventDate)
-        val = Date.parse(a.eventDate) - Date.parse(b.eventDate);
-      else if (a.eventDate && b.publishDate)
-        val = Date.parse(a.eventDate) - Date.parse(b.publishDate);
-      else if (a.publishDate && b.eventDate)
-        val = Date.parse(a.publishDate) - Date.parse(b.eventDate);
+  const featuredStudios = _.orderBy(
+    (studios as Studio[]).filter(
+      (item) => item.flags && item.flags.includes('home')
+    ),
+    'order'
+  );
 
-      return val;
-    })
-    .reverse()
-    .slice(0, 3)
-    .reverse();
   return {
     props: {
-      featuredItems,
-      recentItems,
+      upcomingEvents,
+      recentNews,
+      studioProjects: featuredStudioProjects,
+      studios: featuredStudios,
     },
     revalidate: 1,
   };

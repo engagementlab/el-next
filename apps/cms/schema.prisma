@@ -278,6 +278,8 @@ model Studio {
   blurb              String       @default("")
   semesters          Semester[]   @relation("Semester_studio")
   initiatives        Json         @default("[]")
+  flags              Json         @default("[]")
+  order              Int?         @default(0)
   initiativesRelated Initiative[] @relation("Initiative_studios")
 }
 

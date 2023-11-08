@@ -1953,6 +1953,8 @@ type Studio {
   semesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
   semestersCount(where: SemesterWhereInput! = {}): Int
   initiatives: [StudioInitiativeType!]
+  flags: [StudioFlagType!]
+  order: Int
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
 }
@@ -1961,6 +1963,11 @@ enum StudioInitiativeType {
   gunviolence
   climate
   incarceration
+}
+
+enum StudioFlagType {
+  home
+  section
 }
 
 input StudioWhereUniqueInput {
@@ -1981,6 +1988,7 @@ input StudioWhereInput {
   shortDescription: StringFilter
   blurb: StringFilter
   semesters: SemesterManyRelationFilter
+  order: IntNullableFilter
   initiativesRelated: InitiativeManyRelationFilter
 }
 
@@ -1993,6 +2001,7 @@ input StudioOrderByInput {
   thumbAltText: OrderDirection
   shortDescription: OrderDirection
   blurb: OrderDirection
+  order: OrderDirection
 }
 
 input StudioUpdateInput {
@@ -2006,6 +2015,8 @@ input StudioUpdateInput {
   blurb: String
   semesters: SemesterRelateToManyForUpdateInput
   initiatives: [StudioInitiativeType!]
+  flags: [StudioFlagType!]
+  order: Int
   initiativesRelated: InitiativeRelateToManyForUpdateInput
 }
 
@@ -2025,6 +2036,8 @@ input StudioCreateInput {
   blurb: String
   semesters: SemesterRelateToManyForCreateInput
   initiatives: [StudioInitiativeType!]
+  flags: [StudioFlagType!]
+  order: Int
   initiativesRelated: InitiativeRelateToManyForCreateInput
 }
 

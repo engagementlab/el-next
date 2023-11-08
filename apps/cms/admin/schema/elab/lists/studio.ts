@@ -1,4 +1,4 @@
-import { list } from '@keystone-6/core';
+import { group, list } from '@keystone-6/core';
 import {
   checkbox,
   integer,
@@ -17,6 +17,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { helper } from '../../../components/helper';
 import { Theme } from '../../../../../elab/types';
+import { Featuring } from '../featuring';
 
 const Studio: Lists.Studio = list({
   access: allowAll,
@@ -85,6 +86,7 @@ const Studio: Lists.Studio = list({
         { label: 'Incarceration', value: 'incarceration' },
       ],
     }),
+    ...group(Featuring),
     initiativesRelated: relationship({
       ref: 'Initiative.studios',
       many: true,

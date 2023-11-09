@@ -63,6 +63,23 @@ const blockOverrides = (theme: ThemeConfig | null) => {
 let AppBlocks = (theme: ThemeConfig) => {
   return {
     slideshow: (props: any) => {
+      if (!props.slideshow)
+        return (
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="48"
+              viewBox="0 -960 960 960"
+              width="48"
+              className="fill-yellow"
+            >
+              <path d="m40-120 440-760 440 760H40Zm104-60h672L480-760 144-180Zm340.175-57q12.825 0 21.325-8.675 8.5-8.676 8.5-21.5 0-12.825-8.675-21.325-8.676-8.5-21.5-8.5-12.825 0-21.325 8.675-8.5 8.676-8.5 21.5 0 12.825 8.675 21.325 8.676 8.5 21.5 8.5ZM454-348h60v-224h-60v224Zm26-122Z" />
+            </svg>
+            <p className="font-bold text-yellow">
+              Unable to load slideshow; no data found.
+            </p>
+          </div>
+        );
       return <Slideshow slides={props.slideshow.data.slides} theme={theme} />;
     },
     iconLink: (props: any) => {
@@ -307,6 +324,7 @@ const StudioGenericItemRenderer = (props: {
     if (props.item.initiative === 'gunviolence') borderColor = 'border-purple';
     else if (props.item.initiative === 'climate') borderColor = 'border-leaf';
   }
+
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -353,60 +371,6 @@ const StudioGenericItemRenderer = (props: {
     </motion.div>
   );
 };
-
-// const StudioProjectRenderer = (props: {
-//   key: number;
-//   item: StudioProject;
-//   showBorder: boolean;
-// }) => {
-//   let borderColor = 'border-yellow';
-//   if (props.item.initiative) {
-//     if (props.item.initiative === 'gunviolence') borderColor = 'border-purple';
-//     else if (props.item.initiative === 'climate') borderColor = 'border-leaf';
-//   }
-//   return (
-//     <motion.div
-//       key={props.key}
-//       animate={{ opacity: 1 }}
-//       exit={{ opacity: 0 }}
-//       className="w-full"
-//     >
-//       <Link
-//         href={`/studios/projects/${props.item.key}`}
-//         className="group relative"
-//       >
-//         <div>
-//           {props.item.thumbnail ? (
-//             <Image
-//               id={`thumb-${props.item.key}`}
-//               alt={props.item.thumbAltText}
-//               transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-//               imgId={props.item.thumbnail.publicId}
-//               width={460}
-//               maxWidthDisable={true}
-//               className="w-full"
-//             />
-//           ) : (
-//             <ImagePlaceholder
-//               imageLabel="Studio Project"
-//               width={335}
-//               height={200}
-//             />
-//           )}
-//         </div>
-//         {props.showBorder && (
-//           <hr
-//             className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
-//           />
-//         )}
-//         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-//           {props.item.name}
-//         </h3>
-//         <p>{props.item.shortDescription}</p>
-//       </Link>
-//     </motion.div>
-//   );
-// };
 
 const QuoteRenderer = (
   children: ReactElement[],

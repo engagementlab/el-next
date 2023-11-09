@@ -62,7 +62,7 @@ export const Layout = ({
         <Favicon />
       </Head>
       {error && process.env.NODE_ENV !== 'production' ? (
-        <div className="m-40 p-10 border-4 border-[#00ab9e]">
+        <div className="m-40 p-10 border-4 border-[#00ab9e] bg-[#00ab9e80] text-white">
           <svg viewBox="0 0 50 50" className="max-w-[105px]">
             <circle style={{ fill: '#D75A4A' }} cx="25" cy="25" r="25" />
             <polyline
@@ -93,8 +93,8 @@ export const Layout = ({
           <hr />
 
           <img
-            src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1682526632/github/logo-api.png"
-            className="max-w-[150px]"
+            src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_200/v1699550434/github/logo-api.png"
+            className="max-w-[200px] mt-5"
           />
         </div>
       ) : (

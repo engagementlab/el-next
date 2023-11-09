@@ -76,7 +76,7 @@ var Layout = function Layout(_ref) {
         content: description
       }), /*#__PURE__*/jsxRuntime.jsx(favicon_dist_elNextComponentsFavicon.Favicon, {})]
     }), error && process.env.NODE_ENV !== 'production' ? /*#__PURE__*/jsxRuntime.jsxs("div", {
-      className: "m-40 p-10 border-4 border-[#00ab9e]",
+      className: "m-40 p-10 border-4 border-[#00ab9e] bg-[#00ab9e80] text-white",
       children: [/*#__PURE__*/jsxRuntime.jsxs("svg", {
         viewBox: "0 0 50 50",
         className: "max-w-[105px]",
@@ -110,8 +110,8 @@ var Layout = function Layout(_ref) {
         className: "text-4xl font-bold",
         children: "Content Error"
       }), errorHelper, /*#__PURE__*/jsxRuntime.jsx("hr", {}), /*#__PURE__*/jsxRuntime.jsx("img", {
-        src: "https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1682526632/github/logo-api.png",
-        className: "max-w-[150px]"
+        src: "https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_200/v1699550434/github/logo-api.png",
+        className: "max-w-[200px] mt-5"
       })]
     }) : /*#__PURE__*/jsxRuntime.jsx(framerMotion.motion.main, {
       initial: "hidden",

@@ -426,6 +426,7 @@ export default function Home({
   );
 }
 export async function getStaticProps() {
+  // We want events only on or after right now
   const events = await Query(
     'events',
     `events(
@@ -433,9 +434,12 @@ export async function getStaticProps() {
           enabled: {
               equals: true
           },
+          eventDate:{
+            gte: "${new Date().toISOString()}"
+          }
         },
         orderBy: {
-          eventDate: desc
+          eventDate: asc
         }
       ) { 
           name
@@ -564,8 +568,7 @@ export async function getStaticProps() {
     };
   }
 
-  // const studioProjects = studioProjects ;
-  const upcomingEvents = (events as Event[]).slice(0, 3).reverse();
+  const upcomingEvents = (events as Event[]).slice(0, 3);
   const recentNews = (news as News[]).slice(0, 3);
   const featuredStudioProjects = _.orderBy(
     (studioProjects as StudioProject[]).filter(

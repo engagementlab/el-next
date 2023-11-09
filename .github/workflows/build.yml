@@ -1,0 +1,114 @@
+name: Run full build
+on: 
+  push:
+    branches: [main]
+env:
+  CI: true
+  NODE_ENV: production
+  DB_URI: ${{ secrets.DB_URI }}
+  AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+jobs:
+  initial-setup:
+    name: "Initial setup"
+    uses: engagementlab/el-next/.github/workflows/init.yml@main
+  run-cms:
+    needs: initial-setup
+    name: "Run CMS, make build"
+    # Do not run on automated commits (interpretation of TravisCI feature)
+    if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:      
+      - name: Setup node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Download artifacts from initial-setup job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ format('artifact-repo-{0}', github.run_id) }}
+
+      - name: Install global packages
+        run: npm install -g yarn pm2 @preconstruct/cli
+
+      - name: Install local monorepo packages and run preconstruct
+        run: yarn
+
+    #   - name: Run CMS
+    #     working-directory: apps/cms  
+    #     env:
+    #       AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
+    #       AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
+    #       DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
+    #     run: |
+    #       yarn add typescript @types/node yargs
+    #       yarn
+    #       yarn postinstall-ci --app elab
+    #       pm2 start yarn --name "el-cms" -- dev --port 8000 --app elab
+    #       yarn build --app elab
+
+      - name: Make production build
+        working-directory: apps/elab
+        env:
+          GRAPHQL_APP: elab
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+        run: |
+          yarn add typescript @types/node
+          yarn
+          yarn build
+
+      - name: Generate build notes and summary from user
+        if: ${{ github.event.client_payload.note != 'null' }}
+        run: echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY"
+
+  a11y-tests:
+    name: "Run accessibility tests on mock production"
+    needs: [initial-setup, run-cms]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+      - name: Download artifacts from production build job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ format('artifact-build-{0}', github.run_id) }}
+
+      - name: Install packages
+        run: npm i -g pa11y-ci http-server pm2 && npm i
+          
+      - name: Serve build 
+        working-directory: ./
+        run: pm2 start `which http-server` --name server
+
+      - name: Output all build paths to .pa11yci config and run pa11y
+        run: |
+          node outputRoutes.mjs --app elab
+          pa11y-ci
+
+#   notify-success:
+#     name: Send success Slack notification
+#     needs: [initial-setup, run-cms, production-publish]
+#     if: ${{ success() }}
+#     uses: engagementlab/el-next/.github/workflows/slack.yml@main
+#     with:
+#       apexUrl: ${{ github.event.client_payload.apexUrl }}
+#       note: ${{ github.event.client_payload.note }}
+#       userName: ${{ github.event.client_payload.userName }}
+#       success: true
+#     secrets: inherit
+
+#   notify-failure:
+#     name: Send failure Slack notification 
+#     needs: [initial-setup, run-cms, production-publish]
+#     if: ${{ failure() }}
+#     uses: engagementlab/el-next/.github/workflows/slack.yml@main
+#     with:
+#       apexUrl: ${{ github.event.client_payload.apexUrl }}
+#       note: ${{ github.event.client_payload.note }}
+#       userName: ${{ github.event.client_payload.userName }}
+#       success: false
+#     secrets: inherit

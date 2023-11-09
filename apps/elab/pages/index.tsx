@@ -296,7 +296,7 @@ export default function Home({
             <Divider noMarginY={true} />
             {upcomingEvents && upcomingEvents.length > 0 && (
               <Gutter>
-                <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
                   Upcoming Events
                 </h2>
                 <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
@@ -331,7 +331,7 @@ export default function Home({
               <>
                 <Divider />
                 <Gutter>
-                  <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                  <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
                     Recent News
                   </h2>
                   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
@@ -370,7 +370,7 @@ export default function Home({
               <>
                 <Divider />
                 <Gutter>
-                  <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                  <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
                     Featured Studio Projects
                   </h2>
                   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
@@ -398,7 +398,7 @@ export default function Home({
               <>
                 <Divider />
                 <Gutter>
-                  <h2 className="text-3xl lg:text-7xl text-grey font-bold my-14">
+                  <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
                     Featured Social Impact Studios
                   </h2>
                   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">

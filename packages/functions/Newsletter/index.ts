@@ -37,32 +37,45 @@ const newsletterSignup: AzureFunction = async function (
     server: 'us6',
   });
 
+  const email = req.query.email;
+
   const queryKeys = Object.keys(req.query);
   queryKeys.splice(queryKeys.indexOf('email'), 1);
-  const tagsFormatted = queryKeys.map((tag) => {
-    return tag.toLocaleUpperCase();
+  let tagsFormatted = [];
+
+  queryKeys.forEach((tag) => {
+    if (req.query[tag] === 'true') tagsFormatted.push(tag.toLocaleUpperCase());
   });
   try {
-    const memberRes = await mailchimp.lists.getListMember(
-      listId,
-      req.query.email
-    );
+    const memberRes = await mailchimp.lists.getListMember(listId, email);
     // If already subscribed, modify member tags
     if (memberRes.list_id === listId) {
-      const subscriberHash = createHash('md5')
-        .update(req.query.email.toLowerCase())
-        .digest('hex');
-      const response = await mailchimp.lists.updateListMemberTags(
-        listId,
-        subscriberHash,
-        { tags: [{ name: 'name', status: 'active' }] }
-      );
-      console.log(response);
+      try {
+        const subscriberHash = createHash('md5')
+          .update(email.toLowerCase())
+          .digest('hex');
+        const response = await mailchimp.lists.updateListMemberTags(
+          listId,
+          subscriberHash,
+          {
+            tags: tagsFormatted.map((tag) => {
+              if (tag) return { name: tag, status: 'active' };
+            }),
+          }
+        );
+
+        context.res = {
+          status: 204,
+          body: 'modified_tags',
+        };
+      } catch (e) {
+        console.log(e);
+      }
     }
   } catch (err) {
     try {
       const response = await mailchimp.lists.addListMember(listId, {
-        email_address: req.query.email,
+        email_address: email,
         tags: tagsFormatted,
         status: 'subscribed',
       });

@@ -25,8 +25,10 @@ const ItemRenderer = (props: { item: ResearchProject }) => {
           <Image
             id={`thumb-${props.item.key}`}
             alt={props.item.thumbAltText}
+            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
             imgId={props.item.thumbnail.publicId}
-            maxWidth={800}
+            width={460}
+            maxWidthDisable={true}
             className="w-full"
           />
         ) : (
@@ -55,12 +57,12 @@ export default function MediaArchive({
           Research Projects
         </h1>
         {blurb && (
-          <div className="mx-6 w-full lg:w-1/2">
+          <div className="mx-6 w-full">
             <DocumentRenderer document={blurb.document} />
           </div>
         )}
         <div className="w-full mt-7">
-          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2">
+          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-8 lg:grid-cols-2 lg:gap-2 lg:my-11">
             {researchProjects?.map((item, i: number) => (
               <ItemRenderer key={i} item={item} />
             ))}

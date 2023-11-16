@@ -39,9 +39,6 @@ const Person: Lists.Person = list({
     }),
     title: text({
       label: 'Title/Role',
-      validation: {
-        isRequired: true,
-      },
     }),
     secondaryTitle: text(),
     image: cloudinaryImage({

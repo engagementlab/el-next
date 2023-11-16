@@ -2,20 +2,16 @@ import path from 'path';
 import { list, group } from '@keystone-6/core';
 import {
   checkbox,
+  integer,
   json,
   relationship,
-  select,
   text,
-  timestamp,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
-import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
-import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
-import { azConfig } from '../../azure';
 
 import { Flags } from '../flags';
 
@@ -60,12 +56,22 @@ export default list({
           'Specifies if this project was created as a masters thesis',
       },
     }),
-    years: text({
-      validation: {
-        isRequired: true,
+    pin: checkbox({
+      label: '"Pin" Project to top',
+      ui: {
+        description:
+          'If checked, project will always appear at top of index page.',
       },
-      label: 'Project Year(s)',
     }),
+    ongoing: checkbox({
+      label: 'Project is ongoing',
+      ui: {
+        description:
+          'If checked, "to Present" will show instead of just the star year.',
+      },
+    }),
+    startYear: integer(),
+    endYear: integer(),
     ...group({
       label: 'Images',
       description: 'Project thumbnail and header image',

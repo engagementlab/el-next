@@ -1444,7 +1444,10 @@ type ResearchProject {
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
   mdProject: Boolean
-  years: String
+  pin: Boolean
+  ongoing: Boolean
+  startYear: Int
+  endYear: Int
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   headingImage: CloudinaryImage_File
@@ -1500,7 +1503,10 @@ input ResearchProjectWhereInput {
   enabled: BooleanFilter
   filters: FilterManyRelationFilter
   mdProject: BooleanFilter
-  years: StringFilter
+  pin: BooleanFilter
+  ongoing: BooleanFilter
+  startYear: IntNullableFilter
+  endYear: IntNullableFilter
   thumbAltText: StringFilter
   headingImageAltText: StringFilter
   shortDescription: StringFilter
@@ -1531,7 +1537,10 @@ input ResearchProjectOrderByInput {
   createdDate: OrderDirection
   enabled: OrderDirection
   mdProject: OrderDirection
-  years: OrderDirection
+  pin: OrderDirection
+  ongoing: OrderDirection
+  startYear: OrderDirection
+  endYear: OrderDirection
   thumbAltText: OrderDirection
   headingImageAltText: OrderDirection
   shortDescription: OrderDirection
@@ -1546,7 +1555,10 @@ input ResearchProjectUpdateInput {
   flags: [ResearchProjectFlagType!]
   filters: FilterRelateToManyForUpdateInput
   mdProject: Boolean
-  years: String
+  pin: Boolean
+  ongoing: Boolean
+  startYear: Int
+  endYear: Int
   thumbnail: Upload
   thumbAltText: String
   headingImage: Upload
@@ -1598,7 +1610,10 @@ input ResearchProjectCreateInput {
   flags: [ResearchProjectFlagType!]
   filters: FilterRelateToManyForCreateInput
   mdProject: Boolean
-  years: String
+  pin: Boolean
+  ongoing: Boolean
+  startYear: Int
+  endYear: Int
   thumbnail: Upload
   thumbAltText: String
   headingImage: Upload

@@ -198,7 +198,10 @@ model ResearchProject {
   flags               Json         @default("[]")
   filters             Filter[]     @relation("Filter_researchProjects")
   mdProject           Boolean      @default(false)
-  years               String       @default("")
+  pin                 Boolean      @default(false)
+  ongoing             Boolean      @default(false)
+  startYear           Int?
+  endYear             Int?
   thumbnail           Json?
   thumbAltText        String       @default("")
   headingImage        Json?

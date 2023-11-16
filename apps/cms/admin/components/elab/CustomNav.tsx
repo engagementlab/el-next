@@ -100,10 +100,16 @@ export function CustomNavigation({
 }: NavigationProps) {
   const [appPath, setAppPath] = useState('');
 
-  const listMapping = new Map<string, any[]>([
-    ['Initiatives', ['Landings', 'Studios']],
-    // ['Big Pictures', 'Big Picture Page'],
-    // ['Communities', 'Community Page'],
+  const listMapping = new Map<string, { label: string; url: string }[]>([
+    // ['Initiatives', ['Landings', 'Studios']],
+    [
+      'Curriculum',
+      [
+        { label: 'Undergraduate', url: '/undergraduates' },
+        // { Graduate: '/graduates' },
+        // { 'Learning Partners': '/learning-partners' },
+      ],
+    ],
     // ['Homes', 'Home'],
   ]);
   useEffect(() => {
@@ -147,10 +153,14 @@ export function CustomNavigation({
   );
 
   const app = apps.filter((app) => app.key === appPath)[0];
-  const [open, setOpen] = React.useState(true);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const [expanded, setExpanded] = useState<boolean[]>([false, false]);
+  const handleClick = (i: number) => {
+    setExpanded(
+      expanded.flatMap((v, eI) => {
+        return expanded[i] ? false : eI === i;
+      })
+    );
   };
   return (
     <NavigationContainer authenticatedItem={authenticatedItem}>
@@ -224,34 +234,28 @@ export function CustomNavigation({
       <List
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
         component="nav"
-        aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Nested List Items
-          </ListSubheader>
-        }
       >
-        {lists.map((list, i) => {
-          if (listMapping.get(list.label))
+        {Array.from(listMapping.keys()).map((folderKey, i) => {
+          if (listMapping.get(folderKey))
             return (
               <>
-                <ListItemButton component="button">
-                  <ListItemText primary="Inbox" />
-                  {open ? <ExpandLess /> : <ExpandMore />}
+                <ListItemButton onClick={() => handleClick(i)}>
+                  <ListItemText primary={folderKey} />
+                  {expanded[i] ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
-                <Collapse in={open} timeout="auto" unmountOnExit>
+                <Collapse in={expanded[i]} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    {listMapping.get(list.label)?.map((item) => (
+                    {listMapping.get(folderKey)?.map((item) => (
                       <ListItemButton
                         sx={{ pl: 4 }}
                         component="a"
-                        href={`/${list.path}`}
+                        href={item.url}
                         className="navItems"
                       >
-                        <ListItemIcon>
+                        {/* <ListItemIcon>
                           <StarBorder />
-                        </ListItemIcon>
-                        <ListItemText primary={item} />
+                        </ListItemIcon> */}
+                        <ListItemText primary={item.label} />
                       </ListItemButton>
                     ))}
                   </List>

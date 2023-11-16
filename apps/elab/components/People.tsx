@@ -120,11 +120,10 @@ export const Person = ({
           width={large ? 250 : 150}
         />
       )}
-      {/* 
-      // border-b-2
-       */}
       <p className={`mt-3 ${theme.text} text-lg`}>{person.name}</p>
-      <p className="text-sm font-semibold mt-1">{person.title}</p>
+      {person.title && person.title.length > 0 && (
+        <p className="text-sm font-semibold mt-1">{person.title}</p>
+      )}
       {person.secondaryTitle && (
         <p className="text-sm mt-0 italic">{person.secondaryTitle}</p>
       )}

@@ -19,6 +19,11 @@ export default function ResearchProject({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const endLabel = item?.ongoing
+    ? '- Present'
+    : item?.endYear
+    ? `- ${item?.endYear}`
+    : '';
   return (
     <Layout
       error={error}
@@ -29,14 +34,18 @@ export default function ResearchProject({
         <div className="text-grey">
           <Gutter>
             <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
-            <h2>{item.years}</h2>
+            <h2>
+              {item.startYear}&nbsp;
+              {endLabel}
+            </h2>
             <div className="flex flex-col-reverse lg:flex-row gap-x-5 mt-16">
               <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
                 <Image
                   id="thumb"
                   alt={item.thumbAltText}
                   imgId={item.thumbnail.publicId}
-                  transforms="f_auto,dpr_auto,c_fill,g_faces,w_450"
+                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                  width={460}
                 />
               </div>
 
@@ -61,27 +70,6 @@ export default function ResearchProject({
                     />
                   ))}
               </div>
-            </div>
-            <div className="hidden lg:block w-3/4 lg:w-full">
-              <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
-                Jump to:
-              </p>
-              <Button
-                label="About the Project"
-                anchorId="content"
-                className="border-red text-red fill-yellow text-sm"
-              />
-              {/*
-                <Button
-                  label="Impact Beyond the Studio"
-                  anchorId="impact"
-                  className="border-green-blue text-green-blue fill-green-blue"
-                />
-                <Button
-                  label="Studio Participants"
-                  anchorId="impact"
-                  className="border-green-blue text-green-blue fill-green-blue"
-                /> */}
             </div>
           </Gutter>
           <Divider />
@@ -142,15 +130,19 @@ export default function ResearchProject({
                 index={3}
               />
             )}
-            <h2
-              className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
-            >
-              Project Contact
-            </h2>
-            <p className="w-full">
-              For inquiries about this project, please contact&nbsp;
-              {item.contact}.
-            </p>
+            {item.contact && item.contact.length > 0 && (
+              <>
+                <h2
+                  className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
+                >
+                  Project Contact
+                </h2>
+                <p className="w-full">
+                  For inquiries about this project, please contact&nbsp;
+                  {item.contact}.
+                </p>
+              </>
+            )}
           </Gutter>
         </div>
       )}
@@ -186,12 +178,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     'researchProjects',
     `researchProjects(where: { key: { equals: "${params!.key}" } }) {
         name
-        years
+        ongoing
+        startYear
+        endYear
         headingText {
-            document
+          document
         }
         thumbnail {
-            publicId
+          publicId
         }
         thumbAltText
         buttons

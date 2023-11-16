@@ -244,8 +244,13 @@ export type ResearchProject = {
   name: string;
   type: string;
   key: string;
-  years: string;
-  contact: string;
+
+  pin?: boolean;
+  ongoing?: boolean;
+  startYear: number;
+  endYear?: number;
+
+  contact?: string;
 
   buttons: any[];
   content: {

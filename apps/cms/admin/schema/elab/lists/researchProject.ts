@@ -148,6 +148,7 @@ export default list({
         cardFields: ['name', 'logo'],
         inlineCreate: { fields: ['name', 'url', 'logo'] },
         inlineEdit: { fields: ['name', 'url', 'logo'] },
+        inlineConnect: true,
       },
     }),
     funders: relationship({
@@ -159,6 +160,7 @@ export default list({
         cardFields: ['name', 'logo'],
         inlineCreate: { fields: ['name', 'url', 'logo'] },
         inlineEdit: { fields: ['name', 'url', 'logo'] },
+        inlineConnect: true,
       },
     }),
     projectLeads: relationship({

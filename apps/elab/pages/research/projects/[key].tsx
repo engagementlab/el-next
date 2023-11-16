@@ -44,8 +44,8 @@ export default function ResearchProject({
                   id="thumb"
                   alt={item.thumbAltText}
                   imgId={item.thumbnail.publicId}
-                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                  width={460}
+                  transforms="f_auto,dpr_auto"
+                  width={550}
                 />
               </div>
 
@@ -85,11 +85,11 @@ export default function ResearchProject({
             {item.collaborators && item.collaborators.length > 0 && (
               <>
                 <h3
-                  className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
+                  className={`text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
                 >
                   Partners
                 </h3>
-                <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+                <div className="lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center">
                   {item.collaborators.length > 0 &&
                     item.collaborators.map((collaborator) => (
                       <Image
@@ -109,7 +109,7 @@ export default function ResearchProject({
                 >
                   Funders
                 </h3>
-                <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
+                <div className="lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center">
                   {item.funders.length > 0 &&
                     item.funders.map((funder) => (
                       <Image

@@ -167,7 +167,8 @@ export async function getStaticProps() {
       researchProjects: _.sortBy(
         researchProjects as ResearchProject[],
         (project: ResearchProject) => {
-          if (project.pin) return 0;
+          // Pinned projects always appear first
+          if (project.pin) return -1;
           return project.ongoing ? 0 : 1;
         }
       ),

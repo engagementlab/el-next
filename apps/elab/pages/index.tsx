@@ -20,6 +20,7 @@ import {
   Event,
   Item,
   News,
+  Project,
   ResearchProject,
   Studio,
   StudioProject,
@@ -629,15 +630,20 @@ export async function getStaticProps() {
 
   const upcomingEvents = (events as Event[]).slice(0, 3);
   const recentNews = (news as News[]).slice(0, 3);
-  const featuredProjects = _.orderBy(
-    [
-      ...(studioProjects as StudioProject[]).filter(
+  // TODO: clean this up
+  let projectsMerged: Project[] = (studioProjects as Project[]).filter(
+    (item) => item.flags && item.flags.includes('home')
+  );
+
+  if (researchProjects && researchProjects.length > 0)
+    projectsMerged = [
+      ...(studioProjects as Project[]).filter(
         (item) => item.flags && item.flags.includes('home')
       ),
-      ...(researchProjects as ResearchProject[]),
-    ],
-    'order'
-  );
+      ...(researchProjects as Project[]),
+    ];
+
+  const featuredProjects = _.orderBy(projectsMerged, 'order');
   const featuredStudios = _.orderBy(
     (studios as Studio[]).filter(
       (item) => item.flags && item.flags.includes('home')

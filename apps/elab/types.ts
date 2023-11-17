@@ -307,6 +307,7 @@ export type Publication = {
 };
 
 export type Item = News & Event & StudioProject;
+export type Project = ResearchProject & StudioProject;
 
 type Category = 'core' | 'studentstaff' | 'fellow';
 export type Person = {

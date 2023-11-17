@@ -333,7 +333,7 @@ const StudioGenericItemRenderer = (props: {
     >
       <Link
         href={
-          'trailerId' in props.item
+          props.item.hasOwnProperty('initiative')
             ? `/studios/projects/${props.item.key}`
             : `/studios/${(props.item as Studio).key}`
         }

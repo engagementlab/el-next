@@ -118,8 +118,8 @@ export async function getStaticProps() {
 				}
 			},
 			orderBy: {
-				createdDate: desc
-			}		
+				endYear: asc
+			}
 		) {
 			name
 			key

@@ -272,6 +272,9 @@ export type ResearchProject = {
       publicId: string;
     };
   }[];
+  projectTeam: {
+    document: any;
+  };
   collaborators: {
     name: string;
     key: string;

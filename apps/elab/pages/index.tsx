@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Player from '@vimeo/player';
 import _ from 'lodash';
 
-import { Query } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 import Layout from '../components/Layout';
 
 import Divider from '@/components/Divider';
@@ -20,14 +20,12 @@ import {
   Event,
   Item,
   News,
+  ResearchProject,
   Studio,
   StudioProject,
   StudioUnion,
-  Theme,
-  Theming,
 } from '@/types';
-import { CTAButton, MoreButton } from '@/components/Buttons';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
+import { MoreButton } from '@/components/Buttons';
 
 type Home = {
   newsItem?: News;
@@ -36,7 +34,7 @@ type Home = {
 export default function Home({
   upcomingEvents,
   recentNews,
-  studioProjects,
+  projects,
   studios,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -366,23 +364,55 @@ export default function Home({
                 </Gutter>
               </>
             )}
-            {studioProjects && studioProjects.length > 0 && (
+            {projects && projects.length > 0 && (
               <>
                 <Divider />
                 <Gutter>
                   <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                    Featured Studio Projects
+                    Featured Projects
                   </h2>
                   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                    {studioProjects?.map((item: StudioProject, i: number) => {
-                      return (
-                        <StudioGenericItemRenderer
-                          key={i}
-                          item={item as StudioUnion}
-                          showBorder={true}
-                        />
-                      );
-                    })}
+                    {projects?.map(
+                      (item: StudioProject | ResearchProject, i: number) => {
+                        if (item.hasOwnProperty('initiative'))
+                          return (
+                            <StudioGenericItemRenderer
+                              key={i}
+                              item={item as unknown as StudioUnion}
+                              showBorder={true}
+                            />
+                          );
+                        else
+                          return (
+                            <Link
+                              href={`/research/projects/${item.key}`}
+                              passHref
+                              className="group"
+                            >
+                              <div className="relative">
+                                <Image
+                                  id={`thumb-${item.key}`}
+                                  alt={item.thumbAltText}
+                                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                                  imgId={item.thumbnail.publicId}
+                                  width={460}
+                                  maxWidthDisable={true}
+                                  className="w-full"
+                                />
+
+                                <hr
+                                  className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] border-red`}
+                                />
+                              </div>
+                              <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                                {item.name}
+                              </h3>
+
+                              <p>{item.shortDescription}</p>
+                            </Link>
+                          );
+                      }
+                    )}
                   </div>
                   <div className="flex justify-center lg:justify-end">
                     <MoreButton
@@ -399,7 +429,7 @@ export default function Home({
                 <Divider />
                 <Gutter>
                   <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                    Featured Social Impact Studios
+                    Featured Studios
                   </h2>
                   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
                     {studios.map((item: Studio, i: number) => {
@@ -530,6 +560,35 @@ export async function getStaticProps() {
         }`
   );
 
+  const researchProjects = await Query(
+    'researchProjects',
+    `researchProjects(
+			where: {
+				enabled: {
+					equals: true
+				},
+        featured: {
+					equals: true
+				}
+			},
+			orderBy: {
+				endYear: asc
+			}
+		) {
+			name
+			key
+      ongoing
+      order
+      startYear
+      endYear
+      shortDescription 
+			thumbnail { 
+				publicId
+			}
+      thumbAltText
+		}`
+  );
+
   if (studioProjects.error) {
     return {
       props: {
@@ -570,10 +629,13 @@ export async function getStaticProps() {
 
   const upcomingEvents = (events as Event[]).slice(0, 3);
   const recentNews = (news as News[]).slice(0, 3);
-  const featuredStudioProjects = _.orderBy(
-    (studioProjects as StudioProject[]).filter(
-      (item) => item.flags && item.flags.includes('home')
-    ),
+  const featuredProjects = _.orderBy(
+    [
+      ...(studioProjects as StudioProject[]).filter(
+        (item) => item.flags && item.flags.includes('home')
+      ),
+      ...(researchProjects as ResearchProject[]),
+    ],
     'order'
   );
   const featuredStudios = _.orderBy(
@@ -587,7 +649,7 @@ export async function getStaticProps() {
     props: {
       upcomingEvents,
       recentNews,
-      studioProjects: featuredStudioProjects,
+      projects: featuredProjects,
       studios: featuredStudios,
     },
     revalidate: 1,

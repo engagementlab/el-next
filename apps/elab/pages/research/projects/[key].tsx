@@ -51,11 +51,7 @@ export default function ResearchProject({
 
               <div className="flex flex-col items-center">
                 <div className="my-6">
-                  <DocumentRenderer
-                    document={item.headingText.document}
-                    // componentBlocks={Blocks(theming)}
-                    // renderers={Doc(rendererOverrides)}
-                  />
+                  <DocumentRenderer document={item.headingText.document} />
                 </div>
                 {item.buttons &&
                   item.buttons.length > 0 &&
@@ -87,7 +83,7 @@ export default function ResearchProject({
                 <h3
                   className={`text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
                 >
-                  Partners
+                  Collaborators
                 </h3>
                 <div className="lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center">
                   {item.collaborators.length > 0 &&
@@ -129,6 +125,16 @@ export default function ResearchProject({
                 theme={Theming['none']}
                 index={3}
               />
+            )}
+            {item.projectTeam && (
+              <>
+                <h2
+                  className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
+                >
+                  Project Team
+                </h2>
+                <DocumentRenderer document={item.projectTeam.document} />
+              </>
             )}
             {item.contact && item.contact.length > 0 && (
               <>
@@ -200,6 +206,9 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           image {
               publicId
           }
+        }
+        projectTeam {
+          document
         }
         shortDescription
         contact

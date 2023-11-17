@@ -1446,6 +1446,8 @@ type ResearchProject {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
+  featured: Boolean
+  order: Int
   startYear: Int
   endYear: Int
   thumbnail: CloudinaryImage_File
@@ -1463,6 +1465,7 @@ type ResearchProject {
   fundersCount(where: PartnerWhereInput! = {}): Int
   projectLeads(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   projectLeadsCount(where: PersonWhereInput! = {}): Int
+  projectTeam: ResearchProject_projectTeam_Document
   contact: String
   tools: JSON
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
@@ -1487,6 +1490,10 @@ type ResearchProject_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
+type ResearchProject_projectTeam_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
 input ResearchProjectWhereUniqueInput {
   id: ID
   key: String
@@ -1505,6 +1512,8 @@ input ResearchProjectWhereInput {
   mdProject: BooleanFilter
   pin: BooleanFilter
   ongoing: BooleanFilter
+  featured: BooleanFilter
+  order: IntNullableFilter
   startYear: IntNullableFilter
   endYear: IntNullableFilter
   thumbAltText: StringFilter
@@ -1539,6 +1548,8 @@ input ResearchProjectOrderByInput {
   mdProject: OrderDirection
   pin: OrderDirection
   ongoing: OrderDirection
+  featured: OrderDirection
+  order: OrderDirection
   startYear: OrderDirection
   endYear: OrderDirection
   thumbAltText: OrderDirection
@@ -1557,6 +1568,8 @@ input ResearchProjectUpdateInput {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
+  featured: Boolean
+  order: Int
   startYear: Int
   endYear: Int
   thumbnail: Upload
@@ -1571,6 +1584,7 @@ input ResearchProjectUpdateInput {
   collaborators: PartnerRelateToManyForUpdateInput
   funders: PartnerRelateToManyForUpdateInput
   projectLeads: PersonRelateToManyForUpdateInput
+  projectTeam: JSON
   contact: String
   tools: JSON
   initiativesRelated: InitiativeRelateToManyForUpdateInput
@@ -1612,6 +1626,8 @@ input ResearchProjectCreateInput {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
+  featured: Boolean
+  order: Int
   startYear: Int
   endYear: Int
   thumbnail: Upload
@@ -1626,6 +1642,7 @@ input ResearchProjectCreateInput {
   collaborators: PartnerRelateToManyForCreateInput
   funders: PartnerRelateToManyForCreateInput
   projectLeads: PersonRelateToManyForCreateInput
+  projectTeam: JSON
   contact: String
   tools: JSON
   initiativesRelated: InitiativeRelateToManyForCreateInput

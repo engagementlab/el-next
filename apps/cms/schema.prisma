@@ -200,6 +200,8 @@ model ResearchProject {
   mdProject           Boolean      @default(false)
   pin                 Boolean      @default(false)
   ongoing             Boolean      @default(false)
+  featured            Boolean      @default(false)
+  order               Int?         @default(0)
   startYear           Int?
   endYear             Int?
   thumbnail           Json?
@@ -214,6 +216,7 @@ model ResearchProject {
   collaborators       Partner[]    @relation("Partner_researchProject")
   funders             Partner[]    @relation("Partner_researchProjectFunders")
   projectLeads        Person[]     @relation("Person_researchLeads")
+  projectTeam         Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   contact             String       @default("")
   tools               Json?
   initiativesRelated  Initiative[] @relation("Initiative_research")

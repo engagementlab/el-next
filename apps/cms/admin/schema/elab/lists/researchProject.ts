@@ -70,6 +70,16 @@ export default list({
           'If checked, "to Present" will show instead of just the star year.',
       },
     }),
+    featured: checkbox({
+      label: 'Featured on Home',
+    }),
+    order: integer({
+      defaultValue: 0,
+      ui: {
+        description:
+          'Controls the order of this item on featured section on the homepage.',
+      },
+    }),
     startYear: integer(),
     endYear: integer(),
     ...group({
@@ -177,6 +187,9 @@ export default list({
         cardFields: ['name', 'title'],
         inlineConnect: true,
       },
+    }),
+    projectTeam: document({
+      formatting: true,
     }),
     contact: text({
       label: 'Contact Email',

@@ -21,6 +21,7 @@ const Partners = ({ partners }: Props): string => {
     { key: 'ficdc', name: 'Fairmount Indigo CDC Collaborative' },
     { key: 'greenroots', name: 'GreenRoots' },
     { key: 'sftt', name: 'Speak for the Trees' },
+    { key: 'wabt', name: 'We Are Better Together' },
     // {
     //   key: 'swboston',
     //   name: 'Southwest Boston Community Development Corporation',

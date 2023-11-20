@@ -99,7 +99,7 @@ const Logos = ({
           />
         </a>
       )}
-      {(all || partners.includes('wab2g')) && (
+      {(all || partners.includes('wab2g') || partners.includes('wabt')) && (
         <a href="https://www.wab2g.org/" target="_blank">
           <Image
             id="wab2g-logo"

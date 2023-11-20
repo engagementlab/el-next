@@ -64,9 +64,7 @@ export default function AboutPage({
                 <div
                   key={i}
                   className={`${
-                    i === 0
-                      ? 'w-full lg:w-1/2 flex-grow flex-shrink-0 basis-1/2'
-                      : ''
+                    i === 0 ? 'w-full lg:w-1/2 flex-shrink-0 basis-1/2' : ''
                   }`}
                 >
                   {element}
@@ -79,7 +77,7 @@ export default function AboutPage({
     },
     divider: () => {
       return (
-        <div className="my-6 scale-x-[1.169]">
+        <div className="my-6 scale-x-[0.98] sm:scale-x-[1.142] md:scale-x-[1.297] lg:scale-x-[1.1782] xl:scale-x-[1.087]">
           <Divider />
         </div>
       );
@@ -115,22 +113,24 @@ export default function AboutPage({
     },
   };
 
-  const jumpLinks: { id: string; text: string }[] = (
-    item?.content.document as any[]
-  )
-    .filter((child: any) => {
-      return child.type === 'heading' && child.level === 2;
-    })
-    .flatMap((heading) => {
-      return {
-        id: heading.children[0].text
-          .toLocaleLowerCase()
-          .replaceAll(/[^\w ]/g, '')
-          .replaceAll(/[^a-z+A-Z+0-9+]/gi, '-')
-          .replace(/-{2,}/g, '-'),
-        text: heading.children[0].text,
-      };
-    });
+  // We don't have any links on Mission/Values page
+  const jumpLinks: { id: string; text: string }[] =
+    item?.key === 'mission-values'
+      ? []
+      : (item?.content.document as any[])
+          .filter((child: any) => {
+            return child.type === 'heading' && child.level === 2;
+          })
+          .flatMap((heading) => {
+            return {
+              id: heading.children[0].text
+                .toLocaleLowerCase()
+                .replaceAll(/[^\w ]/g, '')
+                .replaceAll(/[^a-z+A-Z+0-9+]/gi, '-')
+                .replace(/-{2,}/g, '-'),
+              text: heading.children[0].text,
+            };
+          });
 
   return (
     <Layout error={error}>
@@ -189,7 +189,8 @@ export default function AboutPage({
             {item.content.document &&
               item.content.document[0].children[0].text &&
               item.content.document[0].children[0].text.length > 0 && (
-                <div className="my-6 scale-x-[1.169]">
+                <div className="my-6 scale-x-[0.98] sm:scale-x-[1.142] md:scale-x-[1.297] lg:scale-x-[1.1782] xl:scale-x-[1.087]">
+                  {/* <div className="my-6 1"> */}
                   <Divider />
                 </div>
               )}

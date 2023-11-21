@@ -332,6 +332,27 @@ export default function Media() {
       setErrorOpen(true);
     }
   };
+  const updateImg = () => {
+    try {
+      axios
+        .get(`${endpointPrefix}/media/delete?id=${imgIdToDelete}`)
+        .then((response) => {
+          if (response.data.result === 'ok') {
+            setConfirmOpen(false);
+
+            toggleWaiting();
+            refreshMedia();
+            return;
+          }
+          setErrorOpen(true);
+        })
+        .catch((error) => {
+          setErrorOpen(true);
+        });
+    } catch (err: any) {
+      setErrorOpen(true);
+    }
+  };
 
   useEffect(() => {
     if (data && data.length > 1) return;

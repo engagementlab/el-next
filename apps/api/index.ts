@@ -183,6 +183,18 @@ app.post('/media/upload', upload.none(), async (req, res) => {
   }
 });
 
+app.post('/media/update', async (req, res) => {
+  try {
+    cloudinary.uploader.add_context(
+      'alt=al txt test',
+      [req.query.id as string],
+      (e, response) => res.status(200).send(response)
+    );
+  } catch (err: any) {
+    res.status(500).send(err);
+  }
+});
+
 app.post('/prod-deploy', async (req, res, next) => {
   try {
     if (!req.body) {

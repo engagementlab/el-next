@@ -92,13 +92,13 @@ export default function MediaArchive({
         <h1 className="m-6 font-extrabold text-4xl xl:text-6xl">
           Research Projects
         </h1>
-        {blurb && (
-          <div className="mx-6 w-full">
-            <DocumentRenderer document={blurb.document} />
-          </div>
-        )}
-        <div className="w-full mt-7">
-          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-8 lg:grid-cols-2 lg:gap-2 lg:my-11">
+        <div className="container mb-24 px-4 xl:px-8">
+          {blurb && (
+            <div className="w-full">
+              <DocumentRenderer document={blurb.document} />
+            </div>
+          )}
+          <div className="mt-14 lg:ml-5 grid xl:grid-cols-3 gap-4 xl:gap-8 lg:grid-cols-2 lg:gap-2 lg:my-11">
             {researchProjects?.map((item, i: number) => (
               <ItemRenderer key={i} item={item} />
             ))}

@@ -236,9 +236,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   );
   const researchLinks = (
     <>
-      {process.env.NEXT_PUBLIC_STAGING === 'true' && (
-        <NavLink href="/research/projects" label="Research Projects" />
-      )}
+      <NavLink href="/research/projects" label="Research Projects" />
       <NavLink href="/publications" label="Publications" />
     </>
   );
@@ -392,17 +390,16 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       label: 'Social Impact Initiatives',
       links: siiLinks,
     },
-  ];
-  if (process.env.NEXT_PUBLIC_STAGING === 'true')
-    MobileNavSections.push({
+    {
       label: 'Research',
       links: researchLinks,
-    });
+    },
+    {
+      label: "What's New",
+      links: whatsNewLinks,
+    },
+  ];
 
-  MobileNavSections.push({
-    label: "What's New",
-    links: whatsNewLinks,
-  });
   return (
     <>
       <nav className="w-full flex flex-row justify-center pt-9 mb-1 md:px-16">

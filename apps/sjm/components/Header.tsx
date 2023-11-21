@@ -17,7 +17,7 @@ const links: NavLink[] = [
   {
     label: 'Symposium',
     subMenu: [
-      { url: '/events/2024-movement', label: '2024: New York' },
+      { url: '/events/2024-movement', label: '2024: Queens' },
       { url: '/events/2023-spectacle', label: '2023: Las Vegas' },
       { url: '/events/2022-place', label: '2022: Miami' },
       { url: '/events/2021-impact', label: '2021: Virtual' },

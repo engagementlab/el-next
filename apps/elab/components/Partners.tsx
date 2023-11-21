@@ -1,6 +1,3 @@
-import * as React from 'react';
-import { Image } from '@el-next/components';
-
 type Props = {
   // all?: boolean;
   partners: string[];

@@ -126,7 +126,7 @@ export default function ResearchProject({
                 index={3}
               />
             )}
-            {item.projectTeam && (
+            {item.projectTeam.document.length > 2 && (
               <>
                 <h2
                   className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
@@ -252,5 +252,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
+  // console.log(item.projectTeam.document);
   return { props: { item }, revalidate: 1 };
 }

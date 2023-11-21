@@ -212,7 +212,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       <NavLink href="/about/people" label="People" />
       <NavLink href="/about/jobs" label="Jobs" />
       {/* <NavLink href="/about/get-involved" label="Get Involved" /> */}
-      {/* <NavLink href="/about/donate" label="Donate" /> */}
+      <NavLink href="/about/donate" label="Support Our Work" />
     </>
   );
   const siiLinks = (

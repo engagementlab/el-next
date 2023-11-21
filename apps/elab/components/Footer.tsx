@@ -345,7 +345,7 @@ export const Footer = () => {
             <GetInTouch />
           </div>
         </div>
-        <div className="mt-4 px-6 md:px-16 xl:px-24 flex flex-col justify-between">
+        <div className="mt-4 px-6 md:px-16 xl:px-24 flex flex-col justify-between min-w-[640px]">
           <div className="hidden lg:block mb-5">
             <GetInTouch />
           </div>
@@ -360,12 +360,14 @@ export const Footer = () => {
                   </span>
                 )}{' '}
                 {status === 'tags_modified' && (
-                  <span className="text-green-blue">
-                    You're preferences have been updated. ✏️
+                  <span className="text-purple text-lg">
+                    Your preferences have been updated. ✏️
                   </span>
                 )}
                 {status === 'success' && (
-                  <span className="text-green">Thanks for joining! 😍</span>
+                  <span className="text-purple text-lg">
+                    Thanks for joining! 😍
+                  </span>
                 )}
                 {status === 'error' && (
                   <span className="text-red">

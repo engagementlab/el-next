@@ -18,9 +18,13 @@ import {
   ReactElement,
   ReactFragment,
   ReactPortal,
+  useEffect,
+  useState,
 } from 'react';
 import CaptionedImage from '@/components/CaptionedImage';
-import { Theming } from '@/types';
+import { Theme, Theming } from '@/types';
+import Script from 'next/script';
+import { CTAButton } from '@/components/Buttons';
 
 type About = {
   name: string;
@@ -42,6 +46,8 @@ export default function AboutPage({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [dividerWidth, setDividerWidth] = useState(0);
+  const [dividerOffset, setDividerOffset] = useState('');
   const rendererOverrides = {
     layout: (layout: number[], children: any[]) => {
       const flexClass = 'flex gap-x-5 flex-col-reverse xl:flex-row mx-6';
@@ -77,7 +83,10 @@ export default function AboutPage({
     },
     divider: () => {
       return (
-        <div className="my-6 scale-x-[0.98] sm:scale-x-[1.142] md:scale-x-[1.297] lg:scale-x-[1.1782] xl:scale-x-[1.087]">
+        <div
+          className="relative my-6"
+          style={{ width: dividerWidth, left: `-${dividerOffset}` }}
+        >
           <Divider />
         </div>
       );
@@ -132,17 +141,41 @@ export default function AboutPage({
             };
           });
 
+  useEffect(() => {
+    // if (document.getElementById('layout-daddy') !== null)
+    setDividerWidth(document.getElementById('layout-daddy')?.clientWidth || 0);
+    setDividerOffset(
+      window.getComputedStyle(document.getElementById('layout-daddy')!)
+        .paddingLeft
+    );
+  });
+
   return (
     <Layout error={error}>
       {item && (
         <>
+          {/* {item?.key === 'donate' && (
+            // Loads the donation form
+            <>
+              <Script
+                src="https://sky.blackbaudcdn.net/static/donor-form-loader/2/main.js"
+                strategy="beforeInteractive"
+              />
+              <Script strategy="afterInteractive">
+                {`BBDonorFormLoader.newBlackbaudDonationFormZoned('renxt',
+                  'p-PFuHvew1kEO665oQM8v7JA',
+                  '63df0fa4-04c8-4dd1-bfe2-de4e800e4408', 'usa')`}
+              </Script>
+            </>
+          )} */}
+
           <motion.div
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="text-grey"
           >
             <h1 className="m-6 font-extrabold text-4xl xl:text-6xl text-slate">
-              {item.name}
+              {item?.key === 'donate' ? 'Support Our Work' : item.name}
             </h1>
             <div className="flex flex-col lg:flex-row">
               <div className="m-6 lg:w-1/2">
@@ -151,6 +184,26 @@ export default function AboutPage({
                   componentBlocks={Blocks()}
                   renderers={Doc(rendererOverrides)}
                 />
+                {item?.key === 'donate' && (
+                  <>
+                    <div
+                      className="relative my-6"
+                      // style={{ width: dividerWidth, left: `-${dividerOffset}` }}
+                    >
+                      {/* <Divider />    */}
+                      {/* //   <div id="blackbaud-donation-form_63df0fa4-04c8-4dd1-bfe2-de4e800e4408"></div> */}
+                      <CTAButton
+                        label="Donate Today"
+                        link="https://host.nxt.blackbaud.com/donor-form?svcid=renxt&formId=63df0fa4-04c8-4dd1-bfe2-de4e800e4408&envid=p-PFuHvew1kEO665oQM8v7JA&zone=usa"
+                        external={true}
+                        icon="website"
+                        theme={Theme.none}
+                        className={`flex flex-row-reverse gap-x-5 items-center text-4xl font-semibold mb-8 w-[340px]`}
+                      />
+                    </div>
+                  </>
+                )}
+
                 {jumpLinks && jumpLinks.length > 0 && (
                   <div className="hidden lg:flex flex-col flex-wrap m-6">
                     <p className="text-yellow text-xl lg:text-3xl font-extrabold uppercase">
@@ -185,12 +238,13 @@ export default function AboutPage({
                 )}
               </div>
             </div>
-
             {item.content.document &&
               item.content.document[0].children[0].text &&
               item.content.document[0].children[0].text.length > 0 && (
-                <div className="my-6 scale-x-[0.98] sm:scale-x-[1.142] md:scale-x-[1.297] lg:scale-x-[1.1782] xl:scale-x-[1.087]">
-                  {/* <div className="my-6 1"> */}
+                <div
+                  className="relative my-6"
+                  style={{ width: dividerWidth, left: `-${dividerOffset}` }}
+                >
                   <Divider />
                 </div>
               )}

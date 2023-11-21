@@ -70,8 +70,9 @@ const ItemRenderer = (props: { item: ResearchProject }) => {
           {props.item.name}
         </h3>
         <h2 className="text-sm">
-          {props.item.startYear}&nbsp;
-          {endLabel}
+          {props.item.startYear === props.item.endYear
+            ? props.item.startYear
+            : `${props.item.startYear} ${endLabel}`}
         </h2>
 
         <p>{props.item.shortDescription}</p>
@@ -118,7 +119,7 @@ export async function getStaticProps() {
 				}
 			},
 			orderBy: {
-				endYear: asc
+				endYear: desc
 			}
 		) {
 			name

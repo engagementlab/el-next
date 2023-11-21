@@ -19,12 +19,8 @@ import {
 
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import WebOutlinedIcon from '@mui/icons-material/WebOutlined';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
 
 import React, { useEffect, useState } from 'react';
 import { create } from 'zustand';
@@ -100,18 +96,59 @@ export function CustomNavigation({
 }: NavigationProps) {
   const [appPath, setAppPath] = useState('');
 
-  const listMapping = new Map<string, { label: string; url: string }[]>([
+  const listGroups = new Map<string, { label: string; url: string }[]>([
     // ['Initiatives', ['Landings', 'Studios']],
     [
       'Curriculum',
       [
         { label: 'Undergraduate', url: '/undergraduates' },
-        // { Graduate: '/graduates' },
-        // { 'Learning Partners': '/learning-partners' },
+        { label: 'Graduate', url: '/graduates' },
+        { label: 'Learning Partners', url: '/learning-partners' },
       ],
     ],
-    // ['Homes', 'Home'],
+    [
+      'Studios',
+      [
+        { label: 'Studios', url: '/studios' },
+        { label: 'Semesters', url: '/semesters' },
+        { label: 'Projects', url: '/studio-projects' },
+      ],
+    ],
+    [
+      'Research',
+      [
+        { label: 'Projects', url: '/research-projects' },
+        { label: 'Publications', url: '/publications' },
+        { label: 'Partners / Funders', url: '/partners' },
+      ],
+    ],
+    [
+      "What's New",
+      [
+        { label: 'News', url: '/news-items' },
+        { label: 'Events', url: '/events' },
+      ],
+    ],
   ]);
+  const listItems = [
+    {
+      label: 'Blurbs / Landing Pages',
+      url: '/initiatives-landings/clj4hyoh90000bn0kcd669525',
+    },
+    {
+      label: 'Filters',
+      url: '/filters',
+    },
+    { label: 'Initiative Landings', url: '/initiatives' },
+    {
+      label: 'People',
+      url: '/people',
+    },
+    {
+      label: 'Slideshows',
+      url: '/slideshows',
+    },
+  ];
   useEffect(() => {
     setAppPath(
       window.location.pathname.replace('/', '').split('/')[0] || 'tngvi'
@@ -154,7 +191,12 @@ export function CustomNavigation({
 
   const app = apps.filter((app) => app.key === appPath)[0];
 
-  const [expanded, setExpanded] = useState<boolean[]>([false, false]);
+  const [expanded, setExpanded] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const handleClick = (i: number) => {
     setExpanded(
       expanded.flatMap((v, eI) => {
@@ -232,22 +274,45 @@ export function CustomNavigation({
       <NavItem href="/">Dashboard</NavItem>
 
       <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        component="nav"
+        sx={{ width: '100%', padding: '8px 10px' }}
+        // component="nav"
       >
-        {Array.from(listMapping.keys()).map((folderKey, i) => {
-          if (listMapping.get(folderKey))
+        {Array.from(listGroups.keys()).map((folderKey, i) => {
+          if (listGroups.get(folderKey))
             return (
-              <>
-                <ListItemButton onClick={() => handleClick(i)}>
+              <div className={`list-${folderKey}`}>
+                <ListItemButton
+                  onClick={() => handleClick(i)}
+                  sx={{
+                    color: 'black',
+                    fontWeight: '700',
+                    transition: 'all .2s',
+                    transformOrigin: 'left',
+                    ':hover': {
+                      backgroundColor: '#F6A536',
+
+                      translate: '1% 0%',
+                    },
+                  }}
+                >
                   <ListItemText primary={folderKey} />
                   {expanded[i] ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
                 <Collapse in={expanded[i]} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    {listMapping.get(folderKey)?.map((item) => (
+                    {listGroups.get(folderKey)?.map((item) => (
                       <ListItemButton
-                        sx={{ pl: 4 }}
+                        sx={{
+                          transition: 'all .2s',
+                          transformOrigin: 'left',
+                          pl: 4,
+                          ':hover': {
+                            backgroundColor: 'black',
+                            color: 'white',
+
+                            translate: '3% 0%',
+                          },
+                        }}
                         component="a"
                         href={item.url}
                         className="navItems"
@@ -260,44 +325,31 @@ export function CustomNavigation({
                     ))}
                   </List>
                 </Collapse>
-              </>
-            );
-          else
-            return (
-              <ListItemButton component="a" href={`/${list.path}`}>
-                {/* <ListItemIcon>
-                <SendIcon />
-              </ListItemIcon> */}
-                <ListItemText primary={list.label} />
-              </ListItemButton>
+              </div>
             );
         })}
-        {/* <ListItemButton component="a" href="/initiatives-landings">
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse> */}
-      </List>
-      {/* 
-      {lists.map((list, i) => {
-        if (listMapping.get(list.label))
-          return <button key={i}>listMapping.get(list.label)</button>;
-        else
+        {listItems.map((item) => {
           return (
-            <NavItem key={i} href={`/${list.path}`}>
-              {list.label}
-            </NavItem>
+            <ListItemButton
+              component="a"
+              href={item.url}
+              sx={{
+                transition: 'all .2s',
+                transformOrigin: 'left',
+                // pl: 4,
+                ':hover': {
+                  backgroundColor: 'black',
+                  color: 'white',
+
+                  translate: '3% 0%',
+                },
+              }}
+            >
+              <ListItemText primary={item.label} />
+            </ListItemButton>
           );
-      })} */}
+        })}
+      </List>
       <hr style={{ width: '85%', borderWidth: '1px', borderColor: 'grey' }} />
       <NavItem href="/media">
         <span>Media Library</span>

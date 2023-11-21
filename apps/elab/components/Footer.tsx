@@ -345,7 +345,7 @@ export const Footer = () => {
             <GetInTouch />
           </div>
         </div>
-        <div className="mt-4 px-6 md:px-16 xl:px-24 flex flex-col justify-between min-w-[640px]">
+        <div className="mt-4 px-6 md:px-16 xl:px-24 flex flex-col justify-between xl:min-w-[640px]">
           <div className="hidden lg:block mb-5">
             <GetInTouch />
           </div>

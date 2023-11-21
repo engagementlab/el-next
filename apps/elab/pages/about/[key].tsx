@@ -51,7 +51,7 @@ export default function AboutPage({
   const rendererOverrides = {
     layout: (layout: number[], children: any[]) => {
       const flexClass = 'flex gap-x-5 flex-col-reverse xl:flex-row mx-6';
-      if (layout[0] === 1 && layout[1] === 1) {
+      if (layout.length === 2 && layout[0] === 1 && layout[1] === 1) {
         return (
           <div className={flexClass}>
             {children.map(
@@ -77,6 +77,18 @@ export default function AboutPage({
                 </div>
               )
             )}
+          </div>
+        );
+      }
+      // [ ][ ][ ]
+      else if (layout[0] === 1 && layout[1] === 1 && layout[2] === 1) {
+        return (
+          <div className={flexClass}>
+            {children.map((element, i) => (
+              <div key={i} className="w-full lg:w-1/3">
+                {element}
+              </div>
+            ))}
           </div>
         );
       }

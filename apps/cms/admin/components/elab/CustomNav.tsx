@@ -25,7 +25,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import React, { useEffect, useState } from 'react';
 import { create } from 'zustand';
 
-import './styles.css';
+import '../styles.css';
 
 const apps = [
   {

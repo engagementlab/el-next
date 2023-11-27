@@ -174,7 +174,8 @@ app.post('/media/upload', upload.none(), async (req, res) => {
       folder:
         req.body.folder !== 'undefined'
           ? req.body.folder
-          : req.body.app || 'tngvi',
+          : req.body.app || 'elab-home-v3.x',
+      context: { alt: 'alt test' },
     });
     res.status(200).send(response);
   } catch (err: any) {
@@ -183,12 +184,27 @@ app.post('/media/upload', upload.none(), async (req, res) => {
   }
 });
 
-app.post('/media/update', async (req, res) => {
+app.get('/media/update', (req, res) => {
   try {
-    cloudinary.uploader.add_context(
-      'alt=al txt test',
-      [req.query.id as string],
-      (e, response) => res.status(200).send(response)
+    // cloudinary.uploader.add_context(
+    //   "['alt': 'al txt test']",
+    //   "['alt': 'al txt test']",
+    //   (e, response) => res.status(200).send(response)
+    // );
+    console.log((req.query.id as string).replace('.jpg', ''));
+
+    cloudinary.api.update(
+      (req.query.id as string).replace('.jpg', ''),
+      {
+        resource_type: 'image',
+        // type: 'upload',
+        context: { alt: 'alt test' },
+        // caption: 'YourCaptionDataHere',
+      },
+      function (error, result) {
+        console.log(error, result);
+        res.status(200).send(result);
+      }
     );
   } catch (err: any) {
     res.status(500).send(err);

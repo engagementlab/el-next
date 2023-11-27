@@ -334,8 +334,12 @@ export default function Media() {
   };
   const updateImg = () => {
     try {
+      var formData = new FormData();
+
       axios
-        .get(`${endpointPrefix}/media/delete?id=${imgIdToDelete}`)
+        .get(
+          `${endpointPrefix}/media/update?id=elab-home-v3.x/y9qweimfol5ucr2otwly.jpg`
+        )
         .then((response) => {
           if (response.data.result === 'ok') {
             setConfirmOpen(false);
@@ -571,8 +575,8 @@ export default function Media() {
                           sx={actionsStyle}
                           aria-label="delete image"
                           onClick={() => {
-                            setConfirmOpen(true);
-                            setImageIdToDelete(d.public_id);
+                            // setConfirmOpen(true);
+                            updateImg();
                           }}
                         >
                           <DeleteForeverTwoToneIcon fontSize="large" />

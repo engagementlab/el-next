@@ -12,13 +12,19 @@ import {
   Alert,
   Box,
   Checkbox,
+  Chip,
+  FormControl,
   FormControlLabel,
   Grid,
   IconButton,
+  InputLabel,
   LinearProgress,
   MenuItem,
   Modal,
   Select as MUISelect,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
   Snackbar,
   TextField,
   Tooltip,
@@ -42,26 +48,18 @@ import Link from 'next/link';
 const axios = require('axios').default;
 const _ = require('underscore');
 
-type VideoGridState = {
-  pgIndex: number;
-  selectedVideo: RelatedVideoField;
-  data: any[];
-  dataError: boolean;
-  gridOpen: boolean;
-  waiting: boolean;
-
-  toggleWaiting: () => void;
-  setData: (vidData: any[]) => void;
-  setPageIndex: (pgIndex: number) => void;
-  setSelectedVideo: (selectedVideo: RelatedVideoField) => void;
-  setGridOpen: (open: boolean) => void;
-};
+type Folder = { name: string; path: string };
 
 type ImageGridState = {
   id: string;
   alt: string;
+  folders: Folder[];
+
   data: any[];
+  selectedFolders: string[];
+
   index: number;
+  altExisted: boolean;
   dataError: boolean;
   waiting: boolean;
   gridOpen: boolean;
@@ -69,9 +67,11 @@ type ImageGridState = {
   toggleWaiting: () => void;
   setId: (id: string) => void;
   setAlt: (id: string) => void;
-  setData: (imgData: any[]) => void;
+  setData: (imgData: any[], folders: { name: string; path: string }[]) => void;
   setIndex: (imgIndex: number) => void;
+  setSelecedFolders: (event: SelectChangeEvent<string[]>) => void;
   setGridOpen: (open: boolean) => void;
+  setAltExisted: (existed: boolean) => void;
 };
 
 export interface RelatedImage {
@@ -83,155 +83,6 @@ export interface RelatedImage {
 
 export interface EmbeddedUrl {
   embed: EmbedMetadata;
-}
-
-function videoSelect({
-  label,
-  current,
-  defaultValue = {
-    video: {
-      label: '',
-      value: '',
-      thumb: '',
-      thumbSm: '',
-      caption: '',
-    },
-  },
-}: {
-  label: string;
-  current?: RelatedVideoField;
-  defaultValue: RelatedVideoField;
-}): FormField<RelatedVideoField, undefined> {
-  return {
-    kind: 'form',
-
-    Input({ value, onChange, autoFocus }) {
-      // Create store with Zustand
-      const [useStore] = useState(() =>
-        create<VideoGridState>((set) => ({
-          pgIndex: 0,
-          data: [],
-          dataError: false,
-          gridOpen: true,
-          waiting: true,
-
-          selectedVideo: {
-            video: {
-              label: '',
-              value: '',
-              thumb: '',
-              thumbSm: '',
-              caption: '',
-            },
-          },
-          toggleWaiting: () =>
-            set((state) => {
-              return { waiting: !state.waiting };
-            }),
-          setPageIndex: (index: number) =>
-            set((state) => {
-              return {
-                ...state,
-                pgIndex: index,
-              };
-            }),
-          setData: (vidData: any[]) =>
-            set((state) => {
-              return {
-                ...state,
-                data: vidData,
-              };
-            }),
-          setSelectedVideo: (video: RelatedVideoField) =>
-            set((state) => {
-              return {
-                ...state,
-                selectedVideo: video,
-              };
-            }),
-          setGridOpen: (open: boolean) =>
-            set((state) => {
-              return {
-                ...state,
-                gridOpen: open,
-              };
-            }),
-        }))
-      );
-
-      const setGridOpen = useStore((state) => state.setGridOpen);
-      const toggleWaiting = useStore((state) => state.toggleWaiting);
-      const setData = useStore((state) => state.setData);
-
-      const { data, gridOpen, dataError } = useStore((state) => state);
-
-      useEffect(() => {
-        const endpointPrefix =
-          window.location.protocol === 'https:'
-            ? '/api'
-            : 'http://localhost:8000';
-
-        if (data && data.length > 1) return;
-        // Get Vimeo data
-        try {
-          axios
-            .get(`${endpointPrefix}/media/videos`)
-            .then((response: { data: any[] }) => {
-              setData(response.data);
-              toggleWaiting();
-            })
-            .catch((error: any) => {
-              useStore.setState({
-                dataError: true,
-              });
-              toggleWaiting();
-              setGridOpen(false);
-            });
-        } catch (err) {
-          useStore.setState({
-            dataError: true,
-          });
-          toggleWaiting();
-          setGridOpen(false);
-        }
-      });
-
-      let videoField: RelatedVideoField = {};
-      if (value) videoField = value;
-      else videoField = defaultValue;
-
-      return (
-        <FieldContainer>
-          Click <em>Done</em> for video preview.
-          <VideoSelector
-            video={videoField}
-            data={data}
-            open={gridOpen}
-            singleSelection={true}
-            selectionChanged={(item: RelatedVideoField) => {
-              onChange({
-                label: item.label,
-                value: item.value,
-                thumb: item.thumb,
-                thumbSm: item.thumbSm,
-              });
-            }}
-            done={() => setGridOpen(false)}
-          />
-          {dataError && (
-            <Alert severity="error">
-              Something went wrong. Please refresh this page and try again.
-            </Alert>
-          )}
-        </FieldContainer>
-      );
-    },
-    options: undefined,
-    defaultValue,
-    validate(value) {
-      return typeof value === 'object';
-    },
-  };
 }
 
 function imageSelect({
@@ -252,13 +103,26 @@ function imageSelect({
     kind: 'form',
 
     Input({ value, onChange, autoFocus }) {
+      const ITEM_HEIGHT = 48;
+      const ITEM_PADDING_TOP = 8;
+      const MenuProps = {
+        PaperProps: {
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+          },
+        },
+      };
       // Create store with Zustand
       const [useStore] = useState(() =>
         create<ImageGridState>((set) => ({
           waiting: true,
           gridOpen: true,
           dataError: false,
+          altExisted: false,
           data: [],
+          folders: [],
+          selectedFolders: [],
           index: 0,
           id:
             (value?.publicId as unknown as string) ||
@@ -283,11 +147,15 @@ function imageSelect({
                 alt,
               };
             }),
-          setData: (imgData: any[]) =>
+          setData: (
+            imgData: any[],
+            folders: { name: string; path: string }[]
+          ) =>
             set((state) => {
               return {
                 ...state,
                 data: imgData,
+                folders,
               };
             }),
           setIndex: (imgIndex: number) =>
@@ -297,6 +165,13 @@ function imageSelect({
                 index: imgIndex,
               };
             }),
+          setSelecedFolders: (event: SelectChangeEvent<string[]>) =>
+            set((state: ImageGridState) => {
+              return {
+                ...state,
+                selectedFolders: event.target.value as string[],
+              };
+            }),
           setGridOpen: (open: boolean) =>
             set((state) => {
               return {
@@ -304,27 +179,54 @@ function imageSelect({
                 gridOpen: open,
               };
             }),
+          setAltExisted: (existed: boolean) =>
+            set((state) => {
+              return {
+                ...state,
+                altExisted: existed,
+              };
+            }),
         }))
       );
 
-      const setId = useStore((state) => state.setId);
-      const setAlt = useStore((state) => state.setAlt);
-      const toggleWaiting = useStore((state) => state.toggleWaiting);
-      const setData = useStore((state) => state.setData);
-      const setIndex = useStore((state) => state.setIndex);
-      const setGridOpen = useStore((state) => state.setGridOpen);
+      const {
+        id,
+        alt,
+        altExisted,
+        gridOpen,
+        selectedFolders,
+        folders,
+        data,
+        dataError,
+        index,
+        waiting,
+        setId,
+        setAlt,
+        toggleWaiting,
+        setData,
+        setIndex,
+        setGridOpen,
+        setSelecedFolders,
+        setAltExisted,
+      } = useStore((state) => state);
+
+      const filteredData = data.filter(
+        // If selected filters empty, show all...
+        (item) =>
+          selectedFolders.length === 0 ||
+          // ...otherwise, item's filters must match ALL selected filters
+          selectedFolders.indexOf(item.folder) > -1
+      );
 
       const snackbarClose = () => {
         useStore.setState({
           dataError: false,
         });
       };
-      const { id, alt, gridOpen, data, dataError, index, waiting } = useStore(
-        (state) => state
-      );
+
       const beginIndex = index * 15;
       const endIndex = beginIndex + 15;
-      const dataLength = Math.floor(data.length / 15) + 1;
+      const dataLength = Math.floor(filteredData.length / 15) + 1;
 
       useEffect(() => {
         // app name is derived from first pathname string
@@ -354,7 +256,7 @@ function imageSelect({
               );
               data.splice(0, 0, data.splice(itemIndex, 1)[0]);
             }
-            setData(data);
+            setData(data, response.data.folders);
             toggleWaiting();
           })
           .catch((error: any) => {
@@ -403,6 +305,7 @@ function imageSelect({
                   >
                     <ArrowCircleLeftOutlinedIcon fontSize="large" />
                   </IconButton>
+
                   <MUISelect
                     value={index}
                     label="Page"
@@ -425,42 +328,105 @@ function imageSelect({
                   >
                     <ArrowCircleRightOutlinedIcon fontSize="large" />
                   </IconButton>
+                  <FormControl sx={{ m: 1, width: 600 }}>
+                    <InputLabel id="folders-chip-label">
+                      Filter by Folder
+                    </InputLabel>
+                    <Select
+                      labelId="folders-chip-label"
+                      id="folders-chip"
+                      multiple
+                      value={selectedFolders}
+                      onChange={(val) => {
+                        setSelecedFolders(val);
+                      }}
+                      input={
+                        <OutlinedInput id="select-multiple-chip" label="Chip" />
+                      }
+                      renderValue={(selected: string[]) => (
+                        <Box
+                          sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+                        >
+                          {selected.map((value) => (
+                            <Chip
+                              key={value}
+                              label={value
+                                .substring(value.indexOf('/') + 1)
+                                .replaceAll('-', ' ')}
+                            />
+                          ))}
+                        </Box>
+                      )}
+                      MenuProps={MenuProps}
+                    >
+                      {folders.map((folder) => (
+                        <MenuItem key={folder.path} value={folder.path}>
+                          {/* Format folder name */}
+                          {folder.name
+                            .replaceAll('-', ' ')
+                            .split(' ')
+                            .map(
+                              (s) => s.charAt(0).toUpperCase() + s.substring(1)
+                            )
+                            .join(' ')}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </div>
 
                 <hr style={{ borderTopWidth: '2px', borderColor: '#f6a536' }} />
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container spacing={2}>
-                    {data.slice(beginIndex, endIndex).map((item) => (
-                      <Grid item xs={3} key={item.public_id}>
-                        <a
-                          style={{ position: 'relative' }}
-                          onClick={(e) => {
-                            setId(item.public_id);
-                            onChange({ publicId: item.public_id });
-                          }}
-                        >
-                          <div
-                            style={{ position: 'absolute', top: 0, left: 0 }}
-                          >
-                            {item.public_id === id && (
-                              <CheckCircleOutlineIcon
-                                fontSize="large"
-                                htmlColor="#f6a536"
-                              />
-                            )}
-                          </div>
-                          <img
-                            src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_100/v${item.version}/${item.public_id}`}
-                            style={{
-                              opacity: item.public_id === id ? 0.5 : 1,
+                    {filteredData.slice(beginIndex, endIndex).map((item) => {
+                      const alt =
+                        item.context && item.context.custom
+                          ? item.context.custom.alt
+                          : '';
+                      return (
+                        <Grid item xs={3} key={item.public_id}>
+                          <a
+                            style={{ position: 'relative' }}
+                            onClick={(e) => {
+                              setAlt(alt);
+                              setAltExisted(
+                                item.context && item.context.custom
+                              );
+                              setId(item.public_id);
+                              onChange({
+                                publicId: item.public_id,
+                                alt,
+                              });
                             }}
-                          />
-                        </a>
-                      </Grid>
-                    ))}
+                          >
+                            <div
+                              style={{ position: 'absolute', top: 0, left: 0 }}
+                            >
+                              {item.public_id === id && (
+                                <CheckCircleOutlineIcon
+                                  fontSize="large"
+                                  htmlColor="#f6a536"
+                                />
+                              )}
+                            </div>
+                            <img
+                              src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_100/v${item.version}/${item.public_id}`}
+                              style={{
+                                opacity: item.public_id === id ? 0.5 : 1,
+                              }}
+                            />
+                          </a>
+                        </Grid>
+                      );
+                    })}
                   </Grid>
                 </Box>
-
+                {altExisted && (
+                  <Alert severity="info" sx={{ marginBottom: '.4rem' }}>
+                    Alt text already exists. It can be further edited for this
+                    usage if needed.
+                  </Alert>
+                )}
                 <TextField
                   id="alt-field"
                   multiline
@@ -476,6 +442,7 @@ function imageSelect({
                       alt: e.target.value as any,
                     });
                   }}
+                  defaultValue={alt}
                 />
                 <br />
                 <IconButton

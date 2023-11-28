@@ -210,7 +210,10 @@ export default function Media() {
           return {
             ...state,
             selectedImg: image,
-            altText: image.context.custom.alt,
+            altText:
+              image.context && image.context.custom.alt
+                ? image.context.custom.alt
+                : '',
           };
         }),
       setSelecedFolders: (event: SelectChangeEvent<string[]>) =>
@@ -420,24 +423,7 @@ export default function Media() {
       setAltTextState('error');
     }
   };
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-
-    setOpen(false);
-  };
   useEffect(() => {
     if (data && data.length > 1) return;
     refreshMedia();

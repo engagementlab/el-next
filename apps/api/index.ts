@@ -103,15 +103,16 @@ app.get(`/media/get/:app/:type`, async (req, res) => {
   const appName = req.params.app;
   try {
     cloudinary.api.sub_folders(
-      appName || 'tngvi',
+      appName || 'elab-home-v3.x',
       { max_results: 100 },
       (e, foldersResponse) => {
         cloudinary.api.resources(
           {
-            prefix: appName || 'tngvi',
+            prefix: appName || 'elab-home-v3.x',
             resource_type: 'image',
             type: req.params.type,
             max_results: 500,
+            context: true,
           },
           (e, response) => {
             const sorted = response.resources.sort(
@@ -175,7 +176,7 @@ app.post('/media/upload', upload.none(), async (req, res) => {
         req.body.folder !== 'undefined'
           ? req.body.folder
           : req.body.app || 'elab-home-v3.x',
-      context: { alt: 'alt test' },
+      context: { alt: req.body.alt ? req.body.alt : '' },
     });
     res.status(200).send(response);
   } catch (err: any) {
@@ -186,24 +187,16 @@ app.post('/media/upload', upload.none(), async (req, res) => {
 
 app.get('/media/update', (req, res) => {
   try {
-    // cloudinary.uploader.add_context(
-    //   "['alt': 'al txt test']",
-    //   "['alt': 'al txt test']",
-    //   (e, response) => res.status(200).send(response)
-    // );
-    console.log((req.query.id as string).replace('.jpg', ''));
-
     cloudinary.api.update(
-      (req.query.id as string).replace('.jpg', ''),
+      req.query.id as string,
       {
         resource_type: 'image',
-        // type: 'upload',
-        context: { alt: 'alt test' },
-        // caption: 'YourCaptionDataHere',
+
+        context: { alt: req.query.alt },
       },
       function (error, result) {
-        console.log(error, result);
-        res.status(200).send(result);
+        if (error) res.status(500).send(error);
+        res.status(200).send('ok');
       }
     );
   } catch (err: any) {

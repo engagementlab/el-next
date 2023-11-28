@@ -12,33 +12,48 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
+  ClickAwayListener,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   Fab,
   FormControl,
+  Grow,
   IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
+  Input,
   InputLabel,
   LinearProgress,
   MenuItem,
+  MenuList,
   Modal,
   OutlinedInput,
   Pagination,
+  Paper,
+  Popper,
   Select,
   SelectChangeEvent,
+  Switch,
+  TextField,
   Theme,
+  Typography,
+  styled,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
 import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
+
+import DoneIcon from '@mui/icons-material/Done';
 import FolderIcon from '@mui/icons-material/Folder';
 import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { Image } from '@el-next/components';
 
@@ -72,24 +87,29 @@ type NavState = {
   folders: Folder[];
   selectedFolders: string[];
   selectedTargetFolder: string | undefined;
-  deleteConfirmOpen: boolean;
+  editOpen: boolean;
+  altText: string | undefined;
+  altTextState: string;
+  confirmed: boolean;
   errorOpen: boolean;
-  imgIdToDelete: string;
+  selectedImg: { public_id: string; context?: { custom?: { alt?: string } } };
   pgIndex: number;
-  selectedImgId: string;
   waiting: boolean;
   uploadOpen: boolean;
 
+  toggleConfirm: () => void;
   toggleWaiting: () => void;
   setData: (imgData: any[], folders: { name: string; path: string }[]) => void;
   setId: (id: string) => void;
-  setImageIdToDelete: (id: string) => void;
+  setSelectedImage: (image: any) => void;
   setSelecedFolders: (event: SelectChangeEvent<string[]>) => void;
   setSelectedTargetFolder: (event: string) => void;
+  setAltText: (txt: string) => void;
+  setAltTextState: (state: string) => void;
   setIndex: (imgIndex: number) => void;
   setErrorOpen: (open: boolean) => void;
   setUploadOpen: (open: boolean) => void;
-  setConfirmOpen: (open: boolean) => void;
+  setEditOpen: (open: boolean) => void;
 };
 
 const styles = {
@@ -112,7 +132,17 @@ const styles = {
   imgHover: emCss`opacity: .5`,
 };
 const actionsStyle = { position: 'absolute', bottom: 0, right: 0 };
-
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 export default function Media() {
   // app name is derived from first pathname string
   const app =
@@ -137,17 +167,23 @@ export default function Media() {
   // Create store with Zustand
   const [useStore] = useState(() =>
     create<NavState>((set) => ({
+      confirmed: false,
       data: [],
       folders: [],
       errorOpen: false,
-      imgIdToDelete: '',
-      selectedImgId: '',
+      selectedImg: { public_id: '' },
       selectedFolders: [],
       selectedTargetFolder: undefined,
+      altText: undefined,
+      altTextState: '',
       uploadOpen: false,
-      deleteConfirmOpen: false,
+      editOpen: false,
       waiting: true,
       pgIndex: 0,
+      toggleConfirm: () =>
+        set((state) => {
+          return { confirmed: !state.confirmed };
+        }),
       toggleWaiting: () =>
         set((state) => {
           return {
@@ -169,11 +205,12 @@ export default function Media() {
             selectedImgId: id,
           };
         }),
-      setImageIdToDelete: (id: string) =>
+      setSelectedImage: (image: any) =>
         set((state) => {
           return {
             ...state,
-            imgIdToDelete: id,
+            selectedImg: image,
+            altText: image.context.custom.alt,
           };
         }),
       setSelecedFolders: (event: SelectChangeEvent<string[]>) =>
@@ -190,6 +227,20 @@ export default function Media() {
             selectedTargetFolder: event,
           };
         }),
+      setAltText: (txt: string) =>
+        set((state) => {
+          return {
+            ...state,
+            altText: txt,
+          };
+        }),
+      setAltTextState: (newState: string) =>
+        set((state) => {
+          return {
+            ...state,
+            altTextState: newState,
+          };
+        }),
       setIndex: (imgIndex: number) =>
         set((state) => {
           return {
@@ -197,11 +248,13 @@ export default function Media() {
             pgIndex: imgIndex,
           };
         }),
-      setConfirmOpen: (open: boolean) =>
+      setEditOpen: (open: boolean) =>
         set((state) => {
           return {
             ...state,
-            deleteConfirmOpen: open,
+            editOpen: open,
+            altTextState: '',
+            confirmed: false,
           };
         }),
       setErrorOpen: (open: boolean) =>
@@ -224,25 +277,31 @@ export default function Media() {
   );
 
   const {
-    deleteConfirmOpen,
+    confirmed,
+    editOpen,
     errorOpen,
-    imgIdToDelete,
+    selectedImg,
     selectedFolders,
     selectedTargetFolder,
+    altText,
+    altTextState,
     folders,
     data,
     waiting,
     pgIndex,
     uploadOpen,
 
+    toggleConfirm,
     toggleWaiting,
     setData,
-    setConfirmOpen,
+    setEditOpen,
     setErrorOpen,
     setId,
-    setImageIdToDelete,
+    setSelectedImage,
     setSelecedFolders,
     setSelectedTargetFolder,
+    setAltText,
+    setAltTextState,
     setIndex,
     setUploadOpen,
   } = useStore((state) => state);
@@ -259,6 +318,7 @@ export default function Media() {
   const endIndex = beginIndex + 30;
 
   const refreshMedia = () => {
+    // toggleWaiting();
     axios
       .get(
         `${endpointPrefix}/media/get/${
@@ -287,6 +347,7 @@ export default function Media() {
           formData.append('img', reader.result as string);
           formData.append('app', app === 'elab' ? 'elab-home-v3.x' : app);
           formData.append('folder', selectedTargetFolder as string);
+          formData.append('alt', altText as string);
 
           var xhr = new XMLHttpRequest();
           xhr.open('POST', `${endpointPrefix}/media/upload`, true);
@@ -314,12 +375,12 @@ export default function Media() {
   const deleteImg = () => {
     try {
       axios
-        .get(`${endpointPrefix}/media/delete?id=${imgIdToDelete}`)
+        .get(`${endpointPrefix}/media/delete?id=${selectedImg.public_id}`)
         .then((response) => {
           if (response.data.result === 'ok') {
-            setConfirmOpen(false);
-
+            setEditOpen(false);
             toggleWaiting();
+
             refreshMedia();
             return;
           }
@@ -333,31 +394,50 @@ export default function Media() {
     }
   };
   const updateImg = () => {
+    setAltTextState('waiting');
     try {
-      var formData = new FormData();
-
       axios
         .get(
-          `${endpointPrefix}/media/update?id=elab-home-v3.x/y9qweimfol5ucr2otwly.jpg`
+          `${endpointPrefix}/media/update?id=${selectedImg.public_id}&alt=${altText}`
         )
         .then((response) => {
-          if (response.data.result === 'ok') {
-            setConfirmOpen(false);
+          if (response.data === 'ok') {
+            // setEditOpen(false);
 
-            toggleWaiting();
-            refreshMedia();
+            // toggleWaiting();
+            setAltTextState('done');
+            // refreshMedia();
             return;
           }
           setErrorOpen(true);
         })
         .catch((error) => {
           setErrorOpen(true);
+          setAltTextState('error');
         });
     } catch (err: any) {
       setErrorOpen(true);
+      setAltTextState('error');
     }
   };
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
 
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event: Event) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setOpen(false);
+  };
   useEffect(() => {
     if (data && data.length > 1) return;
     refreshMedia();
@@ -404,7 +484,24 @@ export default function Media() {
                 ))}
               </Select>
             </FormControl>
-            <div {...getRootProps({ className: 'dropzone' })}>
+            <FormControl sx={{ m: 1, width: 500 }}>
+              <TextField
+                label="Alt Text (optional):"
+                helperText="If not specified, this must be written on a per-document usage basis"
+                id="alt-text"
+                multiline={true}
+                rows={4}
+                onChange={(val) => {
+                  setAltText(val.target.value);
+                }}
+              />
+            </FormControl>
+            <div
+              {...getRootProps({
+                className: 'dropzone',
+                style: { backgroundColor: '#FFF1DB', padding: '1rem' },
+              })}
+            >
               <input {...getInputProps()} />
               <p>Drag and drop an image here, or click to select one.</p>
               <em>(Only *.jpeg and *.png images will be accepted)</em>
@@ -435,37 +532,65 @@ export default function Media() {
       {!waiting ? (
         <div>
           <Dialog
-            open={deleteConfirmOpen}
+            open={editOpen}
             onClose={() => {
-              setConfirmOpen(false);
+              setEditOpen(false);
             }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">{'Are you sure?'}</DialogTitle>
-            <DialogContent>
+            <DialogTitle id="alert-dialog-title">Image Actions</DialogTitle>
+            <Paper sx={{ p: '2rem' }}>
+              <TextField
+                label="Change Alt Text"
+                helperText="If not specified, this must be written on a per-document usage basis"
+                id="alt-text"
+                multiline={true}
+                rows={4}
+                defaultValue={selectedImg.context?.custom?.alt}
+                onChange={(val) => {
+                  setAltText(val.target.value);
+                }}
+              />
+              <br />
+              <Box sx={{ display: 'flex' }}>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => updateImg()}
+                >
+                  Update
+                </Button>
+                {altTextState === 'waiting' && (
+                  <CircularProgress sx={{ p: '.4rem' }} />
+                )}
+                {altTextState === 'done' && <DoneIcon sx={{ p: '.4rem' }} />}
+              </Box>
+            </Paper>
+            <Paper elevation={3} sx={{ p: '2rem' }}>
+              <Divider />
               <DialogContentText id="alert-dialog-description">
                 This image will be permanently deleted. If it's being used
                 somewhere on this app, bugs/errors may occur.
+                <br />
+                <Switch
+                  defaultChecked={false}
+                  value={confirm}
+                  onClick={() => {
+                    toggleConfirm();
+                  }}
+                />{' '}
+                I Understand
               </DialogContentText>
-            </DialogContent>
-            <DialogActions>
               <Button
-                onClick={() => {
-                  setConfirmOpen(false);
-                }}
-                autoFocus
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  deleteImg();
-                }}
+                color="error"
+                variant="contained"
+                onClick={() => deleteImg()}
+                disabled={!confirmed}
               >
                 Delete
               </Button>
-            </DialogActions>
+            </Paper>
           </Dialog>
 
           <Fab
@@ -569,34 +694,45 @@ export default function Media() {
                         </>
                       }
                       actionIcon={
-                        <IconButton
-                          color="warning"
-                          size="large"
-                          sx={actionsStyle}
-                          aria-label="delete image"
-                          onClick={() => {
-                            // setConfirmOpen(true);
-                            updateImg();
-                          }}
-                        >
-                          <DeleteForeverTwoToneIcon fontSize="large" />
-                        </IconButton>
+                        <>
+                          {' '}
+                          <IconButton
+                            color="secondary"
+                            size="large"
+                            sx={actionsStyle}
+                            aria-label="delete image"
+                            onClick={() => {
+                              setSelectedImage(d);
+                              setEditOpen(true);
+                              // ();
+                            }}
+                          >
+                            <EditIcon fontSize="large" />
+                          </IconButton>
+                          {/* <IconButton
+                            color="warning"
+                            size="large"
+                            sx={actionsStyle}
+                            aria-label="delete image"
+                          >
+                            <DeleteForeverTwoToneIcon fontSize="large" />
+                          </IconButton> 
+                          <HtmlTooltip
+                            title={
+                              <React.Fragment>
+                                <Typography color="inherit" variant='h4'>
+                                Options
+                                </Typography>
+                                
+                              </React.Fragment>
+                            }
+                            placement="right"
+                          >
+       
+                          </HtmlTooltip>*/}
+                        </>
                       }
                     />
-                    {/* {d.public_id === currentId && (
-                      <IconButton
-                        color="warning"
-                        size="large"
-                        sx={actionsStyle}
-                        aria-label="delete image"
-                        onClick={() => {
-                          setDeleteConfirm(true);
-                          setImageIdToDelete(d.public_id);
-                        }}
-                      >
-                        <DeleteForeverTwoToneIcon fontSize="large" />
-                      </IconButton>
-                    )} */}
                     {d.folder
                       .substring(d.folder.indexOf('/') + 1)
                       .replaceAll('-', ' ')

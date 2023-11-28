@@ -4,7 +4,7 @@
   "private": true,
   "main": "keystone.ts",
   "scripts": {
-    "dev": "npx tsc --esModuleInterop dev.ts; node dev.js",
+    "dev": ". ~/.nvm/nvm.sh; nvm use; npx tsc --esModuleInterop dev.ts; node dev.js",
     "start": "keystone start",
     "build": "node build.js",
     "build-export": "npx babel export/src -d export/lib --extensions .ts,.tsx",

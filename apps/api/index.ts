@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -146,8 +146,13 @@ app.get(`/media/get/:app/:type`, async (req, res) => {
 
 app.get('/media/delete', async (req, res) => {
   try {
-    cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
-      res.status(200).send(response)
+    cloudinary.uploader.destroy(
+      req.query.id as string,
+      { invalidate: true },
+      (e, response) => {
+        console.log(response, e);
+        res.status(200).send(response);
+      }
     );
   } catch (err: any) {
     res.status(500).send(err);
@@ -171,13 +176,23 @@ app.post('/embed', async (req, res) => {
 
 app.post('/media/upload', upload.none(), async (req, res) => {
   try {
-    const response = await cloudinary.uploader.upload(req.body.img, {
+    let options: UploadApiOptions = {
       folder:
         req.body.folder !== 'undefined'
           ? req.body.folder
           : req.body.app || 'elab-home-v3.x',
       context: { alt: req.body.alt ? req.body.alt : '' },
-    });
+    };
+    if (req.body.overwrite === 'true' && req.body.public_id) {
+      options.overwrite = true;
+      options.invalidate = true;
+      options.public_id = req.body.public_id.replace(
+        req.body.app || 'elab-home-v3.x',
+        ''
+      );
+    }
+
+    const response = await cloudinary.uploader.upload(req.body.img, options);
     res.status(200).send(response);
   } catch (err: any) {
     console.error(err);
@@ -194,6 +209,28 @@ app.get('/media/update', (req, res) => {
 
         context: { alt: req.query.alt },
       },
+      function (error, result) {
+        if (error) res.status(500).send(error);
+        res.status(200).send('ok');
+      }
+    );
+  } catch (err: any) {
+    res.status(500).send(err);
+  }
+});
+
+// clp8ut62f00176vlbajcxgdja
+//
+app.get('/media/update/metadata', (req, res) => {
+  try {
+    cloudinary.api.update(
+      req.query.id as string,
+      'add',
+      {
+        resource_type: 'image',
+        context: `${req.query.doc_id}=hknnjlnk`,
+      },
+      // [req.query.id as string],
       function (error, result) {
         if (error) res.status(500).send(error);
         res.status(200).send('ok');

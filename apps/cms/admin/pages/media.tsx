@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PageContainer } from '@keystone-6/core/admin-ui/components';
 import { create } from 'zustand';
 
@@ -13,47 +13,37 @@ import {
   Button,
   Chip,
   CircularProgress,
-  ClickAwayListener,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogContentText,
   DialogTitle,
   Divider,
   Fab,
   FormControl,
-  Grow,
   IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
-  Input,
   InputLabel,
   LinearProgress,
   MenuItem,
-  MenuList,
   Modal,
   OutlinedInput,
-  Pagination,
   Paper,
-  Popper,
   Select,
   SelectChangeEvent,
   Switch,
   TextField,
-  Theme,
-  Typography,
-  styled,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
 import AddIcon from '@mui/icons-material/Add';
-
 import DoneIcon from '@mui/icons-material/Done';
+import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import FolderIcon from '@mui/icons-material/Folder';
 import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 
 import { Image } from '@el-next/components';
 
@@ -67,18 +57,26 @@ const MenuProps = {
     },
   },
 };
-function getStyles(
-  folder: string,
-  personName: readonly string[],
-  theme: Theme
-) {
-  return {
-    fontWeight:
-      personName.indexOf(folder) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+const styles = {
+  item: {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  modal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 650,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  },
+  imgHover: emCss`opacity: .5`,
+};
+const actionsStyle = { position: 'absolute', bottom: 0, right: 0 };
 
 type Folder = { name: string; path: string };
 
@@ -111,38 +109,6 @@ type NavState = {
   setUploadOpen: (open: boolean) => void;
   setEditOpen: (open: boolean) => void;
 };
-
-const styles = {
-  item: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  modal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 650,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  },
-  imgHover: emCss`opacity: .5`,
-};
-const actionsStyle = { position: 'absolute', bottom: 0, right: 0 };
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}));
 export default function Media() {
   // app name is derived from first pathname string
   const app =
@@ -153,16 +119,38 @@ export default function Media() {
   const endpointPrefix =
     window.location.protocol === 'https:' ? '/api' : 'http://localhost:8000';
 
-  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
-    useDropzone({
-      accept: {
-        'image/jpeg': [],
-        'image/png': [],
-      },
-      maxFiles: 1,
-    });
-  const acceptedFileItems = acceptedFiles.map((file) => (
-    <li key={file.name}>{file.name}</li>
+  const [myFiles, setMyFiles] = useState<File[]>([]);
+
+  const onDrop = useCallback(
+    (acceptedFiles: any) => {
+      setMyFiles([...myFiles, ...acceptedFiles]);
+    },
+    [myFiles]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/jpeg': [],
+      'image/png': [],
+    },
+    maxFiles: 1,
+    onDrop,
+  });
+
+  const removeFile = (file: File) => () => {
+    const newFiles = [...myFiles];
+    newFiles.splice(newFiles.indexOf(file), 1);
+    setMyFiles(newFiles);
+  };
+
+  // const { acceptedFiles, fileRejections } = useDropzone({});
+  const acceptedFileItems = myFiles.map((file) => (
+    <li key={file.name}>
+      {file.name}
+      <IconButton onClick={removeFile(file)}>
+        <DoNotDisturbOnIcon fontSize="small" />
+      </IconButton>
+    </li>
   ));
   // Create store with Zustand
   const [useStore] = useState(() =>
@@ -251,7 +239,9 @@ export default function Media() {
             pgIndex: imgIndex,
           };
         }),
-      setEditOpen: (open: boolean) =>
+      setEditOpen: (open: boolean) => {
+        if (!open) setMyFiles([]);
+
         set((state) => {
           return {
             ...state,
@@ -259,7 +249,8 @@ export default function Media() {
             altTextState: '',
             confirmed: false,
           };
-        }),
+        });
+      },
       setErrorOpen: (open: boolean) =>
         set((state) => {
           if (!open) toggleWaiting();
@@ -269,13 +260,16 @@ export default function Media() {
             errorOpen: open,
           };
         }),
-      setUploadOpen: (open: boolean) =>
+      setUploadOpen: (open: boolean) => {
+        if (!open) setMyFiles([]);
+
         set((state) => {
           return {
             ...state,
             uploadOpen: open,
           };
-        }),
+        });
+      },
     }))
   );
 
@@ -319,7 +313,7 @@ export default function Media() {
 
   const beginIndex = pgIndex * 30;
   const endIndex = beginIndex + 30;
-
+  const dataLength = Math.floor(filteredData.length / 30) + 1;
   const refreshMedia = () => {
     // toggleWaiting();
     axios
@@ -334,7 +328,7 @@ export default function Media() {
       });
   };
 
-  const upload = () => {
+  const upload = (publicId?: string) => {
     try {
       const reader = new FileReader();
       reader.onabort = () => {
@@ -351,13 +345,22 @@ export default function Media() {
           formData.append('app', app === 'elab' ? 'elab-home-v3.x' : app);
           formData.append('folder', selectedTargetFolder as string);
           formData.append('alt', altText as string);
+          if (publicId) {
+            formData.append('overwrite', 'true');
+            formData.append('public_id', publicId);
+          }
 
           var xhr = new XMLHttpRequest();
           xhr.open('POST', `${endpointPrefix}/media/upload`, true);
           xhr.onprogress = (e) => {
             if (e.loaded !== e.total) return;
-            setUploadOpen(false);
-            refreshMedia();
+
+            setTimeout(() => {
+              setUploadOpen(false);
+              setEditOpen(false);
+              refreshMedia();
+
+            }, 2500);
           };
           xhr.onabort = () => {
             setErrorOpen(true);
@@ -370,7 +373,7 @@ export default function Media() {
           setErrorOpen(true);
         }
       };
-      reader.readAsDataURL(acceptedFiles[0]);
+      reader.readAsDataURL(myFiles[0]);
     } catch (err) {
       setErrorOpen(true);
     }
@@ -522,36 +525,90 @@ export default function Media() {
             onClose={() => {
               setEditOpen(false);
             }}
+            maxWidth="xl"
+            fullWidth={true}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">Image Actions</DialogTitle>
             <Paper sx={{ p: '2rem' }}>
-              <TextField
-                label="Change Alt Text"
-                helperText="If not specified, this must be written on a per-document usage basis"
-                id="alt-text"
-                multiline={true}
-                rows={4}
-                defaultValue={selectedImg.context?.custom?.alt}
-                onChange={(val) => {
-                  setAltText(val.target.value);
-                }}
-              />
+              <div
+                style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}
+              >
+                <Image
+                  id={selectedImg.public_id}
+                  alt={`Image with public ID ${selectedImg.public_id}`}
+                  imgId={selectedImg.public_id}
+                  width={500}
+                  transforms="f_auto,dpr_auto,c_crop,g_center,q_10"
+                  lazy={false}
+                  aspectDefault={true}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <TextField
+                    label="Change Alt Text"
+                    helperText="If not specified, this must be written on a per-document usage basis"
+                    id="alt-text"
+                    multiline={true}
+                    rows={4}
+                    defaultValue={selectedImg.context?.custom?.alt}
+                    onChange={(val) => {
+                      setAltText(val.target.value);
+                    }}
+                  />
+                  <Box sx={{ display: 'flex' }}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() => updateImg()}
+                    >
+                      Update
+                    </Button>
+                    {altTextState === 'waiting' && (
+                      <CircularProgress sx={{ p: '.4rem' }} />
+                    )}
+                    {altTextState === 'done' && (
+                      <DoneIcon sx={{ p: '.4rem' }} />
+                    )}
+                  </Box>
+                </div>
+              </div>
+              <div
+                {...getRootProps({
+                  className: 'dropzone',
+                  style: {
+                    backgroundColor: '#FFF1DB',
+                    padding: '1rem',
+                    marginTop: '1rem',
+                  },
+                })}
+              >
+                <input {...getInputProps()} />
+                <h3 style={{ fontWeight: 'bold' }}>Replace this Image</h3>
+                <p>Drag and drop an image here, or click to select one.</p>
+                <em>(Only *.jpeg and *.png images will be accepted)</em>
+              </div>
+              {acceptedFileItems.length > 0 && (
+                <aside>
+                  <h4>Accepted files</h4>
+                  <ul>{acceptedFileItems}</ul>
+                  <br />
+
+                  <LoadingButton
+                    loading={waiting}
+                    loadingPosition="start"
+                    startIcon={<FileUploadTwoToneIcon />}
+                    variant="text"
+                    color="warning"
+                    onClick={() => {
+                      upload(selectedImg.public_id);
+                    }}
+                  >
+                    Replace Image
+                  </LoadingButton>
+                </aside>
+              )}{' '}
               <br />
-              <Box sx={{ display: 'flex' }}>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  onClick={() => updateImg()}
-                >
-                  Update
-                </Button>
-                {altTextState === 'waiting' && (
-                  <CircularProgress sx={{ p: '.4rem' }} />
-                )}
-                {altTextState === 'done' && <DoneIcon sx={{ p: '.4rem' }} />}
-              </Box>
             </Paper>
             <Paper elevation={3} sx={{ p: '2rem' }}>
               <Divider />
@@ -590,55 +647,84 @@ export default function Media() {
             <AddIcon />
           </Fab>
           <hr />
-          <FormControl sx={{ m: 1, width: 600 }}>
-            <InputLabel id="folders-chip-label">Filter by Folder</InputLabel>
-            <Select
-              labelId="folders-chip-label"
-              id="folders-chip"
-              multiple
-              value={selectedFolders}
-              onChange={(val) => {
-                setSelecedFolders(val);
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <IconButton
+              aria-label="go to last page"
+              disabled={pgIndex === 0}
+              onClick={(val) => {
+                setIndex(pgIndex - 1);
               }}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={value
-                        .substring(value.indexOf('/') + 1)
-                        .replaceAll('-', ' ')}
-                    />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
             >
-              {folders.map((folder) => (
-                <MenuItem
-                  key={folder.path}
-                  value={folder.path}
-                  // style={getStyles(folder, personName, theme)}
-                >
-                  {/* Format folder name */}
-                  {folder.name
-                    .replaceAll('-', ' ')
-                    .split(' ')
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(' ')}
+              <ArrowCircleLeftOutlinedIcon fontSize="large" />
+            </IconButton>
+
+            <Select
+              value={pgIndex}
+              label="Page"
+              onChange={(val) => {
+                setIndex(!val ? 0 : (val.target.value as number));
+              }}
+            >
+              {[...new Array(dataLength)].map((v, i) => (
+                <MenuItem value={i} key={i}>
+                  {i + 1}
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
-
-          <Pagination
-            count={Math.floor(filteredData.length / 30) + 1}
-            page={pgIndex + 1}
-            onChange={(e, pg) => {
-              setIndex(pg - 1);
-            }}
-          />
+            <IconButton
+              aria-label="go to right page"
+              disabled={pgIndex === filteredData.length - 1}
+              onClick={(val) => {
+                setIndex(pgIndex + 1);
+              }}
+            >
+              <ArrowCircleRightOutlinedIcon fontSize="large" />
+            </IconButton>
+            <FormControl sx={{ m: 1, width: 600 }}>
+              <InputLabel id="folders-chip-label" shrink={true}>
+                Filter by Folder
+              </InputLabel>
+              <Select
+                labelId="folders-chip-label"
+                id="folders-chip"
+                multiple
+                notched={true}
+                value={selectedFolders}
+                onChange={(val) => {
+                  setSelecedFolders(val);
+                }}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value
+                          .substring(value.indexOf('/') + 1)
+                          .replaceAll('-', ' ')}
+                      />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {folders.map((folder) => (
+                  <MenuItem
+                    key={folder.path}
+                    value={folder.path}
+                    // style={getStyles(folder, personName, theme)}
+                  >
+                    {/* Format folder name */}
+                    {folder.name
+                      .replaceAll('-', ' ')
+                      .split(' ')
+                      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                      .join(' ')}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
 
           <Box sx={{ flexGrow: 1 }}>
             <ImageList variant="masonry" cols={3} gap={8}>
@@ -695,27 +781,6 @@ export default function Media() {
                           >
                             <EditIcon fontSize="large" />
                           </IconButton>
-                          {/* <IconButton
-                            color="warning"
-                            size="large"
-                            sx={actionsStyle}
-                            aria-label="delete image"
-                          >
-                            <DeleteForeverTwoToneIcon fontSize="large" />
-                          </IconButton> 
-                          <HtmlTooltip
-                            title={
-                              <React.Fragment>
-                                <Typography color="inherit" variant='h4'>
-                                Options
-                                </Typography>
-                                
-                              </React.Fragment>
-                            }
-                            placement="right"
-                          >
-       
-                          </HtmlTooltip>*/}
                         </>
                       }
                     />

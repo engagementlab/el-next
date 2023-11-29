@@ -41,7 +41,6 @@ import InfoIcon from '@mui/icons-material/Info';
 import { create } from 'zustand';
 
 import { Image } from '@el-next/components';
-import VideoSelector, { RelatedVideoField } from './video/selector';
 import { EmbedMetadata, EmbedState } from '../../types';
 import Link from 'next/link';
 

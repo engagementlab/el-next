@@ -46,7 +46,11 @@ import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutl
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 
 import { Image } from '@el-next/components';
-
+type ImageData = {
+  public_id: string;
+  context?: { custom?: { [key: string]: string } };
+};
+type ImageUsageData = { docId: string; docName: string; docCategory: string };
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -87,10 +91,11 @@ type NavState = {
   selectedTargetFolder: string | undefined;
   editOpen: boolean;
   altText: string | undefined;
+  usageData: ImageUsageData[] | undefined;
   altTextState: string;
   confirmed: boolean;
   errorOpen: boolean;
-  selectedImg: { public_id: string; context?: { custom?: { alt?: string } } };
+  selectedImg: ImageData;
   pgIndex: number;
   waiting: boolean;
   uploadOpen: boolean;
@@ -164,6 +169,7 @@ export default function Media() {
       selectedTargetFolder: undefined,
       altText: undefined,
       altTextState: '',
+      usageData: [],
       uploadOpen: false,
       editOpen: false,
       waiting: true,
@@ -193,17 +199,34 @@ export default function Media() {
             selectedImgId: id,
           };
         }),
-      setSelectedImage: (image: any) =>
+      setSelectedImage: (image: ImageData) => {
+        let alt = '';
+        if (!image.context || !image.context.custom) return;
+        const usageKeys = Object.keys(image.context.custom).filter((key) =>
+          key.startsWith('doc_id_')
+        );
+        let usages: ImageUsageData[] = [];
+        usageKeys.forEach((key) => {
+          // if (image.context.custom)
+          const category = image.context.custom[key].split('>')[0];
+          const name = image.context.custom[key].split('>')[1];
+          usages.push({
+            docId: key.replace('doc_id_', ''),
+            docCategory: category,
+            docName: name,
+          });
+        });
+        if (image.context.custom['alt']) alt = image.context.custom['alt'];
+
         set((state) => {
           return {
             ...state,
             selectedImg: image,
-            altText:
-              image.context && image.context.custom.alt
-                ? image.context.custom.alt
-                : '',
+            altText: alt,
+            usageData: usages,
           };
-        }),
+        });
+      },
       setSelecedFolders: (event: SelectChangeEvent<string[]>) =>
         set((state: NavState) => {
           return {
@@ -282,6 +305,7 @@ export default function Media() {
     selectedTargetFolder,
     altText,
     altTextState,
+    usageData,
     folders,
     data,
     waiting,
@@ -359,7 +383,6 @@ export default function Media() {
               setUploadOpen(false);
               setEditOpen(false);
               refreshMedia();
-
             }, 2500);
           };
           xhr.onabort = () => {
@@ -570,6 +593,14 @@ export default function Media() {
                     {altTextState === 'done' && (
                       <DoneIcon sx={{ p: '.4rem' }} />
                     )}
+                    <ul>
+                      {usageData?.map((data) => (
+                        <li>
+                          {data.docCategory} <span> &gt; </span>
+                          <a href={data.docId}>{data.docName}</a>
+                        </li>
+                      ))}
+                    </ul>
                   </Box>
                 </div>
               </div>

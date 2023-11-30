@@ -60,6 +60,7 @@ type ImageGridState = {
   index: number;
   altExisted: boolean;
   dataError: boolean;
+  imgDataError: boolean;
   waiting: boolean;
   gridOpen: boolean;
 
@@ -98,6 +99,9 @@ function imageSelect({
   current?: RelatedImage;
   defaultValue: RelatedImage;
 }): FormField<RelatedImage, undefined> {
+  // app name is derived from first pathname string
+  let app = '';
+  let endpointPrefix = '';
   return {
     kind: 'form',
 
@@ -118,6 +122,7 @@ function imageSelect({
           waiting: true,
           gridOpen: true,
           dataError: false,
+          imgDataError: false,
           altExisted: false,
           data: [],
           folders: [],
@@ -197,6 +202,7 @@ function imageSelect({
         folders,
         data,
         dataError,
+        imgDataError,
         index,
         waiting,
         setId,
@@ -222,18 +228,65 @@ function imageSelect({
           dataError: false,
         });
       };
+      const imgDataErrorClose = () => {
+        useStore.setState({
+          imgDataError: false,
+        });
+      };
 
       const beginIndex = index * 15;
       const endIndex = beginIndex + 15;
       const dataLength = Math.floor(filteredData.length / 15) + 1;
+      const updateImgUsage = (publicId: string | null) => {
+        // Assemble this item's label by obtaining the link/category and then the name of this item from the DOM
+        const pageCategory = (
+          document.querySelector(
+            'a[class$="ItemPageHeader"]'
+          ) as HTMLAnchorElement
+        ).innerText;
+        const pageName = document.querySelector(
+          'h1[class$="ItemPageHeader"]'
+        )!.textContent;
+        const pageValue = `${pageCategory}>${pageName}`;
+        // Get the items ID from the sidebar > input DOM element
+        const docId = (document.querySelector(
+          'div[class$="ItemForm"] input'
+        ) as HTMLInputElement)!.value;
+
+        try {
+          axios
+            .get(
+              `${endpointPrefix}/media/update/usage?public_id=${publicId}&doc_id=${docId}&doc_name=${pageValue}`
+            )
+            .then((response: { data: string }) => {
+              if (response.data === 'ok') {
+                return;
+              }
+
+              useStore.setState({
+                imgDataError: true,
+              });
+            })
+            .catch(() => {
+              useStore.setState({
+                imgDataError: true,
+              });
+            });
+        } catch (err: any) {
+          r;
+          useStore.setState({
+            imgDataError: true,
+          });
+        }
+      };
 
       useEffect(() => {
         // app name is derived from first pathname string
-        const app =
+        app =
           window.location.protocol === 'https:'
             ? window.location.pathname.replace('/', '').split('/')[0]
             : 'elab';
-        const endpointPrefix =
+        endpointPrefix =
           window.location.protocol === 'https:'
             ? '/api'
             : 'http://localhost:8000';
@@ -292,173 +345,206 @@ function imageSelect({
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            {!waiting ? (
-              <Box className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 border-2 bg-white p-4 shadow-xl">
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <IconButton
-                    aria-label="go to last page"
-                    disabled={index === 0}
-                    onClick={(val) => {
-                      setIndex(index - 1);
-                    }}
-                  >
-                    <ArrowCircleLeftOutlinedIcon fontSize="large" />
-                  </IconButton>
-
-                  <MUISelect
-                    value={index}
-                    label="Page"
-                    onChange={(val) => {
-                      setIndex(!val ? 0 : (val.target.value as number));
-                    }}
-                  >
-                    {[...new Array(dataLength)].map((v, i) => (
-                      <MenuItem value={i} key={i}>
-                        {i + 1}
-                      </MenuItem>
-                    ))}
-                  </MUISelect>
-                  <IconButton
-                    aria-label="go to right page"
-                    disabled={index === dataLength - 1}
-                    onClick={(val) => {
-                      setIndex(index + 1);
-                    }}
-                  >
-                    <ArrowCircleRightOutlinedIcon fontSize="large" />
-                  </IconButton>
-                  <FormControl sx={{ m: 1, width: 600 }}>
-                    <InputLabel id="folders-chip-label">
-                      Filter by Folder
-                    </InputLabel>
-                    <Select
-                      labelId="folders-chip-label"
-                      id="folders-chip"
-                      multiple
-                      value={selectedFolders}
-                      onChange={(val) => {
-                        setSelecedFolders(val);
+            <>
+              {!waiting ? (
+                <Box className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 border-2 bg-white p-4 shadow-xl">
+                  <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <IconButton
+                      aria-label="go to last page"
+                      disabled={index === 0}
+                      onClick={(val) => {
+                        setIndex(index - 1);
                       }}
-                      input={
-                        <OutlinedInput id="select-multiple-chip" label="Chip" />
-                      }
-                      renderValue={(selected: string[]) => (
-                        <Box
-                          sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
-                        >
-                          {selected.map((value) => (
-                            <Chip
-                              key={value}
-                              label={value
-                                .substring(value.indexOf('/') + 1)
-                                .replaceAll('-', ' ')}
-                            />
-                          ))}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
                     >
-                      {folders.map((folder) => (
-                        <MenuItem key={folder.path} value={folder.path}>
-                          {/* Format folder name */}
-                          {folder.name
-                            .replaceAll('-', ' ')
-                            .split(' ')
-                            .map(
-                              (s) => s.charAt(0).toUpperCase() + s.substring(1)
-                            )
-                            .join(' ')}
+                      <ArrowCircleLeftOutlinedIcon fontSize="large" />
+                    </IconButton>
+
+                    <MUISelect
+                      value={index}
+                      label="Page"
+                      onChange={(val) => {
+                        setIndex(!val ? 0 : (val.target.value as number));
+                      }}
+                    >
+                      {[...new Array(dataLength)].map((v, i) => (
+                        <MenuItem value={i} key={i}>
+                          {i + 1}
                         </MenuItem>
                       ))}
-                    </Select>
-                  </FormControl>
-                </div>
-
-                <hr style={{ borderTopWidth: '2px', borderColor: '#f6a536' }} />
-                <Box sx={{ flexGrow: 1 }}>
-                  <Grid container spacing={2}>
-                    {filteredData.slice(beginIndex, endIndex).map((item) => {
-                      const alt =
-                        item.context && item.context.custom
-                          ? item.context.custom.alt
-                          : '';
-                      return (
-                        <Grid item xs={3} key={item.public_id}>
-                          <a
-                            style={{ position: 'relative' }}
-                            onClick={(e) => {
-                              setAlt(alt);
-                              setAltExisted(
-                                item.context && item.context.custom
-                              );
-                              setId(item.public_id);
-                              onChange({
-                                publicId: item.public_id,
-                                alt,
-                              });
-                            }}
+                    </MUISelect>
+                    <IconButton
+                      aria-label="go to right page"
+                      disabled={index === dataLength - 1}
+                      onClick={(val) => {
+                        setIndex(index + 1);
+                      }}
+                    >
+                      <ArrowCircleRightOutlinedIcon fontSize="large" />
+                    </IconButton>
+                    <FormControl sx={{ m: 1, width: 600 }}>
+                      <InputLabel id="folders-chip-label">
+                        Filter by Folder
+                      </InputLabel>
+                      <Select
+                        labelId="folders-chip-label"
+                        id="folders-chip"
+                        multiple
+                        value={selectedFolders}
+                        onChange={(val) => {
+                          setSelecedFolders(val);
+                        }}
+                        input={
+                          <OutlinedInput
+                            id="select-multiple-chip"
+                            label="Chip"
+                          />
+                        }
+                        renderValue={(selected: string[]) => (
+                          <Box
+                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
                           >
-                            <div
-                              style={{ position: 'absolute', top: 0, left: 0 }}
-                            >
-                              {item.public_id === id && (
-                                <CheckCircleOutlineIcon
-                                  fontSize="large"
-                                  htmlColor="#f6a536"
-                                />
-                              )}
-                            </div>
-                            <img
-                              src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_100/v${item.version}/${item.public_id}`}
-                              style={{
-                                opacity: item.public_id === id ? 0.5 : 1,
+                            {selected.map((value) => (
+                              <Chip
+                                key={value}
+                                label={value
+                                  .substring(value.indexOf('/') + 1)
+                                  .replaceAll('-', ' ')}
+                              />
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {folders.map((folder) => (
+                          <MenuItem key={folder.path} value={folder.path}>
+                            {/* Format folder name */}
+                            {folder.name
+                              .replaceAll('-', ' ')
+                              .split(' ')
+                              .map(
+                                (s) =>
+                                  s.charAt(0).toUpperCase() + s.substring(1)
+                              )
+                              .join(' ')}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+
+                  <hr
+                    style={{ borderTopWidth: '2px', borderColor: '#f6a536' }}
+                  />
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={2}>
+                      {filteredData.slice(beginIndex, endIndex).map((item) => {
+                        const alt =
+                          item.context && item.context.custom
+                            ? item.context.custom.alt
+                            : '';
+                        // const docUrlSegments = window.location.pathname
+                        //   .replace('/', '')
+                        //   .split('/')
+                        //   const do
+                        //   [window.location.pathname.length - 1];
+                        return (
+                          <Grid item xs={3} key={item.public_id}>
+                            <a
+                              style={{ position: 'relative' }}
+                              onClick={(e) => {
+                                setAlt(alt);
+                                setAltExisted(
+                                  item.context && item.context.custom
+                                );
+                                setId(item.public_id);
+
+                                // Get current item title and doc id to include in image's metadata
+                                if (id !== item.public_id) {
+                                  updateImgUsage(item.public_id);
+                                }
+                                onChange({
+                                  publicId: item.public_id,
+                                  alt,
+                                });
                               }}
-                            />
-                          </a>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
+                            >
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0,
+                                }}
+                              >
+                                {item.public_id === id && (
+                                  <CheckCircleOutlineIcon
+                                    fontSize="large"
+                                    htmlColor="#f6a536"
+                                  />
+                                )}
+                              </div>
+                              <img
+                                src={`https://res.cloudinary.com/engagement-lab-home/image/upload/f_auto,dpr_auto,w_100/v${item.version}/${item.public_id}`}
+                                style={{
+                                  opacity: item.public_id === id ? 0.5 : 1,
+                                }}
+                              />
+                            </a>
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  </Box>
+                  {altExisted && (
+                    <Alert severity="info" sx={{ marginBottom: '.4rem' }}>
+                      Alt text already exists. It can be further edited for this
+                      usage if needed.
+                    </Alert>
+                  )}
+                  <TextField
+                    id="alt-field"
+                    multiline
+                    fullWidth
+                    rows={4}
+                    label="Alt Text"
+                    variant="standard"
+                    value={alt}
+                    onChange={(e) => {
+                      setAlt(e.target.value);
+                      onChange({
+                        publicId: id as any,
+                        alt: e.target.value as any,
+                      });
+                    }}
+                    defaultValue={alt}
+                  />
+                  <br />
+                  <IconButton
+                    aria-label="done"
+                    disabled={id === ''}
+                    onClick={() => {
+                      setGridOpen(false);
+                    }}
+                  >
+                    <CheckTwoToneIcon fontSize="large" color="success" />
+                  </IconButton>
                 </Box>
-                {altExisted && (
-                  <Alert severity="info" sx={{ marginBottom: '.4rem' }}>
-                    Alt text already exists. It can be further edited for this
-                    usage if needed.
-                  </Alert>
-                )}
-                <TextField
-                  id="alt-field"
-                  multiline
-                  fullWidth
-                  rows={4}
-                  label="Alt Text"
-                  variant="standard"
-                  value={alt}
-                  onChange={(e) => {
-                    setAlt(e.target.value);
-                    onChange({
-                      publicId: id as any,
-                      alt: e.target.value as any,
-                    });
-                  }}
-                  defaultValue={alt}
-                />
-                <br />
-                <IconButton
-                  aria-label="done"
-                  disabled={id === ''}
-                  onClick={() => {
-                    setGridOpen(false);
-                  }}
-                >
-                  <CheckTwoToneIcon fontSize="large" color="success" />
-                </IconButton>
-              </Box>
-            ) : (
-              <Box>
-                <LinearProgress />
-              </Box>
-            )}
+              ) : (
+                <Box>
+                  <LinearProgress />
+                </Box>
+              )}
+
+              <Snackbar
+                open={imgDataError}
+                autoHideDuration={5000}
+                onClose={imgDataErrorClose}
+                // sx={{ position: 'relative', zIndex: 1400 }}
+              >
+                <Alert severity="error">
+                  Unable to update this image's usage data.
+                </Alert>
+              </Snackbar>
+            </>
           </Modal>
           <Snackbar
             open={dataError}

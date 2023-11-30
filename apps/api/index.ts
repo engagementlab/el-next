@@ -219,23 +219,14 @@ app.get('/media/update', (req, res) => {
   }
 });
 
-// clp8ut62f00176vlbajcxgdja
-//
-app.get('/media/update/metadata', (req, res) => {
+app.get('/media/update/usage', async (req, res) => {
   try {
-    cloudinary.api.update(
-      req.query.id as string,
-      'add',
-      {
-        resource_type: 'image',
-        context: `${req.query.doc_id}=hknnjlnk`,
-      },
-      // [req.query.id as string],
-      function (error, result) {
-        if (error) res.status(500).send(error);
-        res.status(200).send('ok');
-      }
+    await cloudinary.uploader.add_context(
+      `doc_id_${req.query.doc_id}=${req.query.doc_name}`,
+      [req.query.public_id as string]
     );
+
+    res.status(200).send('ok');
   } catch (err: any) {
     res.status(500).send(err);
   }

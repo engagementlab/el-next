@@ -25,6 +25,9 @@ import {
   ImageListItemBar,
   InputLabel,
   LinearProgress,
+  List,
+  ListItemButton,
+  ListItemText,
   MenuItem,
   Modal,
   OutlinedInput,
@@ -44,6 +47,7 @@ import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import QueryBuilderRoundedIcon from '@mui/icons-material/QueryBuilderRounded';
 
 import { Image } from '@el-next/components';
 type ImageData = {
@@ -201,23 +205,23 @@ export default function Media() {
         }),
       setSelectedImage: (image: ImageData) => {
         let alt = '';
-        if (!image.context || !image.context.custom) return;
-        const usageKeys = Object.keys(image.context.custom).filter((key) =>
-          key.startsWith('doc_id_')
-        );
         let usages: ImageUsageData[] = [];
-        usageKeys.forEach((key) => {
-          // if (image.context.custom)
-          const category = image.context.custom[key].split('>')[0];
-          const name = image.context.custom[key].split('>')[1];
-          usages.push({
-            docId: key.replace('doc_id_', ''),
-            docCategory: category,
-            docName: name,
+        if (image.context && image.context.custom) {
+          const usageKeys = Object.keys(image.context.custom).filter((key) =>
+            key.startsWith('doc_id_')
+          );
+          usageKeys.forEach((key) => {
+            // if (image.context.custom)
+            const category = image.context.custom[key].split('>')[0];
+            const name = image.context.custom[key].split('>')[1];
+            usages.push({
+              docId: key.replace('doc_id_', ''),
+              docCategory: category,
+              docName: name,
+            });
           });
-        });
-        if (image.context.custom['alt']) alt = image.context.custom['alt'];
-
+          if (image.context.custom['alt']) alt = image.context.custom['alt'];
+        }
         set((state) => {
           return {
             ...state,
@@ -263,7 +267,9 @@ export default function Media() {
           };
         }),
       setEditOpen: (open: boolean) => {
-        if (!open) setMyFiles([]);
+        if (!open) {
+          setMyFiles([]);
+        }
 
         set((state) => {
           return {
@@ -547,6 +553,7 @@ export default function Media() {
             open={editOpen}
             onClose={() => {
               setEditOpen(false);
+              setId('');
             }}
             maxWidth="xl"
             fullWidth={true}
@@ -593,15 +600,33 @@ export default function Media() {
                     {altTextState === 'done' && (
                       <DoneIcon sx={{ p: '.4rem' }} />
                     )}
-                    <ul>
-                      {usageData?.map((data) => (
-                        <li>
-                          {data.docCategory} <span> &gt; </span>
-                          <a href={data.docId}>{data.docName}</a>
-                        </li>
-                      ))}
-                    </ul>
                   </Box>
+                  <hr />
+                  {!usageData || usageData?.length === 0 ? (
+                    <p>
+                      <QueryBuilderRoundedIcon />
+                      No Usage
+                    </p>
+                  ) : (
+                    <List
+                      sx={{
+                        width: '100%',
+                        maxWidth: 360,
+                        bgcolor: 'background.paper',
+                      }}
+                      component="nav"
+                      subheader={<h4>Usage:</h4>}
+                    >
+                      {usageData?.map((data) => (
+                        <ListItemButton component="a" href={data.docId}>
+                          <ListItemText
+                            primary={data.docName}
+                            secondary={data.docCategory}
+                          />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  )}
                 </div>
               </div>
               <div
@@ -807,7 +832,6 @@ export default function Media() {
                             onClick={() => {
                               setSelectedImage(d);
                               setEditOpen(true);
-                              // ();
                             }}
                           >
                             <EditIcon fontSize="large" />

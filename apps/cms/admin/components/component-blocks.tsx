@@ -248,10 +248,8 @@ function imageSelect({
           'h1[class$="ItemPageHeader"]'
         )!.textContent;
         const pageValue = `${pageCategory}>${pageName}`;
-        // Get the items ID from the sidebar > input DOM element
-        const docId = (document.querySelector(
-          'div[class$="ItemForm"] input'
-        ) as HTMLInputElement)!.value;
+        // Get the item's ID from window location
+        const docId = window.location.pathname;
 
         try {
           axios

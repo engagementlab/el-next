@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomNavigation } from './components/CustomNav';
+import { CustomNavigation } from './components/elab/CustomNav';
 import { Global, css } from '@emotion/core';
 
 // admin/config.tsx
@@ -32,25 +32,24 @@ function CustomLogo() {
             position: relative;
             text-decoration: none;
         }
-                nav li a:hover {
-              background-color: black !important;
-              color: white !important;
-    transform-origin: left;
-    translate: 3% 0%;
-}
-        }
-          [class*='ChromefulComponentBlockElement']{
-            button{
-              color: black !important;
-              background-color: #f6a536 !important;
-            }
+          nav li a:hover {
+            background-color: black !important;
+            color: white !important;
+            transform-origin: left;
+            translate: 3% 0%;
           }
-
-          [class*='BaseToolbar'] {
-            button[data-form-type='action'] {
-              color: black !important;
-              background-color: #f6a536 !important;
-            }
+        }
+        [class*='ChromefulComponentBlockElement']{
+          button{
+            color: black !important;
+            background-color: #f6a536 !important;
+          }
+        }
+        [class*='BaseToolbar'] {
+          button[data-form-type='action'] {
+            color: black !important;
+            background-color: #f6a536 !important;
+          }
         `}
       />
       <div style={{ width: '80px' }}>

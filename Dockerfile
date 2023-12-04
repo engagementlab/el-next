@@ -53,6 +53,9 @@ WORKDIR /repo/apps/cms
 # RUN ln -s /repo/apps/cms/admin/schema/$APP_NAME/index.ts /repo/apps/cms/admin/schema/index.ts
 RUN echo "import * as schema from './admin/schema/$APP_NAME'; export default schema;" > ./schema.ts
 
+# Override the custom nav file if app is elab
+RUN if [ "$APP_NAME" = "elab" ] ; then cp -r ./admin/components/elab/CustomNav.tsx ./admin/components/CustomNav.tsx ; fi
+
 RUN apt-get update && apt-get install -y openssl libssl-dev curl
 RUN yarn install --network-timeout 1000000000 --network-concurrency 1 && yarn cache clean
 

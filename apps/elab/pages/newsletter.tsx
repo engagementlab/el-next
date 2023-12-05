@@ -1,26 +1,61 @@
+import { useEffect } from 'react';
 import Layout from '../components/Layout';
 import { create } from 'zustand';
+import router from 'next/router';
+import _ from 'lodash';
 type FormState = {
   status: string;
+  prefilledEmail: string;
   submitted: boolean;
+  gotTags: boolean;
+  tags?: string[] | number[];
   setStatus: (status: string) => void;
+  setEmail: (email: string) => void;
   setSubmitted: (isSet: boolean) => void;
+  setGotTags: (isSet: boolean) => void;
+  setTags: (tags: string[]) => void;
 };
 // Create store with Zustand
 const useStore = create<FormState>((set) => ({
   status: '',
+  prefilledEmail: '',
   submitted: false,
+  gotTags: false,
+  tags: [],
   setStatus: (status: string) =>
     set({
       status,
+    }),
+  setEmail: (email: string) =>
+    set({
+      prefilledEmail: email,
     }),
   setSubmitted: (isSet: boolean) =>
     set({
       submitted: isSet,
     }),
+  setGotTags: (isSet: boolean) =>
+    set({
+      gotTags: isSet,
+    }),
+  setTags: (tags: string[]) =>
+    set({
+      tags,
+    }),
 }));
 export default function Newsletter() {
-  const { status, submitted, setStatus, setSubmitted } = useStore();
+  const {
+    status,
+    submitted,
+    gotTags,
+    prefilledEmail,
+    tags,
+    setStatus,
+    setSubmitted,
+    setGotTags,
+    setEmail,
+    setTags,
+  } = useStore();
 
   const SubmitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,6 +114,35 @@ export default function Newsletter() {
     // label: string;
   }
 
+  useEffect(() => {
+    if (gotTags || !router.isReady) return;
+
+    const email = router.query['email'] as string;
+    if (!email || email.length < 5) return;
+    setEmail(email);
+    // setSubmitted(true);
+    setGotTags(true);
+
+    fetch(
+      `${
+        process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||
+        'https://elab-initiatives-api.azurewebsites.net/api'
+      }/newsletter?email=${email}&get_tags=true`
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((res) => {
+        // setStatus('success');
+        setSubmitted(false);
+        if (res) setTags(_.map(res['tags'], 'id'));
+      })
+      .catch(() => {
+        // setStatus('error');
+        setSubmitted(false);
+      });
+  });
+
   const Checkbox = (props: CheckboxProps) => (
     <div className="flex gap-2">
       <input
@@ -87,7 +151,7 @@ export default function Newsletter() {
         border-slate bg-[rgba(255,255,255,0)] text-transparent accent-[#fcd2a3] text-slate bg-[rgba(255,255,255,0] before:content-none before:w-5 before:h-4"
         type="checkbox"
         id={props.id}
-        defaultChecked={true}
+        defaultChecked={(tags && tags.includes(props.id)) || false}
       />
       <svg
         className="absolute w-8 h-8 pointer-events-none hidden peer-checked:block stroke-black mt-1 outline-none"
@@ -123,14 +187,12 @@ export default function Newsletter() {
                 </span>
               )}{' '}
               {status === 'tags_modified' && (
-                <span className="text-purple text-lg">
+                <span className="text-purple">
                   Your preferences have been updated. ✏️
                 </span>
               )}
               {status === 'success' && (
-                <span className="text-purple text-lg">
-                  Thanks for joining! 😍
-                </span>
+                <span className="text-purple">Thanks for joining! 😍</span>
               )}
               {status === 'error' && (
                 <span className="text-red">
@@ -143,7 +205,7 @@ export default function Newsletter() {
                     // Form
                     <div className="flex flex-col w-full gap-y-2">
                       <label className="flex flex-row w-fullg items-center">
-                        <Checkbox id="monthly" />
+                        <Checkbox id="3379057" />
                         <span className="ml-2 lg:flex lg:gap-x-5">
                           <span className="block font-medium">Monthly</span>
                           <span className="font-light">
@@ -152,7 +214,7 @@ export default function Newsletter() {
                         </span>
                       </label>
                       <label className="flex flex-row w-full items-center">
-                        <Checkbox id="tngv" />
+                        <Checkbox id="3379061" />
                         <span className="ml-2 lg:flex lg:gap-x-2">
                           <span className="block font-medium">Quarterly</span>
                           <span className="font-light">
@@ -161,7 +223,7 @@ export default function Newsletter() {
                         </span>
                       </label>
                       <label className="flex flex-row w-full items-center">
-                        <Checkbox id="tnej" />
+                        <Checkbox id="3379065" />
                         <span className="ml-2 lg:flex lg:gap-x-2">
                           <span className="block font-medium">Quarterly</span>
                           <span className="font-light">
@@ -181,8 +243,11 @@ export default function Newsletter() {
                           aria-label="Enter your email"
                           minLength={5}
                           required
-                          disabled={submitted}
-                          className="absolute transition-all w-full h-12 bg-[rgba(255,255,255,0)] border-2 focus:border-4 focus:border-yellow border-slate p-3 placeholder:text-slate focus:bg-yellow/25 shadow-[16px_20px_0px_0px_#2d3748]1"
+                          disabled={submitted || prefilledEmail.length > 0}
+                          value={prefilledEmail}
+                          className={`absolute transition-all w-full h-12 bg-[rgba(255,255,255,0)] border-2 focus:border-4 focus:border-yellow border-slate p-3 placeholder:text-slate focus:bg-yellow/25 shadow-[16px_20px_0px_0px_#2d3748]1 ${
+                            prefilledEmail.length > 0 && 'opacity-50'
+                          }`}
                         />
                       </div>
 
@@ -191,9 +256,9 @@ export default function Newsletter() {
                         aria-label="Subscribe"
                         className="group relative my-12"
                       >
-                        <div className="absolute w-36 h-12 border-yellow border-2 mt-1 ml-1 bg-yellow bg-opacity-0 group-hover:bg-opacity-25"></div>
-                        <div className="absolute w-36 h-12 bg-[rgba(255,255,255,0)] border-2 border-yellow py-2">
-                          Sign up
+                        <div className="absolute w-60 h-12 border-yellow border-2 mt-1 ml-1 bg-yellow bg-opacity-0 group-hover:bg-opacity-25"></div>
+                        <div className="absolute w-60 h-12 bg-[rgba(255,255,255,0)] border-2 border-yellow py-2">
+                          Update preferences
                           <svg
                             className="h-4 w-4 ml-2 inline-block group-hover:translate-x-1 transition-transform"
                             fill="none"

@@ -48,29 +48,44 @@ const newsletterSignup: AzureFunction = async function (
   });
   try {
     const memberRes = await mailchimp.lists.getListMember(listId, email);
-    // If already subscribed, modify member tags
     if (memberRes.list_id === listId) {
-      try {
-        const subscriberHash = createHash('md5')
-          .update(email.toLowerCase())
-          .digest('hex');
-        const response = await mailchimp.lists.updateListMemberTags(
-          listId,
-          subscriberHash,
-          {
+      const subscriberHash = createHash('md5')
+        .update(email.toLowerCase())
+        .digest('hex');
+      // If already subscribed and get tags flag is in query, get member's tags
+      if (req.query.get_tags === 'true')
+        try {
+          const response = await mailchimp.lists.getListMemberTags(
+            listId,
+            subscriberHash
+          );
+
+          context.res = {
+            status: 200,
+            body: {
+              msg: 'got_tags',
+              tags: response.tags,
+            },
+          };
+        } catch (e) {
+          console.log(e);
+        }
+      // Or, if already subscribed, modify member tags
+      else
+        try {
+          await mailchimp.lists.updateListMemberTags(listId, subscriberHash, {
             tags: tagsFormatted.map((tag) => {
               if (tag) return { name: tag, status: 'active' };
             }),
-          }
-        );
+          });
 
-        context.res = {
-          status: 204,
-          body: 'modified_tags',
-        };
-      } catch (e) {
-        console.log(e);
-      }
+          context.res = {
+            status: 204,
+            body: 'modified_tags',
+          };
+        } catch (e) {
+          console.log(e);
+        }
     }
   } catch (err) {
     try {

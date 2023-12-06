@@ -47,6 +47,7 @@ export const Footer = () => {
     const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       email
     );
+    let status = 200;
 
     if (emailValid) {
       try {
@@ -57,26 +58,29 @@ export const Footer = () => {
           }/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tnej=${tnej}`
         )
           .then((response) => {
-            return response;
+            status = response.status;
+            return response.json();
           })
           .then((res) => {
-            if (res.status === 409) {
+            if (status === 409) {
               setStatus('already_subscribed');
               return;
-            } else if (res.status === 200) {
+            } else if (status === 200 && res.msg === 'modified_tags') {
               setStatus('modified_tags');
               return;
             }
-            if (res.status === 500 || res.status === 404) {
+            if (status === 500 || status === 404) {
               setStatus('error');
               return;
             }
             setStatus('success');
           })
-          .catch(() => {
+          .catch((e) => {
+            console.error(e);
             setStatus('error');
           });
-      } catch {
+      } catch (e) {
+        console.error(e);
         setStatus('error');
       }
     } else setSubmitted(false);

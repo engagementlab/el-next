@@ -88,6 +88,7 @@ export default function Newsletter() {
     const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       email
     );
+    let status = 200;
 
     if (emailValid) {
       try {
@@ -98,17 +99,18 @@ export default function Newsletter() {
           }/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tnej=${tnej}`
         )
           .then((response) => {
-            return response;
+            status = response.status;
+            return response.json();
           })
           .then((res) => {
-            if (res.status === 409) {
+            if (status === 409) {
               setStatus('already_subscribed');
               return;
-            } else if (res.status === 200) {
+            } else if (status === 200 && res.msg === 'modified_tags') {
               setStatus('modified_tags');
               return;
             }
-            if (res.status === 500 || res.status === 404) {
+            if (status === 500 || res.status === 404) {
               setStatus('error');
               return;
             }
@@ -146,12 +148,11 @@ export default function Newsletter() {
         return response.json();
       })
       .then((res) => {
-        // setStatus('success');
         setSubmitted(false);
         if (res) setTags(_.map(res['tags'], 'name'));
       })
       .catch(() => {
-        // setStatus('error');
+        setStatus('error');
         setSubmitted(false);
       });
   });

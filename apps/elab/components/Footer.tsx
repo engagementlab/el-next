@@ -63,8 +63,8 @@ export const Footer = () => {
             if (res.status === 409) {
               setStatus('already_subscribed');
               return;
-            } else if (res.status === 204) {
-              setStatus('tags_modified');
+            } else if (res.status === 200) {
+              setStatus('modified_tags');
               return;
             }
             if (res.status === 500 || res.status === 404) {
@@ -359,7 +359,7 @@ export const Footer = () => {
                     You are already subscribed. Nice! 😎
                   </span>
                 )}{' '}
-                {status === 'tags_modified' && (
+                {status === 'modified_tags' && (
                   <span className="text-purple text-lg">
                     Your preferences have been updated. ✏️
                   </span>

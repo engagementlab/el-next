@@ -44,7 +44,8 @@ const newsletterSignup: AzureFunction = async function (
   let tagsFormatted = [];
 
   queryKeys.forEach((tag) => {
-    if (req.query[tag] === 'true') tagsFormatted.push(tag.toLocaleUpperCase());
+    if (req.query[tag] === 'true' || req.query[tag] === 'false')
+      tagsFormatted.push(tag);
   });
   try {
     const memberRes = await mailchimp.lists.getListMember(listId, email);
@@ -75,12 +76,17 @@ const newsletterSignup: AzureFunction = async function (
         try {
           await mailchimp.lists.updateListMemberTags(listId, subscriberHash, {
             tags: tagsFormatted.map((tag) => {
-              if (tag) return { name: tag, status: 'active' };
+              if (tag)
+                return {
+                  name: tag.toLocaleUpperCase(),
+                  // Status based on the query string
+                  status: JSON.parse(req.query[tag]) ? 'active' : 'inactive',
+                };
             }),
           });
 
           context.res = {
-            status: 204,
+            status: 200,
             body: 'modified_tags',
           };
         } catch (e) {

@@ -94,7 +94,7 @@ export default function Newsletter() {
         await fetch(
           `${
             process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||
-            'https://elab-initiatives-api.azurewebsites.net/api'
+            'https://go.elab.works/api'
           }/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tnej=${tnej}`
         )
           .then((response) => {
@@ -139,7 +139,7 @@ export default function Newsletter() {
     fetch(
       `${
         process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||
-        'https://elab-initiatives-api.azurewebsites.net/api'
+        'https://go.elab.works/api'
       }/newsletter?email=${email}&get_tags=true`
     )
       .then((response) => {

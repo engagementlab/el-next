@@ -53,7 +53,7 @@ export const Footer = () => {
         await fetch(
           `${
             process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||
-            'https://elab-initiatives-api.azurewebsites.net/api'
+            'https://go.elab.works/api'
           }/newsletter?email=${email}&monthly=${monthly}&tngv=${tngv}&tnej=${tnej}`
         )
           .then((response) => {

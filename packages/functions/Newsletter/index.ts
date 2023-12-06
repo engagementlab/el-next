@@ -87,7 +87,9 @@ const newsletterSignup: AzureFunction = async function (
 
           context.res = {
             status: 200,
-            body: 'modified_tags',
+            body: {
+              msg: 'modified_tags',
+            },
           };
         } catch (e) {
           console.log(e);

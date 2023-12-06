@@ -133,10 +133,9 @@ export default function Newsletter() {
     const email = router.query['email'] as string;
     if (!email || email.length < 5) return;
     setEmail(email);
-    // setSubmitted(true);
+    setSubmitted(true);
     setGotTags(true);
 
-    debugger;
     fetch(
       `${
         process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||

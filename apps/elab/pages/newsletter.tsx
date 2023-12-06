@@ -3,18 +3,20 @@ import Layout from '../components/Layout';
 import { create } from 'zustand';
 import router from 'next/router';
 import _ from 'lodash';
+
 type FormState = {
   status: string;
   prefilledEmail: string;
   submitted: boolean;
   gotTags: boolean;
-  tags?: string[] | number[];
+  tags?: number[];
   setStatus: (status: string) => void;
   setEmail: (email: string) => void;
   setSubmitted: (isSet: boolean) => void;
   setGotTags: (isSet: boolean) => void;
-  setTags: (tags: string[]) => void;
+  setTags: (tags: number[]) => void;
 };
+
 // Create store with Zustand
 const useStore = create<FormState>((set) => ({
   status: '',
@@ -38,11 +40,12 @@ const useStore = create<FormState>((set) => ({
     set({
       gotTags: isSet,
     }),
-  setTags: (tags: string[]) =>
+  setTags: (tags: number[]) =>
     set({
       tags,
     }),
 }));
+
 export default function Newsletter() {
   const {
     status,
@@ -58,12 +61,23 @@ export default function Newsletter() {
   } = useStore();
 
   const SubmitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    const email =
+      prefilledEmail.length > 0
+        ? prefilledEmail
+        : (e.currentTarget[3] as HTMLInputElement).value;
     e.preventDefault();
+
+    if (prefilledEmail.length === 0) {
+      router.push(`/newsletter?email=${email}`, undefined, { shallow: true });
+      return;
+    }
+
     setSubmitted(true);
 
     const monthly = (e.currentTarget[0] as HTMLInputElement).checked;
     const tngv = (e.currentTarget[1] as HTMLInputElement).checked;
     const tnej = (e.currentTarget[2] as HTMLInputElement).checked;
+
     if (!monthly && !tngv && !tnej) {
       setStatus('noselection');
       setSubmitted(false);
@@ -71,7 +85,6 @@ export default function Newsletter() {
       return;
     }
 
-    const email = (e.currentTarget[3] as HTMLInputElement).value;
     const emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       email
     );
@@ -91,8 +104,8 @@ export default function Newsletter() {
             if (res.status === 409) {
               setStatus('already_subscribed');
               return;
-            } else if (res.status === 204) {
-              setStatus('tags_modified');
+            } else if (res.status === 200) {
+              setStatus('modified_tags');
               return;
             }
             if (res.status === 500 || res.status === 404) {
@@ -123,6 +136,7 @@ export default function Newsletter() {
     // setSubmitted(true);
     setGotTags(true);
 
+    debugger;
     fetch(
       `${
         process.env.NEXT_PUBLIC_AZURE_FUNCTION_URI ||
@@ -151,7 +165,7 @@ export default function Newsletter() {
         border-slate bg-[rgba(255,255,255,0)] text-transparent accent-[#fcd2a3] text-slate bg-[rgba(255,255,255,0] before:content-none before:w-5 before:h-4"
         type="checkbox"
         id={props.id}
-        defaultChecked={(tags && tags.includes(props.id)) || false}
+        defaultChecked={(tags && tags.includes(parseInt(props.id))) || false}
       />
       <svg
         className="absolute w-8 h-8 pointer-events-none hidden peer-checked:block stroke-black mt-1 outline-none"
@@ -186,7 +200,7 @@ export default function Newsletter() {
                   You are already subscribed. Nice! 😎
                 </span>
               )}{' '}
-              {status === 'tags_modified' && (
+              {status === 'modified_tags' && (
                 <span className="text-purple">
                   Your preferences have been updated. ✏️
                 </span>
@@ -204,39 +218,50 @@ export default function Newsletter() {
                   {!submitted ? (
                     // Form
                     <div className="flex flex-col w-full gap-y-2">
-                      <label className="flex flex-row w-fullg items-center">
-                        <Checkbox id="3379057" />
-                        <span className="ml-2 lg:flex lg:gap-x-5">
-                          <span className="block font-medium">Monthly</span>
-                          <span className="font-light">
-                            Engagement Lab Newsletter
+                      <div
+                        className={
+                          prefilledEmail.length > 0 ? 'block' : 'hidden'
+                        }
+                      >
+                        <label className="flex flex-row w-fullg items-center">
+                          <Checkbox id="3379057" />
+                          <span className="ml-2 lg:flex lg:gap-x-5">
+                            <span className="block font-medium">Monthly</span>
+                            <span className="font-light">
+                              Engagement Lab Newsletter
+                            </span>
                           </span>
-                        </span>
-                      </label>
-                      <label className="flex flex-row w-full items-center">
-                        <Checkbox id="3379061" />
-                        <span className="ml-2 lg:flex lg:gap-x-2">
-                          <span className="block font-medium">Quarterly</span>
-                          <span className="font-light">
-                            Transforming Narratives of Gun Violence Newsletter
+                        </label>
+                        <label className="flex flex-row w-full items-center">
+                          <Checkbox id="3379061" />
+                          <span className="ml-2 lg:flex lg:gap-x-2">
+                            <span className="block font-medium">Quarterly</span>
+                            <span className="font-light">
+                              Transforming Narratives of Gun Violence Newsletter
+                            </span>
                           </span>
-                        </span>
-                      </label>
-                      <label className="flex flex-row w-full items-center">
-                        <Checkbox id="3379065" />
-                        <span className="ml-2 lg:flex lg:gap-x-2">
-                          <span className="block font-medium">Quarterly</span>
-                          <span className="font-light">
-                            Transforming Narratives for Environmental Justice
-                            Newsletter
+                        </label>
+                        <label className="flex flex-row w-full items-center">
+                          <Checkbox id="3379065" />
+                          <span className="ml-2 lg:flex lg:gap-x-2">
+                            <span className="block font-medium">Quarterly</span>
+                            <span className="font-light">
+                              Transforming Narratives for Environmental Justice
+                              Newsletter
+                            </span>
                           </span>
-                        </span>
-                      </label>
+                        </label>
+                      </div>
+
                       <div className="relative w-full my-6 max-w-xs">
                         <div className="absolute w-full h-12 border-yellow border-2 mt-1 ml-1"></div>
                         <input
                           type="email"
-                          placeholder="Your email"
+                          placeholder={
+                            prefilledEmail.length > 0
+                              ? prefilledEmail
+                              : 'Your email'
+                          }
                           name="EMAIL"
                           id="email"
                           width="800"
@@ -244,7 +269,6 @@ export default function Newsletter() {
                           minLength={5}
                           required
                           disabled={submitted || prefilledEmail.length > 0}
-                          value={prefilledEmail}
                           className={`absolute transition-all w-full h-12 bg-[rgba(255,255,255,0)] border-2 focus:border-4 focus:border-yellow border-slate p-3 placeholder:text-slate focus:bg-yellow/25 shadow-[16px_20px_0px_0px_#2d3748]1 ${
                             prefilledEmail.length > 0 && 'opacity-50'
                           }`}
@@ -258,7 +282,9 @@ export default function Newsletter() {
                       >
                         <div className="absolute w-60 h-12 border-yellow border-2 mt-1 ml-1 bg-yellow bg-opacity-0 group-hover:bg-opacity-25"></div>
                         <div className="absolute w-60 h-12 bg-[rgba(255,255,255,0)] border-2 border-yellow py-2">
-                          Update preferences
+                          {prefilledEmail.length > 0
+                            ? 'Update preferences'
+                            : 'Get preferences'}
                           <svg
                             className="h-4 w-4 ml-2 inline-block group-hover:translate-x-1 transition-transform"
                             fill="none"

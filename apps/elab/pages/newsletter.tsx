@@ -9,12 +9,12 @@ type FormState = {
   prefilledEmail: string;
   submitted: boolean;
   gotTags: boolean;
-  tags?: number[];
+  tags?: string[];
   setStatus: (status: string) => void;
   setEmail: (email: string) => void;
   setSubmitted: (isSet: boolean) => void;
   setGotTags: (isSet: boolean) => void;
-  setTags: (tags: number[]) => void;
+  setTags: (tags: string[]) => void;
 };
 
 // Create store with Zustand
@@ -40,7 +40,7 @@ const useStore = create<FormState>((set) => ({
     set({
       gotTags: isSet,
     }),
-  setTags: (tags: number[]) =>
+  setTags: (tags: string[]) =>
     set({
       tags,
     }),
@@ -148,7 +148,7 @@ export default function Newsletter() {
       .then((res) => {
         // setStatus('success');
         setSubmitted(false);
-        if (res) setTags(_.map(res['tags'], 'id'));
+        if (res) setTags(_.map(res['tags'], 'name'));
       })
       .catch(() => {
         // setStatus('error');
@@ -156,35 +156,47 @@ export default function Newsletter() {
       });
   });
 
-  const Checkbox = (props: CheckboxProps) => (
-    <div className="flex gap-2">
-      <input
-        className="peer relative appearance-none shrink-0 w-8 h-8 border-2 mt-1 
+  const Checkbox = (props: CheckboxProps) => {
+    let isChecked =
+      (tags && !!tags.find((val: string) => val.indexOf(props.id) !== -1)) ||
+      false;
+    if (
+      props.id === 'MONTHLY' &&
+      !!tags?.find(
+        (val: string) => val.toLocaleLowerCase().indexOf('elab') !== -1
+      )
+    )
+      isChecked = true;
+    return (
+      <div className="flex gap-2">
+        <input
+          className="peer relative appearance-none shrink-0 w-8 h-8 border-2 mt-1 
         focus:outline-none focus:ring-offset-0 focus:ring-1 focus:ring-blue-100
         border-slate bg-[rgba(255,255,255,0)] text-transparent accent-[#fcd2a3] text-slate bg-[rgba(255,255,255,0] before:content-none before:w-5 before:h-4"
-        type="checkbox"
-        id={props.id}
-        defaultChecked={(tags && tags.includes(parseInt(props.id))) || false}
-      />
-      <svg
-        className="absolute w-8 h-8 pointer-events-none hidden peer-checked:block stroke-black mt-1 outline-none"
-        viewBox="0 0 30 30"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      ></svg>
-      <svg
-        viewBox="0 4 12 9"
-        width="20"
-        height="25"
-        className="absolute pointer-events-none hidden peer-checked:block stroke-black stroke-2 mt-[0.45rem] ml-[.4rem] outline-none"
-      >
-        <path d="M 12 4.342 L 3.837 13 L 0 8.473 L 0.381 8.149 L 3.856 12.25 L 11.636 4 L 12 4.342 L 12 4.342 Z"></path>
-      </svg>
-    </div>
-  );
+          type="checkbox"
+          id={props.id}
+          defaultChecked={isChecked}
+        />
+        <svg
+          className="absolute w-8 h-8 pointer-events-none hidden peer-checked:block stroke-black mt-1 outline-none"
+          viewBox="0 0 30 30"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></svg>
+        <svg
+          viewBox="0 4 12 9"
+          width="20"
+          height="25"
+          className="absolute pointer-events-none hidden peer-checked:block stroke-black stroke-2 mt-[0.45rem] ml-[.4rem] outline-none"
+        >
+          <path d="M 12 4.342 L 3.837 13 L 0 8.473 L 0.381 8.149 L 3.856 12.25 L 11.636 4 L 12 4.342 L 12 4.342 Z"></path>
+        </svg>
+      </div>
+    );
+  };
   return (
     <Layout>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
@@ -223,7 +235,7 @@ export default function Newsletter() {
                         }
                       >
                         <label className="flex flex-row w-fullg items-center">
-                          <Checkbox id="3379057" />
+                          <Checkbox id="MONTHLY" />
                           <span className="ml-2 lg:flex lg:gap-x-5">
                             <span className="block font-medium">Monthly</span>
                             <span className="font-light">
@@ -232,7 +244,7 @@ export default function Newsletter() {
                           </span>
                         </label>
                         <label className="flex flex-row w-full items-center">
-                          <Checkbox id="3379061" />
+                          <Checkbox id="TNGV" />
                           <span className="ml-2 lg:flex lg:gap-x-2">
                             <span className="block font-medium">Quarterly</span>
                             <span className="font-light">
@@ -241,7 +253,7 @@ export default function Newsletter() {
                           </span>
                         </label>
                         <label className="flex flex-row w-full items-center">
-                          <Checkbox id="3379065" />
+                          <Checkbox id="TNEJ" />
                           <span className="ml-2 lg:flex lg:gap-x-2">
                             <span className="block font-medium">Quarterly</span>
                             <span className="font-light">

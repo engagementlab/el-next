@@ -13,6 +13,7 @@ import {
   Item,
   Person as PersonT,
   CustomEase,
+  InitiativeFilterGroups,
 } from '@/types';
 
 import { CTAButton, MoreButton } from '@/components/Buttons';
@@ -27,6 +28,7 @@ import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
 
 type AboutPage = {
+  name?: string;
   intro: {
     document: any;
   };
@@ -154,8 +156,15 @@ export default function InitIndex({
       </div>
     );
   };
+
   return (
-    <Layout error={error} fullBleed={true} theme={Theming[initiative].theme}>
+    <Layout
+      error={error}
+      fullBleed={true}
+      theme={Theming[initiative].theme}
+      title={InitiativeFilterGroups.find((i) => i.key === initiative)?.label}
+      // ogDescription={item.summary}
+    >
       {page && (
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
@@ -488,7 +497,8 @@ export async function getStaticProps({
 
   const result = await Query(
     'initiative',
-    `initiative(where: { name: "${objectName}" }) {      
+    `initiative(where: { name: "${objectName}" }) {
+        name
         intro {
           document
         }

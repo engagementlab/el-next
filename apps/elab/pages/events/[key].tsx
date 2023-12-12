@@ -6,7 +6,7 @@ import {
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Image, Query } from '@el-next/components';
+import { Image, ImageUrl, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
@@ -35,85 +35,87 @@ export default function Event({
       else if (item.initiatives[0] === 'climate') theme = Theme.climate;
     }
   }
-  return (
+  return item ? (
     <Layout
       error={error}
       breadcrumbs={[{ label: 'Back to News & Events', href: '/whats-new' }]}
+      title={`${item.name} - Events`}
+      ogDescription={item.summary}
+      ogImage={ImageUrl({
+        imgId: item.thumbnail.publicId,
+        width: 600,
+        transforms: `f_auto,dpr_auto,c_thumb,g_face`,
+      })}
     >
-      {item && (
-        <div className="mt-14">
-          <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">
-            <div className="w-full xl:w-1/2 flex-shrink-0">
-              {item.thumbnail ? (
-                <Image
-                  id="header-img"
-                  alt={item.thumbAltText}
-                  imgId={item.thumbnail.publicId}
-                />
-              ) : (
-                <ImagePlaceholder
-                  imageLabel="Header"
-                  width={1280}
-                  height={350}
-                />
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <h1 className="text-coated text-4xl font-extrabold mt-5">
-                {item.name}
-              </h1>
-              <div className="text-coated font-medium my-5">{`${new Date(
-                item.eventDate
-              ).toLocaleDateString('en-US', {
-                weekday: 'long',
-              })}, ${new Date(item.eventDate).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}, ${new Date(item.eventDate).toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}`}</div>
-              {item.address && (
-                <div className="text-coated font-medium">
-                  <a
-                    href={`https://www.google.com/maps?q=${item.address.replaceAll(
-                      '\n',
-                      ' '
-                    )}`}
-                    target="_blank"
-                    className="border-b-2 border-b-yellow"
-                  >
-                    {item.address}
-                  </a>
-
-                  <DocumentRenderer
-                    document={item.blurb.document}
-                    componentBlocks={Blocks()}
-                    renderers={Doc()}
-                  />
-                  {item.registrationLink &&
-                    new Date(item.eventDate) >= new Date() && (
-                      <CTAButton
-                        label="RSVP Today"
-                        external={true}
-                        link={item.registrationLink}
-                        theme={theme}
-                        className="max-w-[150px]"
-                      />
-                    )}
-                </div>
-              )}
-            </div>
+      <div className="mt-14">
+        <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">
+          <div className="w-full xl:w-1/2 flex-shrink-0">
+            {item.thumbnail ? (
+              <Image
+                id="header-img"
+                alt={item.thumbAltText}
+                imgId={item.thumbnail.publicId}
+              />
+            ) : (
+              <ImagePlaceholder imageLabel="Header" width={1280} height={350} />
+            )}
           </div>
-          <div className="px-4 xl:px-8 mt-10">
-            <DocumentRenderer
-              document={item.content.document}
-              componentBlocks={Blocks()}
-              renderers={Doc(rendererOverrides)}
-            />
-            {/*  {relatedItems &&
+
+          <div className="flex flex-col">
+            <h1 className="text-coated text-4xl font-extrabold mt-5">
+              {item.name}
+            </h1>
+            <div className="text-coated font-medium my-5">{`${new Date(
+              item.eventDate
+            ).toLocaleDateString('en-US', {
+              weekday: 'long',
+            })}, ${new Date(item.eventDate).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}, ${new Date(item.eventDate).toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}`}</div>
+            {item.address && (
+              <div className="text-coated font-medium">
+                <a
+                  href={`https://www.google.com/maps?q=${item.address.replaceAll(
+                    '\n',
+                    ' '
+                  )}`}
+                  target="_blank"
+                  className="border-b-2 border-b-yellow"
+                >
+                  {item.address}
+                </a>
+
+                <DocumentRenderer
+                  document={item.blurb.document}
+                  componentBlocks={Blocks()}
+                  renderers={Doc()}
+                />
+                {item.registrationLink &&
+                  new Date(item.eventDate) >= new Date() && (
+                    <CTAButton
+                      label="RSVP Today"
+                      external={true}
+                      link={item.registrationLink}
+                      theme={theme}
+                      className="max-w-[150px]"
+                    />
+                  )}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="px-4 xl:px-8 mt-10">
+          <DocumentRenderer
+            document={item.content.document}
+            componentBlocks={Blocks()}
+            renderers={Doc(rendererOverrides)}
+          />
+          {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
                     <div>
@@ -142,10 +144,11 @@ export default function Event({
                     </div>
                     </div>
                 } */}
-          </div>
         </div>
-      )}
+      </div>
     </Layout>
+  ) : (
+    <h1>Something went wrong.</h1>
   );
 }
 
@@ -192,6 +195,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        thumbnail { 
            publicId 
        }
+       summary
       }`
   );
 

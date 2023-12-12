@@ -12,6 +12,7 @@ import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
   CustomEase,
+  InitiativeFilterGroups,
   StudioProject,
   StudioUnion,
   Theme,
@@ -177,17 +178,6 @@ export default function StudioProjects({
     const toggleFilter = useStore((state) => state.toggle);
     const reset = useStore((state) => state.reset);
 
-    const filterGroups = [
-      {
-        key: 'tngv',
-        label: 'Transforming Narratives of Gun Violence',
-      },
-      {
-        key: 'tnej',
-        label: 'Transforming Narratives for Environmental Justice',
-      },
-    ];
-
     const RenderFilters = (filters: any[]) => {
       const menu = (
         <div className="mx-6 mt-7">
@@ -195,7 +185,7 @@ export default function StudioProjects({
             Filter Projects By:
           </h2>
           <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
-            {filterGroups.map((group) => {
+            {InitiativeFilterGroups.map((group) => {
               const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
                 !haveGroupOpen(group.key)
                   ? `bg-white ${Theming[group.key].text}`

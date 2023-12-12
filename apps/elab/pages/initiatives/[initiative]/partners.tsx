@@ -2,7 +2,7 @@ import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import { Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
-import { Theming } from '@/types';
+import { InitiativeFilterGroups, Theming } from '@/types';
 
 import { Gutter } from '@/components/Gutter';
 import Logos from '@/components/Logos';
@@ -22,6 +22,9 @@ export default function PartnersPage({
       error={error}
       fullBleed={true}
       theme={Theming[initiative] ? Theming[initiative].theme : 0}
+      title={`Partners - ${
+        InitiativeFilterGroups.find((i) => i.key === initiative)?.label
+      }`}
     >
       {page && (
         <div className="text-grey">

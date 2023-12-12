@@ -10,6 +10,7 @@ import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
   CustomEase,
+  InitiativeFilterGroups,
   InitiativeKeyMap,
   StudioProject,
   Theme,
@@ -61,16 +62,6 @@ export default function StudioProjects({
         ? filtersQuery.split(',').includes(key as never)
         : false;
     };
-    const filterGroups = [
-      {
-        key: 'tngv',
-        label: 'Transforming Narratives of Gun Violence',
-      },
-      {
-        key: 'tnej',
-        label: 'Transforming Narratives for Environmental Justice',
-      },
-    ];
 
     const ItemRenderer = (props: { item: StudioProject }) => {
       let borderColor = 'border-yellow';
@@ -126,7 +117,7 @@ export default function StudioProjects({
             Filter Projects By:
           </h2>
           <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
-            {filterGroups.map((group) => {
+            {InitiativeFilterGroups.map((group) => {
               const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
                 !haveGroupOpen(group.key)
                   ? `bg-white ${Theming[group.key].text}`

@@ -323,8 +323,19 @@ export type Person = {
     document: any;
   };
 };
+
 export const CustomEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';
 export const InitiativeKeyMap: { [key: string]: string } = {
   tngv: 'gunviolence',
   tnej: 'climate',
 };
+export const InitiativeFilterGroups = [
+  {
+    key: 'tngv',
+    label: 'Transforming Narratives of Gun Violence',
+  },
+  {
+    key: 'tnej',
+    label: 'Transforming Narratives for Environmental Justice',
+  },
+];

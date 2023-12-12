@@ -11,7 +11,14 @@ import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { CustomEase, InitiativeKeyMap, Studio, Theme, Theming } from '@/types';
+import {
+  CustomEase,
+  InitiativeFilterGroups,
+  InitiativeKeyMap,
+  Studio,
+  Theme,
+  Theming,
+} from '@/types';
 
 import Layout from '../../../components/Layout';
 
@@ -23,21 +30,9 @@ export default function Studios({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const FilteredItems = (props: { items: Studio[] | null }) => {
     // Store get/set
-
     const haveGroupOpen = (key: string) => {
       return key === initiative;
     };
-
-    const filterGroups = [
-      {
-        key: 'tngv',
-        label: 'Transforming Narratives of Gun Violence',
-      },
-      {
-        key: 'tnej',
-        label: 'Transforming Narratives for Environmental Justice',
-      },
-    ];
 
     const ItemRenderer = (props: { item: Studio }) => {
       let borderColor = 'border-yellow';
@@ -93,7 +88,7 @@ export default function Studios({
             Filter By:
           </h2>
           <div className="flex flex-col lg:flex-row gap-x-5 gap-y-2">
-            {filterGroups.map((group) => {
+            {InitiativeFilterGroups.map((group) => {
               const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 ${
                 !haveGroupOpen(group.key)
                   ? `bg-white ${Theming[group.key].text}`

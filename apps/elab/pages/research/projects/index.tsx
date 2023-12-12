@@ -87,7 +87,7 @@ export default function MediaArchive({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} theme={Theme.none}>
+    <Layout error={error} theme={Theme.none} title="Research Projects">
       <div className="flex flex-col">
         <h1 className="m-6 font-extrabold text-4xl xl:text-6xl">
           Research Projects

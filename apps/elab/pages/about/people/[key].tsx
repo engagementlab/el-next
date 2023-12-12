@@ -17,7 +17,7 @@ export default function AboutPage({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error}>
+    <Layout error={error} title={`${item?.name} - People`}>
       {item && (
         <>
           <motion.div

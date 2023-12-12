@@ -163,7 +163,7 @@ export default function AboutPage({
   });
 
   return (
-    <Layout error={error}>
+    <Layout error={error} title={`${item?.name} - About`}>
       {item && (
         <>
           {/* {item?.key === 'donate' && (

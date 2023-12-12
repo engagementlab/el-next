@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { Item, Theming } from '@/types';
+import { InitiativeFilterGroups, Item, Theming } from '@/types';
 import { NewsEventRenderer } from './Renderers';
 
 type Props = {
@@ -16,23 +16,13 @@ const WhatsNewRenderer = ({
   filter,
   initiative,
 }: Props): JSX.Element => {
-  const filterGroups = [
-    {
-      key: 'tngv',
-      label: 'Transforming Narratives of Gun Violence',
-    },
-    {
-      key: 'tnej',
-      label: 'Transforming Narratives for Environmental Justice',
-    },
-  ];
   return (
     <>
       <h2 className="uppercase leading-10 text-grey text-xl font-bold">
         Filter By:
       </h2>
       <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
-        {filterGroups.map((group) => {
+        {InitiativeFilterGroups.map((group) => {
           const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  
 ${
   group.key !== initiative

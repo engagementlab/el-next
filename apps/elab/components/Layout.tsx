@@ -7,11 +7,16 @@ import { Breadcrumb, CustomEase, Theme } from '@/types';
 import Header from './Header';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import Footer from './Footer';
+import { useRouter } from 'next/router';
 
 type Props = {
   children: ReactNode;
   description?: string;
   title?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
   error?: any;
   theme?: Theme;
   breadcrumbs?: Breadcrumb[];
@@ -31,6 +36,11 @@ const Layout = ({
   breadcrumbs,
   fullBleed,
   topBgElement,
+
+  ogTitle,
+  ogDescription,
+  ogImage,
+  ogUrl,
 }: Props): JSX.Element => {
   const BG = topBgElement ? topBgElement : <></>;
   const GutterBGClasses = [
@@ -38,6 +48,8 @@ const Layout = ({
     'bg-gradient-to-b from-[#E3BFFF] to-[#CC89FF]',
     'bg-gradient-to-b from-[#D7EFC1] to-leaf',
   ];
+  const router = useRouter();
+  const currentUrl = router.asPath;
   return (
     <>
       <span
@@ -93,8 +105,12 @@ const Layout = ({
         )}
 
         <SuperLayout
-          title={title ? `${appName} - ${title}` : appName}
+          title={title ? `${title} - ${appName}` : appName}
+          ogTitle={ogTitle}
           description={description ? description : defaultDescription}
+          ogDescription={ogDescription}
+          ogUrl={`https://elab.emerson.edu${currentUrl}`}
+          ogImage={ogImage}
           error={error}
           transitions={{
             variants: {

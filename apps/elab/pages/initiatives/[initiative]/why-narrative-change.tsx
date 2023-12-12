@@ -13,6 +13,7 @@ import {
   Theme,
   Theming,
   Item,
+  InitiativeFilterGroups,
 } from '@/types';
 import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { ReactNode } from 'react';
@@ -37,7 +38,14 @@ export default function GunViolence({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} fullBleed={true} theme={Theming[initiative].theme}>
+    <Layout
+      error={error}
+      fullBleed={true}
+      theme={Theming[initiative].theme}
+      title={`Why Narrative Change? - ${
+        InitiativeFilterGroups.find((i) => i.key === initiative)?.label
+      }`}
+    >
       {page && (
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">

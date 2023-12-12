@@ -122,6 +122,10 @@ export default function Studio({
   );
   const [semestersNavOpen, toggleMenuHover] = useCycle(false, true);
 
+  const semesterInstructors = selectedSemester?.instructors
+    .map((i) => i.name)
+    .join(', ');
+
   const GetLabel = (selectedSemester: Semester) => {
     if (selectedSemester.type === 'upcoming')
       return <span>Upcoming Semester</span>;
@@ -312,7 +316,7 @@ export default function Studio({
                       Course Information
                     </h2>
 
-                    <div className="flex flex-col xl:flex-row gap-8">
+                    <div className="flex flex-col xl:flex-row gap-8 ">
                       <div className="w-full xl:w-1/2">
                         <p>
                           <span className="font-bold tracking-wider">
@@ -331,9 +335,7 @@ export default function Studio({
                             :
                           </span>
                           <br />
-                          {selectedSemester.instructors
-                            .map((i) => i.name)
-                            .join(', ')}
+                          {semesterInstructors}
                         </p>
                         <p>
                           <span className="font-bold tracking-wider">

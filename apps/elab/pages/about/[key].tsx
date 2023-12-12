@@ -269,7 +269,7 @@ export default function AboutPage({
               {item.key === 'our-approach' && (
                 <div className="mx-6 my-6">
                   <h3 className="text-yellow text-xl lg:text-2xl font-extrabold uppercase mx-6 my-4">
-                    Partner Organizatioms
+                    Partner Organizations
                   </h3>
                   <Logos all={true} partners={[]} />
                 </div>

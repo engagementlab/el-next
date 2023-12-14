@@ -39,6 +39,8 @@ export default function Home({
   studios,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [videoFallback, setVideoFallback] = useState(false);
+  const [videoFallbackPortrait, setVideoFallbackPortrait] = useState(false);
   const [vidH, setVideoHeight] = useState(0);
   const [videoOverlayHeight, setVideoOverlayHeight] = useState(0);
   const [bgTargetElement, setBgVideo] = useState();
@@ -57,43 +59,81 @@ export default function Home({
     );
     setBgVideo(bgVideoRef.current);
     const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
-    const player = new Player('video-bg', {
-      id: portraitVideo ? 855474088 : 855473995,
-      width: 1640,
-      height: 720,
-      controls: false,
-      autoplay: true,
-      autopause: true,
-      muted: true,
-      loop: true,
-      responsive: true,
-      quality: '720p',
-    });
+    try {
+      const player = new Player('video-bg', {
+        id: portraitVideo ? 855474088 : 855473995,
+        width: 1640,
+        height: 720,
+        controls: false,
+        autoplay: true,
+        autopause: true,
+        muted: true,
+        loop: true,
+        responsive: true,
+        quality: '720p',
+      });
 
-    player.on('loaded', () => {
-      setShowVideo(true);
-    });
-    player.on('resize', (e) => {
-      // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
-      let height =
-        document.querySelector<HTMLElement>('iframe')!.clientHeight -
-        document.querySelector<HTMLElement>('nav')!.clientHeight -
-        document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
-        parseInt(
-          window
-            .getComputedStyle(document.getElementById('layout-daddy')!)
-            .marginTop.replace(/[^0-9-]/g, '')
+      player.on('loaded', () => {
+        setShowVideo(true);
+      });
+      player.on('error', () => {
+        console.log('Error loading video');
+      });
+      player.on('resize', (e) => {
+        // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
+        let height =
+          document.querySelector<HTMLElement>('iframe')!.clientHeight -
+          document.querySelector<HTMLElement>('nav')!.clientHeight -
+          document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
+          parseInt(
+            window
+              .getComputedStyle(document.getElementById('layout-daddy')!)
+              .marginTop.replace(/[^0-9-]/g, '')
+          );
+        if (
+          window.matchMedia('(orientation: portrait)').matches &&
+          height > 500
+        )
+          height = 500;
+
+        setVideoHeight(height);
+        setVideoOverlayHeight(
+          document.querySelector<HTMLElement>('iframe') !== null
+            ? document.querySelector<HTMLElement>('iframe')!.clientHeight
+            : 0
         );
-      if (window.matchMedia('(orientation: portrait)').matches && height > 500)
-        height = 500;
+      });
+      player
+        .loadVideo({ id: portraitVideo ? 855474088 : 855473995 })
+        .catch((e) => {
+          // There is a problem with Vimeo, we will fall back to an image
+          setVideoFallback(true);
+          if (window.matchMedia('(orientation: portrait)').matches)
+            setVideoFallbackPortrait(true);
 
-      setVideoHeight(height);
-      setVideoOverlayHeight(
-        document.querySelector<HTMLElement>('iframe') !== null
-          ? document.querySelector<HTMLElement>('iframe')!.clientHeight
-          : 0
-      );
-    });
+          debugger;
+
+          const img = document.getElementById('video-fallback');
+          if (img) {
+            img.addEventListener('load', () => {
+              const height =
+                img.clientHeight -
+                document.querySelector<HTMLElement>('nav')!.clientHeight -
+                document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
+                parseInt(
+                  window
+                    .getComputedStyle(document.getElementById('layout-daddy')!)
+                    .marginTop.replace(/[^0-9-]/g, '')
+                );
+              setVideoHeight(height);
+              setVideoOverlayHeight(img.clientHeight);
+            });
+          }
+        });
+    } catch (e) {
+      // There is a problem with Vimeo, we will fall back to an image
+      setVideoFallback(true);
+    }
   }, [bgVideoRef]);
 
   const Definition = ({
@@ -136,14 +176,39 @@ export default function Home({
     <Layout
       topBgElement={
         <div className="relative md:mx-16">
-          <div
-            id="video-bg"
-            ref={bgTargetElement}
-            className={`absolute top-0 h-screen w-full min-h-screen transition-all ${CustomEase} duration-300  ${
-              showVideo ? 'block' : 'hidden'
-            }`}
-            style={{ height: vidH }}
-          ></div>
+          {!videoFallbackPortrait ? (
+            <Image
+              id="video-fallback"
+              alt="A group of people sitting around a table"
+              imgId="elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8"
+              width={1800}
+              className={`absolute top-0 h-screen w-full min-h-screen ${
+                videoFallback ? 'block' : 'hidden'
+              }`}
+            />
+          ) : (
+            <Image
+              id="video-fallback"
+              alt="A group of people sitting around a table"
+              imgId="elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8"
+              transforms={`c_lfill,g_custom:faces,w_${window.innerWidth},h_820`}
+              width={window.innerWidth}
+              maxWidthDisable={true}
+              className={`absolute top-0 h-screen w-full min-h-screen ${
+                videoFallback ? 'block' : 'hidden'
+              }`}
+            />
+          )}
+          {!videoFallback && (
+            <div
+              id="video-bg"
+              ref={bgTargetElement}
+              className={`absolute top-0 h-screen w-full min-h-screen transition-all ${CustomEase} duration-300  ${
+                showVideo ? 'block' : 'hidden'
+              }`}
+              style={{ height: vidH }}
+            ></div>
+          )}
 
           <div
             className={`absolute top-0 w-full bg-gradient-to-b from-[#EFC3C0] via-[#CDE6E1] to-[#F4E3C5] ${
@@ -154,36 +219,17 @@ export default function Home({
             style={{ height: showVideo ? videoOverlayHeight : 'auto' }}
           >
             {!showVideo && (
-              //           <div className="absolute top-0 w-full">
-              //             <img
-              //               srcSet={`
-              //     https://vumbnail.com/855473995_large.jpg 640w,
-              //     https://vumbnail.com/855473995_medium.jpg 200w,
-              //     https://vumbnail.com/855473995_small.jpg 100w
-              // `}
-              //               sizes="(max-width: 1400px) 100vw, 1400px"
-              //               src="https://vumbnail.com/855473995.jpg"
-              //             />
               <svg
                 width="100"
                 height="100"
                 viewBox="0 0 24 24"
                 className="opacity-70 fill-purple"
               >
-                {/* <path
-                d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
-                width={1}
-                opacity=".25"
-              />
-              <path
-                d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
-              /> */}
                 <path
                   d="M2,12A10.94,10.94,0,0,1,5,4.65c-.21-.19-.42-.36-.62-.55h0A11,11,0,0,0,12,23c.34,0,.67,0,1-.05C6,23,2,17.74,2,12Z"
                   className="animate-spin origin-center"
                 />
               </svg>
-              // </div>
             )}
           </div>
         </div>

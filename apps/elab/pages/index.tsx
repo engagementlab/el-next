@@ -111,8 +111,6 @@ export default function Home({
           if (window.matchMedia('(orientation: portrait)').matches)
             setVideoFallbackPortrait(true);
 
-          debugger;
-
           const img = document.getElementById('video-fallback');
           if (img) {
             img.addEventListener('load', () => {
@@ -172,6 +170,7 @@ export default function Home({
       </div>
     );
   };
+
   return (
     <Layout
       topBgElement={
@@ -337,6 +336,7 @@ export default function Home({
               transition: { duration: 1, delay: 0.6 },
             }}
             exit={{ opacity: 0 }}
+            className="bg-white"
           >
             <Divider noMarginY={true} />
             {upcomingEvents && upcomingEvents.length > 0 && (

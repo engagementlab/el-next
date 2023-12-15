@@ -52,7 +52,11 @@ var Layout = function Layout(_ref) {
     title = _ref.title,
     description = _ref.description,
     error = _ref.error,
-    transitions = _ref.transitions;
+    transitions = _ref.transitions,
+    ogDescription = _ref.ogDescription,
+    ogTitle = _ref.ogTitle,
+    ogImage = _ref.ogImage,
+    ogUrl = _ref.ogUrl;
   var variants = transitions && transitions.variants ? transitions.variants : defaultPgTransitions;
   var transition = transitions && transitions.transition ? transitions.transition : {
     type: 'linear'
@@ -74,6 +78,21 @@ var Layout = function Layout(_ref) {
       }), /*#__PURE__*/jsxRuntime.jsx("meta", {
         name: "description",
         content: description
+      }), /*#__PURE__*/jsxRuntime.jsx("meta", {
+        property: "og:title",
+        content: ogTitle || title
+      }), /*#__PURE__*/jsxRuntime.jsx("meta", {
+        property: "og:description",
+        content: ogDescription || description
+      }), /*#__PURE__*/jsxRuntime.jsx("meta", {
+        property: "og:url",
+        content: ogUrl
+      }), /*#__PURE__*/jsxRuntime.jsx("meta", {
+        property: "og:type",
+        content: "website"
+      }), ogImage && /*#__PURE__*/jsxRuntime.jsx("meta", {
+        property: "og:image",
+        content: ogImage
       }), /*#__PURE__*/jsxRuntime.jsx(favicon_dist_elNextComponentsFavicon.Favicon, {})]
     }), error && process.env.NODE_ENV !== 'production' ? /*#__PURE__*/jsxRuntime.jsxs("div", {
       className: "m-40 p-10 border-4 border-[#00ab9e] bg-[#00ab9e80] text-white",

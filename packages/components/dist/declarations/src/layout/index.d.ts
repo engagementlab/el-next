@@ -5,11 +5,15 @@ type Props = {
     children: ReactNode;
     title: string;
     description: string;
+    ogTitle?: string;
+    ogDescription?: string;
+    ogImage?: string;
+    ogUrl?: string;
     error?: TError;
     transitions?: {
         variants: Variants;
         transition?: Transition;
     };
 };
-export declare const Layout: ({ children, title, description, error, transitions, }: Props) => JSX.Element;
+export declare const Layout: ({ children, title, description, error, transitions, ogDescription, ogTitle, ogImage, ogUrl, }: Props) => JSX.Element;
 export {};

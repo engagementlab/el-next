@@ -9,6 +9,10 @@ type Props = {
   children: ReactNode;
   title: string;
   description: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
   error?: TError;
   transitions?: { variants: Variants; transition?: Transition };
 };
@@ -25,6 +29,10 @@ export const Layout = ({
   description,
   error,
   transitions,
+  ogDescription,
+  ogTitle,
+  ogImage,
+  ogUrl,
 }: Props): JSX.Element => {
   const variants =
     transitions && transitions.variants
@@ -59,6 +67,14 @@ export const Layout = ({
         )}
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content={description} />
+        <meta property="og:title" content={ogTitle || title} />
+        <meta
+          property="og:description"
+          content={ogDescription || description}
+        />
+        <meta property="og:url" content={ogUrl} />
+        <meta property="og:type" content="website" />
+        {ogImage && <meta property="og:image" content={ogImage} />}
         <Favicon />
       </Head>
       {error && process.env.NODE_ENV !== 'production' ? (

@@ -51,6 +51,30 @@ export default function Home({
   const targetRef = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef();
 
+  const EnableVideoFallback = () => {
+    // There is a problem with Vimeo, we will fall back to an image
+    setVideoFallback(true);
+    if (window.matchMedia('(orientation: portrait)').matches)
+      setVideoFallbackPortrait(true);
+
+    const img = document.getElementById('video-fallback');
+    if (img) {
+      img.addEventListener('load', () => {
+        const height =
+          img.clientHeight -
+          document.querySelector<HTMLElement>('nav')!.clientHeight -
+          document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
+          parseInt(
+            window
+              .getComputedStyle(document.getElementById('layout-daddy')!)
+              .marginTop.replace(/[^0-9-]/g, '')
+          );
+        setVideoHeight(height);
+        setVideoOverlayHeight(img.clientHeight);
+      });
+    }
+  };
+
   useEffect(() => {
     window.addEventListener(
       'scroll',
@@ -79,7 +103,7 @@ export default function Home({
         setShowVideo(true);
       });
       player.on('error', () => {
-        console.log('Error loading video');
+        EnableVideoFallback();
       });
       player.on('resize', (e) => {
         // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
@@ -108,31 +132,10 @@ export default function Home({
       player
         .loadVideo({ id: portraitVideo ? 855474088 : 855473995 })
         .catch((e) => {
-          // There is a problem with Vimeo, we will fall back to an image
-          setVideoFallback(true);
-          if (window.matchMedia('(orientation: portrait)').matches)
-            setVideoFallbackPortrait(true);
-
-          const img = document.getElementById('video-fallback');
-          if (img) {
-            img.addEventListener('load', () => {
-              const height =
-                img.clientHeight -
-                document.querySelector<HTMLElement>('nav')!.clientHeight -
-                document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
-                parseInt(
-                  window
-                    .getComputedStyle(document.getElementById('layout-daddy')!)
-                    .marginTop.replace(/[^0-9-]/g, '')
-                );
-              setVideoHeight(height);
-              setVideoOverlayHeight(img.clientHeight);
-            });
-          }
+          EnableVideoFallback();
         });
     } catch (e) {
-      // There is a problem with Vimeo, we will fall back to an image
-      setVideoFallback(true);
+      EnableVideoFallback();
     }
   }, [bgVideoRef]);
 

@@ -2,7 +2,7 @@ import Layout from '../components/Layout';
 
 export default function Privacy() {
   return (
-    <Layout>
+    <Layout title="Privacy Policy">
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         <h2 className="text-5xl font-semibold mb-8">Privacy Policy</h2>
         <div>

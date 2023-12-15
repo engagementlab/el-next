@@ -38,7 +38,7 @@ export default function Initiatives({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} fullBleed={true}>
+    <Layout error={error} fullBleed={true} title="Initiatives">
       {/* <Gutter> */}
       {page && (
         <div className="text-grey">

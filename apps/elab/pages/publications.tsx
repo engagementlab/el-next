@@ -22,7 +22,7 @@ export default function Publications({
       )
     : [];
   return (
-    <Layout error={error} fullBleed={true}>
+    <Layout error={error} fullBleed={true} title="Publications - Research">
       <div className="text-slate">
         <Gutter>
           <h1 className="m-6 font-extrabold text-4xl xl:text-6xl">

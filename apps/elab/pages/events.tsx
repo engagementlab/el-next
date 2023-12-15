@@ -21,7 +21,7 @@ export default function WhatsNew({
   else if (router.asPath.indexOf('events') > 0) filter = 'events';
 
   return (
-    <Layout error={error}>
+    <Layout error={error} title="Events">
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         {items && <WhatsNewRenderer items={items} filter="events" />}
       </div>

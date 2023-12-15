@@ -3,7 +3,12 @@ import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import { Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
-import { Item, InitiativeKeyMap, Theming } from '@/types';
+import {
+  Item,
+  InitiativeKeyMap,
+  Theming,
+  InitiativeFilterGroups,
+} from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
 export default function WhatsNew({
@@ -13,7 +18,14 @@ export default function WhatsNew({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} theme={Theming[initiative].theme}>
+    <Layout
+      error={error}
+      theme={Theming[initiative].theme}
+      title={`${filter?.at(0)?.toUpperCase()}${filter?.substring(
+        1,
+        filter.length
+      )} - ${InitiativeFilterGroups.find((i) => i.key === initiative)?.label}`}
+    >
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         {items && (
           <WhatsNewRenderer

@@ -1,22 +1,15 @@
 import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
-
 import { AnimatePresence, motion } from 'framer-motion';
-
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+
 import {
-  CustomEase,
   InitiativeFilterGroups,
   InitiativeKeyMap,
   Studio,
-  Theme,
   Theming,
 } from '@/types';
 
@@ -136,7 +129,13 @@ export default function Studios({
     };
 
     return (
-      <Layout error={error} theme={Theming[initiative].theme}>
+      <Layout
+        error={error}
+        theme={Theming[initiative].theme}
+        title={`Studios - ${
+          InitiativeFilterGroups.find((i) => i.key === initiative)?.label
+        }`}
+      >
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studios

@@ -15,7 +15,7 @@ export default function WhatsNew({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error}>
+    <Layout error={error} title="News">
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         {items && <WhatsNewRenderer items={items} filter="news" />}
       </div>

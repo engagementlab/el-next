@@ -29,6 +29,7 @@ export default function ResearchProject({
       error={error}
       breadcrumbs={[{ label: 'Research Projects', href: '/research/projects' }]}
       fullBleed={true}
+      title={`${item?.name} - Research Projects`}
     >
       {item && (
         <div className="text-grey">

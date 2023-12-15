@@ -4,7 +4,14 @@ import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import { Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
-import { News, Event, Item, InitiativeKeyMap, Theming } from '@/types';
+import {
+  News,
+  Event,
+  Item,
+  InitiativeKeyMap,
+  Theming,
+  InitiativeFilterGroups,
+} from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
 export default function WhatsNew({
@@ -13,7 +20,13 @@ export default function WhatsNew({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} theme={Theming[initiative].theme}>
+    <Layout
+      error={error}
+      theme={Theming[initiative].theme}
+      title={`What's New - ${
+        InitiativeFilterGroups.find((i) => i.key === initiative)?.label
+      }`}
+    >
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         {items && <WhatsNewRenderer items={items} initiative={initiative} />}
       </div>

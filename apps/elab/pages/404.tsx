@@ -2,7 +2,7 @@ import Layout from '../components/Layout';
 
 export default function NotFound() {
   return (
-    <Layout>
+    <Layout title="Not Found">
       <div className="flex flex-row justify-center min-h-screen w-full text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"

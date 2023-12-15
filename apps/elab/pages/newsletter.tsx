@@ -199,7 +199,7 @@ export default function Newsletter() {
     );
   };
   return (
-    <Layout>
+    <Layout title="Newsletter Preferences">
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         <h3 className="uppercase font-extrabold text-4xl">
           Newsletter Preferences

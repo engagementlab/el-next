@@ -39,49 +39,9 @@ export default function Initiatives({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} fullBleed={true}>
+    <Layout error={error} fullBleed={true} title="Undergraduate Curriculum">
       {page && (
         <div className="text-grey">
-          {/* <div className="flex flex-col lg:flex-row justify-start px-4 xl:mx-20 md:px-20 lg:pl-20 my-0 lg:mt-14 xl:mt-16 xl:mb-20">
-            <div className="my-0 lg:mt-14 xl:mt-16 xl:mb-20 w-full lg:w-4/6 xl:w-1/2">
-              <div className="flex flex-col studios-center w-full">
-                <DocumentRenderer
-                  document={page.intro.document}
-                  componentBlocks={Blocks()}
-                  renderers={Doc(rendererOverrides)}
-                />
-              </div>
-              <div className="hidden lg:block w-full mt-6 mb-12">
-                <p className="text-xl lg:text-3xl font-extrabold uppercase">
-                  Jump to:
-                </p>
-                <Button
-                  label="Undergraduate Minor: Social Impact Design"
-                  anchorId="sid"
-                  className="border-teal text-teal fill-yellow"
-                />
-                <Button
-                  label="Social Impact Studios"
-                  anchorId="studios"
-                  className="border-teal text-teal fill-yellow"
-                />
-                <Button
-                  label="Project Spotlight"
-                  anchorId="projects"
-                  className="border-teal text-teal fill-yellow"
-                />
-              </div>
-            </div>
-            <div className="flex justify-center my-5 xl:max-w-md">
-              <CaptionedImage
-                alt={page.introImageAltText}
-                imgId={page?.introImage.publicId}
-                caption={page?.introImageCaption}
-                themeColor="bg-teal"
-              />
-            </div>
-          </div> */}
-
           <div className="flex flex-col lg:flex-row justify-start">
             <div className="px-4 md:px-20 lg:pl-20 my-0 lg:mt-14 xl:mt-16 xl:mb-20 w-full lg:w-4/6 xl:w-1/2">
               <h1 className="font-extrabold text-black">

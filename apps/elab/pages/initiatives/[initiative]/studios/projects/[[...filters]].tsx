@@ -216,7 +216,6 @@ export default function StudioProjects({
 
     const filteredProjects = studioProjects
       ? studioProjects.filter((item) => {
-          // console.log(_.map(item.filters, 'key').indexOf(filtersQuery));
           return !filtersQuery
             ? true
             : _.some(
@@ -227,14 +226,17 @@ export default function StudioProjects({
       : [];
 
     return (
-      <Layout error={error} theme={Theming[initiative].theme}>
+      <Layout
+        error={error}
+        theme={Theming[initiative].theme}
+        title={`Studio Projects - ${
+          InitiativeFilterGroups.find((i) => i.key === initiative)?.label
+        }`}
+      >
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studio Projects
           </h1>
-          {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
-            {showing}
-          </div> */}
           {initiativeBlurbs.projectsBlurb && (
             <div className="mx-6 w-full lg:w-1/2">
               <DocumentRenderer

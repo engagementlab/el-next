@@ -6,7 +6,7 @@ const Divider = ({
   noMarginY?: boolean;
 }) => {
   return (
-    <div className={noMarginY ? 'my-0' : 'my-12'}>
+    <div className={`divider ${noMarginY ? 'my-0' : 'my-12'}`}>
       <hr className={`h-1 border-none w-full ${color || 'bg-red'}`} />
       <hr
         className={`h-1 my-1 border-none w-full ${color || 'bg-green-blue'}`}

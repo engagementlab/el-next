@@ -34,6 +34,7 @@ type Home = {
 
 export default function Home({
   upcomingEvents,
+  recentEvents,
   recentNews,
   projects,
   studios,
@@ -49,6 +50,7 @@ export default function Home({
   const [wordIndex, setWordIndex] = useState(0);
   const targetRef = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef();
+
   useEffect(() => {
     window.addEventListener(
       'scroll',
@@ -168,6 +170,38 @@ export default function Home({
           <p className="text-grey font-normal text-sm">{define}</p>
         </motion.div>
       </div>
+    );
+  };
+
+  const EventsRenderer = ({
+    events,
+    upcoming,
+  }: {
+    events: Event[];
+    upcoming?: boolean;
+  }) => {
+    return (
+      <Gutter>
+        <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+          {upcoming ? 'Upcoming' : 'Recent'} Events
+        </h2>
+        <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+          {events.map((item: Event, i: number) => {
+            return (
+              <div key={i}>
+                <div className="flex-shrink">
+                  <Link href={`/events/${item.key}`} className="group">
+                    <NewsEventRenderer item={item as Item} i={i} />
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+          <MoreButton label="See more events" link="/events" />
+        </div>
+      </Gutter>
     );
   };
 
@@ -339,38 +373,13 @@ export default function Home({
             className="bg-white"
           >
             <Divider noMarginY={true} />
-            {upcomingEvents && upcomingEvents.length > 0 && (
-              <Gutter>
-                <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                  Upcoming Events
-                </h2>
-                <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                  {upcomingEvents.map((item: Event, i: number) => {
-                    return (
-                      <div key={i}>
-                        <div className="flex-shrink">
-                          {/* {item.externalLink ? (
-                            <a className="group" href={item.externalLink}>
-                              <NewsEventRenderer
-                                item={item}
-                                i={i}
-                                external={true}
-                                showIcon={true}
-                              />
-                            </a>
-                          ) : ( */}
-                          <Link href={`/events/${item.key}`} className="group">
-                            <NewsEventRenderer item={item as Item} i={i} />
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
-                  <MoreButton label="See more events" link="/events" />
-                </div>
-              </Gutter>
+            {upcomingEvents && upcomingEvents.length > 0 ? (
+              <EventsRenderer events={upcomingEvents} upcoming={true} />
+            ) : (
+              recentEvents &&
+              recentEvents.length > 0 && (
+                <EventsRenderer events={recentEvents} />
+              )
             )}
             {recentNews && recentNews.length > 0 && (
               <>
@@ -470,7 +479,6 @@ export default function Home({
                 </Gutter>
               </>
             )}
-
             {studios && studios.length > 0 && (
               <>
                 <Divider />
@@ -503,38 +511,48 @@ export default function Home({
   );
 }
 export async function getStaticProps() {
-  // We want events only on or after right now
+  let recentEventsResult = [];
+  const eventQueryStr = (dateCondition: string) => {
+    return `events(
+              where: {
+                  enabled: {
+                      equals: true
+                  },
+                  eventDate: {
+                    ${dateCondition}
+                  }
+                },
+                orderBy: {
+                  eventDate: desc
+                }
+              ) { 
+                  name
+                  key
+                  initiatives
+                  eventDate
+                  blurb {
+                    document
+                  }
+                  thumbnail { 
+                    publicId
+                  }
+                  thumbAltText
+                  summary
+              }`;
+  };
+  // We want events only on or after right now, If there aren't any we will look for most recent
   const events = await Query(
     'events',
-    `events(
-      where: {
-          enabled: {
-              equals: true
-          },
-          eventDate:{
-            gte: "${new Date().toISOString()}"
-          }
-        },
-        orderBy: {
-          eventDate: asc
-        }
-      ) { 
-          name
-          key
-          initiatives
-          eventDate
-          blurb {
-            document
-          }
-          thumbnail { 
-            publicId
-          }
-          thumbAltText
-          summary
-      }`
+    eventQueryStr(`gte: "${new Date().toISOString()}"`)
   );
-
-  if (events.error) {
+  // If response for upcoming events is empty, look for past events
+  // ErrorClass.empty = 1
+  if (events.error && events.error.class === 1) {
+    recentEventsResult = await Query(
+      'events',
+      eventQueryStr(`lte: "${new Date().toISOString()}"`)
+    );
+  } else if (events.error) {
     return {
       props: {
         error: events.error,
@@ -674,7 +692,11 @@ export async function getStaticProps() {
     };
   }
 
-  const upcomingEvents = (events as Event[]).slice(0, 3);
+  const upcomingEvents = events.error ? [] : (events as Event[]).slice(0, 3);
+  const recentEvents =
+    recentEventsResult.length > 0
+      ? (recentEventsResult as Event[]).slice(0, 3)
+      : [];
   const recentNews = (news as News[]).slice(0, 3);
   // TODO: clean this up
   let projectsMerged: Project[] = (studioProjects as Project[]).filter(
@@ -700,6 +722,7 @@ export async function getStaticProps() {
   return {
     props: {
       upcomingEvents,
+      recentEvents,
       recentNews,
       projects: featuredProjects,
       studios: featuredStudios,

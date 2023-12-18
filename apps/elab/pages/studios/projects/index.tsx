@@ -301,11 +301,9 @@ export default function StudioProjects({
       : [];
 
     const count = filteredItems.length;
-    // Decide plural of item count
-    const showing = `Showing ${count}`;
 
     return (
-      <Layout error={error} theme={currentTheme}>
+      <Layout error={error} theme={currentTheme} title="Studio Projects">
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studio Projects

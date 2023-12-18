@@ -159,6 +159,9 @@ export default function Studio({
         error={error}
         // breadcrumbs={[{ label: 'Social Impact Studios', href: '/studios' }]}
         theme={theme.theme}
+        title={`${selectedSemester ? selectedSemester.name + ' - ' : ''}${
+          item.name
+        } - Social Impact Studios`}
       >
         {item && (
           <div className="mx-6 text-grey">

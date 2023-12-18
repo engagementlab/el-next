@@ -25,9 +25,7 @@ import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
 import { Gutter } from '@/components/Gutter';
 
-interface SemestersState {
-  peopleOpen: boolean[];
-  togglePeople: (i: number) => void;
+interface ProjectState {
   trailerOpen: boolean;
   toggleTrailerVideo: () => void;
   videoOpen: boolean;
@@ -35,24 +33,11 @@ interface SemestersState {
 }
 
 // Create store with Zustand
-const useStore = create<SemestersState>()(
+const useStore = create<ProjectState>()(
   subscribeWithSelector((set) => ({
-    peopleOpen: [false, false, false, false],
-    togglePeople: (i: number) =>
-      set((state) => {
-        // debugger;
-        return {
-          ...state,
-          peopleOpen: state.peopleOpen.flatMap((section, ind) => {
-            if (ind === i) return !section;
-            return section;
-          }),
-        };
-      }),
     trailerOpen: false,
     toggleTrailerVideo: () =>
       set((state) => {
-        // debugger;
         return {
           ...state,
           trailerOpen: !state.trailerOpen,
@@ -61,7 +46,6 @@ const useStore = create<SemestersState>()(
     videoOpen: false,
     toggleVideo: () =>
       set((state) => {
-        // debugger;
         return {
           ...state,
           videoOpen: !state.videoOpen,
@@ -74,14 +58,9 @@ export default function Studio({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const {
-    togglePeople,
-    peopleOpen,
-    toggleTrailerVideo,
-    trailerOpen,
-    toggleVideo,
-    videoOpen,
-  } = useStore((state) => state);
+  const { toggleTrailerVideo, trailerOpen, toggleVideo, videoOpen } = useStore(
+    (state) => state
+  );
 
   if (item) {
     const theming =
@@ -144,6 +123,7 @@ export default function Studio({
         breadcrumbs={[{ label: 'Studio Projects', href: '/studios/projects' }]}
         theme={theming.theme}
         fullBleed={true}
+        title={`${item.name} - Studio Projects`}
       >
         {item && (
           <div className="text-grey">

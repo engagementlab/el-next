@@ -69,7 +69,7 @@ var Layout = function Layout(_ref) {
     children: [/*#__PURE__*/jsxRuntime.jsxs(Head__default["default"], {
       children: [/*#__PURE__*/jsxRuntime.jsx("title", {
         children: title
-      }), process.env.NODE_ENV !== 'production' && /*#__PURE__*/jsxRuntime.jsx("meta", {
+      }), process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_STAGING === 'true' && /*#__PURE__*/jsxRuntime.jsx("meta", {
         name: "robots",
         content: "noindex"
       }), /*#__PURE__*/jsxRuntime.jsx("meta", {

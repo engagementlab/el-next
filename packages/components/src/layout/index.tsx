@@ -62,9 +62,10 @@ export const Layout = ({
       <Head>
         <title>{title}</title>
         {/* Block indexing on non-prod */}
-        {process.env.NODE_ENV !== 'production' && (
-          <meta name="robots" content="noindex" />
-        )}
+        {process.env.NODE_ENV !== 'production' ||
+          (process.env.NEXT_PUBLIC_STAGING === 'true' && (
+            <meta name="robots" content="noindex" />
+          ))}
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content={description} />
         <meta property="og:title" content={ogTitle || title} />

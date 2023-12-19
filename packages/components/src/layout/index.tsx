@@ -76,7 +76,37 @@ export const Layout = ({
         <meta property="og:url" content={ogUrl} />
         <meta property="og:type" content="website" />
         {ogImage && <meta property="og:image" content={ogImage} />}
-        <Favicon />
+        {/* <Favicon />
+         */}
+        <>
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/favicon/apple-touch-icon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon/favicon-16x16.png"
+          />
+          <link rel="manifest" href="/favicon/site.webmanifest" />
+          <link
+            rel="mask-icon"
+            href="/favicon/safari-pinned-tab.svg"
+            color="#5bbad5"
+          />
+          <meta name="apple-mobile-web-app-title" content={title} />
+          <meta name="application-name" content={title} />
+          <meta name="msapplication-TileColor" content="#ffc40d" />
+          <meta name="theme-color" content="#ffffff" />
+        </>
       </Head>
       {error && process.env.NODE_ENV !== 'production' ? (
         <div className="m-40 p-10 border-4 border-[#00ab9e] bg-[#00ab9e80] text-white">

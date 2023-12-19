@@ -38,9 +38,6 @@ var Favicon = function Favicon() {
       href: "/favicon/safari-pinned-tab.svg",
       color: "#5bbad5"
     }), /*#__PURE__*/jsxRuntime.jsx("meta", {
-      name: "apple-mobile-web-app-title",
-      content: "Snippit"
-    }), /*#__PURE__*/jsxRuntime.jsx("meta", {
       name: "msapplication-TileColor",
       content: "#ffc40d"
     }), /*#__PURE__*/jsxRuntime.jsx("meta", {

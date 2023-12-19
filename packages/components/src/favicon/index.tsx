@@ -40,7 +40,7 @@ export const Favicon = (): JSX.Element => {
         href="/favicon/safari-pinned-tab.svg"
         color="#5bbad5"
       />
-      <meta name="apple-mobile-web-app-title" content="Snippit" />
+      {/* <meta name="apple-mobile-web-app-title" content="Snippit" /> */}
       {/* <meta name="application-name" content="<APP NAME>"/> */}
       <meta name="msapplication-TileColor" content="#ffc40d" />
       <meta name="theme-color" content="#ffffff" />

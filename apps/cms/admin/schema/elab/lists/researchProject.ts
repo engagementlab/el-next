@@ -4,7 +4,9 @@ import {
   checkbox,
   integer,
   json,
+  multiselect,
   relationship,
+  select,
   text,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
@@ -56,6 +58,15 @@ export default list({
           'Specifies if this project was created as a masters thesis',
       },
     }),
+    initiatives: multiselect({
+      label: 'Associated Initiatives',
+      type: 'enum',
+      options: [
+        { label: 'Gun Violence', value: 'gunviolence' },
+        { label: 'Climate', value: 'climate' },
+        // { label: 'Incarceration', value: 'incarceration' },
+      ],
+    }),
     pin: checkbox({
       label: '"Pin" Project to top',
       ui: {
@@ -69,9 +80,6 @@ export default list({
         description:
           'If checked, "to Present" will show instead of just the star year.',
       },
-    }),
-    featured: checkbox({
-      label: 'Featured on Home',
     }),
     order: integer({
       defaultValue: 0,

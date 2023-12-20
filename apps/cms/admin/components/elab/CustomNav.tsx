@@ -314,7 +314,11 @@ export function CustomNavigation({
                           },
                         }}
                         component="a"
-                        href={item.url}
+                        href={
+                          process.env.NODE_ENV === 'production'
+                            ? `/elab/${item.url}`
+                            : item.url
+                        }
                         className="navItems"
                       >
                         {/* <ListItemIcon>

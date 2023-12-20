@@ -316,7 +316,7 @@ export function CustomNavigation({
                         component="a"
                         href={
                           process.env.NODE_ENV === 'production'
-                            ? `/elab/${item.url}`
+                            ? `/elab${item.url}`
                             : item.url
                         }
                         className="navItems"
@@ -338,7 +338,7 @@ export function CustomNavigation({
               component="a"
               href={
                 process.env.NODE_ENV === 'production'
-                  ? `/elab/${item.url}`
+                  ? `/elab${item.url}`
                   : item.url
               }
               sx={{

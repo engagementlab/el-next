@@ -336,7 +336,11 @@ export function CustomNavigation({
           return (
             <ListItemButton
               component="a"
-              href={item.url}
+              href={
+                process.env.NODE_ENV === 'production'
+                  ? `/elab/${item.url}`
+                  : item.url
+              }
               sx={{
                 transition: 'all .2s',
                 transformOrigin: 'left',

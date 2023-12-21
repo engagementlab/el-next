@@ -759,6 +759,7 @@ type InitiativesLanding {
   studiosBlurb: InitiativesLanding_studiosBlurb_Document
   researchProjectsBlurb: InitiativesLanding_researchProjectsBlurb_Document
   publicationsBlurb: InitiativesLanding_publicationsBlurb_Document
+  homepageOrder: [InitiativesLandingHomepageOrderType!]
 }
 
 type InitiativesLanding_intro_Document {
@@ -791,6 +792,13 @@ type InitiativesLanding_researchProjectsBlurb_Document {
 
 type InitiativesLanding_publicationsBlurb_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+enum InitiativesLandingHomepageOrderType {
+  events
+  news
+  projects
+  studios
 }
 
 input InitiativesLandingWhereUniqueInput {
@@ -828,6 +836,7 @@ input InitiativesLandingUpdateInput {
   studiosBlurb: JSON
   researchProjectsBlurb: JSON
   publicationsBlurb: JSON
+  homepageOrder: [InitiativesLandingHomepageOrderType!]
 }
 
 input InitiativesLandingUpdateArgs {
@@ -848,6 +857,7 @@ input InitiativesLandingCreateInput {
   studiosBlurb: JSON
   researchProjectsBlurb: JSON
   publicationsBlurb: JSON
+  homepageOrder: [InitiativesLandingHomepageOrderType!]
 }
 
 type LearningPartners {
@@ -1446,7 +1456,6 @@ type ResearchProject {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
-  featured: Boolean
   order: Int
   startYear: Int
   endYear: Int
@@ -1512,7 +1521,6 @@ input ResearchProjectWhereInput {
   mdProject: BooleanFilter
   pin: BooleanFilter
   ongoing: BooleanFilter
-  featured: BooleanFilter
   order: IntNullableFilter
   startYear: IntNullableFilter
   endYear: IntNullableFilter
@@ -1548,7 +1556,6 @@ input ResearchProjectOrderByInput {
   mdProject: OrderDirection
   pin: OrderDirection
   ongoing: OrderDirection
-  featured: OrderDirection
   order: OrderDirection
   startYear: OrderDirection
   endYear: OrderDirection
@@ -1568,7 +1575,6 @@ input ResearchProjectUpdateInput {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
-  featured: Boolean
   order: Int
   startYear: Int
   endYear: Int
@@ -1626,7 +1632,6 @@ input ResearchProjectCreateInput {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
-  featured: Boolean
   order: Int
   startYear: Int
   endYear: Int

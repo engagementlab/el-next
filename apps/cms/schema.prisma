@@ -101,6 +101,7 @@ model InitiativesLanding {
   studiosBlurb          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   researchProjectsBlurb Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   publicationsBlurb     Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  homepageOrder         Json   @default("[]")
 }
 
 model LearningPartners {
@@ -200,7 +201,6 @@ model ResearchProject {
   mdProject           Boolean      @default(false)
   pin                 Boolean      @default(false)
   ongoing             Boolean      @default(false)
-  featured            Boolean      @default(false)
   order               Int?         @default(0)
   startYear           Int?
   endYear             Int?

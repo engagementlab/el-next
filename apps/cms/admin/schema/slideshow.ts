@@ -45,7 +45,6 @@ const Fields = {
 };
 const Slideshow = (additionalFields: any = {}) => {
   Object.assign(Fields, additionalFields);
-  console.log(Fields);
   return list({
     access: allowAll,
     fields: Fields,

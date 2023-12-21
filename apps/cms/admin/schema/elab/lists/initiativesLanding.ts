@@ -1,10 +1,10 @@
 import { group, list } from '@keystone-6/core';
-import { text } from '@keystone-6/core/fields';
+import { multiselect, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
-import { FixButtons } from '../../hooks';
+
 import { cloudinaryImage } from '../../../components/cloudinary';
 
 const InitiativesLanding: Lists.InitiativesLanding = list({
@@ -109,6 +109,16 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
     publicationsBlurb: document({
       label: 'Publications Blurb',
       formatting: true,
+    }),
+    homepageOrder: multiselect({
+      label: 'Homepage Section Ordering',
+      type: 'enum',
+      options: [
+        { label: 'Events', value: 'events' },
+        { label: 'News', value: 'news' },
+        { label: 'Studio/Research Projects', value: 'projects' },
+        { label: 'Studios', value: 'studios' },
+      ],
     }),
   },
   ui: {

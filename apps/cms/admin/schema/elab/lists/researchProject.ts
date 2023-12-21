@@ -58,15 +58,6 @@ export default list({
           'Specifies if this project was created as a masters thesis',
       },
     }),
-    initiatives: multiselect({
-      label: 'Associated Initiatives',
-      type: 'enum',
-      options: [
-        { label: 'Gun Violence', value: 'gunviolence' },
-        { label: 'Climate', value: 'climate' },
-        // { label: 'Incarceration', value: 'incarceration' },
-      ],
-    }),
     pin: checkbox({
       label: '"Pin" Project to top',
       ui: {

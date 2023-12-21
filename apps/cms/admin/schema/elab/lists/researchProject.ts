@@ -72,6 +72,9 @@ export default list({
           'If checked, "to Present" will show instead of just the star year.',
       },
     }),
+    featured: checkbox({
+      label: 'Featured on Home',
+    }),
     order: integer({
       defaultValue: 0,
       ui: {

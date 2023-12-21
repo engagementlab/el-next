@@ -33,11 +33,8 @@ type Home = {
 };
 
 export default function Home({
-  upcomingEvents,
-  recentEvents,
-  recentNews,
-  projects,
-  studios,
+  sections,
+  sectionOrder,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [videoFallback, setVideoFallback] = useState(false);
@@ -376,136 +373,182 @@ export default function Home({
             className="bg-white"
           >
             <Divider noMarginY={true} />
-            {upcomingEvents && upcomingEvents.length > 0 ? (
-              <EventsRenderer events={upcomingEvents} upcoming={true} />
-            ) : (
-              recentEvents &&
-              recentEvents.length > 0 && (
-                <EventsRenderer events={recentEvents} />
-              )
-            )}
-            {recentNews && recentNews.length > 0 && (
-              <>
-                <Divider />
-                <Gutter>
-                  <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                    Recent News
-                  </h2>
-                  <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                    {recentNews.map((item: News, i: number) => {
+            {sections &&
+              sectionOrder.map((key, index) => {
+                switch (key) {
+                  case 'events':
+                    if (
+                      sections.events.upcomingEvents &&
+                      sections.events.upcomingEvents.length > 0
+                    )
                       return (
-                        <div key={i}>
-                          <div className="flex-shrink">
-                            {item.externalLink ? (
-                              <a className="group" href={item.externalLink}>
-                                <NewsEventRenderer
-                                  item={item as Item}
-                                  i={i}
-                                  external={true}
-                                />
-                              </a>
-                            ) : (
-                              <Link
-                                href={`/news/${item.key}`}
-                                className="group"
-                              >
-                                <NewsEventRenderer item={item as Item} i={i} />
-                              </Link>
-                            )}
-                          </div>
-                        </div>
+                        <>
+                          {index > 0 && <Divider />}
+                          <EventsRenderer
+                            events={sections.events.upcomingEvents}
+                            upcoming={true}
+                          />
+                        </>
                       );
-                    })}
-                  </div>
-                  <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
-                    <MoreButton label="See more news" link="/news" />
-                  </div>
-                </Gutter>
-              </>
-            )}
-            {projects && projects.length > 0 && (
-              <>
-                <Divider />
-                <Gutter>
-                  <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                    Featured Projects
-                  </h2>
-                  <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                    {projects?.map(
-                      (item: StudioProject | ResearchProject, i: number) => {
-                        if (item.hasOwnProperty('initiative'))
-                          return (
-                            <StudioGenericItemRenderer
-                              key={i}
-                              item={item as unknown as StudioUnion}
-                              showBorder={true}
-                            />
-                          );
-                        else
-                          return (
-                            <Link
-                              href={`/research/projects/${item.key}`}
-                              passHref
-                              className="group"
-                            >
-                              <div className="relative">
-                                <Image
-                                  id={`thumb-${item.key}`}
-                                  alt={item.thumbAltText}
-                                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                                  imgId={item.thumbnail.publicId}
-                                  width={460}
-                                  maxWidthDisable={true}
-                                  className="w-full"
-                                />
-
-                                <hr
-                                  className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] border-red`}
-                                />
-                              </div>
-                              <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-                                {item.name}
-                              </h3>
-
-                              <p>{item.shortDescription}</p>
-                            </Link>
-                          );
-                      }
-                    )}
-                  </div>
-                  <div className="flex justify-center lg:justify-end">
-                    <MoreButton
-                      link={`/studios/projects`}
-                      label="See more projects"
-                    />
-                  </div>
-                </Gutter>
-              </>
-            )}
-            {studios && studios.length > 0 && (
-              <>
-                <Divider />
-                <Gutter>
-                  <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                    Featured Studios
-                  </h2>
-                  <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                    {studios.map((item: Studio, i: number) => {
+                    else if (
+                      sections.events.recentEvents &&
+                      sections?.events.recentEvents.length > 0
+                    )
                       return (
-                        <StudioGenericItemRenderer
-                          key={i}
-                          item={item as StudioUnion}
-                          showBorder={true}
-                        />
+                        <>
+                          {index > 0 && <Divider />}
+                          <EventsRenderer
+                            events={sections?.events.recentEvents}
+                          />
+                        </>
                       );
-                    })}
-                  </div>
-                  <div className="flex justify-center lg:justify-end">
-                    <MoreButton link={`/studios`} label="See more studios" />
-                  </div>
-                </Gutter>
-              </>
-            )}
+                    break;
+                  case 'news':
+                    if (sections.news && sections.news.length > 0)
+                      return (
+                        <>
+                          {index > 0 && <Divider />}
+                          <Gutter>
+                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                              Recent News
+                            </h2>
+                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                              {sections.news.map((item: News, i: number) => {
+                                return (
+                                  <div key={i}>
+                                    <div className="flex-shrink">
+                                      {item.externalLink ? (
+                                        <a
+                                          className="group"
+                                          href={item.externalLink}
+                                        >
+                                          <NewsEventRenderer
+                                            item={item as Item}
+                                            i={i}
+                                            external={true}
+                                          />
+                                        </a>
+                                      ) : (
+                                        <Link
+                                          href={`/news/${item.key}`}
+                                          className="group"
+                                        >
+                                          <NewsEventRenderer
+                                            item={item as Item}
+                                            i={i}
+                                          />
+                                        </Link>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                              <MoreButton label="See more news" link="/news" />
+                            </div>
+                          </Gutter>
+                        </>
+                      );
+                  case 'projects':
+                    if (sections.projects && sections.projects.length > 0)
+                      return (
+                        <>
+                          {index > 0 && <Divider />}
+                          <Gutter>
+                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                              Featured Projects
+                            </h2>
+                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                              {sections.projects?.map(
+                                (
+                                  item: StudioProject | ResearchProject,
+                                  i: number
+                                ) => {
+                                  if (item.hasOwnProperty('initiative'))
+                                    return (
+                                      <StudioGenericItemRenderer
+                                        key={i}
+                                        item={item as unknown as StudioUnion}
+                                        showBorder={true}
+                                      />
+                                    );
+                                  else
+                                    return (
+                                      <Link
+                                        href={`/research/projects/${item.key}`}
+                                        passHref
+                                        className="group"
+                                      >
+                                        <div className="relative">
+                                          <Image
+                                            id={`thumb-${item.key}`}
+                                            alt={item.thumbAltText}
+                                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                                            imgId={item.thumbnail.publicId}
+                                            width={460}
+                                            maxWidthDisable={true}
+                                            className="w-full"
+                                          />
+
+                                          <hr
+                                            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] border-red`}
+                                          />
+                                        </div>
+                                        <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                                          {item.name}
+                                        </h3>
+
+                                        <p>{item.shortDescription}</p>
+                                      </Link>
+                                    );
+                                }
+                              )}
+                            </div>
+                            <div className="flex justify-center lg:justify-end">
+                              <MoreButton
+                                link={`/studios/projects`}
+                                label="See more projects"
+                              />
+                            </div>
+                          </Gutter>
+                        </>
+                      );
+
+                    break;
+                  case 'studios':
+                    if (sections.studios && sections.studios.length > 0)
+                      return (
+                        <>
+                          {index > 0 && <Divider />}
+                          <Gutter>
+                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                              Featured Studios
+                            </h2>
+                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                              {sections.studios.map(
+                                (item: Studio, i: number) => {
+                                  return (
+                                    <StudioGenericItemRenderer
+                                      key={i}
+                                      item={item as StudioUnion}
+                                      showBorder={true}
+                                    />
+                                  );
+                                }
+                              )}
+                            </div>
+                            <div className="flex justify-center lg:justify-end">
+                              <MoreButton
+                                link={`/studios`}
+                                label="See more studios"
+                              />
+                            </div>
+                          </Gutter>
+                        </>
+                      );
+                }
+              })}
           </motion.div>
         )}
       </AnimatePresence>
@@ -514,6 +557,14 @@ export default function Home({
   );
 }
 export async function getStaticProps() {
+  const orderingQuery = await Query(
+    'initiativesLanding',
+    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
+        homepageOrder
+      }`
+  );
+  const ordering: string[] = orderingQuery.homepageOrder;
+
   let recentEventsResult = [];
   const eventQueryStr = (dateCondition: string) => {
     return `events(
@@ -544,28 +595,28 @@ export async function getStaticProps() {
               }`;
   };
   // We want events only on or after right now, If there aren't any we will look for most recent
-  const events = await Query(
+  const eventsQuery = await Query(
     'events',
     eventQueryStr(`gte: "${new Date().toISOString()}"`)
   );
   // If response for upcoming events is empty, look for past events
   // ErrorClass.empty = 1
-  if (events.error && events.error.class === 1) {
+  if (eventsQuery.error && eventsQuery.error.class === 1) {
     recentEventsResult = await Query(
       'events',
       eventQueryStr(`lte: "${new Date().toISOString()}"`)
     );
-  } else if (events.error) {
+  } else if (eventsQuery.error) {
     return {
       props: {
-        error: events.error,
+        error: eventsQuery.error,
         event: null,
       },
       revalidate: 1,
     };
   }
 
-  const news = await Query(
+  const newsItems = await Query(
     'newsItems',
     `newsItems(
       where: {
@@ -593,11 +644,11 @@ export async function getStaticProps() {
     }`
   );
 
-  if (news.error) {
+  if (newsItems.error) {
     return {
       props: {
-        error: news.error,
-        newsItem: null,
+        error: newsItems.error,
+        news: null,
       },
       revalidate: 1,
     };
@@ -665,7 +716,7 @@ export async function getStaticProps() {
       },
     };
   }
-  const studios = await Query(
+  const studiosQuery = await Query(
     'studios',
     `studios(
 			where: {
@@ -686,26 +737,31 @@ export async function getStaticProps() {
       thumbAltText
 		}`
   );
-  if (studios.error) {
+  if (studiosQuery.error) {
     return {
       props: {
-        error: studios.error,
+        error: studiosQuery.error,
         studios: null,
       },
     };
   }
 
-  const upcomingEvents = events.error ? [] : (events as Event[]).slice(0, 3);
+  // We need only the first three items in these queries
+  const upcomingEvents = eventsQuery.error
+    ? []
+    : (eventsQuery as Event[]).slice(0, 3);
   const recentEvents =
     recentEventsResult.length > 0
       ? (recentEventsResult as Event[]).slice(0, 3)
       : [];
-  const recentNews = (news as News[]).slice(0, 3);
+  const news = (newsItems as News[]).slice(0, 3);
+
   // TODO: clean this up
   let projectsMerged: Project[] = (studioProjects as Project[]).filter(
     (item) => item.flags && item.flags.includes('home')
   );
 
+  // Project can either be studio or research
   if (researchProjects && researchProjects.length > 0)
     projectsMerged = [
       ...(studioProjects as Project[]).filter(
@@ -714,22 +770,22 @@ export async function getStaticProps() {
       ...(researchProjects as Project[]),
     ];
 
-  const featuredProjects = _.orderBy(projectsMerged, 'order');
-  const featuredStudios = _.orderBy(
-    (studios as Studio[]).filter(
+  const projects = _.orderBy(projectsMerged, 'order');
+  const studios = _.orderBy(
+    (studiosQuery as Studio[]).filter(
       (item) => item.flags && item.flags.includes('home')
     ),
     'order'
   );
-
+  const events = { upcomingEvents, recentEvents };
+  let sections = {
+    events: events,
+    news: news,
+    projects: projects,
+    studios: studios,
+  };
   return {
-    props: {
-      upcomingEvents,
-      recentEvents,
-      recentNews,
-      projects: featuredProjects,
-      studios: featuredStudios,
-    },
+    props: { sections, sectionOrder: ordering },
     revalidate: 1,
   };
 }

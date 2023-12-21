@@ -73,6 +73,38 @@ export default function InitIndex({
   (' group-hover:fill-purple');
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
   const renderSlide = (props: { slide: Item }) => {
+    // Determine what type of button to show from conditions of slide
+    const Button = () => {
+      if (props.slide.eventDate) {
+        if (
+          props.slide.registrationLink &&
+          new Date(props.slide.eventDate) >= new Date()
+        )
+          return (
+            <CTAButton
+              label="RSVP Today"
+              external={true}
+              link={props.slide.registrationLink}
+              theme={Theming[initiative].theme}
+            />
+          );
+        else
+          return (
+            <CTAButton
+              label="Learn More"
+              link={`/events/${props.slide.key}`}
+              theme={Theming[initiative].theme}
+            />
+          );
+      } else
+        return (
+          <CTAButton
+            label="Learn More"
+            link={`/news/${props.slide.key}`}
+            theme={Theming[initiative].theme}
+          />
+        );
+    };
     return (
       <div className="flex flex-col lg:flex-row-reverse">
         <div className="flex-grow w-full lg:w-1/2">
@@ -127,30 +159,7 @@ export default function InitIndex({
                 )}...`
               : props.slide.summary}
           </p>
-          <div className="flex w-full mx-3 mt-3">
-            {props.slide.eventDate ? (
-              props.slide.registrationLink ? (
-                <CTAButton
-                  label="RSVP Today"
-                  external={true}
-                  link={props.slide.registrationLink}
-                  theme={Theming[initiative].theme}
-                />
-              ) : (
-                <CTAButton
-                  label="Learn More"
-                  link={`/events/${props.slide.key}`}
-                  theme={Theming[initiative].theme}
-                />
-              )
-            ) : (
-              <CTAButton
-                label="Learn More"
-                link={`/news/${props.slide.key}`}
-                theme={Theming[initiative].theme}
-              />
-            )}
-          </div>
+          <div className="flex w-full mx-3 mt-3">{Button()}</div>
         </div>
         {/* </div> */}
       </div>

@@ -39,7 +39,12 @@ export default function Initiatives({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} fullBleed={true} title="Undergraduate Curriculum">
+    <Layout
+      error={error}
+      fullBleed={true}
+      title="Undergraduate Curriculum"
+      ogDescription="Learn about our current undergraduate curriculum."
+    >
       {page && (
         <div className="text-grey">
           <div className="flex flex-col lg:flex-row justify-start">

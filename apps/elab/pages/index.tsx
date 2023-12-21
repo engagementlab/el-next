@@ -207,6 +207,7 @@ export default function Home({
 
   return (
     <Layout
+      ogTitle="Home"
       topBgElement={
         <div className="relative md:mx-16">
           {!videoFallbackPortrait ? (

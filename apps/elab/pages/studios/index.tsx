@@ -205,7 +205,12 @@ export default function Studios({
     const showing = `Showing ${count}`;
 
     return (
-      <Layout error={error} theme={currentTheme}>
+      <Layout
+        error={error}
+        theme={currentTheme}
+        title="Studios"
+        ogDescription="Learn about our current undergraduate studios."
+      >
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studios

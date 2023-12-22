@@ -32,3 +32,8 @@ certificatesResolvers:
       storage: "acme.json"
       dnsChallenge:
         provider: cloudflare
+  le-http:
+    acme:
+      email: "engagementlab@emerson.edu"
+      httpChallenge: 
+        entryPoint: web

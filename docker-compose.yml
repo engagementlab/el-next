@@ -120,7 +120,7 @@ services:
       - 'traefik.http.routers.qa-elab.tls=true'
       - 'traefik.http.routers.qa-elab.service=qa-elab-el-next'
       - 'traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083'
-      - 'traefik.http.routers.qa-elab.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.qa-elab.tls.certresolver=le-http'
 
   qa-sjm:
     build:

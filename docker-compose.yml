@@ -23,10 +23,10 @@ services:
         max-size: "1m"
         max-file: "5"
     labels:
-      # - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      # - "traefik.http.routers.dashboard.tls=true"
-      # - "traefik.http.routers.dashboard.entrypoints=websecure"
-      # - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.service=api@internal"
       - 'traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https'
       - 'traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true'
 
@@ -148,25 +148,25 @@ services:
       - 'traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082'
       - 'traefik.http.routers.qa-sjm.tls.certresolver=letsencrypt'
 
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: api
-    env_file:
-      - ./apps/api/.env
-    environment:
-      - PORT=8000
-    logging:
-      driver: none
-    labels:
-      - 'traefik.http.routers.api.rule=PathPrefix(`/api`)'
-      - 'traefik.http.routers.api.tls=true'
-      - 'traefik.http.routers.api.entrypoints=websecure'
-      - 'traefik.http.routers.api.service=api-el-next'
-      - 'traefik.http.services.api-el-next.loadbalancer.server.port=8000'
-      - 'traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api'
-      - 'traefik.http.routers.api.middlewares=api-stripprefix'
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: api
+  #   env_file:
+  #     - ./apps/api/.env
+  #   environment:
+  #     - PORT=8000
+  #   logging:
+  #     driver: none
+  #   labels:
+  #     - 'traefik.http.routers.api.rule=PathPrefix(`/api`)'
+  #     - 'traefik.http.routers.api.tls=true'
+  #     - 'traefik.http.routers.api.entrypoints=websecure'
+  #     - 'traefik.http.routers.api.service=api-el-next'
+  #     - 'traefik.http.services.api-el-next.loadbalancer.server.port=8000'
+  #     - 'traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api'
+  #     - 'traefik.http.routers.api.middlewares=api-stripprefix'
 
   traefik-forward-auth:
     image: thomseddon/traefik-forward-auth:latest

@@ -35,5 +35,6 @@ certificatesResolvers:
   le-http:
     acme:
       email: "engagementlab@emerson.edu"
+      storage: "acme-http.json"
       httpChallenge: 
         entryPoint: web

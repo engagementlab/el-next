@@ -14,6 +14,7 @@ services:
       - ./proxy/certs.yml:/certs.yml
       - /etc/ssl/certs:/certs
       - ./proxy/acme.json:/acme.json
+      - ./proxy/acme-http.json:/acme-http.json
     environment:
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
     logging:

@@ -28,6 +28,7 @@ if [ $# -eq 0 ]
 
         # Traefik will complain about permissions on this otherwise...
         chmod 600 proxy/acme.json
+        chmod 600 proxy/acme-http.json
 
         # Build image and daemonize services
         DOCKER_BUILDKIT=1 docker compose up -d

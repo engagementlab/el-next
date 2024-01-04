@@ -17,19 +17,19 @@ services:
       - ./proxy/acme-http.json:/acme-http.json
     environment:
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
-    command: 
-      - "--log.level=DEBUG"
+    command:
+      - '--log.level=DEBUG'
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "1m"
-        max-file: "5"
+        max-size: '1m'
+        max-file: '5'
     labels:
       # - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       # - "traefik.http.routers.dashboard.tls=true"
       # - "traefik.http.routers.dashboard.entrypoints=websecure"
       # - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.priority=1"
+      - 'traefik.http.routers.priority=1'
 
   cms-landing:
     image: ghcr.io/patrickdappollonio/docker-http-server:v2
@@ -57,10 +57,10 @@ services:
       - PORT=3001
     restart: on-failure
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "1m"
-        max-file: "1"
+        max-size: '1m'
+        max-file: '1'
     labels:
       - 'traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)'
       - 'traefik.http.routers.api-sjm.tls=true'
@@ -110,10 +110,10 @@ services:
         CMS_ENDPOINT: cms-elab:3002
     restart: on-failure
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "1m"
-        max-file: "1"
+        max-size: '1m'
+        max-file: '1'
     labels:
       - 'traefik.http.routers.qa-elab-http.entrypoints=web'
       - 'traefik.http.routers.qa-elab-http.rule=Host(`qa.elab.emerson.edu`)'
@@ -122,7 +122,7 @@ services:
       - 'traefik.http.routers.qa-elab.tls=true'
       - 'traefik.http.routers.qa-elab.service=qa-elab-el-next'
       - 'traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083'
-      - 'traefik.http.routers.qa-elab.tls.certresolver=le-http'
+      # - 'traefik.http.routers.qa-elab.tls.certresolver=le-http'
 
   qa-sjm:
     build:
@@ -135,10 +135,10 @@ services:
         CMS_ENDPOINT: cms-sjm:3001
     restart: on-failure
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "1m"
-        max-file: "1"
+        max-size: '1m'
+        max-file: '1'
     labels:
       - 'traefik.http.routers.qa-sjm-http.entrypoints=web'
       - 'traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)'

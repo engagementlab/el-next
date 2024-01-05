@@ -11,9 +11,10 @@ jobs:
   initial-setup:
     name: "Initial setup"
     uses: engagementlab/el-next/.github/workflows/init.yml@main
-  run-cms:
+
+  run-build:
     needs: initial-setup
-    name: "Run CMS, make build"
+    name: "Make build"
     # Do not run on automated commits (interpretation of TravisCI feature)
     if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
     runs-on: ubuntu-latest
@@ -89,26 +90,49 @@ jobs:
           node outputRoutes.mjs --app elab
           pa11y-ci
 
-#   notify-success:
-#     name: Send success Slack notification
-#     needs: [initial-setup, run-cms, production-publish]
-#     if: ${{ success() }}
-#     uses: engagementlab/el-next/.github/workflows/slack.yml@main
-#     with:
-#       apexUrl: ${{ github.event.client_payload.apexUrl }}
-#       note: ${{ github.event.client_payload.note }}
-#       userName: ${{ github.event.client_payload.userName }}
-#       success: true
-#     secrets: inherit
+  notify-test-success:
+    name: Send success Slack notification
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && success() }} 
+    uses: slackapi/slack-github-action@v1.23.0
+    with:
+      payload: |
+        {
+          "blocks": [
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": ":goggles: The latest *test* build of our web apps succeeded _(Build #${{ github.run_number }})_"
+              }
+            }
+          ]
+        }
 
-#   notify-failure:
-#     name: Send failure Slack notification 
-#     needs: [initial-setup, run-cms, production-publish]
-#     if: ${{ failure() }}
-#     uses: engagementlab/el-next/.github/workflows/slack.yml@main
-#     with:
-#       apexUrl: ${{ github.event.client_payload.apexUrl }}
-#       note: ${{ github.event.client_payload.note }}
-#       userName: ${{ github.event.client_payload.userName }}
-#       success: false
-#     secrets: inherit
+  notify-test-fail:
+    name: Send failed Slack notification
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && failure() }}
+    uses: slackapi/slack-github-action@v1.23.0
+    with:
+      payload: |
+        {
+          "blocks": [
+            {
+              "text": {
+              "type": "section",
+                "type": "mrkdwn",
+                "text": ":woozy_face: The latest *test* build of our web apps failed. _(Build #${{ github.run_number }})_"
+              }
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": "(Production deploys will probably fail right now)"
+                }
+              ]
+            }
+          ]
+        }

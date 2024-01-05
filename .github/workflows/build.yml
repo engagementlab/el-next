@@ -7,6 +7,9 @@ env:
   NODE_ENV: production
   DB_URI: ${{ secrets.DB_URI }}
   AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+  
 jobs:
   initial-setup:
     name: "Initial setup"

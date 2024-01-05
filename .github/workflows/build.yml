@@ -41,19 +41,7 @@ jobs:
       - name: Install local monorepo packages and run preconstruct
         run: yarn
 
-    #   - name: Run CMS
-    #     working-directory: apps/cms  
-    #     env:
-    #       AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
-    #       AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
-    #       DB_URI: ${{ format('{0}/{1}', secrets.DB_URI_PREFIX, github.event.client_payload.appName) }}
-    #     run: |
-    #       yarn add typescript @types/node yargs
-    #       yarn
-    #       yarn postinstall-ci --app elab
-    #       pm2 start yarn --name "el-cms" -- dev --port 8000 --app elab
-    #       yarn build --app elab
-
+ 
       - name: Make production build
         working-directory: apps/elab
         env:
@@ -65,7 +53,7 @@ jobs:
           yarn build
 
       - name: Generate build notes and summary from user
-        if: ${{ github.event.client_payload.note != 'null' }}
+        if: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.note != 'null' }}
         run: echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY"
 
   a11y-tests:
@@ -116,7 +104,7 @@ jobs:
                 }
               ]
             }
-            
+
       - name: Send failed Slack notification
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && failure() }}
         uses: slackapi/slack-github-action@v1.23.0

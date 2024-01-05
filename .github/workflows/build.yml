@@ -9,7 +9,7 @@ env:
   AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-  
+
 jobs:
   initial-setup:
     name: "Initial setup"
@@ -70,7 +70,7 @@ jobs:
 
   a11y-tests:
     name: "Run accessibility tests on mock production"
-    needs: [initial-setup, run-cms]
+    needs: [initial-setup, run-build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -93,49 +93,52 @@ jobs:
           node outputRoutes.mjs --app elab
           pa11y-ci
 
-  notify-test-success:
-    name: Send success Slack notification
-    needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && success() }} 
-    uses: slackapi/slack-github-action@v1.23.0
-    with:
-      payload: |
-        {
-          "blocks": [
+  slack:
+    runs-on: ubuntu-latest
+    needs: [initial-setup, run-build, a11y-tests]
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+      - name: Send success Slack notification
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && success() }} 
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
             {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": ":goggles: The latest *test* build of our web apps succeeded _(Build #${{ github.run_number }})_"
-              }
-            }
-          ]
-        }
-
-  notify-test-fail:
-    name: Send failed Slack notification
-    needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && failure() }}
-    uses: slackapi/slack-github-action@v1.23.0
-    with:
-      payload: |
-        {
-          "blocks": [
-            {
-              "text": {
-              "type": "section",
-                "type": "mrkdwn",
-                "text": ":woozy_face: The latest *test* build of our web apps failed. _(Build #${{ github.run_number }})_"
-              }
-            },
-            {
-              "type": "context",
-              "elements": [
+              "blocks": [
                 {
-                  "type": "mrkdwn",
-                  "text": "(Production deploys will probably fail right now)"
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":goggles: The latest *test* build of our web apps succeeded _(Build #${{ github.run_number }})_"
+                  }
                 }
               ]
             }
-          ]
-        }
+            
+      - name: Send failed Slack notification
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && failure() }}
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "text": {
+                  "type": "section",
+                    "type": "mrkdwn",
+                    "text": ":woozy_face: The latest *test* build of our web apps failed. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "(Production deploys will probably fail right now)"
+                    }
+                  ]
+                }
+              ]
+            }

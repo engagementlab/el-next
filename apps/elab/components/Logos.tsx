@@ -142,6 +142,20 @@ const Logos = ({
           />
         </a>
       )}
+      {(all || partners.includes('zoone')) && (
+        <a
+          href="https://www.zoonewengland.org"
+          target="_blank"
+          className="max-w-xs"
+        >
+          <Image
+            id="zne-logo"
+            alt="Zoo New England logo"
+            imgId="elab-home-v3.x/logos/zne"
+            width={200}
+          />
+        </a>
+      )}
     </div>
   );
 };

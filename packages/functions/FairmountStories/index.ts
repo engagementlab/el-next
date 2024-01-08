@@ -2,22 +2,30 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { google } from 'googleapis';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-/**
- * request or authorization to call APIs.
- */
-async function authorize() {
-  const client = new google.auth.GoogleAuth({
-    credentials: JSON.parse(process.env.FAIRMOUNT_API_GOOGLE),
-    scopes: SCOPES,
-  });
-
-  return client;
-}
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
+  /**
+   * request or authorization to call APIs.
+   */
+  async function authorize() {
+    try {
+      let creds = JSON.parse(process.env.FAIRMOUNT_API_GOOGLE);
+      creds.private_key = process.env.FAIRMOUNT_API_GOOGLE_CERT;
+      const client = new google.auth.GoogleAuth({
+        credentials: creds,
+        scopes: SCOPES,
+      });
+
+      return client;
+    } catch (e) {
+      console.error(e);
+      context.res = { status: 500, body: { msg: e } };
+    }
+  }
+
   /**
    * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
    */
@@ -47,6 +55,29 @@ const httpTrigger: AzureFunction = async function (
       console.error(e);
       return { status: 500, body: { msg: e } };
     }
+  }
+
+  if (!process.env.FAIRMOUNT_API_GOOGLE) {
+    context.res = {
+      status: 500,
+      body: 'Missing process.env.FAIRMOUNT_API_GOOGLE)!',
+    };
+    return;
+  }
+  if (!process.env.FAIRMOUNT_API_GOOGLE_CERT) {
+    context.res = {
+      status: 500,
+      body: 'Missing process.env.FAIRMOUNT_API_GOOGLE_CERT)!',
+    };
+    return;
+  }
+
+  if (!req.query.spreadsheetId) {
+    context.res = {
+      status: 500,
+      body: 'Missing spreadsheetId',
+    };
+    return;
   }
 
   const auth = await authorize();

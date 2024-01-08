@@ -67,7 +67,7 @@ jobs:
       - name: Download artifacts from production build job
         uses: actions/download-artifact@v3
         with:
-          name: ${{ format('artifact-build-{0}', github.run_id) }}
+          name: ${{ format('artifact-repo-{0}', github.run_id) }}
 
       - name: Install packages
         run: npm i -g pa11y-ci http-server pm2 && npm i

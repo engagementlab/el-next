@@ -49,8 +49,15 @@ jobs:
           NODE_TLS_REJECT_UNAUTHORIZED: '0'
         run: |
           yarn add typescript @types/node
-          yarn
+          yarn          
           yarn build
+        
+      - name: Archive build step artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ format('artifact-build-{0}', github.run_id) }}
+          retention-days: 1
+          path: ./
 
       - name: Generate build notes and summary from user
         if: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.note != 'null' }}
@@ -62,12 +69,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.13.1]
+        node-version: [10]
     steps:
       - name: Download artifacts from production build job
         uses: actions/download-artifact@v3
         with:
-          name: ${{ format('artifact-repo-{0}', github.run_id) }}
+          name: ${{ format('artifact-build-{0}', github.run_id) }}
 
       - name: Install packages
         run: npm i -g pa11y-ci http-server pm2 && npm i

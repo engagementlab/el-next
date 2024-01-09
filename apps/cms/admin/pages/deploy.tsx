@@ -97,6 +97,8 @@ export default function Deploy() {
         {
           app,
           storageAccount: appConfigMap[app].storageAccount,
+          cdnName:
+            appConfigMap[app].cdnName || appConfigMap[app].storageAccount,
           apexUrl: appConfigMap[app].apexUrl,
           note: noteContent,
         },

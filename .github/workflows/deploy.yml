@@ -15,7 +15,7 @@ jobs:
     needs: initial-setup
     name: "Run CMS, make build"
     # Do not run on automated commits (interpretation of TravisCI feature)
-    if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
+    if: "!contains(github.event.head_commit.message, 'skip ci') && github.actor != 'dependabot[bot]'"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,7 +40,6 @@ jobs:
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
         env:
-          # APOLLO_CLIENT_GRAPHQL_URI: ${{ format('https://qa.{0}/api/graphql', github.event.client_payload.apexUrl) }}''
           GRAPHQL_APP: ${{ github.event.client_payload.appName }}
           NODE_TLS_REJECT_UNAUTHORIZED: '0'
         run: |

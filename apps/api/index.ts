@@ -252,6 +252,7 @@ app.post('/prod-deploy', async (req, res, next) => {
           ? userEmail[0]
           : 'engagementlab@emerson.edu',
       note: req.body.note,
+      cdnName: req.body.cdnName ? req.body.cdnName : req.body.storageAccount,
     });
 
     res.status(200).send(response.data);

@@ -22,6 +22,7 @@ const httpTrigger: AzureFunction = async function (
   const note = req.body.note;
   const repoName = req.body.repo;
   const storageAccount = req.body.storageAccount;
+  const cdnName = req.body.cdnName;
   const userName = req.body.userName;
 
   const workflowError = `
@@ -75,10 +76,11 @@ const httpTrigger: AzureFunction = async function (
         event_type: event || 'deploy-prod',
         client_payload: {
           apexUrl,
-          appName: appName || 'tngvi',
+          appName: appName || 'elab',
           note,
           storageAccount,
           userName,
+          cdnName: cdnName ? cdnName : storageAccount,
         },
       }
     );

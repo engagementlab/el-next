@@ -1,3 +1,4 @@
+import path from 'path';
 import { group, list } from '@keystone-6/core';
 import {
   checkbox,
@@ -5,22 +6,16 @@ import {
   relationship,
   select,
   text,
-  timestamp,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
-import path from 'path';
+
 import { componentBlocks } from '../../../components/component-blocks';
-import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
-import { azConfig } from '../../azure';
 import { PartnersSelect } from './partners';
 
-import { Flags } from '../flags';
-import { helper, HelperIcon } from '../../../components/helper';
-import { boolean } from 'yargs';
 import { Featuring } from '../featuring';
 
 const StudioProject: Lists.StudioProject = list({

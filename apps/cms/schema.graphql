@@ -1456,6 +1456,7 @@ type ResearchProject {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
+  featured: Boolean
   order: Int
   startYear: Int
   endYear: Int
@@ -1521,6 +1522,7 @@ input ResearchProjectWhereInput {
   mdProject: BooleanFilter
   pin: BooleanFilter
   ongoing: BooleanFilter
+  featured: BooleanFilter
   order: IntNullableFilter
   startYear: IntNullableFilter
   endYear: IntNullableFilter
@@ -1556,6 +1558,7 @@ input ResearchProjectOrderByInput {
   mdProject: OrderDirection
   pin: OrderDirection
   ongoing: OrderDirection
+  featured: OrderDirection
   order: OrderDirection
   startYear: OrderDirection
   endYear: OrderDirection
@@ -1575,6 +1578,7 @@ input ResearchProjectUpdateInput {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
+  featured: Boolean
   order: Int
   startYear: Int
   endYear: Int
@@ -1632,6 +1636,7 @@ input ResearchProjectCreateInput {
   mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
+  featured: Boolean
   order: Int
   startYear: Int
   endYear: Int

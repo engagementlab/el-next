@@ -47,26 +47,11 @@ jobs:
           yarn
           yarn build
 
-      # - name: Commit build
-      #   run: |
-      #     git config --global user.name "ELDevBot"
-      #     git config --global user.email engagementlab@emerson.edu
-
-      #     git remote set-url origin ${{ format('https://ELDevBot:{0}@github.com/engagementlab/el-next', secrets.GH_TOKEN) }}
-      #     git add ${{ format('./apps/{0}/out', github.event.client_payload.appName) }}
-      #     git commit --message "Automated generated static production app (GH action #$GHA_RUNNUM) [skip ci]\n\n**Publishing summary from user:**\n${{ github.event.client_payload.note }}"
-      #     git push
-
       - name: Generate build notes and summary from user
-        if: ${{ github.event.client_payload.note != 'null' }}
+        if: ${{ github.event.client_payload.note != 'null' && github.event.client_payload.note.length > 0 }}
         run: |
           echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
           echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
-        # echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY"
-
-        # git pull
-        # git commit --message "Merge branch 'main' of github.com:engagementlab/transform-narratives into main [skip ci]"
-        # git push
           
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3

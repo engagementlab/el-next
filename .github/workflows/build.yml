@@ -99,8 +99,8 @@ jobs:
             {
               "blocks": [
                 {
-                  "text": {
                   "type": "section",
+                  "text": {
                     "type": "mrkdwn",
                     "text": ":woozy_face: The latest *test* build of our web apps failed. _(Build #${{ github.run_number }})_"
                   }

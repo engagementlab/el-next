@@ -1,7 +1,5 @@
 name: "Checkout latest HEAD commit, make build for all apps"
 on: 
-  push:
-    branches: [main]
   pull_request:
     branches: [production]
   workflow_call:

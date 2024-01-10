@@ -24,8 +24,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.16]
-    outputs:
-      a11y_warn: ${{ steps.lhci.outputs.exit_code }}
     steps:      
       - name: Setup node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -76,11 +74,9 @@ jobs:
         run: |
           npm i -g @lhci/cli@0.13.x
           lhci autorun
-          echo ::set-output a11y_warn=exit_code::$?
-        # echo "a11y_warn=$BUILD_ID"  >> $GITHUB_OUTPUT
 
       - name: Send success Slack notification
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outputs.a11y_warn == 0 }} 
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'success' }} 
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |
@@ -97,7 +93,7 @@ jobs:
             }
 
       - name: Send success Slack notification w/ a11y warning 
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outputs.a11y_warn == 1 }} 
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'failure' }} 
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |

@@ -38,6 +38,7 @@ export const MenuToggle = ({ toggle, hover, isHover, isOpen }: any) => {
         transition: { duration: 0.3 },
       }}
       className="relative z-50"
+      aria-label={isOpen ? 'Close Main Menu' : 'Open Main Menu'}
     >
       <svg width="75" height="75" viewBox="0 0 75 75">
         <Path

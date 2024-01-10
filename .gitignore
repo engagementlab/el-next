@@ -10,3 +10,4 @@ apps/sjm/.next
 apps/elab/.next
 apps/elab/out
 apps/cms/admin/schema/index.ts
+apps/elab/.lighthouseci

@@ -23,7 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.13.1]
+        node-version: [18.16]
+    outputs:
+      a11y_warn: ${{ steps.lhci.outputs.exit_code }}
     steps:      
       - name: Setup node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -69,13 +71,16 @@ jobs:
           pa11y-ci
 
       - name: Run Lighthouse CI
+        id: lhci
         working-directory: apps/elab
         run: |
           npm i -g @lhci/cli@0.13.x
           lhci autorun
+          echo ::set-output a11y_warn=exit_code::$?
+        # echo "a11y_warn=$BUILD_ID"  >> $GITHUB_OUTPUT
 
       - name: Send success Slack notification
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }} 
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outputs.a11y_warn == 0 }} 
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |
@@ -87,6 +92,32 @@ jobs:
                     "type": "mrkdwn",
                     "text": ":goggles: The latest *test* build of our web apps succeeded. _(Build #${{ github.run_number }})_"
                   }
+                }
+              ]
+            }
+
+      - name: Send success Slack notification w/ a11y warning 
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outputs.a11y_warn == 1 }} 
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":goggles: The latest *test* build of our web apps succeeded. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": ":pushpin: Some accessibility issues exist."
+                    }
+                  ]
                 }
               ]
             }

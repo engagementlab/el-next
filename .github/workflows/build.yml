@@ -64,16 +64,17 @@ jobs:
         run: pm2 start `which http-server` --name server
 
       - name: Output all build paths to .pa11yci config and run a11y tests 
+        id: pa11y
         run: |
           node outputRoutes.mjs --app elab
           pa11y-ci
 
-      - name: Run Lighthouse CI
+      - name: Run Lighthouse
         id: lhci
-        working-directory: apps/elab
-        run: |
-          npm i -g @lhci/cli@0.13.x
-          lhci autorun
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          fooApiToken: ${{ secrets.FOO_API_KEY }}
+          configFile: 'lhconfig.json'
 
       - name: Send success Slack notification
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'success' }} 
@@ -92,9 +93,9 @@ jobs:
               ]
             }
 
-      # Build has failed due to lhci a11y check not successful
+      # Build has failed due to a11y check(s) not successful
       - name: Send Slack notification w/ a11y warning 
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && steps.lhci.outcome == 'failure' }} 
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && (steps.lhci.outcome == 'failure' || steps.pa11y.outcome == 'failure') }} 
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |
@@ -104,7 +105,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":goggles: The latest *test* build of our web apps succeeded. _(Build #${{ github.run_number }})_"
+                    "text": ":goggles: The latest *test* build of our web apps succeeded with warnings. _(Build #${{ github.run_number }})_"
                   }
                 },
                 {

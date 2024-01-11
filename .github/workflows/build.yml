@@ -92,8 +92,9 @@ jobs:
               ]
             }
 
-      - name: Send success Slack notification w/ a11y warning 
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'failure' }} 
+      # Build has failed due to lhci a11y check not successful
+      - name: Send Slack notification w/ a11y warning 
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && steps.lhci.outcome == 'failure' }} 
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |
@@ -119,7 +120,7 @@ jobs:
             }
 
       - name: Send failed Slack notification
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && steps.lhci.outcome == 'success'  }}
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |

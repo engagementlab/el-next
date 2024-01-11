@@ -13,5 +13,10 @@ module.exports = {
         'categories:accessibility': ['error', { minScore: 1 }],
       },
     },
+    ci: {
+      upload: {
+        target: 'temporary-public-storage',
+      },
+    },
   },
 };

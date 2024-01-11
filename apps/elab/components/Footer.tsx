@@ -429,7 +429,7 @@ export const Footer = () => {
 
                         <button
                           type="submit"
-                          aria-label="Subscribe"
+                          aria-label="Sign up"
                           className="group relative my-12"
                         >
                           <div className="absolute w-24 h-8 border-yellow border-2 mt-1 ml-1 bg-yellow bg-opacity-0 group-hover:bg-opacity-25"></div>

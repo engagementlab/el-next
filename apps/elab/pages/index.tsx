@@ -272,56 +272,55 @@ export default function Home({
       error={error}
     >
       <Gutter noMarginY={true}>
-        <motion.div id="tagline" className="flex static flex-col pt-14">
+        <div id="tagline" className="flex static flex-col pt-14">
           <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
-            {showVideo && (
-              <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_15px_#fff] ">
-                Advancing&nbsp;
-                <span className="inline-block text-purple">
-                  peace<span className="text-slate">,</span>
-                </span>
-                &nbsp;
-                <span className="inline-block text-purple">equity</span>,
-                &&nbsp;
-                <span className="text-purple">justice</span>
-                <br />
-                through collaborative&nbsp;
-                <div className="inline-flex flex-col font-extrabold">
-                  <div className="overflow-hidden h-8 md:h-12">
-                    <div
-                      className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left ${
-                        wordIndex !== 0
-                          ? wordIndex === 1
-                            ? 'translate-y-[-33%]'
-                            : 'translate-y-[-66%]'
-                          : ''
-                      }`}
-                    >
-                      <motion.span className="text-yellow">
-                        storytelling
-                      </motion.span>
-                      <motion.span className="text-green">research</motion.span>
-                      <motion.span className="text-red">design</motion.span>
-                    </div>
-                  </div>
+            {/* {showVideo && ( */}
+            <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_15px_#fff]">
+              Advancing&nbsp;
+              <span className="inline-block text-purple">
+                peace<span className="text-slate">,</span>
+              </span>
+              &nbsp;
+              <span className="inline-block text-purple">equity</span>, &&nbsp;
+              <span className="text-purple">justice</span>
+              <br />
+              through collaborative&nbsp;
+              <div className="inline-flex flex-col font-extrabold">
+                <div className="overflow-hidden h-8 md:h-12">
                   <div
-                    className={`flex flex-col transition-all ${CustomEase} duration-300 ${
+                    className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left ${
                       wordIndex !== 0
                         ? wordIndex === 1
-                          ? 'w-9/12'
-                          : 'w-7/12'
+                          ? 'translate-y-[-33%]'
+                          : 'translate-y-[-66%]'
                         : ''
                     }`}
                   >
-                    <hr className="h-1 border-none bg-red w-full" />
-                    <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                    <hr className="h-1 border-none bg-yellow w-full" />
+                    <motion.span className="text-yellow">
+                      storytelling
+                    </motion.span>
+                    <motion.span className="text-green">research</motion.span>
+                    <motion.span className="text-red">design</motion.span>
                   </div>
                 </div>
+                <div
+                  className={`flex flex-col transition-all ${CustomEase} duration-300 ${
+                    wordIndex !== 0
+                      ? wordIndex === 1
+                        ? 'w-9/12'
+                        : 'w-7/12'
+                      : ''
+                  }`}
+                >
+                  <hr className="h-1 border-none bg-red w-full" />
+                  <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+                  <hr className="h-1 border-none bg-yellow w-full" />
+                </div>
               </div>
-            )}
+            </div>
+            {/* )} */}
           </motion.div>
-        </motion.div>
+        </div>
 
         <AnimatePresence>
           {showVideo && (
@@ -418,6 +417,10 @@ export default function Home({
                                 return (
                                   <div key={i}>
                                     <div className="flex-shrink">
+                                      {/*  &&
+                                      !item.externalLink.includes(
+                                        'elab.emerson.edu'
+                                      ) */}
                                       {item.externalLink ? (
                                         <a
                                           className="group"

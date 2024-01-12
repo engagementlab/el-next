@@ -555,8 +555,8 @@ export default function Studio({
                     </h2>
                     <p className="w-full">
                       Are you an Emerson student interested in enrolling in this
-                      course in the future? Please contact the professor
-                      at&nbsp;{selectedSemester.contact}&nbsp;to learn more!
+                      course in the future? Please contact &nbsp;
+                      {selectedSemester.contact}&nbsp;to learn more!
                     </p>
                     {selectedSemester.partners &&
                       selectedSemester.partners.length > 0 && (

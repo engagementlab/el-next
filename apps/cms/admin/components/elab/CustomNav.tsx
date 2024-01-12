@@ -97,7 +97,32 @@ export function CustomNavigation({
   const [appPath, setAppPath] = useState('');
 
   const listGroups = new Map<string, { label: string; url: string }[]>([
-    // ['Initiatives', ['Landings', 'Studios']],
+    [
+      'About',
+      [
+        {
+          label: 'About The Lab',
+          url: '/abouts/cljzwcixj0008bnnlnk510xy8',
+        },
+        {
+          label: 'Mission & Values',
+          url: '/abouts/cljzw50t40000bnvzqqplvatp',
+        },
+        {
+          label: 'Our Approach',
+          url: '/abouts/cljzw9sea0002bnvzgkf1c5wk',
+        },
+        {
+          label: 'Jobs',
+          url: '/abouts/cljzwastb0004bnvzwxhoudqu',
+        },
+
+        {
+          label: 'Donate',
+          url: '/abouts/cljzwcixj0008bnvznk510xy8',
+        },
+      ],
+    ],
     [
       'Curriculum',
       [

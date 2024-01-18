@@ -124,9 +124,9 @@ export default function AboutPage({
           {children}
         </h2>
       ) : (
-        <h3 className="text-yellow text-xl lg:text-2xl font-extrabold uppercase mx-6 my-4">
+        <h4 className="text-yellow text-xl lg:text-2xl font-extrabold uppercase mx-6 my-4">
           {children}
-        </h3>
+        </h4>
       );
     },
     quote: (children: ReactElement[]) => {

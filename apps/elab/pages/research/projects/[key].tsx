@@ -39,14 +39,15 @@ export default function ResearchProject({
               {item.startYear}&nbsp;
               {endLabel}
             </h2>
-            <div className="flex flex-col-reverse lg:flex-row gap-x-5 mt-16">
-              <div className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
+            <div className="flex flex-col-reverse xl:flex-row gap-x-5 mt-16">
+              <div className="w-full xl:w-1/2 xl:basis-1/2 flex-shrink-0">
                 <Image
                   id="thumb"
                   alt={item.thumbAltText}
                   imgId={item.thumbnail.publicId}
                   transforms="f_auto,dpr_auto"
-                  width={550}
+                  width={480}
+                  maxWidth={480}
                 />
               </div>
 

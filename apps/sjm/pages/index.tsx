@@ -222,5 +222,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   );
   const item = itemResult as Home;
 
-  return { props: { item } };
+  return { props: { item }, revalidate: 1 };
 }

@@ -294,5 +294,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     }`
   );
   const item = itemResult[0] as Event;
-  return { props: { item } };
+  return { props: { item }, revalidate: 1 };
 }

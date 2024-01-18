@@ -109,7 +109,7 @@ export default function Studio({
 
       if (aYr && bYr) {
         // If years match, use fall vs spring
-        if (aYr[0] === bYr[0]) return a.key.includes('fall') ? -1 : 1;
+        if (aYr[0] === bYr[0]) return a.key.includes('fall') ? 1 : -1;
         return parseInt(aYr[0]) - parseInt(bYr[0]);
       }
       return 0;

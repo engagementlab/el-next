@@ -105,7 +105,13 @@ const Layout = ({
         )}
 
         <SuperLayout
-          title={title ? `${title} - ${appName}` : appName}
+          title={
+            title
+              ? `${
+                  process.env.NODE_ENV !== 'production' && '(QA)'
+                } ${title} - ${appName}`
+              : appName
+          }
           ogTitle={ogTitle}
           description={description ? description : defaultDescription}
           ogDescription={ogDescription}

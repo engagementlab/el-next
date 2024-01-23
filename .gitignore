@@ -11,3 +11,7 @@ apps/elab/.next
 apps/elab/out
 apps/cms/admin/schema/index.ts
 apps/elab/.lighthouseci
+.env.local
+dev.js
+apps/api/dist
+dist

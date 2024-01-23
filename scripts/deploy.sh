@@ -33,11 +33,8 @@ if [ $# -eq 0 ]
         # Build image and daemonize services
         DOCKER_BUILDKIT=1 docker compose up -d
     else
-        # Remove, rebuild and launch only specified service
-        docker stop $1
-        # docker rm $1
-        DOCKER_BUILDKIT=1 docker compose build $1
-        DOCKER_BUILDKIT=1 docker compose up $1 -d
+        # Rebuild and launch only specified service
+        BUILDKIT_PROGRESS=plain docker compose up $1 -d --build
 fi
 
 sh /srv/apps/el-next/scripts/cleanup.sh

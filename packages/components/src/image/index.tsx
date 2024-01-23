@@ -9,12 +9,7 @@
 import React from 'react';
 
 import { Cloudinary } from '@cloudinary/url-gen';
-import {
-  AdvancedImage,
-  lazyload,
-  placeholder,
-  responsive,
-} from '@cloudinary/react';
+import { AdvancedImage, lazyload, responsive } from '@cloudinary/react';
 import { Plugins } from '@cloudinary/html';
 
 // Cloudinary instance

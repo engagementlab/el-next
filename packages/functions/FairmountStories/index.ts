@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Fairmount Stories web app form responses service
+ * @copyright Engagement Lab at Emerson College, 2023-2024
+ *
+ * @author Johnny Richardson
+ *
+ * ==========
+ */
+
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { google } from 'googleapis';
 
@@ -35,6 +44,7 @@ const httpTrigger: AzureFunction = async function (
       const res = await sheets.spreadsheets.get({
         spreadsheetId: req.query.spreadsheetId,
       });
+      // Get rows (x), select columns/rows B2:Dx
       const rowCount = res.data.sheets[0].properties.gridProperties.rowCount;
       const resValues = await sheets.spreadsheets.values.get({
         spreadsheetId: req.query.spreadsheetId,
@@ -45,12 +55,13 @@ const httpTrigger: AzureFunction = async function (
       if (!rows || rows.length === 0)
         return { status: 204, body: { msg: 'No data found.' } };
 
-      return { status: 200, body: { msg: rows } };
-      // rows
-      //   .filter((r) => r[2] === 'Approved')
-      //   .forEach((row) => {
-      //     console.log(row);
-      //   });
+      // Send only approved rows
+      return {
+        status: 200,
+        body: {
+          msg: rows.filter((r) => r.length > 0 && r[2] === 'Approved'),
+        },
+      };
     } catch (e) {
       console.error(e);
       return { status: 500, body: { msg: e } };
@@ -80,13 +91,10 @@ const httpTrigger: AzureFunction = async function (
     return;
   }
 
+  // Get an authenticated OAuth client
   const auth = await authorize();
   const response = await getResponses(auth);
   context.res = response;
-  // .catch((e) => {
-  //   console.error(e);
-  //   context.res = { status: 500, body: { msg: e } };
-  // });
 };
 
 export default httpTrigger;

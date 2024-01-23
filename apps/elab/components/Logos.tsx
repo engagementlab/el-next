@@ -12,9 +12,10 @@ const Logos = ({
   partners,
   classOverride,
 }: Props): JSX.Element => {
+  // lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2
   const parentClass = classOverride
     ? classOverride
-    : 'lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center';
+    : 'flex flex-col flex-wrap items-center justify-center justify-items-center xl:gap-x-5 xl:gap-y-2 lg:flex-row ';
   return (
     <div className={parentClass}>
       {(all || partners.includes('ldbpi')) && (
@@ -27,6 +28,7 @@ const Logos = ({
           />
         </a>
       )}
+      <div className="block basis-full h-0 sm:hidden"></div>
       {(all || partners.includes('mgh')) && (
         <a
           href="https://www.massgeneral.org/gun-violence-prevention"
@@ -113,6 +115,7 @@ const Logos = ({
         <a
           href="https://www.dbedc.org/about-us/fairmount-indigo-cdc-collaborative/"
           target="_blank"
+          className="max-w-xs"
         >
           <Image
             id="ficdc-logo"

@@ -108,7 +108,7 @@ const Layout = ({
           title={
             title
               ? `${
-                  process.env.NODE_ENV !== 'production' && '(QA)'
+                  process.env.NEXT_PUBLIC_STAGING === 'true' ? '(QA)' : ''
                 } ${title} - ${appName}`
               : appName
           }

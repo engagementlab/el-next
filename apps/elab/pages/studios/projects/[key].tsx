@@ -19,23 +19,26 @@ import {
 import { CustomEase, StudioProject, Theming } from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import Divider from '@/components/Divider';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
 import { Gutter } from '@/components/Gutter';
+import router, { useRouter } from 'next/router';
 
 interface ProjectState {
   trailerOpen: boolean;
   toggleTrailerVideo: () => void;
   videoOpen: boolean;
   toggleVideo: () => void;
+  reset: () => void;
 }
 
 // Create store with Zustand
 const useStore = create<ProjectState>()(
   subscribeWithSelector((set) => ({
     trailerOpen: false,
+    videoOpen: false,
     toggleTrailerVideo: () =>
       set((state) => {
         return {
@@ -43,7 +46,6 @@ const useStore = create<ProjectState>()(
           trailerOpen: !state.trailerOpen,
         };
       }),
-    videoOpen: false,
     toggleVideo: () =>
       set((state) => {
         return {
@@ -51,16 +53,28 @@ const useStore = create<ProjectState>()(
           videoOpen: !state.videoOpen,
         };
       }),
+    reset: () =>
+      set((state) => {
+        return {
+          ...state,
+          trailerOpen: false,
+          videoOpen: false,
+        };
+      }),
   }))
 );
-
 export default function Studio({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { toggleTrailerVideo, trailerOpen, toggleVideo, videoOpen } = useStore(
-    (state) => state
-  );
+  const dynamicRoute = useRouter().asPath;
+  const { trailerOpen, videoOpen, toggleTrailerVideo, toggleVideo, reset } =
+    useStore((state) => state);
+
+  // Reset toggles
+  useEffect(() => {
+    reset();
+  }, [dynamicRoute]);
 
   if (item) {
     const theming =

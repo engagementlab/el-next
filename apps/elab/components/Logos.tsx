@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Image } from '@el-next/components';
 import { HTMLProps } from 'react';
+import { Image } from '@el-next/components';
 
 type Props = {
   partners: string[];
@@ -12,10 +12,11 @@ const Logos = ({
   partners,
   classOverride,
 }: Props): JSX.Element => {
-  // lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2
-  const parentClass = classOverride
-    ? classOverride
-    : 'flex flex-col flex-wrap items-center justify-center justify-items-center xl:gap-x-5 xl:gap-y-2 lg:flex-row ';
+  let parentClass: HTMLProps<HTMLElement>['className'] =
+    'flex flex-col md:flex-row flex-wrap items-center gap-y-4 md:gap-x-8 lg:gap-y-8';
+
+  if (classOverride) parentClass = classOverride;
+
   return (
     <div className={parentClass}>
       {(all || partners.includes('ldbpi')) && (

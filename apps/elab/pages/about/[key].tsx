@@ -154,7 +154,7 @@ export default function AboutPage({
           });
 
   useEffect(() => {
-    // if (document.getElementById('layout-daddy') !== null)
+    // Set explicit width and offset properties of dividers from parent element
     setDividerWidth(document.getElementById('layout-daddy')?.clientWidth || 0);
     setDividerOffset(
       window.getComputedStyle(document.getElementById('layout-daddy')!)

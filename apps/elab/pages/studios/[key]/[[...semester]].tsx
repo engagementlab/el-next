@@ -570,7 +570,9 @@ export default function Studio({
                             )}
                           </h2>
                           <div className="px-6">
-                            <Logos partners={selectedSemester.partners} />
+                            <Logos
+                              partners={selectedSemester.partners}
+                            />
                           </div>
                         </>
                       )}

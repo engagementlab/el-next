@@ -53,14 +53,14 @@ function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || unsupportedIterableToArray._unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 
-var Video = function Video(_ref2) {
-  var thumbUrl = _ref2.thumbUrl,
-    videoUrl = _ref2.videoUrl,
-    videoLabel = _ref2.videoLabel,
-    isSlide = _ref2.isSlide;
-    _ref2.themeColor;
-    var noUi = _ref2.noUi,
-    play = _ref2.play;
+var Video = function Video(_ref) {
+  var thumbUrl = _ref.thumbUrl,
+    videoUrl = _ref.videoUrl,
+    videoLabel = _ref.videoLabel,
+    isSlide = _ref.isSlide;
+    _ref.themeColor;
+    var noUi = _ref.noUi,
+    play = _ref.play;
   // Create store with Zustand
   var _useState = react.useState(function () {
       return create__default["default"](function (set) {
@@ -83,8 +83,9 @@ var Video = function Video(_ref2) {
     return state.videoOpen;
   });
   var buttonSize = isSlide ? 75 : 150;
+  var classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
-    className: isSlide ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8' : 'video w-full h-full min-h-[inherit] lg:mb-8',
+    className: classStr,
     children: [videoOpen || play || !thumbUrl ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
       onClick: function onClick(e) {
         toggleOpen(true);

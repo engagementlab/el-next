@@ -18,9 +18,6 @@ interface VideoState {
   toggleOpen: (open: boolean) => void;
 }
 
-const thumbLoader = ({ src, width, quality }: ImageLoaderProps) => {
-  return src.replace('_1920x1080?r=pad', `_${width}x1080?r=pad`);
-};
 export const Video = ({
   thumbUrl,
   videoUrl,
@@ -40,14 +37,12 @@ export const Video = ({
   const toggleOpen = useStore((state) => state.toggleOpen);
   const videoOpen = useStore((state) => state.videoOpen);
   const buttonSize = isSlide ? 75 : 150;
+
+  let classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
+  if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
+
   return (
-    <div
-      className={
-        isSlide
-          ? 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8'
-          : 'video w-full h-full min-h-[inherit] lg:mb-8'
-      }
-    >
+    <div className={classStr}>
       {videoOpen || play || !thumbUrl ? (
         ''
       ) : (

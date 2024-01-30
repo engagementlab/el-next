@@ -44,6 +44,39 @@ var Image = function Image(_ref) {
     aspectDefault = _ref$aspectDefault === void 0 ? true : _ref$aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID
   var cloudImage = cld.image(imgId);
+  if (process.env.NODE_ENV !== 'production' && maxWidth < 800) return /*#__PURE__*/jsxRuntime.jsxs("div", {
+    className: "m-4 p-1 border-4 border-[#00ab9e]",
+    children: [/*#__PURE__*/jsxRuntime.jsxs("svg", {
+      viewBox: "0 0 50 50",
+      className: "max-w-[45px]",
+      children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
+        style: {
+          fill: '#D75A4A'
+        },
+        cx: "25",
+        cy: "25",
+        r: "25"
+      }), /*#__PURE__*/jsxRuntime.jsx("polyline", {
+        style: {
+          fill: 'none',
+          stroke: '#FFFFFF',
+          strokeWidth: 2,
+          strokeLinecap: 'round',
+          strokeMiterlimit: 10
+        },
+        points: "16,34 25,25 34,16  "
+      }), /*#__PURE__*/jsxRuntime.jsx("polyline", {
+        style: {
+          fill: 'none',
+          stroke: '#FFFFFF',
+          strokeWidth: 2,
+          strokeLinecap: 'round',
+          strokeMiterlimit: 10
+        },
+        points: "16,16 25,25 34,34  "
+      })]
+    }), "Image error: maxWidth cannot be less than 800."]
+  });
   // If maxWidth is defined, ensure that the image steps don't exceed it
   var plugins = [react.responsive({
     steps: [800, 1000, 1400, 1800, 2200].filter(function (step) {
@@ -60,12 +93,7 @@ var Image = function Image(_ref) {
   cloudImage.addTransformation("".concat(transforms || defaultTransforms).concat(lowBandwidth ? ',e_grayscale,q_auto:eco' : ''));
 
   // If lazyload not set to false, enable
-  if (lazy === undefined) plugins.push(react.lazyload()
-  // placeholder({
-  //   mode: 'blur',
-  // })
-  );
-
+  if (lazy === undefined) plugins.push(react.lazyload());
   return /*#__PURE__*/jsxRuntime.jsx(react.AdvancedImage, {
     id: id,
     className: className,

@@ -5,10 +5,11 @@ import {
 } from 'next';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, Image, Query } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
+
 import { ResearchProject, Theme, Theming } from '@/types';
 import Divider from '@/components/Divider';
 import { CTAButton } from '@/components/Buttons';
@@ -45,9 +46,8 @@ export default function ResearchProject({
                   id="thumb"
                   alt={item.thumbAltText}
                   imgId={item.thumbnail.publicId}
-                  transforms="f_auto,dpr_auto"
                   width={480}
-                  maxWidth={480}
+                  maxWidth={800}
                 />
               </div>
 

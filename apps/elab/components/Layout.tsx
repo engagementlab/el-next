@@ -16,7 +16,6 @@ type Props = {
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: string;
-  ogUrl?: string;
   error?: any;
   theme?: Theme;
   breadcrumbs?: Breadcrumb[];
@@ -25,7 +24,8 @@ type Props = {
 };
 
 const appName = 'Engagement Lab';
-const defaultDescription = `${appName} is Emerson College's laboratory for collaborative learning, design, and research.`;
+const defaultDescription =
+  'Advancing peace, equity, and justice through collaborative design and storytelling.';
 
 const Layout = ({
   children,
@@ -40,7 +40,6 @@ const Layout = ({
   ogTitle,
   ogDescription,
   ogImage,
-  ogUrl,
 }: Props): JSX.Element => {
   const BG = topBgElement ? topBgElement : <></>;
   const GutterBGClasses = [
@@ -114,7 +113,7 @@ const Layout = ({
           }
           ogTitle={ogTitle}
           description={description ? description : defaultDescription}
-          ogDescription={ogDescription}
+          ogDescription={ogDescription ? ogDescription : defaultDescription}
           ogUrl={`https://elab.emerson.edu${currentUrl}`}
           ogImage={ogImage}
           error={error}
@@ -126,7 +125,6 @@ const Layout = ({
             },
             transition: {
               type: 'tween',
-              // velocity: 200,
               duration: 0.4,
             },
           }}

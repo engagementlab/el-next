@@ -4,9 +4,7 @@ import {
   checkbox,
   integer,
   json,
-  multiselect,
   relationship,
-  select,
   text,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
@@ -16,6 +14,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 
 import { Flags } from '../flags';
+import { Social } from '../social';
 
 export default list({
   access: allowAll,
@@ -225,6 +224,7 @@ export default list({
         },
       },
     }),
+    ...group(Social('Uses Short Description if not specified')),
   },
   hooks: {
     resolveInput: async ({

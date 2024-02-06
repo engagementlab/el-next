@@ -8,6 +8,7 @@ import { Lists } from '.keystone/types';
 import { helper, HelperIcon } from '../../../components/helper';
 import { componentBlocks } from '../../../components';
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { Social } from '../social';
 // import { HelperIcon, helper } from '../../../components/helper';
 
 const Initiative: Lists.Initiative = list({
@@ -26,14 +27,6 @@ const Initiative: Lists.Initiative = list({
       },
       componentBlocks,
     }),
-    // helper: helper({
-    //   html: 'A slide can be <i>either</i> an image or video. If you define both, only the image will display. ',
-    //   iconType: HelperIcon.info,
-    //   ui: {
-    //     itemView: { fieldMode: 'read' },
-    //     listView: { fieldMode: 'hidden' },
-    //   },
-    // }),
     ...group({
       label: 'Intro Video/Slideshow',
       fields: {
@@ -150,6 +143,7 @@ const Initiative: Lists.Initiative = list({
         },
       },
     }),
+    ...group(Social()),
   },
   ui: {
     // hideCreate: true,

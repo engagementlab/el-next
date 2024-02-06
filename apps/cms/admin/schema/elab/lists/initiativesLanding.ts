@@ -6,6 +6,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { Social } from '../social';
 
 const InitiativesLanding: Lists.InitiativesLanding = list({
   access: allowAll,
@@ -120,6 +121,7 @@ const InitiativesLanding: Lists.InitiativesLanding = list({
         { label: 'Studios', value: 'studios' },
       ],
     }),
+    ...group(Social()),
   },
   ui: {
     hideCreate: true,

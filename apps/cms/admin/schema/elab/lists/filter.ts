@@ -3,6 +3,7 @@ import { checkbox, relationship, select, text } from '@keystone-6/core/fields';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import { CreateKey } from '../../hooks';
+import { helper, HelperIcon } from '../../../components/helper';
 
 const Filter: Lists.Filter = list({
   access: allowAll,
@@ -24,6 +25,15 @@ const Filter: Lists.Filter = list({
     }),
     enabled: checkbox({
       defaultValue: true,
+    }),
+
+    helper: helper({
+      html: 'Please look at <a href="https://docs.google.com/document/d/1OAjHllntfrr_-godz-ekbNEfs0kxrWGymJHgTlXYYQc/edit" target="_blank">this document</a> for tips on alt text.',
+      ui: {
+        itemView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
+      },
+      iconType: HelperIcon.info,
     }),
     studioProjects: relationship({ ref: 'StudioProject.filters', many: true }),
     researchProjects: relationship({

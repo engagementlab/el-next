@@ -15,6 +15,8 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { Flags } from '../flags';
 import { Featuring } from '../featuring';
+import { helper, HelperIcon } from '../../../components/helper';
+import { Social } from '../social';
 
 const Event: Lists.Event = list({
   access: allowAll,
@@ -124,6 +126,7 @@ const Event: Lists.Event = list({
         },
       },
     }),
+    ...group(Social('Event "Summary" used if not specified')),
   },
   hooks: {
     resolveInput: async ({

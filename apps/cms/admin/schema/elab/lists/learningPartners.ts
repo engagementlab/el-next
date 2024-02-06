@@ -6,6 +6,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { FixButtons } from '../../hooks';
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { Social } from '../social';
 
 const LearningPartners: Lists.LearningPartners = list({
   access: allowAll,
@@ -87,6 +88,7 @@ const LearningPartners: Lists.LearningPartners = list({
       many: true,
       ui: { hideCreate: true },
     }),
+    ...group(Social()),
   },
   ui: {
     hideCreate: true,

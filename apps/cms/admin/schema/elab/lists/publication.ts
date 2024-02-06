@@ -1,23 +1,13 @@
 import path from 'path';
-import { list, group } from '@keystone-6/core';
-import {
-  checkbox,
-  json,
-  relationship,
-  select,
-  text,
-  timestamp,
-} from '@keystone-6/core/fields';
+import { list } from '@keystone-6/core';
+import { checkbox, json, relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
-import { Lists } from '.keystone/types';
+
 import { componentBlocks } from '../../../components/component-blocks';
 import { azureStorageFile } from '../../../components/fields-azure/src/index';
-import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
-
-import { Flags } from '../flags';
 
 export default list({
   access: allowAll,

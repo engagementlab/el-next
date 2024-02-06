@@ -20,6 +20,10 @@ model About {
   headingImageAltText String @default("")
   headingImageCaption String @default("")
   content             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  ogImage             Json?
+  helper_html         String @default("<p>Need HTML!</p>")
+  helper_iconType     icon   @default(help)
+  description         String @default("")
 }
 
 model Event {
@@ -40,6 +44,10 @@ model Event {
   flags               Json         @default("[]")
   order               Int?         @default(0)
   initiativesWhatsNew Initiative[] @relation("Event_initiativesWhatsNew")
+  ogImage             Json?
+  helper_html         String       @default("<p>Need HTML!</p>")
+  helper_iconType     icon         @default(help)
+  description         String       @default("")
 }
 
 model Filter {
@@ -47,6 +55,8 @@ model Filter {
   name             String            @default("")
   key              String            @default("")
   enabled          Boolean           @default(true)
+  helper_html      String            @default("<p>Need HTML!</p>")
+  helper_iconType  icon              @default(help)
   studioProjects   StudioProject[]   @relation("Filter_studioProjects")
   researchProjects ResearchProject[] @relation("Filter_researchProjects")
 }
@@ -65,6 +75,10 @@ model Graduate {
   salzburg          Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   projectSpotlight  StudioProject[] @relation("Graduate_projectSpotlight")
   alumniSpotlight   NewsItem[]      @relation("Graduate_alumniSpotlight")
+  ogImage           Json?
+  helper_html       String          @default("<p>Need HTML!</p>")
+  helper_iconType   icon            @default(help)
+  description       String          @default("")
 }
 
 model Initiative {
@@ -85,6 +99,10 @@ model Initiative {
   studios          Studio[]          @relation("Initiative_studios")
   research         ResearchProject[] @relation("Initiative_research")
   associatedPeople Person[]          @relation("Initiative_associatedPeople")
+  ogImage          Json?
+  helper_html      String            @default("<p>Need HTML!</p>")
+  helper_iconType  icon              @default(help)
+  description      String            @default("")
 }
 
 model InitiativesLanding {
@@ -102,6 +120,10 @@ model InitiativesLanding {
   researchProjectsBlurb Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   publicationsBlurb     Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   homepageOrder         Json   @default("[]")
+  ogImage               Json?
+  helper_html           String @default("<p>Need HTML!</p>")
+  helper_iconType       icon   @default(help)
+  description           String @default("")
 }
 
 model LearningPartners {
@@ -114,6 +136,10 @@ model LearningPartners {
   what              Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   benefits          Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   spotlight         NewsItem[] @relation("LearningPartners_spotlight")
+  ogImage           Json?
+  helper_html       String     @default("<p>Need HTML!</p>")
+  helper_iconType   icon       @default(help)
+  description       String     @default("")
 }
 
 model NewsItem {
@@ -138,6 +164,10 @@ model NewsItem {
   alumni              Graduate[]         @relation("Graduate_alumniSpotlight")
   learningPartners    LearningPartners[] @relation("LearningPartners_spotlight")
   initiativesWhatsNew Initiative[]       @relation("Initiative_news")
+  ogImage             Json?
+  helper_html         String             @default("<p>Need HTML!</p>")
+  helper_iconType     icon               @default(help)
+  description         String             @default("")
 }
 
 model Partner {
@@ -222,6 +252,10 @@ model ResearchProject {
   tools               Json?
   initiativesRelated  Initiative[] @relation("Initiative_research")
   publicationRelated  Publication? @relation("Publication_relatedProject")
+  ogImage             Json?
+  helper_html         String       @default("<p>Need HTML!</p>")
+  helper_iconType     icon         @default(help)
+  description         String       @default("")
 }
 
 model Semester {

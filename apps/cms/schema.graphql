@@ -10,6 +10,9 @@ type About {
   headingImageAltText: String
   headingImageCaption: String
   content: About_content_Document
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 type About_intro_Document {
@@ -69,6 +72,11 @@ type About_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
+type HelperFieldOutput {
+  html: String
+  iconType: String
+}
+
 input AboutWhereUniqueInput {
   id: ID
   name: String
@@ -83,6 +91,7 @@ input AboutWhereInput {
   key: StringFilter
   headingImageAltText: StringFilter
   headingImageCaption: StringFilter
+  description: StringFilter
 }
 
 input IDFilter {
@@ -136,6 +145,7 @@ input AboutOrderByInput {
   key: OrderDirection
   headingImageAltText: OrderDirection
   headingImageCaption: OrderDirection
+  description: OrderDirection
 }
 
 enum OrderDirection {
@@ -151,10 +161,18 @@ input AboutUpdateInput {
   headingImageAltText: String
   headingImageCaption: String
   content: JSON
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input HelperFieldInput {
+  html: String
+  iconType: String
+}
 
 input AboutUpdateArgs {
   where: AboutWhereUniqueInput!
@@ -169,6 +187,9 @@ input AboutCreateInput {
   headingImageAltText: String
   headingImageCaption: String
   content: JSON
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 type Event {
@@ -190,6 +211,9 @@ type Event {
   order: Int
   initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
@@ -233,6 +257,7 @@ input EventWhereInput {
   address: StringFilter
   order: IntNullableFilter
   initiativesWhatsNew: InitiativeManyRelationFilter
+  description: StringFilter
 }
 
 input DateTimeNullableFilter {
@@ -291,6 +316,7 @@ input EventOrderByInput {
   registrationLink: OrderDirection
   address: OrderDirection
   order: OrderDirection
+  description: OrderDirection
 }
 
 input EventUpdateInput {
@@ -310,6 +336,9 @@ input EventUpdateInput {
   flags: [EventFlagType!]
   order: Int
   initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input InitiativeRelateToManyForUpdateInput {
@@ -341,6 +370,9 @@ input EventCreateInput {
   flags: [EventFlagType!]
   order: Int
   initiativesWhatsNew: InitiativeRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input InitiativeRelateToManyForCreateInput {
@@ -353,6 +385,7 @@ type Filter {
   name: String
   key: String
   enabled: Boolean
+  helper: HelperFieldOutput
   studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
   researchProjects(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
@@ -398,6 +431,7 @@ input FilterUpdateInput {
   name: String
   key: String
   enabled: Boolean
+  helper: HelperFieldInput
   studioProjects: StudioProjectRelateToManyForUpdateInput
   researchProjects: ResearchProjectRelateToManyForUpdateInput
 }
@@ -425,6 +459,7 @@ input FilterCreateInput {
   name: String
   key: String
   enabled: Boolean
+  helper: HelperFieldInput
   studioProjects: StudioProjectRelateToManyForCreateInput
   researchProjects: ResearchProjectRelateToManyForCreateInput
 }
@@ -456,6 +491,9 @@ type Graduate {
   projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
   alumniSpotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   alumniSpotlightCount(where: NewsItemWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 type Graduate_intro_Document {
@@ -494,6 +532,7 @@ input GraduateWhereInput {
   currentStudents: PersonManyRelationFilter
   projectSpotlight: StudioProjectManyRelationFilter
   alumniSpotlight: NewsItemManyRelationFilter
+  description: StringFilter
 }
 
 input PersonManyRelationFilter {
@@ -513,6 +552,7 @@ input GraduateOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
+  description: OrderDirection
 }
 
 input GraduateUpdateInput {
@@ -528,6 +568,9 @@ input GraduateUpdateInput {
   salzburg: JSON
   projectSpotlight: StudioProjectRelateToManyForUpdateInput
   alumniSpotlight: NewsItemRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input PersonRelateToManyForUpdateInput {
@@ -562,6 +605,9 @@ input GraduateCreateInput {
   salzburg: JSON
   projectSpotlight: StudioProjectRelateToManyForCreateInput
   alumniSpotlight: NewsItemRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input PersonRelateToManyForCreateInput {
@@ -599,6 +645,9 @@ type Initiative {
   researchCount(where: ResearchProjectWhereInput! = {}): Int
   associatedPeople(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 type Initiative_intro_Document {
@@ -640,6 +689,7 @@ input InitiativeWhereInput {
   studios: StudioManyRelationFilter
   research: ResearchProjectManyRelationFilter
   associatedPeople: PersonManyRelationFilter
+  description: StringFilter
 }
 
 input SlideManyRelationFilter {
@@ -664,6 +714,7 @@ input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
   videoId: OrderDirection
+  description: OrderDirection
 }
 
 input InitiativeUpdateInput {
@@ -683,6 +734,9 @@ input InitiativeUpdateInput {
   studios: StudioRelateToManyForUpdateInput
   research: ResearchProjectRelateToManyForUpdateInput
   associatedPeople: PersonRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input SlideRelateToManyForUpdateInput {
@@ -728,6 +782,9 @@ input InitiativeCreateInput {
   studios: StudioRelateToManyForCreateInput
   research: ResearchProjectRelateToManyForCreateInput
   associatedPeople: PersonRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input SlideRelateToManyForCreateInput {
@@ -760,6 +817,9 @@ type InitiativesLanding {
   researchProjectsBlurb: InitiativesLanding_researchProjectsBlurb_Document
   publicationsBlurb: InitiativesLanding_publicationsBlurb_Document
   homepageOrder: [InitiativesLandingHomepageOrderType!]
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 type InitiativesLanding_intro_Document {
@@ -814,6 +874,7 @@ input InitiativesLandingWhereInput {
   name: StringFilter
   introImageAltText: StringFilter
   introImageCaption: StringFilter
+  description: StringFilter
 }
 
 input InitiativesLandingOrderByInput {
@@ -821,6 +882,7 @@ input InitiativesLandingOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
+  description: OrderDirection
 }
 
 input InitiativesLandingUpdateInput {
@@ -837,6 +899,9 @@ input InitiativesLandingUpdateInput {
   researchProjectsBlurb: JSON
   publicationsBlurb: JSON
   homepageOrder: [InitiativesLandingHomepageOrderType!]
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input InitiativesLandingUpdateArgs {
@@ -858,6 +923,9 @@ input InitiativesLandingCreateInput {
   researchProjectsBlurb: JSON
   publicationsBlurb: JSON
   homepageOrder: [InitiativesLandingHomepageOrderType!]
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 type LearningPartners {
@@ -871,6 +939,9 @@ type LearningPartners {
   benefits: LearningPartners_benefits_Document
   spotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   spotlightCount(where: NewsItemWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 type LearningPartners_intro_Document {
@@ -899,6 +970,7 @@ input LearningPartnersWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   spotlight: NewsItemManyRelationFilter
+  description: StringFilter
 }
 
 input LearningPartnersOrderByInput {
@@ -906,6 +978,7 @@ input LearningPartnersOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
+  description: OrderDirection
 }
 
 input LearningPartnersUpdateInput {
@@ -917,6 +990,9 @@ input LearningPartnersUpdateInput {
   what: JSON
   benefits: JSON
   spotlight: NewsItemRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input LearningPartnersUpdateArgs {
@@ -933,6 +1009,9 @@ input LearningPartnersCreateInput {
   what: JSON
   benefits: JSON
   spotlight: NewsItemRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 type NewsItem {
@@ -959,16 +1038,14 @@ type NewsItem {
   learningPartnersCount(where: LearningPartnersWhereInput! = {}): Int
   initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 enum NewsItemInitiativeType {
   gunviolence
   climate
-}
-
-type HelperFieldOutput {
-  html: String
-  iconType: String
 }
 
 type NewsItem_blurb_Document {
@@ -1007,6 +1084,7 @@ input NewsItemWhereInput {
   alumni: GraduateManyRelationFilter
   learningPartners: LearningPartnersManyRelationFilter
   initiativesWhatsNew: InitiativeManyRelationFilter
+  description: StringFilter
 }
 
 input GraduateManyRelationFilter {
@@ -1033,6 +1111,7 @@ input NewsItemOrderByInput {
   source: OrderDirection
   externalLink: OrderDirection
   order: OrderDirection
+  description: OrderDirection
 }
 
 input NewsItemUpdateInput {
@@ -1055,11 +1134,9 @@ input NewsItemUpdateInput {
   alumni: GraduateRelateToManyForUpdateInput
   learningPartners: LearningPartnersRelateToManyForUpdateInput
   initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
-}
-
-input HelperFieldInput {
-  html: String
-  iconType: String
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input GraduateRelateToManyForUpdateInput {
@@ -1101,6 +1178,9 @@ input NewsItemCreateInput {
   alumni: GraduateRelateToManyForCreateInput
   learningPartners: LearningPartnersRelateToManyForCreateInput
   initiativesWhatsNew: InitiativeRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input GraduateRelateToManyForCreateInput {
@@ -1481,6 +1561,9 @@ type ResearchProject {
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
   publicationRelated: Publication
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 enum ResearchProjectFlagType {
@@ -1535,6 +1618,7 @@ input ResearchProjectWhereInput {
   contact: StringFilter
   initiativesRelated: InitiativeManyRelationFilter
   publicationRelated: PublicationWhereInput
+  description: StringFilter
 }
 
 input FilterManyRelationFilter {
@@ -1566,6 +1650,7 @@ input ResearchProjectOrderByInput {
   headingImageAltText: OrderDirection
   shortDescription: OrderDirection
   contact: OrderDirection
+  description: OrderDirection
 }
 
 input ResearchProjectUpdateInput {
@@ -1599,6 +1684,9 @@ input ResearchProjectUpdateInput {
   tools: JSON
   initiativesRelated: InitiativeRelateToManyForUpdateInput
   publicationRelated: PublicationRelateToOneForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input FilterRelateToManyForUpdateInput {
@@ -1657,6 +1745,9 @@ input ResearchProjectCreateInput {
   tools: JSON
   initiativesRelated: InitiativeRelateToManyForCreateInput
   publicationRelated: PublicationRelateToOneForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input FilterRelateToManyForCreateInput {

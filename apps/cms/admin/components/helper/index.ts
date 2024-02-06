@@ -3,6 +3,7 @@ import {
   fieldType,
   FieldTypeFunc,
   CommonFieldConfig,
+  orderDirectionEnum,
 } from '@keystone-6/core/types';
 import { graphql } from '@keystone-6/core';
 
@@ -40,7 +41,6 @@ const HelperFieldOutput = graphql.object<PairOutput>()({
     html: graphql.field({ type: graphql.String }),
     iconType: graphql.field({ type: graphql.String }),
   },
-  // resolveType: () => 'HelperFieldOutputType',
 });
 
 export type HelperFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
@@ -97,11 +97,14 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
             };
           },
         },
-        // orderBy: { arg: graphql.arg({ type: orderDirectionEnum }) },
       },
       output: graphql.field({
         type: HelperFieldOutput,
         resolve({ value, item }, args, context, info) {
+          if (value === null) {
+            return null;
+          }
+          console.log(value);
           return value;
         },
       }),

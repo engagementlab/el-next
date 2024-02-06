@@ -1,12 +1,14 @@
-import { list } from '@keystone-6/core';
+import { group, list } from '@keystone-6/core';
 import { text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
-import path from 'path';
+
 import { componentBlocks } from '../../../components/component-blocks';
 import { CreateKey, FixButtons } from '../../hooks';
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { Social } from '../social';
+import { helper, HelperIcon } from '../../../components/helper';
 
 const About: Lists.About = list({
   access: allowAll,
@@ -93,6 +95,7 @@ const About: Lists.About = list({
         },
       },
     }),
+    ...group(Social()),
   },
   ui: {
     hideCreate: true,

@@ -1,23 +1,22 @@
-import { graphql, group, list } from '@keystone-6/core';
+import { group, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
   relationship,
   text,
   timestamp,
-  virtual,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 
-import { BlockRenderers } from '@el-next/components';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { helper, HelperIcon } from '../../../components/helper';
-import { Flags } from '../flags';
+
 import { Featuring } from '../featuring';
+import { Social } from '../social';
 
 const NewsItem: Lists.NewsItem = list({
   access: allowAll,
@@ -168,6 +167,7 @@ const NewsItem: Lists.NewsItem = list({
         },
       },
     }),
+    ...group(Social('Item "Summary" used if not specified')),
   },
   hooks: {
     resolveInput: async ({

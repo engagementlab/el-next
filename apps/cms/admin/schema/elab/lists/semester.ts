@@ -8,6 +8,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 
 import { PartnersSelect } from './partners';
+import { Status } from '../flags';
 
 const Semester: Lists.Semester = list({
   access: allowAll,
@@ -30,9 +31,7 @@ const Semester: Lists.Semester = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     buttonLabel: text({
       ui: { description: "The label for the semester's button." },
     }),

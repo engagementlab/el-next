@@ -19,6 +19,7 @@ import { helper } from '../../../components/helper';
 import { Theme } from '../../../../../elab/types';
 import { Featuring } from '../featuring';
 import { Social } from '../social';
+import { Status } from '../flags';
 
 const Studio: Lists.Studio = list({
   access: allowAll,
@@ -41,9 +42,7 @@ const Studio: Lists.Studio = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     thumbnail: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,

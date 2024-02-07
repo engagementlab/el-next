@@ -18,6 +18,7 @@ import { PartnersSelect } from './partners';
 
 import { Featuring } from '../featuring';
 import { Social } from '../social';
+import { Status } from '../flags';
 
 const StudioProject: Lists.StudioProject = list({
   access: allowAll,
@@ -40,9 +41,7 @@ const StudioProject: Lists.StudioProject = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     initiative: select({
       type: 'enum',
       options: [

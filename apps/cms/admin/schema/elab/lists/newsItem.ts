@@ -17,6 +17,7 @@ import { helper, HelperIcon } from '../../../components/helper';
 
 import { Featuring } from '../featuring';
 import { Social } from '../social';
+import { Status } from '../flags';
 
 const NewsItem: Lists.NewsItem = list({
   access: allowAll,
@@ -39,9 +40,7 @@ const NewsItem: Lists.NewsItem = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     initiatives: multiselect({
       type: 'enum',
       options: [

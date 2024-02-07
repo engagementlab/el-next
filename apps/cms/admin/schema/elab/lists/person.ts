@@ -11,6 +11,7 @@ import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
+import { Status } from '../flags';
 
 const Person: Lists.Person = list({
   access: allowAll,
@@ -34,9 +35,7 @@ const Person: Lists.Person = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     title: text({
       label: 'Title/Role',
     }),

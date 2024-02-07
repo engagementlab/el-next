@@ -13,7 +13,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 
-import { Flags } from '../flags';
+import { Flags, Status } from '../flags';
 import { Social } from '../social';
 
 export default list({
@@ -37,9 +37,7 @@ export default list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     flags: Flags,
     filters: relationship({
       ref: 'Filter.researchProjects',

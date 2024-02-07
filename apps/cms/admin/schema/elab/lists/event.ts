@@ -13,7 +13,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
-import { Flags } from '../flags';
+import { Flags, Status } from '../flags';
 import { Featuring } from '../featuring';
 import { helper, HelperIcon } from '../../../components/helper';
 import { Social } from '../social';
@@ -39,9 +39,7 @@ const Event: Lists.Event = list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     initiatives: multiselect({
       type: 'enum',
       options: [

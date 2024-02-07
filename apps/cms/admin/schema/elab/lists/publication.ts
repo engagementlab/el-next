@@ -8,6 +8,7 @@ import { componentBlocks } from '../../../components/component-blocks';
 import { azureStorageFile } from '../../../components/fields-azure/src/index';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { azConfig } from '../../azure';
+import { Status } from '../flags';
 
 export default list({
   access: allowAll,
@@ -30,9 +31,7 @@ export default list({
       },
     }),
     createdDate: CreatedTimestamp,
-    enabled: checkbox({
-      defaultValue: true,
-    }),
+    ...Status,
     year: text({
       validation: {
         isRequired: true,

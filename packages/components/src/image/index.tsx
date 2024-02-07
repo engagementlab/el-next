@@ -1,6 +1,6 @@
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2021-2022
+ * Developed by Engagement Lab, 2021-2024
  *
  * @author Johnny Richardson
  * Cloudinary image component
@@ -197,10 +197,14 @@ const ImageUrl = ({
 }: ImageUrlProps) => {
   // Instantiate a CloudinaryImage object for the image with public ID;
   const cloudImage = cld.image(`${imgId}`);
+  let transformsFormatted = transforms;
+
+  // If transforms missing width and width prop defined, use prop
+  if (!transforms.includes('w_') && width) transformsFormatted += `,w_${width}`;
 
   // Create image transforms
   cloudImage.addTransformation(
-    transforms ||
+    transformsFormatted ||
       `f_auto,dpr_auto,c_crop,g_center${
         aspectDefault ? '' : ',ar_4:3'
       },w_${width}`

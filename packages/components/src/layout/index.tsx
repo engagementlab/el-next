@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import { Transition, Variants, motion } from 'framer-motion';
-import { Favicon } from '../favicon';
 import { TError } from '../query';
 import { ErrorClass } from '..';
 

@@ -9,7 +9,7 @@ var jsxRuntime = require('react/jsx-runtime');
 
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2021-2022
+ * Developed by Engagement Lab, 2021-2024
  *
  * @author Johnny Richardson
  * Cloudinary image component
@@ -89,9 +89,13 @@ var ImageUrl = function ImageUrl(_ref2) {
     aspectDefault = _ref2.aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID;
   var cloudImage = cld.image("".concat(imgId));
+  var transformsFormatted = transforms;
+
+  // If transforms missing width and width prop defined, use prop
+  if (!transforms.includes('w_') && width) transformsFormatted += ",w_".concat(width);
 
   // Create image transforms
-  cloudImage.addTransformation(transforms || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3', ",w_").concat(width));
+  cloudImage.addTransformation(transformsFormatted || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3', ",w_").concat(width));
   return cloudImage.toURL();
 };
 

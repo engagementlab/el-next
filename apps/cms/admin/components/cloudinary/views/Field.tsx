@@ -31,13 +31,18 @@ export function Field({
 }: FieldProps<typeof import('.').controller>) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const errorMessage = value.kind === 'upload' ? validateImage(value.data) : undefined;
+  const errorMessage =
+    value.kind === 'upload' ? validateImage(value.data) : undefined;
 
   const imagePathFromUpload = useObjectURL(
-    errorMessage === undefined && value.kind === 'upload' ? value.data.file : undefined
+    errorMessage === undefined && value.kind === 'upload'
+      ? value.data.file
+      : undefined
   );
   const imagePath =
-    value.kind === 'from-server' ? value.data.publicUrlTransformed : imagePathFromUpload;
+    value.kind === 'from-server'
+      ? value.data.publicUrlTransformed
+      : imagePathFromUpload;
 
   // Generate a random input key when the value changes, to ensure the file input is unmounted and
   // remounted (this is the only way to reset its value and ensure onChange will fire again if
@@ -48,9 +53,12 @@ export function Field({
   return (
     <FieldContainer>
       <FieldLabel>{field.label}</FieldLabel>
+      <FieldLabel>{field.description}</FieldLabel>
       {value.kind === 'from-server' || value.kind === 'upload' ? (
         <Stack gap="small">
-          {imagePath && errorMessage === undefined && <Image src={imagePath} alt={field.path} />}
+          {imagePath && errorMessage === undefined && (
+            <Image src={imagePath} alt={field.path} />
+          )}
           {onChange && (
             <Stack across gap="small" align="center">
               <Button

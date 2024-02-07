@@ -1,13 +1,5 @@
 import { list } from '@keystone-6/core';
-import {
-  checkbox,
-  integer,
-  json,
-  multiselect,
-  relationship,
-  select,
-  text,
-} from '@keystone-6/core/fields';
+import { checkbox, relationship, select, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -87,14 +79,6 @@ const Semester: Lists.Semester = list({
         displayMode: 'textarea',
       },
     }),
-    // helper: helper({
-    //   html: 'Please follow the <a href="https://docs.google.com/document/d/19eTH_wqDlXfsP8ODPz7zruIX2Jj8OH5QKwQUqP1yNNE/edit" target="_blank">Semester Template</a>.',
-    //   ui: {
-    //     itemView: { fieldMode: 'hidden' },
-    //     listView: { fieldMode: 'hidden' },
-    //   },
-    //   iconType: HelperIcon.info,
-    // }),
     partners: PartnersSelect,
     coCreation: document({
       formatting: true,

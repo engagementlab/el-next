@@ -224,7 +224,7 @@ export default list({
         },
       },
     }),
-    ...group(Social('Uses Short Description if not specified')),
+    ...group(Social('Uses "Short Description" if not specified')),
   },
   hooks: {
     resolveInput: async ({

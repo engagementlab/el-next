@@ -1,4 +1,4 @@
-import { integer, text } from '@keystone-6/core/fields';
+import { text } from '@keystone-6/core/fields';
 import { cloudinaryImage } from '../../components/cloudinary';
 import { HelperIcon, helper } from '../../components/helper';
 
@@ -24,9 +24,7 @@ export const Social = (descriptionHelper?: string) => {
         },
       }),
       helper: helper({
-        html: descriptionHelper
-          ? descriptionHelper
-          : `<a href="#" onClick="alert(\'${defaultDescription}\')")>Default description</a> will show if not specified.`,
+        html: `<a href="#" onClick="alert(\'${defaultDescription}\')")>Default description</a> will show if not specified.`,
         iconType: HelperIcon.info,
         ui: {
           listView: {
@@ -34,6 +32,9 @@ export const Social = (descriptionHelper?: string) => {
           },
           itemView: {
             fieldMode: 'hidden',
+          },
+          createView: {
+            fieldMode: descriptionHelper ? 'hidden' : 'edit',
           },
         },
       }),

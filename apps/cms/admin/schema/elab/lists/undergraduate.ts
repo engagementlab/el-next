@@ -4,8 +4,8 @@ import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
-import { FixButtons } from '../../hooks';
 import { cloudinaryImage } from '../../../components/cloudinary';
+import { Social } from '../social';
 
 const Undergraduate: Lists.Undergraduate = list({
   access: allowAll,
@@ -72,6 +72,7 @@ const Undergraduate: Lists.Undergraduate = list({
       many: true,
       ui: { hideCreate: true },
     }),
+    ...group(Social()),
   },
   ui: {
     hideCreate: true,

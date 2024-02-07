@@ -2090,6 +2090,9 @@ type Studio {
   order: Int
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 enum StudioInitiativeType {
@@ -2123,6 +2126,7 @@ input StudioWhereInput {
   semesters: SemesterManyRelationFilter
   order: IntNullableFilter
   initiativesRelated: InitiativeManyRelationFilter
+  description: StringFilter
 }
 
 input StudioOrderByInput {
@@ -2135,6 +2139,7 @@ input StudioOrderByInput {
   shortDescription: OrderDirection
   blurb: OrderDirection
   order: OrderDirection
+  description: OrderDirection
 }
 
 input StudioUpdateInput {
@@ -2151,6 +2156,9 @@ input StudioUpdateInput {
   flags: [StudioFlagType!]
   order: Int
   initiativesRelated: InitiativeRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input StudioUpdateArgs {
@@ -2172,6 +2180,9 @@ input StudioCreateInput {
   flags: [StudioFlagType!]
   order: Int
   initiativesRelated: InitiativeRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 type StudioProject {
@@ -2215,6 +2226,9 @@ type StudioProject {
   gradCount(where: GraduateWhereInput! = {}): Int
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 enum StudioProjectInitiativeType {
@@ -2288,6 +2302,7 @@ input StudioProjectWhereInput {
   undergrad: UndergraduateManyRelationFilter
   grad: GraduateManyRelationFilter
   initiativesRelated: InitiativeManyRelationFilter
+  description: StringFilter
 }
 
 input StudioProjectInitiativeTypeNullableFilter {
@@ -2317,6 +2332,7 @@ input StudioProjectOrderByInput {
   trailerId: OrderDirection
   trailerThumbAltText: OrderDirection
   order: OrderDirection
+  description: OrderDirection
 }
 
 input StudioProjectUpdateInput {
@@ -2350,6 +2366,9 @@ input StudioProjectUpdateInput {
   undergrad: UndergraduateRelateToManyForUpdateInput
   grad: GraduateRelateToManyForUpdateInput
   initiativesRelated: InitiativeRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input UndergraduateRelateToManyForUpdateInput {
@@ -2395,6 +2414,9 @@ input StudioProjectCreateInput {
   undergrad: UndergraduateRelateToManyForCreateInput
   grad: GraduateRelateToManyForCreateInput
   initiativesRelated: InitiativeRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input UndergraduateRelateToManyForCreateInput {
@@ -2412,6 +2434,9 @@ type Undergraduate {
   socialImpactDesign: Undergraduate_socialImpactDesign_Document
   projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
+  ogImage: CloudinaryImage_File
+  helper: HelperFieldOutput
+  description: String
 }
 
 type Undergraduate_intro_Document {
@@ -2436,6 +2461,7 @@ input UndergraduateWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   projectSpotlight: StudioProjectManyRelationFilter
+  description: StringFilter
 }
 
 input UndergraduateOrderByInput {
@@ -2443,6 +2469,7 @@ input UndergraduateOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
+  description: OrderDirection
 }
 
 input UndergraduateUpdateInput {
@@ -2453,6 +2480,9 @@ input UndergraduateUpdateInput {
   introImageCaption: String
   socialImpactDesign: JSON
   projectSpotlight: StudioProjectRelateToManyForUpdateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 input UndergraduateUpdateArgs {
@@ -2468,6 +2498,9 @@ input UndergraduateCreateInput {
   introImageCaption: String
   socialImpactDesign: JSON
   projectSpotlight: StudioProjectRelateToManyForCreateInput
+  ogImage: Upload
+  helper: HelperFieldInput
+  description: String
 }
 
 """

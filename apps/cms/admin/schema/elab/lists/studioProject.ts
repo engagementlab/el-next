@@ -17,6 +17,7 @@ import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { PartnersSelect } from './partners';
 
 import { Featuring } from '../featuring';
+import { Social } from '../social';
 
 const StudioProject: Lists.StudioProject = list({
   access: allowAll,
@@ -241,6 +242,7 @@ const StudioProject: Lists.StudioProject = list({
         },
       },
     }),
+    ...group(Social('Uses "Short Description" if not specified')),
   },
   hooks: {
     resolveInput: async ({

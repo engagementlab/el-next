@@ -322,6 +322,10 @@ model Studio {
   flags              Json         @default("[]")
   order              Int?         @default(0)
   initiativesRelated Initiative[] @relation("Initiative_studios")
+  ogImage            Json?
+  helper_html        String       @default("<p>Need HTML!</p>")
+  helper_iconType    icon         @default(help)
+  description        String       @default("")
 }
 
 model StudioProject {
@@ -356,6 +360,10 @@ model StudioProject {
   undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
   grad                Graduate[]                  @relation("Graduate_projectSpotlight")
   initiativesRelated  Initiative[]                @relation("Initiative_projects")
+  ogImage             Json?
+  helper_html         String                      @default("<p>Need HTML!</p>")
+  helper_iconType     icon                        @default(help)
+  description         String                      @default("")
 }
 
 model Undergraduate {
@@ -367,6 +375,10 @@ model Undergraduate {
   introImageCaption  String          @default("")
   socialImpactDesign Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   projectSpotlight   StudioProject[] @relation("StudioProject_undergrad")
+  ogImage            Json?
+  helper_html        String          @default("<p>Need HTML!</p>")
+  helper_iconType    icon            @default(help)
+  description        String          @default("")
 }
 
 enum icon {

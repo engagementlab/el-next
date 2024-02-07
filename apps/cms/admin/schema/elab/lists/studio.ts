@@ -18,6 +18,7 @@ import { CreatedTimestamp, CreateKey } from '../../hooks';
 import { helper } from '../../../components/helper';
 import { Theme } from '../../../../../elab/types';
 import { Featuring } from '../featuring';
+import { Social } from '../social';
 
 const Studio: Lists.Studio = list({
   access: allowAll,
@@ -99,6 +100,7 @@ const Studio: Lists.Studio = list({
         },
       },
     }),
+    ...group(Social('Uses "Short Description" if not specified')),
   },
   ui: {
     listView: {

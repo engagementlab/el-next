@@ -239,7 +239,7 @@ export type Event = {
   };
   thumbAltText: string;
   summary: string;
-};
+} & OGParams;
 export type ResearchProject = {
   name: string;
   type: string;
@@ -322,6 +322,19 @@ export type Person = {
   content?: {
     document: any;
   };
+};
+
+// Open Graph parameters
+export type OGParams = {
+  ogImage?: {
+    publicId: string;
+  };
+  ogDescription?: string;
+};
+
+export const DefaultOGImageOptions = {
+  width: 600,
+  transforms: 'f_auto,dpr_auto,c_thumb,g_custom:faces',
 };
 
 export const CustomEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';

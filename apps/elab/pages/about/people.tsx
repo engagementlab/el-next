@@ -11,7 +11,11 @@ export default function AboutPage({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout error={error} title="People">
+    <Layout
+      error={error}
+      title="People"
+      description="Learn about our faculty, staff, and students."
+    >
       {people && (
         <>
           <motion.div

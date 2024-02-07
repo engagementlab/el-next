@@ -208,11 +208,6 @@ export default function Home({
   return (
     <Layout
       ogTitle="Home"
-      ogImage={ImageUrl({
-        imgId: 'elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8',
-        width: 600,
-        transforms: `f_auto,dpr_auto,c_thumb,g_custom:faces`,
-      })}
       topBgElement={
         <div className="relative md:mx-16">
           {!videoFallbackPortrait ? (

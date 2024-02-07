@@ -12,7 +12,7 @@ import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { Blocks, Doc, Heading } from '../../components/Renderers';
 
-import { Event, Theme } from '@/types';
+import { DefaultOGImageOptions, Event, Theme } from '@/types';
 import { CTAButton } from '@/components/Buttons';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
@@ -40,12 +40,12 @@ export default function Event({
       error={error}
       breadcrumbs={[{ label: 'Back to News & Events', href: '/whats-new' }]}
       title={`${item.name} - Events`}
-      ogDescription={item.summary}
-      ogImage={ImageUrl({
-        imgId: item.thumbnail.publicId,
-        width: 600,
-        transforms: `f_auto,dpr_auto,c_thumb,g_face`,
-      })}
+      ogDescription={item.ogDescription || item.summary}
+      ogImageId={
+        item.ogImage && item.ogImage.publicId
+          ? item.ogImage.publicId
+          : item.thumbnail.publicId
+      }
     >
       <div className="mt-14">
         <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">
@@ -196,6 +196,11 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
            publicId 
        }
        summary
+
+        ogImage { 
+            publicId
+        }
+        ogDescription
       }`
   );
 

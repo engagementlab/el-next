@@ -23,7 +23,7 @@ export default function NewsItem({
       breadcrumbs={[{ label: 'Back to News & Events', href: '/whats-new' }]}
       title={`${item.title} - News`}
       ogDescription={item.summary}
-      ogImage={ImageUrl({
+      ogImageId={ImageUrl({
         imgId: item.thumbnail.publicId,
         width: 600,
         transforms: `f_auto,dpr_auto,c_thumb,g_face`,

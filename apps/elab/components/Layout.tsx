@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import { Layout as SuperLayout } from '@el-next/components';
-import { Breadcrumb, CustomEase, Theme } from '@/types';
+import { ImageUrl, Layout as SuperLayout } from '@el-next/components';
+import { Breadcrumb, CustomEase, DefaultOGImageOptions, Theme } from '@/types';
 import Header from './Header';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import Footer from './Footer';
@@ -15,7 +15,7 @@ type Props = {
   title?: string;
   ogTitle?: string;
   ogDescription?: string;
-  ogImage?: string;
+  ogImageId?: string;
   error?: any;
   theme?: Theme;
   breadcrumbs?: Breadcrumb[];
@@ -26,6 +26,7 @@ type Props = {
 const appName = 'Engagement Lab';
 const defaultDescription =
   'Advancing peace, equity, and justice through collaborative design and storytelling.';
+const DefaultOGImageId = 'elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8';
 
 const Layout = ({
   children,
@@ -39,7 +40,7 @@ const Layout = ({
 
   ogTitle,
   ogDescription,
-  ogImage,
+  ogImageId,
 }: Props): JSX.Element => {
   const BG = topBgElement ? topBgElement : <></>;
   const GutterBGClasses = [
@@ -115,7 +116,11 @@ const Layout = ({
           description={description ? description : defaultDescription}
           ogDescription={ogDescription ? ogDescription : defaultDescription}
           ogUrl={`https://elab.emerson.edu${currentUrl}`}
-          ogImage={ogImage}
+          ogImage={ImageUrl({
+            // Fallback for OG image
+            ...{ imgId: ogImageId || DefaultOGImageId },
+            ...DefaultOGImageOptions,
+          })}
           error={error}
           transitions={{
             variants: {

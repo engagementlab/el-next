@@ -1,26 +1,27 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Button, HeadingStyle, Image, Query } from '@el-next/components';
+import { Button, Image, ImageUrl, Query } from '@el-next/components';
 
-// import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
+
 import {
   CustomEase,
   News,
   StudioProject,
   Person as PersonT,
-  Theme,
   Theming,
+  OGParams,
 } from '@/types';
+
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import Link from 'next/link';
 import { Person } from '@/components/People';
+import Link from 'next/link';
 
 type GradPage = {
   intro: { document: any };
@@ -46,7 +47,7 @@ type GradPage = {
       publicId: string;
     };
   }[];
-};
+} & OGParams;
 
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
@@ -57,12 +58,23 @@ const rendererOverrides = {
   },
 };
 
-export default function Initiatives({
+export default function Graduate({
   page,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (!page) return;
   return (
-    <Layout error={error} fullBleed={true} title="Graduate Curriculum">
+    <Layout
+      error={error}
+      fullBleed={true}
+      title="Graduate Curriculum"
+      ogDescription={page?.ogDescription || 'Learn about our graduate program.'}
+      ogImageId={
+        page.ogImage && page.ogImage.publicId
+          ? page.ogImage.publicId
+          : page.introImage.publicId
+      }
+    >
       {page && (
         <div className="text-grey">
           <div className="flex flex-col lg:flex-row justify-start">
@@ -404,6 +416,11 @@ export async function getStaticProps() {
         alumni {
           document
         }
+
+        ogImage { 
+            publicId
+        }
+        ogDescription
       }
     `
   );

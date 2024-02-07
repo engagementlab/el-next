@@ -1,13 +1,12 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Button, Image, Query } from '@el-next/components';
+import { Button, Image, ImageUrl, Query } from '@el-next/components';
 
-// import query from '../../../../apollo-client';
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
-import { News } from '@/types';
+import { DefaultOGImageOptions, News, OGParams } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
@@ -26,7 +25,7 @@ type LearningPartners = {
   benefits: { document: any };
 
   spotlight: News[];
-};
+} & OGParams;
 
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
@@ -41,8 +40,22 @@ export default function Initiatives({
   page,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (!page) return null;
+
   return (
-    <Layout error={error} fullBleed={true} title="Learning Partners">
+    <Layout
+      error={error}
+      fullBleed={true}
+      title="Learning Partners"
+      ogDescription={
+        page?.ogDescription || 'Learn about our learning partners.'
+      }
+      ogImageId={
+        page.ogImage && page.ogImage.publicId
+          ? page.ogImage.publicId
+          : page.introImage.publicId
+      }
+    >
       {page && (
         <div className="text-grey">
           <div className="flex flex-col lg:flex-row justify-start">
@@ -184,6 +197,11 @@ export async function getStaticProps() {
             thumbAltText
             initiatives
         }
+
+        ogImage { 
+            publicId
+        }
+        ogDescription
       }
     `
   );

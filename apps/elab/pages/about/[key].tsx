@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Button, Query } from '@el-next/components';
+import { Button, ImageUrl, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import { Blocks, Doc, QuoteRenderer } from '../../components/Renderers';
@@ -22,7 +22,7 @@ import {
   useState,
 } from 'react';
 import CaptionedImage from '@/components/CaptionedImage';
-import { Theme, Theming } from '@/types';
+import { OGParams, Theme, Theming } from '@/types';
 import Script from 'next/script';
 import { CTAButton } from '@/components/Buttons';
 
@@ -40,7 +40,7 @@ type About = {
   };
   headingImageAltText: string;
   headingImageCaption?: string;
-};
+} & OGParams;
 
 export default function AboutPage({
   item,
@@ -162,8 +162,23 @@ export default function AboutPage({
     );
   });
 
+  if (!item) return null;
+
   return (
-    <Layout error={error} title={`${item?.name} - About`}>
+    <Layout
+      error={error}
+      title={`${item?.name} - About`}
+      ogDescription={item.ogDescription}
+      ogImageId={
+        item.ogImage
+          ? item.ogImage.publicId
+          : ImageUrl({
+              imgId: item.headingImage.publicId,
+              width: 600,
+              transforms: `f_auto,dpr_auto,c_thumb,g_custom:faces`,
+            })
+      }
+    >
       {item && (
         <>
           {/* {item?.key === 'donate' && (
@@ -322,6 +337,11 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         content {
            document(hydrateRelationships: true)
         }
+
+        ogImage { 
+            publicId
+        }
+        ogDescription
     }`
   );
   if (itemResult.error) {

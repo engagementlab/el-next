@@ -337,6 +337,24 @@ export const DefaultOGImageOptions = {
   transforms: 'f_auto,dpr_auto,c_thumb,g_custom:faces',
 };
 
+// This is our default GraphQL where clause;
+// - If this is a production build, we want only items that are live
+// - If it's not, we also want items that are in test
+export const DefaultWhereCondition = (clauseAppendix?: string) => {
+  const appendix = clauseAppendix ? `, ${clauseAppendix}` : '';
+  return `where: {
+      ${
+        process.env.NEXT_PUBLIC_STAGING === 'true'
+          ? `OR: [
+            { status: { equals: live } },
+            { status: { equals: testing } }
+          ]`
+          : 'status: { equals: live }'
+      }
+      ${appendix}
+  }`;
+};
+
 export const CustomEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';
 export const InitiativeKeyMap: { [key: string]: string } = {
   tngv: 'gunviolence',

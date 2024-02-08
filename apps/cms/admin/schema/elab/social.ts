@@ -38,7 +38,7 @@ export const Social = (descriptionHelper?: string) => {
           },
         },
       }),
-      description: text({
+      ogDescription: text({
         label: 'Page Description',
         ui: {
           itemView: { fieldPosition: 'sidebar' },

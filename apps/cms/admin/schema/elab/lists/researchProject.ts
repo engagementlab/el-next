@@ -242,4 +242,9 @@ export default list({
       return resolvedData;
     },
   },
+  ui: {
+    listView: {
+      initialColumns: ['name', 'status'],
+    },
+  },
 });

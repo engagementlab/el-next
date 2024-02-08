@@ -212,7 +212,7 @@ const Person: Lists.Person = list({
   },
   ui: {
     listView: {
-      initialColumns: ['name', 'title', 'image'],
+      initialColumns: ['name', 'title', 'image', 'status'],
     },
   },
   hooks: {

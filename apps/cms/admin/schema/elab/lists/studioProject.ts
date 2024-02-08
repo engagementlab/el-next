@@ -261,5 +261,10 @@ const StudioProject: Lists.StudioProject = list({
       return resolvedData;
     },
   },
+  ui: {
+    listView: {
+      initialColumns: ['name', 'initiative', 'status'],
+    },
+  },
 });
 export default StudioProject;

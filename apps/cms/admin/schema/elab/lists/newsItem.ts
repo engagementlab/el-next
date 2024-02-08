@@ -188,7 +188,7 @@ const NewsItem: Lists.NewsItem = list({
   },
   ui: {
     listView: {
-      initialColumns: ['title', 'publishDate', 'thumbnail'],
+      initialColumns: ['title', 'publishDate', 'status'],
       initialSort: { field: 'publishDate', direction: 'DESC' },
     },
   },

@@ -77,7 +77,7 @@ export default list({
   },
   ui: {
     listView: {
-      initialColumns: ['title', 'year'],
+      initialColumns: ['title', 'year', 'status'],
       initialSort: { field: 'year', direction: 'DESC' },
     },
   },

@@ -12,7 +12,7 @@ type About {
   content: About_content_Document
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 type About_intro_Document {
@@ -91,7 +91,7 @@ input AboutWhereInput {
   key: StringFilter
   headingImageAltText: StringFilter
   headingImageCaption: StringFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input IDFilter {
@@ -145,7 +145,7 @@ input AboutOrderByInput {
   key: OrderDirection
   headingImageAltText: OrderDirection
   headingImageCaption: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 enum OrderDirection {
@@ -163,7 +163,7 @@ input AboutUpdateInput {
   content: JSON
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -189,7 +189,7 @@ input AboutCreateInput {
   content: JSON
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 type Event {
@@ -197,7 +197,7 @@ type Event {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: EventStatusType
   initiatives: [EventInitiativeType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
@@ -213,10 +213,16 @@ type Event {
   initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+enum EventStatusType {
+  disabled
+  testing
+  live
+}
 
 enum EventInitiativeType {
   gunviolence
@@ -249,7 +255,7 @@ input EventWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: EventStatusTypeNullableFilter
   thumbAltText: StringFilter
   summary: StringFilter
   eventDate: DateTimeFilter
@@ -257,7 +263,7 @@ input EventWhereInput {
   address: StringFilter
   order: IntNullableFilter
   initiativesWhatsNew: InitiativeManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input DateTimeNullableFilter {
@@ -271,9 +277,11 @@ input DateTimeNullableFilter {
   not: DateTimeNullableFilter
 }
 
-input BooleanFilter {
-  equals: Boolean
-  not: BooleanFilter
+input EventStatusTypeNullableFilter {
+  equals: EventStatusType
+  in: [EventStatusType!]
+  notIn: [EventStatusType!]
+  not: EventStatusTypeNullableFilter
 }
 
 input DateTimeFilter {
@@ -309,21 +317,21 @@ input EventOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   thumbAltText: OrderDirection
   summary: OrderDirection
   eventDate: OrderDirection
   registrationLink: OrderDirection
   address: OrderDirection
   order: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input EventUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: EventStatusType
   initiatives: [EventInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
@@ -338,7 +346,7 @@ input EventUpdateInput {
   initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input InitiativeRelateToManyForUpdateInput {
@@ -357,7 +365,7 @@ input EventCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: EventStatusType
   initiatives: [EventInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
@@ -372,7 +380,7 @@ input EventCreateInput {
   initiativesWhatsNew: InitiativeRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input InitiativeRelateToManyForCreateInput {
@@ -406,6 +414,11 @@ input FilterWhereInput {
   enabled: BooleanFilter
   studioProjects: StudioProjectManyRelationFilter
   researchProjects: ResearchProjectManyRelationFilter
+}
+
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
 }
 
 input StudioProjectManyRelationFilter {
@@ -493,7 +506,7 @@ type Graduate {
   alumniSpotlightCount(where: NewsItemWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 type Graduate_intro_Document {
@@ -532,7 +545,7 @@ input GraduateWhereInput {
   currentStudents: PersonManyRelationFilter
   projectSpotlight: StudioProjectManyRelationFilter
   alumniSpotlight: NewsItemManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input PersonManyRelationFilter {
@@ -552,7 +565,7 @@ input GraduateOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input GraduateUpdateInput {
@@ -570,7 +583,7 @@ input GraduateUpdateInput {
   alumniSpotlight: NewsItemRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input PersonRelateToManyForUpdateInput {
@@ -607,7 +620,7 @@ input GraduateCreateInput {
   alumniSpotlight: NewsItemRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input PersonRelateToManyForCreateInput {
@@ -647,7 +660,7 @@ type Initiative {
   associatedPeopleCount(where: PersonWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 type Initiative_intro_Document {
@@ -689,7 +702,7 @@ input InitiativeWhereInput {
   studios: StudioManyRelationFilter
   research: ResearchProjectManyRelationFilter
   associatedPeople: PersonManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input SlideManyRelationFilter {
@@ -714,7 +727,7 @@ input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
   videoId: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input InitiativeUpdateInput {
@@ -736,7 +749,7 @@ input InitiativeUpdateInput {
   associatedPeople: PersonRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input SlideRelateToManyForUpdateInput {
@@ -784,7 +797,7 @@ input InitiativeCreateInput {
   associatedPeople: PersonRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input SlideRelateToManyForCreateInput {
@@ -819,7 +832,7 @@ type InitiativesLanding {
   homepageOrder: [InitiativesLandingHomepageOrderType!]
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 type InitiativesLanding_intro_Document {
@@ -874,7 +887,7 @@ input InitiativesLandingWhereInput {
   name: StringFilter
   introImageAltText: StringFilter
   introImageCaption: StringFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input InitiativesLandingOrderByInput {
@@ -882,7 +895,7 @@ input InitiativesLandingOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input InitiativesLandingUpdateInput {
@@ -901,7 +914,7 @@ input InitiativesLandingUpdateInput {
   homepageOrder: [InitiativesLandingHomepageOrderType!]
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input InitiativesLandingUpdateArgs {
@@ -925,7 +938,7 @@ input InitiativesLandingCreateInput {
   homepageOrder: [InitiativesLandingHomepageOrderType!]
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 type LearningPartners {
@@ -941,7 +954,7 @@ type LearningPartners {
   spotlightCount(where: NewsItemWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 type LearningPartners_intro_Document {
@@ -970,7 +983,7 @@ input LearningPartnersWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   spotlight: NewsItemManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input LearningPartnersOrderByInput {
@@ -978,7 +991,7 @@ input LearningPartnersOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input LearningPartnersUpdateInput {
@@ -992,7 +1005,7 @@ input LearningPartnersUpdateInput {
   spotlight: NewsItemRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input LearningPartnersUpdateArgs {
@@ -1011,7 +1024,7 @@ input LearningPartnersCreateInput {
   spotlight: NewsItemRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 type NewsItem {
@@ -1019,7 +1032,7 @@ type NewsItem {
   title: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: NewsItemStatusType
   initiatives: [NewsItemInitiativeType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
@@ -1040,7 +1053,13 @@ type NewsItem {
   initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
+}
+
+enum NewsItemStatusType {
+  disabled
+  testing
+  live
 }
 
 enum NewsItemInitiativeType {
@@ -1074,7 +1093,7 @@ input NewsItemWhereInput {
   title: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: NewsItemStatusTypeNullableFilter
   thumbAltText: StringFilter
   summary: StringFilter
   publishDate: DateTimeFilter
@@ -1084,7 +1103,14 @@ input NewsItemWhereInput {
   alumni: GraduateManyRelationFilter
   learningPartners: LearningPartnersManyRelationFilter
   initiativesWhatsNew: InitiativeManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
+}
+
+input NewsItemStatusTypeNullableFilter {
+  equals: NewsItemStatusType
+  in: [NewsItemStatusType!]
+  notIn: [NewsItemStatusType!]
+  not: NewsItemStatusTypeNullableFilter
 }
 
 input GraduateManyRelationFilter {
@@ -1104,21 +1130,21 @@ input NewsItemOrderByInput {
   title: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   thumbAltText: OrderDirection
   summary: OrderDirection
   publishDate: OrderDirection
   source: OrderDirection
   externalLink: OrderDirection
   order: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input NewsItemUpdateInput {
   title: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: NewsItemStatusType
   initiatives: [NewsItemInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
@@ -1136,7 +1162,7 @@ input NewsItemUpdateInput {
   initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input GraduateRelateToManyForUpdateInput {
@@ -1162,7 +1188,7 @@ input NewsItemCreateInput {
   title: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: NewsItemStatusType
   initiatives: [NewsItemInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
@@ -1180,7 +1206,7 @@ input NewsItemCreateInput {
   initiativesWhatsNew: InitiativeRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input GraduateRelateToManyForCreateInput {
@@ -1257,7 +1283,7 @@ type Person {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: PersonStatusType
   title: String
   secondaryTitle: String
   image: CloudinaryImage_File
@@ -1288,6 +1314,12 @@ type Person {
   initiativesCount(where: InitiativeWhereInput! = {}): Int
 }
 
+enum PersonStatusType {
+  disabled
+  testing
+  live
+}
+
 type Person_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
@@ -1305,7 +1337,7 @@ input PersonWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: PersonStatusTypeNullableFilter
   title: StringFilter
   secondaryTitle: StringFilter
   category: StringNullableFilter
@@ -1321,6 +1353,13 @@ input PersonWhereInput {
   researchLeads: ResearchProjectManyRelationFilter
   mdStudents: GraduateManyRelationFilter
   initiatives: InitiativeManyRelationFilter
+}
+
+input PersonStatusTypeNullableFilter {
+  equals: PersonStatusType
+  in: [PersonStatusType!]
+  notIn: [PersonStatusType!]
+  not: PersonStatusTypeNullableFilter
 }
 
 input StringNullableFilter {
@@ -1349,7 +1388,7 @@ input PersonOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   title: OrderDirection
   secondaryTitle: OrderDirection
   category: OrderDirection
@@ -1360,7 +1399,7 @@ input PersonUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: PersonStatusType
   title: String
   secondaryTitle: String
   image: Upload
@@ -1396,7 +1435,7 @@ input PersonCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: PersonStatusType
   title: String
   secondaryTitle: String
   image: Upload
@@ -1426,12 +1465,18 @@ type Publication {
   title: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: PublicationStatusType
   year: String
   citations: Publication_citations_Document
   file: AzureStorageFileFieldOutput
   buttons: JSON
   relatedProject: ResearchProject
+}
+
+enum PublicationStatusType {
+  disabled
+  testing
+  live
 }
 
 type Publication_citations_Document {
@@ -1465,9 +1510,16 @@ input PublicationWhereInput {
   title: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: PublicationStatusTypeNullableFilter
   year: StringFilter
   relatedProject: ResearchProjectWhereInput
+}
+
+input PublicationStatusTypeNullableFilter {
+  equals: PublicationStatusType
+  in: [PublicationStatusType!]
+  notIn: [PublicationStatusType!]
+  not: PublicationStatusTypeNullableFilter
 }
 
 input PublicationOrderByInput {
@@ -1475,7 +1527,7 @@ input PublicationOrderByInput {
   title: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   year: OrderDirection
 }
 
@@ -1483,7 +1535,7 @@ input PublicationUpdateInput {
   title: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: PublicationStatusType
   year: String
   citations: JSON
   file: AzureStorageFileFieldInput
@@ -1511,7 +1563,7 @@ input PublicationCreateInput {
   title: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: PublicationStatusType
   year: String
   citations: JSON
   file: AzureStorageFileFieldInput
@@ -1529,7 +1581,7 @@ type ResearchProject {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: ResearchProjectStatusType
   flags: [ResearchProjectFlagType!]
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
@@ -1563,7 +1615,13 @@ type ResearchProject {
   publicationRelated: Publication
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
+}
+
+enum ResearchProjectStatusType {
+  disabled
+  testing
+  live
 }
 
 enum ResearchProjectFlagType {
@@ -1600,7 +1658,7 @@ input ResearchProjectWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: ResearchProjectStatusTypeNullableFilter
   filters: FilterManyRelationFilter
   mdProject: BooleanFilter
   pin: BooleanFilter
@@ -1618,7 +1676,14 @@ input ResearchProjectWhereInput {
   contact: StringFilter
   initiativesRelated: InitiativeManyRelationFilter
   publicationRelated: PublicationWhereInput
-  description: StringFilter
+  ogDescription: StringFilter
+}
+
+input ResearchProjectStatusTypeNullableFilter {
+  equals: ResearchProjectStatusType
+  in: [ResearchProjectStatusType!]
+  notIn: [ResearchProjectStatusType!]
+  not: ResearchProjectStatusTypeNullableFilter
 }
 
 input FilterManyRelationFilter {
@@ -1638,7 +1703,7 @@ input ResearchProjectOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   mdProject: OrderDirection
   pin: OrderDirection
   ongoing: OrderDirection
@@ -1650,14 +1715,14 @@ input ResearchProjectOrderByInput {
   headingImageAltText: OrderDirection
   shortDescription: OrderDirection
   contact: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input ResearchProjectUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: ResearchProjectStatusType
   flags: [ResearchProjectFlagType!]
   filters: FilterRelateToManyForUpdateInput
   mdProject: Boolean
@@ -1686,7 +1751,7 @@ input ResearchProjectUpdateInput {
   publicationRelated: PublicationRelateToOneForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input FilterRelateToManyForUpdateInput {
@@ -1718,7 +1783,7 @@ input ResearchProjectCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: ResearchProjectStatusType
   flags: [ResearchProjectFlagType!]
   filters: FilterRelateToManyForCreateInput
   mdProject: Boolean
@@ -1747,7 +1812,7 @@ input ResearchProjectCreateInput {
   publicationRelated: PublicationRelateToOneForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input FilterRelateToManyForCreateInput {
@@ -1770,7 +1835,7 @@ type Semester {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: SemesterStatusType
   buttonLabel: String
   studio: Studio
   type: SemesterTypeType
@@ -1791,6 +1856,12 @@ type Semester {
   studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   studioStaffCount(where: PersonWhereInput! = {}): Int
   contact: String
+}
+
+enum SemesterStatusType {
+  disabled
+  testing
+  live
 }
 
 enum SemesterTypeType {
@@ -1832,7 +1903,7 @@ input SemesterWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: SemesterStatusTypeNullableFilter
   buttonLabel: StringFilter
   studio: StudioWhereInput
   type: SemesterTypeTypeNullableFilter
@@ -1847,6 +1918,13 @@ input SemesterWhereInput {
   contact: StringFilter
 }
 
+input SemesterStatusTypeNullableFilter {
+  equals: SemesterStatusType
+  in: [SemesterStatusType!]
+  notIn: [SemesterStatusType!]
+  not: SemesterStatusTypeNullableFilter
+}
+
 input SemesterTypeTypeNullableFilter {
   equals: SemesterTypeType
   in: [SemesterTypeType!]
@@ -1859,7 +1937,7 @@ input SemesterOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   buttonLabel: OrderDirection
   type: OrderDirection
   courseNumber: OrderDirection
@@ -1871,7 +1949,7 @@ input SemesterUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: SemesterStatusType
   buttonLabel: String
   studio: StudioRelateToOneForUpdateInput
   type: SemesterTypeType
@@ -1910,7 +1988,7 @@ input SemesterCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: SemesterStatusType
   buttonLabel: String
   studio: StudioRelateToOneForCreateInput
   type: SemesterTypeType
@@ -2078,7 +2156,7 @@ type Studio {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: StudioStatusType
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   shortDescription: String
@@ -2092,7 +2170,13 @@ type Studio {
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
+}
+
+enum StudioStatusType {
+  disabled
+  testing
+  live
 }
 
 enum StudioInitiativeType {
@@ -2119,14 +2203,21 @@ input StudioWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: StudioStatusTypeNullableFilter
   thumbAltText: StringFilter
   shortDescription: StringFilter
   blurb: StringFilter
   semesters: SemesterManyRelationFilter
   order: IntNullableFilter
   initiativesRelated: InitiativeManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
+}
+
+input StudioStatusTypeNullableFilter {
+  equals: StudioStatusType
+  in: [StudioStatusType!]
+  notIn: [StudioStatusType!]
+  not: StudioStatusTypeNullableFilter
 }
 
 input StudioOrderByInput {
@@ -2134,19 +2225,19 @@ input StudioOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   thumbAltText: OrderDirection
   shortDescription: OrderDirection
   blurb: OrderDirection
   order: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input StudioUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: StudioStatusType
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
@@ -2158,7 +2249,7 @@ input StudioUpdateInput {
   initiativesRelated: InitiativeRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input StudioUpdateArgs {
@@ -2170,7 +2261,7 @@ input StudioCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: StudioStatusType
   thumbnail: Upload
   thumbAltText: String
   shortDescription: String
@@ -2182,7 +2273,7 @@ input StudioCreateInput {
   initiativesRelated: InitiativeRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 type StudioProject {
@@ -2190,7 +2281,7 @@ type StudioProject {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: StudioProjectStatusType
   initiative: StudioProjectInitiativeType
   filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
   filtersCount(where: FilterWhereInput! = {}): Int
@@ -2228,7 +2319,13 @@ type StudioProject {
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
+}
+
+enum StudioProjectStatusType {
+  disabled
+  testing
+  live
 }
 
 enum StudioProjectInitiativeType {
@@ -2284,7 +2381,7 @@ input StudioProjectWhereInput {
   name: StringFilter
   key: StringFilter
   createdDate: DateTimeNullableFilter
-  enabled: BooleanFilter
+  status: StudioProjectStatusTypeNullableFilter
   initiative: StudioProjectInitiativeTypeNullableFilter
   filters: FilterManyRelationFilter
   mdProject: BooleanFilter
@@ -2302,7 +2399,14 @@ input StudioProjectWhereInput {
   undergrad: UndergraduateManyRelationFilter
   grad: GraduateManyRelationFilter
   initiativesRelated: InitiativeManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
+}
+
+input StudioProjectStatusTypeNullableFilter {
+  equals: StudioProjectStatusType
+  in: [StudioProjectStatusType!]
+  notIn: [StudioProjectStatusType!]
+  not: StudioProjectStatusTypeNullableFilter
 }
 
 input StudioProjectInitiativeTypeNullableFilter {
@@ -2323,7 +2427,7 @@ input StudioProjectOrderByInput {
   name: OrderDirection
   key: OrderDirection
   createdDate: OrderDirection
-  enabled: OrderDirection
+  status: OrderDirection
   initiative: OrderDirection
   mdProject: OrderDirection
   thumbAltText: OrderDirection
@@ -2332,14 +2436,14 @@ input StudioProjectOrderByInput {
   trailerId: OrderDirection
   trailerThumbAltText: OrderDirection
   order: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input StudioProjectUpdateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: StudioProjectStatusType
   initiative: StudioProjectInitiativeType
   filters: FilterRelateToManyForUpdateInput
   mdProject: Boolean
@@ -2368,7 +2472,7 @@ input StudioProjectUpdateInput {
   initiativesRelated: InitiativeRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input UndergraduateRelateToManyForUpdateInput {
@@ -2387,7 +2491,7 @@ input StudioProjectCreateInput {
   name: String
   key: String
   createdDate: DateTime
-  enabled: Boolean
+  status: StudioProjectStatusType
   initiative: StudioProjectInitiativeType
   filters: FilterRelateToManyForCreateInput
   mdProject: Boolean
@@ -2416,7 +2520,7 @@ input StudioProjectCreateInput {
   initiativesRelated: InitiativeRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input UndergraduateRelateToManyForCreateInput {
@@ -2436,7 +2540,7 @@ type Undergraduate {
   projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
-  description: String
+  ogDescription: String
 }
 
 type Undergraduate_intro_Document {
@@ -2461,7 +2565,7 @@ input UndergraduateWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   projectSpotlight: StudioProjectManyRelationFilter
-  description: StringFilter
+  ogDescription: StringFilter
 }
 
 input UndergraduateOrderByInput {
@@ -2469,7 +2573,7 @@ input UndergraduateOrderByInput {
   name: OrderDirection
   introImageAltText: OrderDirection
   introImageCaption: OrderDirection
-  description: OrderDirection
+  ogDescription: OrderDirection
 }
 
 input UndergraduateUpdateInput {
@@ -2482,7 +2586,7 @@ input UndergraduateUpdateInput {
   projectSpotlight: StudioProjectRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 input UndergraduateUpdateArgs {
@@ -2500,7 +2604,7 @@ input UndergraduateCreateInput {
   projectSpotlight: StudioProjectRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
-  description: String
+  ogDescription: String
 }
 
 """

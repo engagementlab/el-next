@@ -103,7 +103,7 @@ const Studio: Lists.Studio = list({
   },
   ui: {
     listView: {
-      initialColumns: ['name'],
+      initialColumns: ['name', 'status'],
     },
   },
   hooks: {

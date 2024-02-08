@@ -146,7 +146,7 @@ const Event: Lists.Event = list({
   },
   ui: {
     listView: {
-      initialColumns: ['name', 'eventDate', 'thumbnail'],
+      initialColumns: ['name', 'eventDate', 'status'],
       initialSort: { field: 'eventDate', direction: 'DESC' },
     },
   },

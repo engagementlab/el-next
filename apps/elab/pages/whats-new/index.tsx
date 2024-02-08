@@ -1,6 +1,6 @@
 import { InferGetStaticPropsType } from 'next';
 
-import { News, Event, Item } from '@/types';
+import { News, Event, Item, DefaultWhereCondition } from '@/types';
 import { Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
@@ -24,11 +24,7 @@ export async function getStaticProps() {
   const newsItems = await Query(
     'newsItems',
     `newsItems(
-      where: {
-          enabled: {
-              equals: true
-          },
-      },
+      ${DefaultWhereCondition()},
       orderBy: {
           publishDate: desc
       }		
@@ -51,27 +47,23 @@ export async function getStaticProps() {
   const events = await Query(
     'events',
     `events(
-          where: {
-            enabled: {
-              equals: true
-            }
-          },
-          orderBy: {
-            eventDate: desc
-          }) {
-            name 
-            key 
-            initiatives
-            eventDate 
-            blurb {
-              document
-            }
-            thumbnail {
-              publicId
-            }
-            thumbAltText
-            summary
-          }`
+			${DefaultWhereCondition()},
+      orderBy: {
+        eventDate: desc
+      }) {
+        name 
+        key 
+        initiatives
+        eventDate 
+        blurb {
+          document
+        }
+        thumbnail {
+          publicId
+        }
+        thumbAltText
+        summary
+    }`
   );
 
   if (events.error) {

@@ -11,6 +11,7 @@ import {
   InitiativeKeyMap,
   Theming,
   InitiativeFilterGroups,
+  DefaultWhereCondition,
 } from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
@@ -49,11 +50,7 @@ export async function getStaticProps({
   const newsItems = await Query(
     'newsItems',
     `newsItems(
-      where: {
-          enabled: {
-              equals: true
-          },
-      },
+			${DefaultWhereCondition()},
       orderBy: {
           publishDate: desc
       }		
@@ -76,27 +73,23 @@ export async function getStaticProps({
   const events = await Query(
     'events',
     `events(
-          where: {
-            enabled: {
-              equals: true
-            }
-          },
-          orderBy: {
-            eventDate: desc
-          }) {
-            name 
-            key 
-            initiatives
-            eventDate 
-            blurb {
-              document
-            }
-            thumbnail {
-              publicId
-            }
-            thumbAltText
-            summary
-          }`
+      ${DefaultWhereCondition()},
+      orderBy: {
+        eventDate: desc
+      }) {
+        name 
+        key 
+        initiatives
+        eventDate 
+        blurb {
+          document
+        }
+        thumbnail {
+          publicId
+        }
+        thumbAltText
+        summary
+      }`
   );
 
   if (events.error) {

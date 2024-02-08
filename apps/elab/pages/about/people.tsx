@@ -4,7 +4,7 @@ import { Query } from '@el-next/components';
 import Layout from '../../components/Layout';
 import { motion } from 'framer-motion';
 import { Person } from '@/components/People';
-import { Person as PersonT, Theming } from '@/types';
+import { DefaultWhereCondition, Person as PersonT, Theming } from '@/types';
 
 export default function AboutPage({
   people,
@@ -102,21 +102,18 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const itemResult = await Query(
     'people',
     `people(
-        where: {
-            enabled: {equals: true},
-            category: {not: null} 
-        }, 
+        ${DefaultWhereCondition('category: {not: null}')},
         orderBy: {
             orderInSection: asc
         }) {
-            name
-            key
-            title
-            secondaryTitle
-            image {
-                publicId
-            }
-            category
+          name
+          key
+          title
+          secondaryTitle
+          image {
+              publicId
+          }
+          category
     }`
   );
   if (itemResult.error) {

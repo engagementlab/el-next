@@ -12,7 +12,12 @@ import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { Blocks, Doc, Heading } from '../../components/Renderers';
 
-import { DefaultOGImageOptions, Event, Theme } from '@/types';
+import {
+  DefaultOGImageOptions,
+  DefaultWhereCondition,
+  Event,
+  Theme,
+} from '@/types';
 import { CTAButton } from '@/components/Buttons';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
@@ -155,7 +160,7 @@ export default function Event({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const items = await Query(
     'events',
-    `events(where: { enabled: { equals: true } }),
+    `events(${DefaultWhereCondition()}),
      {
       key
      }`

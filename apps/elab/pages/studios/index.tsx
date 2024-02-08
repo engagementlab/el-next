@@ -13,6 +13,7 @@ import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
   CustomEase,
+  DefaultWhereCondition,
   InitiativeFilterGroups,
   Studio,
   StudioUnion,
@@ -215,16 +216,13 @@ export default function Studios({
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studios
           </h1>
-          {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
-            {showing}
-          </div> */}
-          {initiativeBlurbs.studiosBlurb && (
+          {/* {initiativeBlurbs.studiosBlurb && (
             <div className="mx-6 w-full lg:w-1/2">
               <DocumentRenderer
                 document={initiativeBlurbs.studiosBlurb.document}
               />
             </div>
-          )}
+          )} */}
           {RenderFilters()}
 
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
@@ -262,11 +260,7 @@ export async function getStaticProps() {
   const studios = await Query(
     'studios',
     `studios(
-			where: {
-				enabled: {
-					equals: true
-				}
-			},
+			${DefaultWhereCondition()},
 			orderBy: {
 				createdDate: desc
 			}		
@@ -283,7 +277,7 @@ export async function getStaticProps() {
   );
   const initiativeBlurbs = await Query(
     'initiativesLanding',
-    `initiativesLanding(where: { name: "Initiatives Landing Page" }) {
+    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
         studiosBlurb {
           document
         }
@@ -299,11 +293,20 @@ export async function getStaticProps() {
       },
     };
   }
+  if (initiativeBlurbs.error) {
+    return {
+      props: {
+        error: initiativeBlurbs.error,
+        studios: null,
+        initiativeBlurbs: null,
+      },
+    };
+  }
 
   return {
     props: {
       studios: studios as Studio[],
-      initiativeBlurbs: initiativeBlurbs,
+      initiativeBlurbs,
     },
     revalidate: 1,
   };

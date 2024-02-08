@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Image, Query } from '@el-next/components';
 
-import { ResearchProject, Theme } from '@/types';
+import { DefaultWhereCondition, ResearchProject, Theme } from '@/types';
 import Layout from '../../../components/Layout';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import _ from 'lodash';
@@ -113,11 +113,7 @@ export async function getStaticProps() {
   const researchProjects = await Query(
     'researchProjects',
     `researchProjects(
-			where: {
-				enabled: {
-					equals: true
-				}
-			},
+			${DefaultWhereCondition()},
 			orderBy: {
 				endYear: desc
 			}

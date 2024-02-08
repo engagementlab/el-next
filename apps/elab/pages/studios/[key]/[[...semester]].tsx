@@ -13,7 +13,13 @@ import {
   Heading,
   QuoteRenderer,
 } from '../../../components/Renderers';
-import { CustomEase, Theme, ThemeColors, Theming } from '@/types';
+import {
+  CustomEase,
+  DefaultWhereCondition,
+  Theme,
+  ThemeColors,
+  Theming,
+} from '@/types';
 
 import Logos from '@/components/Logos';
 import Divider from '@/components/Divider';
@@ -570,9 +576,7 @@ export default function Studio({
                             )}
                           </h2>
                           <div className="px-6">
-                            <Logos
-                              partners={selectedSemester.partners}
-                            />
+                            <Logos partners={selectedSemester.partners} />
                           </div>
                         </>
                       )}
@@ -591,10 +595,10 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const studios = await Query(
     'studios',
     `studios {
+      key
+      semesters(${DefaultWhereCondition()}) {
         key
-        semesters {
-          key
-        }
+      }
     }`
   );
   if (studios.error) {
@@ -631,77 +635,77 @@ export async function getStaticProps({
         key
         blurb
         initiatives
-        semesters {
-            key
-            name
-            type
-            courseNumber
-            description
-            partners
+        semesters(${DefaultWhereCondition()}) {
+          key
+          name
+          type
+          courseNumber
+          description
+          partners
+          slides {
             slides {
-              slides {
-                altText
-                image {
-                  publicId
-                  publicUrl
-                }
-                caption
-                videoId
-                order
+              altText
+              image {
+                publicId
+                publicUrl
               }
+              caption
+              videoId
+              order
             }
-            coCreation {
-                document(hydrateRelationships: true)
-            }
-            impact {
-                document(hydrateRelationships: true)
-            }
-            projects {
-                name
-                key
-                shortDescription
-                thumbnail {
-                    publicId
-                }
-                thumbAltText
-            }
-            instructors {
+          }
+          coCreation {
+              document(hydrateRelationships: true)
+          }
+          impact {
+              document(hydrateRelationships: true)
+          }
+          projects {
               name
               key
-              title
-              secondaryTitle
-              image {
+              shortDescription
+              thumbnail {
                   publicId
               }
+              thumbAltText
+          }
+          instructors {
+            name
+            key
+            title
+            secondaryTitle
+            image {
+                publicId
             }
-            learningPartners {
-              name
-              key
-              title
-              secondaryTitle
-              image {
-                  publicId
-              }
+          }
+          learningPartners {
+            name
+            key
+            title
+            secondaryTitle
+            image {
+                publicId
             }
-            studioStudents {
-              name
-              key
-              title
-              secondaryTitle
-              image {
-                  publicId
-              }  
-            }
-            studioStaff {
-              name
-              key
-              title
-              secondaryTitle
-              image {
-                  publicId
-              }  
-            }
-            contact
+          }
+          studioStudents {
+            name
+            key
+            title
+            secondaryTitle
+            image {
+                publicId
+            }  
+          }
+          studioStaff {
+            name
+            key
+            title
+            secondaryTitle
+            image {
+                publicId
+            }  
+          }
+          contact
         }
     }`
   );

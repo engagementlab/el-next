@@ -10,6 +10,7 @@ import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
   CustomEase,
+  DefaultWhereCondition,
   InitiativeFilterGroups,
   InitiativeKeyMap,
   StudioProject,
@@ -309,11 +310,7 @@ export async function getStaticProps({
   const studioProjects = await Query(
     'studioProjects',
     `studioProjects(
-			where: {
-				enabled: {
-					equals: true
-				}
-			},
+			${DefaultWhereCondition()},
 			orderBy: {
 				createdDate: desc
 			}		

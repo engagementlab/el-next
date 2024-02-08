@@ -8,6 +8,7 @@ import {
   InitiativeKeyMap,
   Theming,
   InitiativeFilterGroups,
+  DefaultWhereCondition,
 } from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
 
@@ -62,14 +63,10 @@ export async function getStaticProps({
     items = await Query(
       'newsItems',
       `newsItems(
-      where: {
-          enabled: {
-              equals: true
-          },
-      },
-      orderBy: {
-          publishDate: desc
-      }		
+        ${DefaultWhereCondition()},
+        orderBy: {
+            publishDate: desc
+        }		
     ) { 
         title
         key
@@ -90,11 +87,7 @@ export async function getStaticProps({
     items = await Query(
       'events',
       `events(
-          where: {
-            enabled: {
-              equals: true
-            }
-          },
+          ${DefaultWhereCondition()},
           orderBy: {
             eventDate: desc
           }) {

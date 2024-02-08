@@ -1,7 +1,14 @@
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { News, Event, Item, Publication, Theme } from '@/types';
+import {
+  News,
+  Event,
+  Item,
+  Publication,
+  Theme,
+  DefaultWhereCondition,
+} from '@/types';
 import { Query } from '@el-next/components';
 
 import Layout from '../components/Layout';
@@ -103,25 +110,21 @@ export async function getStaticProps() {
   const publications = await Query(
     'publications',
     `publications(
-          where: {
-            enabled: {
-              equals: true
-            }
-          },
-          orderBy: {
-            year: desc
-          }) {
-            title 
-            key 
-            year
-            citations {
-                document
-            }
-            buttons
-            relatedProject {
-              key
-            }
-    }`
+			${DefaultWhereCondition()},
+      orderBy: {
+        year: desc
+      }) {
+        title 
+        key 
+        year
+        citations {
+            document
+        }
+        buttons
+        relatedProject {
+          key
+        }
+      }`
   );
   if (publications.error) {
     return {

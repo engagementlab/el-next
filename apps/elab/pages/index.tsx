@@ -17,6 +17,7 @@ import {
 
 import {
   CustomEase,
+  DefaultWhereCondition,
   Event,
   Item,
   News,
@@ -572,14 +573,11 @@ export async function getStaticProps() {
   let recentEventsResult = [];
   const eventQueryStr = (dateCondition: string) => {
     return `events(
-              where: {
-                  enabled: {
-                      equals: true
-                  },
+                ${DefaultWhereCondition(`
                   eventDate: {
                     ${dateCondition}
                   }
-                },
+                `)},
                 orderBy: {
                   eventDate: desc
                 }
@@ -623,11 +621,7 @@ export async function getStaticProps() {
   const newsItems = await Query(
     'newsItems',
     `newsItems(
-      where: {
-        enabled: {
-            equals: true
-        }
-      },
+			${DefaultWhereCondition()},
       orderBy: {
           publishDate: desc
       }	
@@ -660,40 +654,26 @@ export async function getStaticProps() {
 
   const studioProjects = await Query(
     'studioProjects',
-    `studioProjects(
-      where: {
-              enabled: {
-                  equals: true
-              }
-            },
-        ) { 
-            name
-            key
-            flags
-            order
-            shortDescription
-            initiative
-            thumbnail { 
-              publicId
-            }
-            thumbAltText
-            filters {
-              key
-            }
-        }`
+    `studioProjects(${DefaultWhereCondition()}) { 
+      name
+      key
+      flags
+      order
+      shortDescription
+      initiative
+      thumbnail { 
+        publicId
+      }
+      thumbAltText
+      filters {
+        key
+      }
+    }`
   );
 
   const researchProjects = await Query(
     'researchProjects',
-    `researchProjects(
-			where: {
-				enabled: {
-					equals: true
-				},
-        featured: {
-					equals: true
-				}
-			},
+    `researchProjects(${DefaultWhereCondition(`featured: { equals: true }`)}
 			orderBy: {
 				endYear: asc
 			}
@@ -722,13 +702,7 @@ export async function getStaticProps() {
   }
   const studiosQuery = await Query(
     'studios',
-    `studios(
-			where: {
-				enabled: {
-					equals: true
-				}
-			}
-		) {
+    `studios(${DefaultWhereCondition()}) {
 			name
 			key
       flags

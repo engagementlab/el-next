@@ -6,7 +6,13 @@ import { Button, Image, ImageUrl, Query } from '@el-next/components';
 
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
-import { CustomEase, OGParams, Studio, StudioProject } from '@/types';
+import {
+  CustomEase,
+  DefaultWhereCondition,
+  OGParams,
+  Studio,
+  StudioProject,
+} from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
@@ -303,15 +309,11 @@ export async function getStaticProps() {
   const studios = (await Query(
     'studios',
     `studios(
-        where: {
-            enabled: {
-                equals: true
-            }
-        },
-        orderBy: {
-            createdDate: desc
-        },
-        take: 3
+      ${DefaultWhereCondition()},
+      orderBy: {
+          createdDate: desc
+      },
+      take: 3
     ) {
         name
         key

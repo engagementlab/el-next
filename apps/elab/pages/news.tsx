@@ -5,7 +5,7 @@ import { Image, Query } from '@el-next/components';
 
 import Layout from '../components/Layout';
 import ImagePlaceholder from '../components/ImagePlaceholder';
-import { News, Event, Item } from '@/types';
+import { News, Event, Item, DefaultWhereCondition } from '@/types';
 import { useRouter } from 'next/router';
 import { NewsEventRenderer } from '@/components/Renderers';
 import WhatsNewRenderer from '@/components/WhatsNew';
@@ -26,11 +26,7 @@ export async function getStaticProps() {
   const newsItems = await Query(
     'newsItems',
     `newsItems(
-      where: {
-          enabled: {
-              equals: true
-          },
-      },
+			${DefaultWhereCondition()},
       orderBy: {
           publishDate: desc
       }		
@@ -50,40 +46,6 @@ export async function getStaticProps() {
         summary
       }`
   );
-  const events = await Query(
-    'events',
-    `events(
-          where: {
-            enabled: {
-              equals: true
-            }
-          },
-          orderBy: {
-            eventDate: desc
-          }) {
-            name 
-            key 
-            initiatives
-            eventDate 
-            blurb {
-              document
-            }
-            thumbnail {
-              publicId
-            }
-            thumbAltText
-            summary
-          }`
-  );
-
-  if (events.error) {
-    return {
-      props: {
-        error: events.error,
-        events: null,
-      },
-    };
-  }
 
   if (newsItems.error) {
     return {
@@ -93,26 +55,10 @@ export async function getStaticProps() {
       },
     };
   }
-  const mergedItems = (
-    [...(events as Event[]), ...(newsItems as News[])] as Item[]
-  )
-    .sort((a, b) => {
-      let val = 0;
-      if (a.publishDate && b.publishDate)
-        val = Date.parse(a.publishDate) - Date.parse(b.publishDate);
-      else if (a.eventDate && b.eventDate)
-        val = Date.parse(a.eventDate) - Date.parse(b.eventDate);
-      else if (a.eventDate && b.publishDate)
-        val = Date.parse(a.eventDate) - Date.parse(b.publishDate);
-      else if (a.publishDate && b.eventDate)
-        val = Date.parse(a.publishDate) - Date.parse(b.eventDate);
 
-      return val;
-    })
-    .reverse();
   return {
     props: {
-      items: mergedItems,
+      items: newsItems,
     },
     revalidate: 1,
   };

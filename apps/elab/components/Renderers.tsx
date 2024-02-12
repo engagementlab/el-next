@@ -107,12 +107,19 @@ let AppBlocks = (theme: ThemeConfig) => {
       if (props.html)
         return (
           <div
+            className="max-w-full aspect-video w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[450px] xl:h-[600px]"
             dangerouslySetInnerHTML={{
               __html: props.html as string,
             }}
           />
         );
-      else return <iframe src={props.embed.open_graph.url}></iframe>;
+      else
+        return (
+          <iframe
+            className="max-w-full aspect-video w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[450px] xl:h-[600px]"
+            src={props.embed.open_graph.url}
+          ></iframe>
+        );
     },
   };
 };

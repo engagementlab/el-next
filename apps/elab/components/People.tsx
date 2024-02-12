@@ -142,6 +142,18 @@ export const PeopleList = ({
   index: any;
 }): JSX.Element => {
   const { togglePeople, peopleOpen } = useStore((state) => state);
+
+  const peopleSorted = list.sort((person1: PersonT, person2: PersonT) => {
+    const person1Names = person1.name.split(' ');
+    const person1NamesLength = person1.name.split(' ').length - 1;
+    const person2Names = person2.name.split(' ');
+    const person2NamesLength = person2.name.split(' ').length - 1;
+
+    return person1Names[person1NamesLength].localeCompare(
+      person2Names[person2NamesLength]
+    );
+  });
+
   return (
     <div className="flex flex-col">
       <h3
@@ -150,17 +162,9 @@ export const PeopleList = ({
         {heading}
       </h3>
       <div className="hidden flex-wrap my-4 gap-x-14 gap-y-5 lg:flex">
-        {list
-          .sort((person1: PersonT, person2: PersonT) =>
-            person1.name
-              .split(' ')
-              [person1.name.split(' ').length - 1].localeCompare(
-                person2.name.split(' ')[person2.name.split(' ').length - 1]
-              )
-          )
-          .map((person: PersonT) => (
-            <Person key={person.key} person={person} theme={theme} />
-          ))}
+        {peopleSorted.map((person: PersonT) => (
+          <Person key={person.key} person={person} theme={theme} />
+        ))}
       </div>
       <div className="flex flex-col flex-wrap my-4 lg:hidden">
         <hr className={`border-1 ${theme.heading}`} />
@@ -195,15 +199,9 @@ export const PeopleList = ({
           animate={peopleOpen[index] ? 'enter' : 'exit'}
           variants={subMenuAnimate}
         >
-          {list
-            .sort((person1: PersonT, person2: PersonT) =>
-              person1.name
-                .split(' ')[1]
-                .localeCompare(person2.name.split(' ')[1])
-            )
-            .map((person: PersonT) => (
-              <Person key={person.key} person={person} theme={theme} />
-            ))}
+          {peopleSorted.map((person: PersonT) => (
+            <Person key={person.key} person={person} theme={theme} />
+          ))}
         </motion.div>
       </div>
     </div>

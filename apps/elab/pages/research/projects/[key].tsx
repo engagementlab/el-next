@@ -46,7 +46,7 @@ export default function ResearchProject({
                   id="thumb"
                   alt={item.thumbAltText}
                   imgId={item.thumbnail.publicId}
-                  width={480}
+                  // width={480}
                   maxWidth={800}
                 />
               </div>

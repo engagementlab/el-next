@@ -214,8 +214,8 @@ export default function Studio({
                       id="thumb"
                       alt={item.thumbAltText}
                       imgId={item.thumbnail.publicId}
-                      transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                      width={460}
+                      transforms="f_auto,dpr_auto,c_fill,g_face"
+                      // width={460}
                     />
                   </div>
                 )}

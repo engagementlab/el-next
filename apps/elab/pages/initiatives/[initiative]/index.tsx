@@ -72,6 +72,8 @@ export default function InitIndex({
     Theming[initiative].fill;
   (' group-hover:fill-purple');
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
+  const gridClass =
+    'my-8 grid md:grid-cols-2 xl:grid-cols-3 md:gap-4 lg:gap-2 xl:gap-5 xl:gap-y-10 text-grey';
   const renderSlide = (props: { slide: Item }) => {
     // Determine what type of button to show from conditions of slide
     const Button = () => {
@@ -291,7 +293,7 @@ export default function InitIndex({
                     />
                   </div>
                 )}
-                <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
+                <div className={gridClass}>
                   {page.projects.map((item: StudioProject, i: number) => {
                     return (
                       <Link
@@ -343,7 +345,7 @@ export default function InitIndex({
             {page.studios && page.studios.length > 0 && (
               <div id="studios">
                 <h2 className="font-bold text-4xl">Featured Studios</h2>
-                <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
+                <div className={gridClass}>
                   {page.studios.map((item: Studio, i: number) => {
                     return (
                       <Link

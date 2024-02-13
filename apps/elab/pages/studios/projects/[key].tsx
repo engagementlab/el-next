@@ -24,7 +24,7 @@ import Divider from '@/components/Divider';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
 import { Gutter } from '@/components/Gutter';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 interface ProjectState {
   trailerOpen: boolean;
@@ -81,8 +81,7 @@ export default function Studio({
       Theming[item.initiative === 'gunviolence' ? 'tngv' : 'tnej'];
     const rendererOverrides = {
       layout: (layout: number[], children: any[]) => {
-        const flexClass = 'flex gap-x-5 flex-col-reverse md:flex-row';
-        ('flex gap-x-5 flex-col-reverse md:flex-row');
+        const flexClass = 'flex gap-x-5 flex-col-reverse lg:flex-row';
         // [  ][ ]
         if (layout[0] === 2 && layout[1] === 1) {
           return (
@@ -145,7 +144,7 @@ export default function Studio({
               <h1 className="font-extrabold text-6xl text-slate">
                 {item.name}
               </h1>
-              <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7">
+              <div className="flex flex-col flex-wrap lg:flex-row items-center gap-x-7 mt-6">
                 {item.videoId ? (
                   <div
                     className={`relative transition-all duration-500 ${CustomEase} ${
@@ -179,8 +178,8 @@ export default function Studio({
                             id="thumb"
                             alt={item.thumbAltText}
                             imgId={item.thumbnail.publicId}
-                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                            width={460}
+                            transforms="f_auto,dpr_auto,c_fill,g_face"
+                            // width={460}
                           />
                         )}
                       </div>
@@ -219,7 +218,7 @@ export default function Studio({
                     />
                   </div>
                 )}
-                <div className="basis-1/3 xl:basis-1/2">
+                <div className="basis-1/3 mt-6 xl:basis-1/2">
                   <h2
                     className={`uppercase text-xl lg:text-3xl font-extrabold ${theming.heading}`}
                   >

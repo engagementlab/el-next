@@ -352,16 +352,16 @@ export default function Studio({
                 />
               )}
               <div className="flex flex-col lg:flex-row gap-x-7">
-                <div>
-                  {item.instructors && item.instructors.length > 0 && (
+                {item.instructors && item.instructors.length > 0 && (
+                  <div className="flex-grow">
                     <PeopleList
                       list={item.instructors}
                       heading="Studio Instructors"
                       theme={theming}
                       index={2}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div>
                   {item.studioStaff && item.studioStaff.length > 0 && (
                     <PeopleList
@@ -426,7 +426,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             }
             trailerId
             trailerThumbnail {
-                publicUrl
+              publicUrl
             }
             trailerThumbAltText
             videoId
@@ -435,15 +435,16 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               document(hydrateRelationships: true)
             }
             impact {
-            document(hydrateRelationships: true)
+              document(hydrateRelationships: true)
             }
     
             instructors {
               name
+              secondaryTitle
               key
               title
               image {
-                  publicId
+                publicId
               }
             }
             learningPartners {
@@ -451,13 +452,14 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               key
               title
               image {
-                  publicId
+                publicId
               }
             }
             studioStudents {
               name
               key
               title
+              secondaryTitle
               image {
                   publicId
               }  
@@ -466,6 +468,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
               name
               key
               title
+              secondaryTitle
               image {
                   publicId
               }  

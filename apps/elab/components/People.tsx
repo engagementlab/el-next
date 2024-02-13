@@ -34,15 +34,17 @@ const subMenuAnimate: Variants = {
     y: 0,
     height: 'auto',
     transition: {
-      ease: 'easeOut',
-      duration: 0.3,
+      ease: [0.04, 0.62, 0.23, 0.98],
+      duration: 0.6,
     },
   },
   exit: {
+    display: 'none',
     opacity: 0,
     y: -40,
     height: 0,
     transition: {
+      ease: [0.04, 0.62, 0.23, 0.98],
       duration: 0.15,
     },
     transitionEnd: {
@@ -55,10 +57,14 @@ export const Person = ({
   person,
   theme,
   large,
+  index = 0,
+  animate = true,
 }: {
   person: PersonT;
   theme: ThemeConfig;
+  index?: number;
   large?: boolean;
+  animate?: boolean;
 }): JSX.Element => {
   if (large)
     return (
@@ -98,6 +104,7 @@ export const Person = ({
     );
   return (
     <div
+      // <motion.div
       className="flex flex-col items-center text-center ml-0 group lg:basis-1/4 xl:basis-1/5"
       // key={`thumb-${person.key}`}
     >
@@ -128,6 +135,7 @@ export const Person = ({
         <p className="text-sm mt-0 italic">{person.secondaryTitle}</p>
       )}
     </div>
+    // </motion.div>
   );
 };
 export const PeopleList = ({
@@ -168,39 +176,46 @@ export const PeopleList = ({
       </div>
       <div className="flex flex-col flex-wrap my-4 lg:hidden">
         <hr className={`border-1 ${theme.heading}`} />
-        <h3 className={`text-lg font-medium uppercase my-4 ${theme.heading}`}>
-          <button
-            className="flex items-center uppercase mb-2"
-            onClick={() => {
-              togglePeople(index);
-            }}
-          >
-            <p className="uppercase mt-0">{heading}</p>
+        <button
+          className="relative z-50 flex flex-row items-center uppercase mb-2"
+          onClick={() => {
+            togglePeople(index);
+          }}
+        >
+          <h3 className={`text-lg font-medium uppercase my-4 ${theme.heading}`}>
+            {heading}
+          </h3>
 
-            <svg
-              className={`transition-all -translate-y-1 ${CustomEase} duration-300 ${
-                peopleOpen[index] ? 'rotate-180' : 'rotate-0'
-              }`}
-              height="40"
-              viewBox="0 -960 960 960"
-              width="40"
-            >
-              <path
-                fill={theme.secodaryArrow}
-                d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"
-              ></path>
-            </svg>
-          </button>
-          {/* <hr className={`border-1 ${theme.heading}`} /> */}
-        </h3>
+          <svg
+            className={`transition-all${CustomEase} duration-300 ${
+              peopleOpen[index] ? 'rotate-180' : 'rotate-0 -translate-y-1 '
+            }`}
+            height="40"
+            viewBox="0 -960 960 960"
+            width="40"
+          >
+            <path
+              fill={theme.secodaryArrow}
+              d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"
+            ></path>
+          </svg>
+        </button>
+        {/* <hr className={`border-1 ${theme.heading}`} /> */}
 
         <motion.div
           initial="exit"
           animate={peopleOpen[index] ? 'enter' : 'exit'}
           variants={subMenuAnimate}
+          className="overflow-hidden"
         >
-          {peopleSorted.map((person: PersonT) => (
-            <Person key={person.key} person={person} theme={theme} />
+          {peopleSorted.map((person: PersonT, pi: number) => (
+            <Person
+              key={person.key}
+              person={person}
+              theme={theme}
+              // index={pi}
+              // animate={peopleOpen[index]}
+            />
           ))}
         </motion.div>
       </div>

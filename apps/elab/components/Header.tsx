@@ -780,7 +780,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                     transition={{ type: 'tween' }}
                   >
                     <section className="flex flex-col landscape:flex-row gap-x-16 gap-y-16">
-                      <div className=" landscape:min-w-[50%]">
+                      <div className="landscape:min-w-[50%]">
                         <h2 className="uppercase">Main Menu</h2>
                         {MobileNavSections.map((section, i) => (
                           <>
@@ -792,7 +792,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                                 transition: {
                                   duration: 0.1,
                                   delay: 0.1 * (i + 1),
-
                                   ease: [0.04, 0.62, 0.23, 0.98],
                                 },
                               }}
@@ -831,11 +830,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                                   }}
                                 >
                                   <motion.div
-                                    variants={
-                                      {
-                                        // open: { scale: 1 },
-                                      }
-                                    }
                                     transition={{ duration: 0.8 }}
                                     className="flex flex-col font-semibold ml-5"
                                   >

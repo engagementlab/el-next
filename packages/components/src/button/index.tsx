@@ -78,6 +78,7 @@ export const Button = ({
     return (
       <button
         className={classOverride || anchorClassStr}
+        key={`btn-${label.toLocaleLowerCase().replaceAll(/[^\w ]/g, '-')}`}
         onClick={() => scrollTo(anchorId)}
       >
         <div className="lg:inline-flex items-center overflow-hidden">

@@ -58,7 +58,7 @@ var Button = function Button(_ref) {
           })]
         })]
       })
-    });
+    }, "btn-".concat(label.toLocaleLowerCase().replaceAll(/[^\w ]/g, '-')));
   }
   if (onClick) return /*#__PURE__*/jsxRuntime.jsxs("button", {
     className: "group ".concat(classOverride || classStr),

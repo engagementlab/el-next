@@ -61,6 +61,7 @@ var Layout = function Layout(_ref) {
   var transition = transitions && transitions.transition ? transitions.transition : {
     type: 'linear'
   };
+  console.log(error);
   var errorHelper = "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {
     if (error["class"] === ErrorClass.noconnection) errorHelper += '🔌 It is most likely that the CMS is currently unavailable. Please try again.';else if (error["class"] === ErrorClass.syntax) errorHelper = 'It looks like there is a syntax error in the query. 🐛 This is a bug in code.';else if (error["class"] === ErrorClass.empty) errorHelper = "One or more of the required content fields on this page is missing. \"(".concat(error.message, ")\"");else if (error["class"] === ErrorClass.client) errorHelper = "There is an error on the client query. \uD83D\uDC1B This is a bug in code. \n\n \uD83D\uDCAC The API says: ".concat(error.message, "\"");else errorHelper += '. Please try again.  🤨 ';
@@ -523,8 +524,6 @@ function _asyncToGenerator(fn) {
 }
 
 var _templateObject;
-// import { capitalCase } from 'change-case';
-
 var apollo = new client.ApolloClient({
   uri: process.env.GRAPHQL_APP ? "https://cms.elab.emerson.edu/".concat(process.env.GRAPHQL_APP, "/api/graphql") : 'http://localhost:3000/api/graphql',
   cache: new client.InMemoryCache(),

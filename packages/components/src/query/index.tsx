@@ -4,7 +4,6 @@ import { ApolloClient, gql, InMemoryCache, ServerError } from '@apollo/client';
 import { ApolloError } from '@apollo/client/errors';
 import { GraphQLError } from 'graphql';
 import { ErrorClass } from '..';
-// import { capitalCase } from 'change-case';
 
 export type TError = {
   class: ErrorClass;

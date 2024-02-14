@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
+// import { GoogleAnalytics } from '@next/third-parties/google';
 import { motion } from 'framer-motion';
 
 import { ImageUrl, Layout as SuperLayout } from '@el-next/components';

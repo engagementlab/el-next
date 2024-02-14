@@ -344,6 +344,7 @@ export const DefaultWhereCondition = (clauseAppendix?: string) => {
   const appendix = clauseAppendix ? `, ${clauseAppendix}` : '';
   return `where: {
       ${
+        process.env.NODE_ENV === 'development' ||
         process.env.NEXT_PUBLIC_STAGING === 'true'
           ? `OR: [
             { status: { equals: live } },

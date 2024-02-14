@@ -31,6 +31,8 @@
   },
   "devDependencies": {
     "@types/gulp": "^4.0.10",
+    "eslint-config-next": "14.1.0",
+    "eslint-plugin-react": "^7.33.2",
     "gulp": "^4.0.2",
     "prompts": "^2.4.2",
     "ts-node":"^10.9.1",

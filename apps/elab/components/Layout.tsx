@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
 // import { GoogleAnalytics } from '@next/third-parties/google';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 
 import { ImageUrl, Layout as SuperLayout } from '@el-next/components';
 import { Breadcrumb, CustomEase, DefaultOGImageOptions, Theme } from '@/types';
@@ -65,11 +65,11 @@ const Layout = ({
 
         {/* Breadcrumbs layout */}
         {breadcrumbs && (
-          <motion.div
+          <div
             className="relative flex justify-center xl:justify-start ml-1 md:ml-0 mt-5 lg:mt-6 lg:mb-20"
-            initial={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            // initial={{ opacity: 0 }}
+            // exit={{ opacity: 0 }}
+            // animate={{ opacity: 1 }}
           >
             <svg width="100%" height="18" className="absolute">
               <rect y={6} width="100%" height="2" fill="#cbdce8" />
@@ -102,7 +102,7 @@ const Layout = ({
                 );
               })}
             </div>
-          </motion.div>
+          </div>
         )}
 
         <SuperLayout

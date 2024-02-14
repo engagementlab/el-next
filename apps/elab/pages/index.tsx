@@ -1,7 +1,9 @@
+'use client';
+
 import { useState, useRef, useEffect } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
+// import { AnimatePresence, motion } from 'framer-motion';
 import Player from '@vimeo/player';
 import _ from 'lodash';
 
@@ -150,26 +152,26 @@ export default function Home({
   }) => {
     return (
       <div className="h-full flex items-center">
-        <motion.div
-          initial={{
-            opacity: 0,
-            filter: 'drop-shadow(0px 0px 13px #fff) blur(5px)',
-          }}
-          whileInView={{
-            opacity: 1,
-            filter: 'drop-shadow(0px 0px 13px #fff) blur(0px)',
-          }}
-          viewport={{ root: targetRef, amount: 'all' }}
-          onViewportEnter={() => {
-            if (didScroll) setWordIndex(index);
-          }}
+        <div
+          // initial={{
+          //   opacity: 0,
+          //   filter: 'drop-shadow(0px 0px 13px #fff) blur(5px)',
+          // }}
+          // whileInView={{
+          //   opacity: 1,
+          //   filter: 'drop-shadow(0px 0px 13px #fff) blur(0px)',
+          // }}
+          // viewport={{ root: targetRef, amount: 'all' }}
+          // onViewportEnter={() => {
+          //   if (didScroll) setWordIndex(index);
+          // }}
           className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
         >
           <p className="flex flex-row w-3/4 justify-start items-center">
             {word} <em className="text-sm font-semibold ml-3">noun</em>
           </p>
           <p className="text-grey font-normal text-sm">{define}</p>
-        </motion.div>
+        </div>
       </div>
     );
   };
@@ -274,7 +276,7 @@ export default function Home({
     >
       <Gutter noMarginY={true}>
         <div id="tagline" className="flex static flex-col pt-14">
-          <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
+          <div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
             {/* {showVideo && ( */}
             <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_15px_#fff]">
               Advancing&nbsp;
@@ -297,11 +299,9 @@ export default function Home({
                         : ''
                     }`}
                   >
-                    <motion.span className="text-yellow">
-                      storytelling
-                    </motion.span>
-                    <motion.span className="text-green">research</motion.span>
-                    <motion.span className="text-red">design</motion.span>
+                    <span className="text-yellow">storytelling</span>
+                    <span className="text-green">research</span>
+                    <span className="text-red">design</span>
                   </div>
                 </div>
                 <div
@@ -320,243 +320,241 @@ export default function Home({
               </div>
             </div>
             {/* )} */}
-          </motion.div>
+          </div>
         </div>
 
-        <AnimatePresence>
-          {showVideo && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{
-                opacity: 1,
-                height: vidH,
-                transition: { duration: 0.5 },
-              }}
-              exit={{ opacity: 0 }}
-              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen"
-              ref={targetRef}
-            >
-              <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">
-                <Definition
-                  word="sto•ry•tell​•ing"
-                  define="The art of conveying a narrative or a sequence of events through
-                  spoken, written, or visual means."
-                  index={0}
-                  color="text-yellow"
-                />
-                <Definition
-                  word="re•search"
-                  define="The systematic investigation of the observable world"
-                  index={1}
-                  color="text-green"
-                />
-                <Definition
-                  word="de•sign"
-                  define="The intentional shaping of futures"
-                  index={2}
-                  color="text-red"
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Gutter>
-      <AnimatePresence>
+        {/* <AnimatePresence> */}
         {showVideo && (
-          <motion.div
-            initial={{ opacity: 0, y: -40 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { duration: 1, delay: 0.6 },
-            }}
-            exit={{ opacity: 0 }}
-            className="bg-white"
+          <div
+            // initial={{ opacity: 0, height: 0 }}
+            // animate={{
+            //   opacity: 1,
+            //   height: vidH,
+            //   transition: { duration: 0.5 },
+            // }}
+            // exit={{ opacity: 0 }}
+            className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen"
+            ref={targetRef}
           >
-            <Divider noMarginY={true} />
-            {sections &&
-              sectionOrder.map((key, index) => {
-                switch (key) {
-                  case 'events':
-                    if (
-                      sections.events.upcomingEvents &&
-                      sections.events.upcomingEvents.length > 0
-                    )
-                      return (
-                        <>
-                          {index > 0 && <Divider />}
-                          <EventsRenderer
-                            events={sections.events.upcomingEvents}
-                            upcoming={true}
-                          />
-                        </>
-                      );
-                    else if (
-                      sections.events.recentEvents &&
-                      sections?.events.recentEvents.length > 0
-                    )
-                      return (
-                        <>
-                          {index > 0 && <Divider />}
-                          <EventsRenderer
-                            events={sections?.events.recentEvents}
-                          />
-                        </>
-                      );
-                    break;
-                  case 'news':
-                    if (sections.news && sections.news.length > 0)
-                      return (
-                        <>
-                          {index > 0 && <Divider />}
-                          <Gutter>
-                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                              Recent News
-                            </h2>
-                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                              {sections.news.map((item: News, i: number) => {
-                                return (
-                                  <div key={i}>
-                                    <div className="flex-shrink">
-                                      {/*  &&
+            <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">
+              <Definition
+                word="sto•ry•tell​•ing"
+                define="The art of conveying a narrative or a sequence of events through
+                  spoken, written, or visual means."
+                index={0}
+                color="text-yellow"
+              />
+              <Definition
+                word="re•search"
+                define="The systematic investigation of the observable world"
+                index={1}
+                color="text-green"
+              />
+              <Definition
+                word="de•sign"
+                define="The intentional shaping of futures"
+                index={2}
+                color="text-red"
+              />
+            </div>
+          </div>
+        )}
+        {/* </AnimatePresence> */}
+      </Gutter>
+      {/* <AnimatePresence> */}
+      {showVideo && (
+        <div
+          // initial={{ opacity: 0, y: -40 }}
+          // animate={{
+          //   opacity: 1,
+          //   y: 0,
+          //   transition: { duration: 1, delay: 0.6 },
+          // }}
+          // exit={{ opacity: 0 }}
+          className="bg-white"
+        >
+          <Divider noMarginY={true} />
+          {sections &&
+            sectionOrder.map((key, index) => {
+              switch (key) {
+                case 'events':
+                  if (
+                    sections.events.upcomingEvents &&
+                    sections.events.upcomingEvents.length > 0
+                  )
+                    return (
+                      <>
+                        {index > 0 && <Divider />}
+                        <EventsRenderer
+                          events={sections.events.upcomingEvents}
+                          upcoming={true}
+                        />
+                      </>
+                    );
+                  else if (
+                    sections.events.recentEvents &&
+                    sections?.events.recentEvents.length > 0
+                  )
+                    return (
+                      <>
+                        {index > 0 && <Divider />}
+                        <EventsRenderer
+                          events={sections?.events.recentEvents}
+                        />
+                      </>
+                    );
+                  break;
+                case 'news':
+                  if (sections.news && sections.news.length > 0)
+                    return (
+                      <>
+                        {index > 0 && <Divider />}
+                        <Gutter>
+                          <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                            Recent News
+                          </h2>
+                          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                            {sections.news.map((item: News, i: number) => {
+                              return (
+                                <div key={i}>
+                                  <div className="flex-shrink">
+                                    {/*  &&
                                       !item.externalLink.includes(
                                         'elab.emerson.edu'
                                       ) */}
-                                      {item.externalLink ? (
-                                        <a
-                                          className="group"
-                                          href={item.externalLink}
-                                        >
-                                          <NewsEventRenderer
-                                            item={item as Item}
-                                            i={i}
-                                            external={true}
-                                          />
-                                        </a>
-                                      ) : (
-                                        <Link
-                                          href={`/news/${item.key}`}
-                                          className="group"
-                                        >
-                                          <NewsEventRenderer
-                                            item={item as Item}
-                                            i={i}
-                                          />
-                                        </Link>
-                                      )}
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
-                              <MoreButton label="See more news" link="/news" />
-                            </div>
-                          </Gutter>
-                        </>
-                      );
-                  case 'projects':
-                    if (sections.projects && sections.projects.length > 0)
-                      return (
-                        <>
-                          {index > 0 && <Divider />}
-                          <Gutter>
-                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                              Featured Projects
-                            </h2>
-                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                              {sections.projects?.map(
-                                (
-                                  item: StudioProject | ResearchProject,
-                                  i: number
-                                ) => {
-                                  if (item.hasOwnProperty('initiative'))
-                                    return (
-                                      <StudioGenericItemRenderer
-                                        key={i}
-                                        item={item as unknown as StudioUnion}
-                                        showBorder={true}
-                                      />
-                                    );
-                                  else
-                                    return (
+                                    {item.externalLink ? (
+                                      <a
+                                        className="group"
+                                        href={item.externalLink}
+                                      >
+                                        <NewsEventRenderer
+                                          item={item as Item}
+                                          i={i}
+                                          external={true}
+                                        />
+                                      </a>
+                                    ) : (
                                       <Link
-                                        href={`/research/projects/${item.key}`}
-                                        passHref
+                                        href={`/news/${item.key}`}
                                         className="group"
                                       >
-                                        <div className="relative">
-                                          <Image
-                                            id={`thumb-${item.key}`}
-                                            alt={item.thumbAltText}
-                                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                                            imgId={item.thumbnail.publicId}
-                                            width={460}
-                                            maxWidthDisable={true}
-                                            className="w-full"
-                                          />
-
-                                          <hr
-                                            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] border-red`}
-                                          />
-                                        </div>
-                                        <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-                                          {item.name}
-                                        </h3>
-
-                                        <p>{item.shortDescription}</p>
+                                        <NewsEventRenderer
+                                          item={item as Item}
+                                          i={i}
+                                        />
                                       </Link>
-                                    );
-                                }
-                              )}
-                            </div>
-                            <div className="flex justify-center lg:justify-end">
-                              <MoreButton
-                                link={`/studios/projects`}
-                                label="See more projects"
-                              />
-                            </div>
-                          </Gutter>
-                        </>
-                      );
-
-                    break;
-                  case 'studios':
-                    if (sections.studios && sections.studios.length > 0)
-                      return (
-                        <>
-                          {index > 0 && <Divider />}
-                          <Gutter>
-                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                              Featured Studios
-                            </h2>
-                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                              {sections.studios.map(
-                                (item: Studio, i: number) => {
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                            <MoreButton label="See more news" link="/news" />
+                          </div>
+                        </Gutter>
+                      </>
+                    );
+                case 'projects':
+                  if (sections.projects && sections.projects.length > 0)
+                    return (
+                      <>
+                        {index > 0 && <Divider />}
+                        <Gutter>
+                          <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                            Featured Projects
+                          </h2>
+                          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                            {sections.projects?.map(
+                              (
+                                item: StudioProject | ResearchProject,
+                                i: number
+                              ) => {
+                                if (item.hasOwnProperty('initiative'))
                                   return (
                                     <StudioGenericItemRenderer
                                       key={i}
-                                      item={item as StudioUnion}
+                                      item={item as unknown as StudioUnion}
                                       showBorder={true}
                                     />
                                   );
-                                }
-                              )}
-                            </div>
-                            <div className="flex justify-center lg:justify-end">
-                              <MoreButton
-                                link={`/studios`}
-                                label="See more studios"
-                              />
-                            </div>
-                          </Gutter>
-                        </>
-                      );
-                }
-              })}
-          </motion.div>
-        )}
-      </AnimatePresence>
+                                else
+                                  return (
+                                    <Link
+                                      href={`/research/projects/${item.key}`}
+                                      passHref
+                                      className="group"
+                                    >
+                                      <div className="relative">
+                                        <Image
+                                          id={`thumb-${item.key}`}
+                                          alt={item.thumbAltText}
+                                          transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                                          imgId={item.thumbnail.publicId}
+                                          width={460}
+                                          maxWidthDisable={true}
+                                          className="w-full"
+                                        />
+
+                                        <hr
+                                          className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] border-red`}
+                                        />
+                                      </div>
+                                      <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                                        {item.name}
+                                      </h3>
+
+                                      <p>{item.shortDescription}</p>
+                                    </Link>
+                                  );
+                              }
+                            )}
+                          </div>
+                          <div className="flex justify-center lg:justify-end">
+                            <MoreButton
+                              link={`/studios/projects`}
+                              label="See more projects"
+                            />
+                          </div>
+                        </Gutter>
+                      </>
+                    );
+
+                  break;
+                case 'studios':
+                  if (sections.studios && sections.studios.length > 0)
+                    return (
+                      <>
+                        {index > 0 && <Divider />}
+                        <Gutter>
+                          <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                            Featured Studios
+                          </h2>
+                          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                            {sections.studios.map((item: Studio, i: number) => {
+                              return (
+                                <StudioGenericItemRenderer
+                                  key={i}
+                                  item={item as StudioUnion}
+                                  showBorder={true}
+                                />
+                              );
+                            })}
+                          </div>
+                          <div className="flex justify-center lg:justify-end">
+                            <MoreButton
+                              link={`/studios`}
+                              label="See more studios"
+                            />
+                          </div>
+                        </Gutter>
+                      </>
+                    );
+              }
+            })}
+        </div>
+      )}
+      {/* </AnimatePresence> */}
       {!showVideo && <div className="min-h-[600px]"></div>}
     </Layout>
   );

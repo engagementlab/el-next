@@ -1,3 +1,5 @@
+'use client';
+
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import { Transition, Variants, motion } from 'framer-motion';
@@ -41,7 +43,7 @@ export const Layout = ({
     transitions && transitions.transition
       ? transitions.transition
       : { type: 'linear' };
-  console.log(error);
+
   let errorHelper =
     "Sorry, we're unable to retrieve content at this time due to a connection error. ";
   if (error) {

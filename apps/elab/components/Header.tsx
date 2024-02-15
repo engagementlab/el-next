@@ -266,9 +266,20 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   }): JSX.Element => {
     return (
       <motion.div
-        // initial={{ y: -10, opacity: 0 }}
-        // exit={{ opacity: 0 }}
-        // animate={{ y: 0, opacity: 1 }}
+        // initial="subexit"
+        // animate="subenter"
+        // exit="subexit"
+        // variants={{
+        //   subenter: { y: 0, opacity: 1 },
+        //   hidden: { y: -10, opacity: 0 },
+        //   subexit: { y: -20, opacity: 0 },
+        // }}
+        transition={{
+          type: 'tween',
+          duration: 0.8,
+          delay: 0.1,
+          ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+        }}
         className="my-6 md:pl-24 lg:mt-12"
       >
         <div className="flex w-full flex-row px-2">

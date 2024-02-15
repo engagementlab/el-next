@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
@@ -29,11 +29,11 @@ import { PeopleList } from '@/components/People';
 import Partners from '@/components/Partners';
 import Slideshow from '@/components/Slideshow';
 import clsx from 'clsx';
+import { Router, useRouter } from 'next/router';
 
 type Semester = {
   key: string;
   name: string;
-  buttonLabel?: string;
   type: string;
   courseNumber: string;
   description: string;
@@ -106,6 +106,14 @@ export default function Studio({
   currentSemester,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  useEffect(() => {
+    // If there is only one semester, just redirect there immediately
+    if (!currentSemester && item?.semesters.length === 1)
+      router.replace(`/studios/${item.key}/${item.semesters[0].key}`);
+  });
+
   let sortedSemesters = item?.semesters
     .filter((v) => v.type !== 'current')
     .sort((a, b) => {
@@ -163,7 +171,6 @@ export default function Studio({
     return (
       <Layout
         error={error}
-        // breadcrumbs={[{ label: 'Social Impact Studios', href: '/studios' }]}
         theme={theme.theme}
         title={`${selectedSemester ? selectedSemester.name + ' - ' : ''}${
           item.name
@@ -240,10 +247,7 @@ export default function Studio({
                             <Link href={`/studios/${item.key}/${se.key}`}>
                               {se.type === 'upcoming' && 'Upcoming Semester'}
                               {se.type === 'current' && 'Current Semester'}
-                              {se.type === null &&
-                                (se.buttonLabel
-                                  ? se.buttonLabel
-                                  : se.name.split(' - ')[0])}
+                              {se.type === null && se.name.split(' - ')[0]}
                             </Link>
                           </p>
                         </li>

@@ -573,28 +573,28 @@ export async function getStaticProps() {
   let recentEventsResult = [];
   const eventQueryStr = (dateCondition: string) => {
     return `events(
-                ${DefaultWhereCondition(`
-                  eventDate: {
-                    ${dateCondition}
-                  }
-                `)},
-                orderBy: {
-                  eventDate: desc
+              ${DefaultWhereCondition(`
+                eventDate: {
+                  ${dateCondition}
                 }
-              ) { 
-                  name
-                  key
-                  initiatives
-                  eventDate
-                  blurb {
-                    document
-                  }
-                  thumbnail { 
-                    publicId
-                  }
-                  thumbAltText
-                  summary
-              }`;
+              `)},
+              orderBy: {
+                eventDate: desc
+              }
+            ) { 
+                name
+                key
+                initiatives
+                eventDate
+                blurb {
+                  document
+                }
+                thumbnail { 
+                  publicId
+                }
+                thumbAltText
+                summary
+            }`;
   };
   // We want events only on or after right now, If there aren't any we will look for most recent
   const eventsQuery = await Query(
@@ -626,22 +626,21 @@ export async function getStaticProps() {
           publishDate: desc
       }	
     ) { 
-        title
-        key
-        blurb {
-          document
-        }
-        initiatives
-        publishDate
-        externalLink
-        thumbnail { 
-            publicId
-        }
-        thumbAltText
-        summary
+      title
+      key
+      blurb {
+        document
+      }
+      initiatives
+      publishDate
+      externalLink
+      thumbnail { 
+          publicId
+      }
+      thumbAltText
+      summary
     }`
   );
-
   if (newsItems.error) {
     return {
       props: {
@@ -654,10 +653,9 @@ export async function getStaticProps() {
 
   const studioProjects = await Query(
     'studioProjects',
-    `studioProjects(${DefaultWhereCondition()}) { 
+    `studioProjects(${DefaultWhereCondition(`home: { equals: true }`)}) { 
       name
       key
-      flags
       order
       shortDescription
       initiative
@@ -673,7 +671,7 @@ export async function getStaticProps() {
 
   const researchProjects = await Query(
     'researchProjects',
-    `researchProjects(${DefaultWhereCondition(`featured: { equals: true }`)}
+    `researchProjects(${DefaultWhereCondition(`home: { equals: true }`)}
 			orderBy: {
 				endYear: asc
 			}
@@ -700,12 +698,12 @@ export async function getStaticProps() {
       },
     };
   }
+
   const studiosQuery = await Query(
     'studios',
-    `studios(${DefaultWhereCondition()}) {
+    `studios(${DefaultWhereCondition(`home: { equals: true }`)}) {
 			name
 			key
-      flags
       order
       initiatives
 			shortDescription 
@@ -734,34 +732,23 @@ export async function getStaticProps() {
       : [];
   const news = (newsItems as News[]).slice(0, 3);
 
-  // TODO: clean this up
-  let projectsMerged: Project[] = (studioProjects as Project[]).filter(
-    (item) => item.flags && item.flags.includes('home')
-  );
-
   // Project can either be studio or research
-  if (researchProjects && researchProjects.length > 0)
-    projectsMerged = [
-      ...(studioProjects as Project[]).filter(
-        (item) => item.flags && item.flags.includes('home')
-      ),
-      ...(researchProjects as Project[]),
-    ];
-
-  const projects = _.orderBy(projectsMerged, 'order');
-  const studios = _.orderBy(
-    (studiosQuery as Studio[]).filter(
-      (item) => item.flags && item.flags.includes('home')
-    ),
+  const projects: Project[] = _.orderBy(
+    [...(studioProjects as Project[]), ...(researchProjects as Project[])],
     'order'
   );
+
+  const studios = _.orderBy(studiosQuery, 'order');
+
   const events = { upcomingEvents, recentEvents };
-  let sections = {
-    events: events,
-    news: news,
-    projects: projects,
-    studios: studios,
+
+  const sections = {
+    events,
+    news,
+    projects,
+    studios,
   };
+
   return {
     props: { sections, sectionOrder: ordering },
     revalidate: 1,

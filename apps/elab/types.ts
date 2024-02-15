@@ -134,7 +134,7 @@ export type Studio = {
 export type StudioProject = {
   name: string;
   key: string;
-  flags: string[];
+  home: boolean;
   order: number;
   initiative: string;
   blurb: { document: any };
@@ -209,7 +209,7 @@ export type StudioUnion = Studio & StudioProject;
 export type News = {
   title: string;
   key: string;
-  flags: string[];
+  home: boolean;
   order: number;
   initiatives: string[];
   publishDate: string;
@@ -342,13 +342,13 @@ export const DefaultOGImageOptions = {
 // - If it's not, we also want items that are in test
 export const DefaultWhereCondition = (clauseAppendix?: string) => {
   const appendix = clauseAppendix ? `, ${clauseAppendix}` : '';
+  const getAll =
+    process.env.NODE_ENV === 'development' ||
+    process.env.NEXT_PUBLIC_STAGING === 'true';
   return `where: {
       ${
-        process.env.NEXT_PUBLIC_STAGING === 'true'
-          ? `OR: [
-            { status: { equals: live } },
-            { status: { equals: testing } }
-          ]`
+        getAll
+          ? 'OR: [{ status: { equals: live } }, { status: { equals: testing } }]'
           : 'status: { equals: live }'
       }
       ${appendix}

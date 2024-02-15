@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { cubicBezier, motion } from 'framer-motion';
 
 import { ImageUrl, Layout as SuperLayout } from '@el-next/components';
 import { Breadcrumb, CustomEase, DefaultOGImageOptions, Theme } from '@/types';
@@ -126,11 +126,12 @@ const Layout = ({
             variants: {
               hidden: { y: 10, opacity: 0 },
               enter: { y: 0, opacity: 1 },
-              exit: { y: 10, opacity: 0 },
+              exit: { y: 50, opacity: 0 },
             },
             transition: {
               type: 'tween',
-              duration: 0.4,
+              duration: 0.8,
+              ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
             },
           }}
         >

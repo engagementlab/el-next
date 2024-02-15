@@ -43,8 +43,8 @@ const Event: Lists.Event = list({
     initiatives: multiselect({
       type: 'enum',
       options: [
-        { label: 'Gun Violence', value: 'gunviolence' },
-        { label: 'Climate', value: 'climate' },
+        { label: 'TNGV', value: 'gunviolence' },
+        { label: 'TNEJ', value: 'climate' },
         // { label: 'Incarceration', value: 'incarceration' },
       ],
       ui: {
@@ -64,7 +64,7 @@ const Event: Lists.Event = list({
       validation: {
         isRequired: true,
       },
-      label: 'Thumbail Alt Text ♿',
+      label: 'Thumbnail Alt Text ♿',
       ui: { description: 'Describe appearance of Thumbnail/Header Image' },
     }),
     summary: text({

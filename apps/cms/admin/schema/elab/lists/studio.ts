@@ -55,7 +55,7 @@ const Studio: Lists.Studio = list({
       validation: {
         isRequired: true,
       },
-      label: 'Thumbail Alt Text ♿',
+      label: 'Thumbnail Alt Text ♿',
       ui: { description: 'Describe appearance of Thumbnail Image' },
     }),
     shortDescription: text({
@@ -81,9 +81,9 @@ const Studio: Lists.Studio = list({
     initiatives: multiselect({
       type: 'enum',
       options: [
-        { label: 'Gun Violence', value: 'gunviolence' },
-        { label: 'Climate', value: 'climate' },
-        { label: 'Incarceration', value: 'incarceration' },
+        { label: 'TNGV', value: 'gunviolence' },
+        { label: 'TNEJ', value: 'climate' },
+        // { label: 'Incarceration', value: 'incarceration' },
       ],
     }),
     ...group(Featuring),
@@ -104,6 +104,7 @@ const Studio: Lists.Studio = list({
   ui: {
     listView: {
       initialColumns: ['name', 'status'],
+      initialSort: { field: 'name', direction: 'ASC' },
     },
   },
   hooks: {

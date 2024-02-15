@@ -132,8 +132,9 @@ export function CustomNavigation({
       ],
     ],
     [
-      'Studios',
+      'Initiatives',
       [
+        { label: 'Landings', url: '/initiatives' },
         { label: 'Studios', url: '/studios' },
         { label: 'Semesters', url: '/semesters' },
         { label: 'Projects', url: '/studio-projects' },
@@ -164,7 +165,6 @@ export function CustomNavigation({
       label: 'Filters',
       url: '/filters',
     },
-    { label: 'Initiative Landings', url: '/initiatives' },
     {
       label: 'People',
       url: '/people',
@@ -358,6 +358,9 @@ export function CustomNavigation({
               </div>
             );
         })}
+        <hr
+          style={{ width: '85%', borderWidth: '1px', borderColor: '#dedded' }}
+        />
         {listItems.map((item) => {
           return (
             <ListItemButton

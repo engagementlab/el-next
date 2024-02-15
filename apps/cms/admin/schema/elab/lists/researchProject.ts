@@ -15,6 +15,7 @@ import { CreatedTimestamp, CreateKey } from '../../hooks';
 
 import { Flags, Status } from '../flags';
 import { Social } from '../social';
+import { Featuring } from '../featuring';
 
 export default list({
   access: allowAll,
@@ -38,7 +39,7 @@ export default list({
     }),
     createdDate: CreatedTimestamp,
     ...Status,
-    flags: Flags,
+    // flags: Flags,
     filters: relationship({
       ref: 'Filter.researchProjects',
       isFilterable: true,
@@ -66,56 +67,25 @@ export default list({
       label: 'Project is ongoing',
       ui: {
         description:
-          'If checked, "to Present" will show instead of just the star year.',
-      },
-    }),
-    featured: checkbox({
-      label: 'Featured on Home',
-    }),
-    order: integer({
-      defaultValue: 0,
-      ui: {
-        description:
-          'Controls the order of this item on featured section on the homepage.',
+          'If checked, "to Present" will show instead of just the start year.',
       },
     }),
     startYear: integer(),
     endYear: integer(),
-    ...group({
-      label: 'Images',
-      description: 'Project thumbnail and header image',
-      fields: {
-        thumbnail: cloudinaryImage({
-          cloudinary: {
-            cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-            apiKey: `${process.env.CLOUDINARY_KEY}`,
-            apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-            folder: 'elab-home-v3.x/research/projects',
-          },
-        }),
-        thumbAltText: text({
-          validation: {
-            isRequired: true,
-          },
-          label: 'Thumbail Alt Text ♿',
-          ui: { description: 'Describe appearance of Thumbnail Image' },
-        }),
-        headingImage: cloudinaryImage({
-          cloudinary: {
-            cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-            apiKey: `${process.env.CLOUDINARY_KEY}`,
-            apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-            folder: 'elab-home-v3.x/research/projects',
-          },
-        }),
-        headingImageAltText: text({
-          validation: {
-            isRequired: true,
-          },
-          label: 'Heading Image Alt Text ♿',
-          ui: { description: 'Describe appearance of Heading Image.' },
-        }),
+    thumbnail: cloudinaryImage({
+      cloudinary: {
+        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+        apiKey: `${process.env.CLOUDINARY_KEY}`,
+        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+        folder: 'elab-home-v3.x/research/projects',
       },
+    }),
+    thumbAltText: text({
+      validation: {
+        isRequired: true,
+      },
+      label: 'Thumbnail Alt Text ♿',
+      ui: { description: 'Describe appearance of Thumbnail Image' },
     }),
     headingText: document({
       formatting: true,
@@ -131,12 +101,6 @@ export default list({
     }),
     shortDescription: text({
       ui: { description: 'Displays in project listing under thumbnail.' },
-    }),
-    blurb: document({
-      links: true,
-      ui: {
-        description: 'Appears when item is featured.',
-      },
     }),
     content: document({
       formatting: true,
@@ -211,6 +175,7 @@ export default list({
         },
       },
     }),
+    ...group(Featuring),
     publicationRelated: relationship({
       ref: 'Publication.relatedProject',
       ui: {

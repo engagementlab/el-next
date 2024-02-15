@@ -4,7 +4,7 @@ import { Flags } from './flags';
 export const Featuring = {
   label: 'Featuring',
   fields: {
-    flags: Flags,
+    ...Flags,
     order: integer({
       defaultValue: 0,
       ui: {

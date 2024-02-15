@@ -45,7 +45,7 @@ const StudioProject: Lists.StudioProject = list({
     initiative: select({
       type: 'enum',
       options: [
-        { label: 'Gun Violence', value: 'gunviolence' },
+        { label: 'TNGV', value: 'gunviolence' },
         { label: 'Climate', value: 'climate' },
         // { label: 'Incarceration', value: 'incarceration' },
       ],
@@ -61,38 +61,48 @@ const StudioProject: Lists.StudioProject = list({
         displayMode: 'select',
       },
     }),
-    mdProject: checkbox({
-      label: 'Is MD Project',
-      defaultValue: false,
-      ui: {
-        description:
-          'Specifies if this project was created as a masters thesis',
-      },
-    }),
-    thumbnail: cloudinaryImage({
-      cloudinary: {
-        cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-        apiKey: `${process.env.CLOUDINARY_KEY}`,
-        apiSecret: `${process.env.CLOUDINARY_SECRET}`,
-        folder: 'elab-home-v3.x/studios/projects',
-      },
-    }),
-    thumbAltText: text({
-      validation: {
-        isRequired: true,
-      },
-      label: 'Thumbail Alt Text ♿',
-      ui: { description: 'Describe appearance of Thumbnail/Header Image' },
-    }),
     shortDescription: text({
       validation: {
         isRequired: true,
       },
       ui: { description: 'Displays in project listing under thumbnail.' },
     }),
+    about: document({
+      formatting: true,
+      links: true,
+      ui: {
+        description: 'Appears above Call to Action.',
+      },
+    }),
+    buttons: json({
+      label: 'Call to Action Buttons',
+      ui: {
+        description:
+          'These will appear below "Watch the film" button, if applicable.',
+        views: path.join(process.cwd(), '/admin/components/callToAction.tsx'),
+      },
+    }),
     ...group({
-      label: 'Top Section',
+      label: 'Main Image or Video',
+      description:
+        "If a trailer image is defined, it will supersede the thumbnail on the project's page.",
       fields: {
+        thumbnail: cloudinaryImage({
+          label: 'Thumbnail/Header Image',
+          cloudinary: {
+            cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+            apiKey: `${process.env.CLOUDINARY_KEY}`,
+            apiSecret: `${process.env.CLOUDINARY_SECRET}`,
+            folder: 'elab-home-v3.x/studios/projects',
+          },
+        }),
+        thumbAltText: text({
+          validation: {
+            isRequired: true,
+          },
+          label: 'Thumbnail/Header Image Alt Text ♿',
+          ui: { description: 'Describe appearance of Thumbnail/Header Image' },
+        }),
         videoId: text({
           label: 'Video ID',
           ui: {
@@ -113,31 +123,8 @@ const StudioProject: Lists.StudioProject = list({
           },
         }),
         trailerThumbAltText: text({
-          label: 'Trailer Thumbail Alt Text ♿',
+          label: 'Trailer Thumbnail Alt Text ♿',
         }),
-        about: document({
-          links: true,
-          ui: {
-            description: 'Appears above Call to Action.',
-          },
-        }),
-        buttons: json({
-          label: 'Call to Action Buttons',
-          ui: {
-            description:
-              'These will appear below "Watch the film" button, if applicable.',
-            views: path.join(
-              process.cwd(),
-              '/admin/components/callToAction.tsx'
-            ),
-          },
-        }),
-      },
-    }),
-    blurb: document({
-      links: true,
-      ui: {
-        description: 'Appears when item is featured.',
       },
     }),
     partners: PartnersSelect,
@@ -239,6 +226,14 @@ const StudioProject: Lists.StudioProject = list({
         itemView: {
           fieldMode: 'hidden',
         },
+      },
+    }),
+    mdProject: checkbox({
+      label: 'Is MD Project',
+      defaultValue: false,
+      ui: {
+        description:
+          'Specifies if this project was created as a masters thesis',
       },
     }),
     ...group(Social('Uses "Short Description" if not specified')),

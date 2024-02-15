@@ -1,13 +1,10 @@
-import { multiselect, select } from '@keystone-6/core/fields';
+import { checkbox, multiselect, select } from '@keystone-6/core/fields';
 
-export const Flags = multiselect({
-  type: 'enum',
-  options: [
-    { label: 'Featured on Home', value: 'home' },
-    { label: 'Featured in Section', value: 'section' },
-  ],
-  isFilterable: true,
-});
+export const Flags = {
+  home: checkbox({
+    label: 'Featured on Home',
+  }),
+};
 
 export const Status = {
   status: select({

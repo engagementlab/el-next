@@ -17,6 +17,10 @@ const Semester: Lists.Semester = list({
       validation: {
         isRequired: true,
       },
+      ui: {
+        description:
+          "This is the label for the semester's button (e.g. Fall 2023 - Documentary).",
+      },
     }),
     key: text({
       // isIndexed: 'unique',
@@ -32,9 +36,6 @@ const Semester: Lists.Semester = list({
     }),
     createdDate: CreatedTimestamp,
     ...Status,
-    buttonLabel: text({
-      ui: { description: "The label for the semester's button." },
-    }),
     studio: relationship({
       ref: 'Studio.semesters',
       ui: { hideCreate: true },
@@ -60,6 +61,7 @@ const Semester: Lists.Semester = list({
       },
     }),
     instructors: relationship({
+      label: 'Professor(s)',
       ref: 'Person.studioInstructors',
       many: true,
       ui: { hideCreate: true },

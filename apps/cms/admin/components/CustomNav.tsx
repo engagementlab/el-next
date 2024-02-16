@@ -181,19 +181,19 @@ export function CustomNavigation({
                 </span>
               </h3>
             )}
+            <Button
+              component="a"
+              href={`https://qa.${app.apexUrl}`}
+              target="_blank"
+              style={{
+                color: '#3b82f6',
+                maxHeight: '40px',
+              }}
+            >
+              <WebOutlinedIcon style={{ paddingRight: '.5rem' }} />
+              View QA
+            </Button>
           </div>
-          <Button
-            component="a"
-            href={`https://qa.${app.apexUrl}`}
-            target="_blank"
-            style={{
-              color: '#3b82f6',
-              maxHeight: '40px',
-            }}
-          >
-            <WebOutlinedIcon style={{ paddingRight: '.5rem' }} />
-            View QA
-          </Button>
         </>
       )}
       <hr style={{ width: '85%', borderWidth: '1px', borderColor: 'grey' }} />

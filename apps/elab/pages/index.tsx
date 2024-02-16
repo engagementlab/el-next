@@ -734,7 +734,9 @@ export async function getStaticProps() {
 
   // Project can either be studio or research
   const projects: Project[] = _.orderBy(
-    [...(studioProjects as Project[]), ...(researchProjects as Project[])],
+    researchProjects && !researchProjects.error
+      ? [...(studioProjects as Project[]), ...(researchProjects as Project[])]
+      : (studioProjects as Project[]),
     'order'
   );
 

@@ -12,3 +12,9 @@
   position: relative;
   text-decoration: none;
 }
+.appNav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomNavigation } from './components/elab/CustomNav';
+import { CustomNavigation } from './components/CustomNav';
 import { Global, css } from '@emotion/core';
 
 // admin/config.tsx

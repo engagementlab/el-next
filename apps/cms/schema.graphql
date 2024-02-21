@@ -398,8 +398,6 @@ type Filter {
   helper: HelperFieldOutput
   studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
-  researchProjects(where: ResearchProjectWhereInput! = {}, orderBy: [ResearchProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ResearchProjectWhereUniqueInput): [ResearchProject!]
-  researchProjectsCount(where: ResearchProjectWhereInput! = {}): Int
 }
 
 input FilterWhereUniqueInput {
@@ -415,19 +413,12 @@ input FilterWhereInput {
   key: StringFilter
   enabled: BooleanFilter
   studioProjects: StudioProjectManyRelationFilter
-  researchProjects: ResearchProjectManyRelationFilter
 }
 
 input StudioProjectManyRelationFilter {
   every: StudioProjectWhereInput
   some: StudioProjectWhereInput
   none: StudioProjectWhereInput
-}
-
-input ResearchProjectManyRelationFilter {
-  every: ResearchProjectWhereInput
-  some: ResearchProjectWhereInput
-  none: ResearchProjectWhereInput
 }
 
 input FilterOrderByInput {
@@ -443,7 +434,6 @@ input FilterUpdateInput {
   enabled: Boolean
   helper: HelperFieldInput
   studioProjects: StudioProjectRelateToManyForUpdateInput
-  researchProjects: ResearchProjectRelateToManyForUpdateInput
 }
 
 input StudioProjectRelateToManyForUpdateInput {
@@ -451,13 +441,6 @@ input StudioProjectRelateToManyForUpdateInput {
   set: [StudioProjectWhereUniqueInput!]
   create: [StudioProjectCreateInput!]
   connect: [StudioProjectWhereUniqueInput!]
-}
-
-input ResearchProjectRelateToManyForUpdateInput {
-  disconnect: [ResearchProjectWhereUniqueInput!]
-  set: [ResearchProjectWhereUniqueInput!]
-  create: [ResearchProjectCreateInput!]
-  connect: [ResearchProjectWhereUniqueInput!]
 }
 
 input FilterUpdateArgs {
@@ -471,17 +454,11 @@ input FilterCreateInput {
   enabled: Boolean
   helper: HelperFieldInput
   studioProjects: StudioProjectRelateToManyForCreateInput
-  researchProjects: ResearchProjectRelateToManyForCreateInput
 }
 
 input StudioProjectRelateToManyForCreateInput {
   create: [StudioProjectCreateInput!]
   connect: [StudioProjectWhereUniqueInput!]
-}
-
-input ResearchProjectRelateToManyForCreateInput {
-  create: [ResearchProjectCreateInput!]
-  connect: [ResearchProjectWhereUniqueInput!]
 }
 
 type Graduate {
@@ -720,6 +697,12 @@ input StudioManyRelationFilter {
   none: StudioWhereInput
 }
 
+input ResearchProjectManyRelationFilter {
+  every: ResearchProjectWhereInput
+  some: ResearchProjectWhereInput
+  none: ResearchProjectWhereInput
+}
+
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -770,6 +753,13 @@ input StudioRelateToManyForUpdateInput {
   connect: [StudioWhereUniqueInput!]
 }
 
+input ResearchProjectRelateToManyForUpdateInput {
+  disconnect: [ResearchProjectWhereUniqueInput!]
+  set: [ResearchProjectWhereUniqueInput!]
+  create: [ResearchProjectCreateInput!]
+  connect: [ResearchProjectWhereUniqueInput!]
+}
+
 input InitiativeUpdateArgs {
   where: InitiativeWhereUniqueInput!
   data: InitiativeUpdateInput!
@@ -810,6 +800,11 @@ input EventRelateToManyForCreateInput {
 input StudioRelateToManyForCreateInput {
   create: [StudioCreateInput!]
   connect: [StudioWhereUniqueInput!]
+}
+
+input ResearchProjectRelateToManyForCreateInput {
+  create: [ResearchProjectCreateInput!]
+  connect: [ResearchProjectWhereUniqueInput!]
 }
 
 type InitiativesLanding {
@@ -1576,9 +1571,6 @@ type ResearchProject {
   key: String
   createdDate: DateTime
   status: ResearchProjectStatusType
-  filters(where: FilterWhereInput! = {}, orderBy: [FilterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FilterWhereUniqueInput): [Filter!]
-  filtersCount(where: FilterWhereInput! = {}): Int
-  mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
   startYear: Int
@@ -1597,9 +1589,9 @@ type ResearchProject {
   projectLeadsCount(where: PersonWhereInput! = {}): Int
   projectTeam: ResearchProject_projectTeam_Document
   contact: String
-  tools: JSON
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
+  mdProject: Boolean
   home: Boolean
   order: Int
   publicationRelated: Publication
@@ -1640,8 +1632,6 @@ input ResearchProjectWhereInput {
   key: StringFilter
   createdDate: DateTimeNullableFilter
   status: ResearchProjectStatusTypeNullableFilter
-  filters: FilterManyRelationFilter
-  mdProject: BooleanFilter
   pin: BooleanFilter
   ongoing: BooleanFilter
   startYear: IntNullableFilter
@@ -1653,6 +1643,7 @@ input ResearchProjectWhereInput {
   projectLeads: PersonManyRelationFilter
   contact: StringFilter
   initiativesRelated: InitiativeManyRelationFilter
+  mdProject: BooleanFilter
   home: BooleanFilter
   order: IntNullableFilter
   publicationRelated: PublicationWhereInput
@@ -1664,12 +1655,6 @@ input ResearchProjectStatusTypeNullableFilter {
   in: [ResearchProjectStatusType!]
   notIn: [ResearchProjectStatusType!]
   not: ResearchProjectStatusTypeNullableFilter
-}
-
-input FilterManyRelationFilter {
-  every: FilterWhereInput
-  some: FilterWhereInput
-  none: FilterWhereInput
 }
 
 input PartnerManyRelationFilter {
@@ -1684,7 +1669,6 @@ input ResearchProjectOrderByInput {
   key: OrderDirection
   createdDate: OrderDirection
   status: OrderDirection
-  mdProject: OrderDirection
   pin: OrderDirection
   ongoing: OrderDirection
   startYear: OrderDirection
@@ -1692,6 +1676,7 @@ input ResearchProjectOrderByInput {
   thumbAltText: OrderDirection
   shortDescription: OrderDirection
   contact: OrderDirection
+  mdProject: OrderDirection
   home: OrderDirection
   order: OrderDirection
   ogDescription: OrderDirection
@@ -1702,8 +1687,6 @@ input ResearchProjectUpdateInput {
   key: String
   createdDate: DateTime
   status: ResearchProjectStatusType
-  filters: FilterRelateToManyForUpdateInput
-  mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
   startYear: Int
@@ -1719,21 +1702,14 @@ input ResearchProjectUpdateInput {
   projectLeads: PersonRelateToManyForUpdateInput
   projectTeam: JSON
   contact: String
-  tools: JSON
   initiativesRelated: InitiativeRelateToManyForUpdateInput
+  mdProject: Boolean
   home: Boolean
   order: Int
   publicationRelated: PublicationRelateToOneForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-}
-
-input FilterRelateToManyForUpdateInput {
-  disconnect: [FilterWhereUniqueInput!]
-  set: [FilterWhereUniqueInput!]
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
 }
 
 input PartnerRelateToManyForUpdateInput {
@@ -1759,8 +1735,6 @@ input ResearchProjectCreateInput {
   key: String
   createdDate: DateTime
   status: ResearchProjectStatusType
-  filters: FilterRelateToManyForCreateInput
-  mdProject: Boolean
   pin: Boolean
   ongoing: Boolean
   startYear: Int
@@ -1776,19 +1750,14 @@ input ResearchProjectCreateInput {
   projectLeads: PersonRelateToManyForCreateInput
   projectTeam: JSON
   contact: String
-  tools: JSON
   initiativesRelated: InitiativeRelateToManyForCreateInput
+  mdProject: Boolean
   home: Boolean
   order: Int
   publicationRelated: PublicationRelateToOneForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-}
-
-input FilterRelateToManyForCreateInput {
-  create: [FilterCreateInput!]
-  connect: [FilterWhereUniqueInput!]
 }
 
 input PartnerRelateToManyForCreateInput {
@@ -2369,6 +2338,12 @@ input StudioProjectInitiativeTypeNullableFilter {
   not: StudioProjectInitiativeTypeNullableFilter
 }
 
+input FilterManyRelationFilter {
+  every: FilterWhereInput
+  some: FilterWhereInput
+  none: FilterWhereInput
+}
+
 input UndergraduateManyRelationFilter {
   every: UndergraduateWhereInput
   some: UndergraduateWhereInput
@@ -2428,6 +2403,13 @@ input StudioProjectUpdateInput {
   ogDescription: String
 }
 
+input FilterRelateToManyForUpdateInput {
+  disconnect: [FilterWhereUniqueInput!]
+  set: [FilterWhereUniqueInput!]
+  create: [FilterCreateInput!]
+  connect: [FilterWhereUniqueInput!]
+}
+
 input UndergraduateRelateToManyForUpdateInput {
   disconnect: [UndergraduateWhereUniqueInput!]
   set: [UndergraduateWhereUniqueInput!]
@@ -2473,6 +2455,11 @@ input StudioProjectCreateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
+}
+
+input FilterRelateToManyForCreateInput {
+  create: [FilterCreateInput!]
+  connect: [FilterWhereUniqueInput!]
 }
 
 input UndergraduateRelateToManyForCreateInput {

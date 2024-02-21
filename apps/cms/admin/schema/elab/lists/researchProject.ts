@@ -39,23 +39,16 @@ export default list({
     }),
     createdDate: CreatedTimestamp,
     ...Status,
-    // flags: Flags,
-    filters: relationship({
+
+    /* filters: relationship({
+      label: 'Media Type',
       ref: 'Filter.researchProjects',
       isFilterable: true,
       many: true,
       ui: {
         displayMode: 'select',
       },
-    }),
-    mdProject: checkbox({
-      label: 'Is MD Project',
-      defaultValue: false,
-      ui: {
-        description:
-          'Specifies if this project was created as a masters thesis',
-      },
-    }),
+    }), */
     pin: checkbox({
       label: '"Pin" Project to top',
       ui: {
@@ -157,12 +150,12 @@ export default list({
     contact: text({
       label: 'Contact Email',
     }),
-    tools: json({
+    /* tools: json({
       label: 'Project Tools',
       ui: {
         views: path.join(process.cwd(), '/admin/components/tools.tsx'),
       },
-    }),
+    }), */
     initiativesRelated: relationship({
       ref: 'Initiative.research',
       many: true,
@@ -173,6 +166,14 @@ export default list({
         itemView: {
           fieldMode: 'hidden',
         },
+      },
+    }),
+    mdProject: checkbox({
+      label: 'Is MD Project',
+      defaultValue: false,
+      ui: {
+        description:
+          'Specifies if this project was created as a masters thesis',
       },
     }),
     ...group(Featuring),

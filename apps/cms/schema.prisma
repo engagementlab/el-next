@@ -51,14 +51,13 @@ model Event {
 }
 
 model Filter {
-  id               String            @id @default(cuid())
-  name             String            @default("")
-  key              String            @default("")
-  enabled          Boolean           @default(true)
-  helper_html      String            @default("<p>Need HTML!</p>")
-  helper_iconType  icon              @default(help)
-  studioProjects   StudioProject[]   @relation("Filter_studioProjects")
-  researchProjects ResearchProject[] @relation("Filter_researchProjects")
+  id              String          @id @default(cuid())
+  name            String          @default("")
+  key             String          @default("")
+  enabled         Boolean         @default(true)
+  helper_html     String          @default("<p>Need HTML!</p>")
+  helper_iconType icon            @default(help)
+  studioProjects  StudioProject[] @relation("Filter_studioProjects")
 }
 
 model Graduate {
@@ -226,8 +225,6 @@ model ResearchProject {
   key                String                     @unique @default("")
   createdDate        DateTime?
   status             ResearchProjectStatusType? @default(disabled)
-  filters            Filter[]                   @relation("Filter_researchProjects")
-  mdProject          Boolean                    @default(false)
   pin                Boolean                    @default(false)
   ongoing            Boolean                    @default(false)
   startYear          Int?
@@ -243,8 +240,8 @@ model ResearchProject {
   projectLeads       Person[]                   @relation("Person_researchLeads")
   projectTeam        Json                       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   contact            String                     @default("")
-  tools              Json?
   initiativesRelated Initiative[]               @relation("Initiative_research")
+  mdProject          Boolean                    @default(false)
   home               Boolean                    @default(false)
   order              Int?                       @default(0)
   publicationRelated Publication?               @relation("Publication_relatedProject")

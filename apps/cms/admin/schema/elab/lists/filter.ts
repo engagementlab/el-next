@@ -36,11 +36,10 @@ const Filter: Lists.Filter = list({
       iconType: HelperIcon.info,
     }),
     studioProjects: relationship({ ref: 'StudioProject.filters', many: true }),
-    researchProjects: relationship({
+    /* researchProjects: relationship({
       ref: 'ResearchProject.filters',
       many: true,
-    }),
-    // order: integer(),
+    }), */
   },
   hooks: {
     resolveInput: async ({

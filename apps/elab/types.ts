@@ -291,6 +291,16 @@ export type ResearchProject = {
       publicId: string;
     };
   }[];
+
+  publicationRelated: {
+    title: string;
+    key: string;
+    year: string;
+    citations: {
+      document: any;
+    };
+    buttons: any[];
+  };
 };
 
 export type Publication = {

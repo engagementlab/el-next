@@ -85,17 +85,21 @@ export default function ResearchProject({
                 <h3
                   className={`text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
                 >
-                  Collaborators
+                  {item.collaborators.length > 1
+                    ? 'Collaborators'
+                    : 'Collaborator'}
                 </h3>
                 <div className="lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center">
                   {item.collaborators.length > 0 &&
                     item.collaborators.map((collaborator) => (
-                      <Image
-                        id={`collaborators-${collaborator.key}`}
-                        alt={`Logo image for ${collaborator.name}`}
-                        imgId={collaborator.logo.publicId}
-                        width={150}
-                      />
+                      <a href={collaborator.url} target="_blank">
+                        <Image
+                          id={`collaborators-${collaborator.key}`}
+                          alt={`Logo image for ${collaborator.name}`}
+                          imgId={collaborator.logo.publicId}
+                          width={150}
+                        />
+                      </a>
                     ))}
                 </div>
               </>
@@ -105,17 +109,19 @@ export default function ResearchProject({
                 <h3
                   className={`hidden lg:block text-xl font-extrabold uppercase mt-10 mb-4 ${Theming['none'].heading}`}
                 >
-                  Funders
+                  {item.collaborators.length > 1 ? 'Funders' : 'Funder'}
                 </h3>
                 <div className="lg:ml-5 grid sm:grid-cols-2 xl:grid-cols-4 gap-y-5 md:gap-x-10 lg:gap-2 xl:gap-y-2 justify-center justify-items-center">
                   {item.funders.length > 0 &&
                     item.funders.map((funder) => (
-                      <Image
-                        id={`funders-${funder.key}`}
-                        alt={`Logo image for ${funder.name}`}
-                        imgId={funder.logo.publicId}
-                        width={150}
-                      />
+                      <a href={funder.url} target="_blank">
+                        <Image
+                          id={`funders-${funder.key}`}
+                          alt={`Logo image for ${funder.name}`}
+                          imgId={funder.logo.publicId}
+                          width={150}
+                        />
+                      </a>
                     ))}
                 </div>
               </>
@@ -151,6 +157,46 @@ export default function ResearchProject({
                 </p>
               </>
             )}
+            {item.publicationRelated && (
+              <>
+                <h2
+                  className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
+                >
+                  Related Publication
+                </h2>
+              </>
+            )}
+            <h3 className="text-yellow text-4xl font-bold mb-0 pb-0">
+              {item.title}
+            </h3>
+            <div className="text-2xl font-medium -mt-3">
+              <DocumentRenderer document={item.citations.document} />
+            </div>
+            <div className="flex flex-row gap-x-5 md:pl-10 mt-4 mb-16">
+              {item.buttons &&
+                item.buttons.length > 0 &&
+                item.buttons.map(
+                  (button: {
+                    url: string;
+                    label: string;
+                    icon: string | undefined;
+                  }) => (
+                    <CTAButton
+                      link={button.url}
+                      external={true}
+                      label={button.label}
+                      theme={2}
+                      icon={button.icon}
+                      iconClassName={
+                        button.icon !== 'arrow' && button.icon !== 'book'
+                          ? 'max-w-[24px] scale-50 origin-left'
+                          : ''
+                      }
+                      className={`flex flex-row gap-x-3 items-center fill-teal`}
+                    />
+                  )
+                )}
+            </div>
           </Gutter>
         </div>
       )}
@@ -229,6 +275,15 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           logo {
               publicId
           }
+        }
+        publicationRelated {
+          title 
+          key 
+          year
+          citations {
+              document
+          }
+          buttons
         }
     }`
   );

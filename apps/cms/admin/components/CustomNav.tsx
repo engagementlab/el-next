@@ -31,6 +31,7 @@ const apps = [
   {
     key: 'elab',
     name: 'ELab Home',
+    apexUrl: 'elab.emerson.edu',
     logo: () => {
       return (
         <svg viewBox="0 0 25 25" width="25" height="25">
@@ -61,7 +62,6 @@ const apps = [
         </svg>
       );
     },
-
     listGroups: new Map<string, { label: string; url: string }[]>([
       [
         'About',

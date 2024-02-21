@@ -90,7 +90,7 @@ export default function Deploy() {
     const app =
       window.location.protocol === 'https:'
         ? window.location.pathname.replace('/', '').split('/')[0]
-        : 'sjm';
+        : 'elab';
     try {
       const response = await axios.post(
         `${endpointPrefix}/prod-deploy`,

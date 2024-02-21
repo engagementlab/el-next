@@ -8,6 +8,9 @@ import {
 import yargs from 'yargs/yargs';
 import e from 'express';
 
+import type { Request, Response } from 'express';
+import { type Context } from '.keystone/types';
+
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
     type: 'string',
@@ -34,11 +37,18 @@ console.log('Found app name: ' + appName);
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { getNews } from './routes/news';
+import { getStudios } from './routes/studios';
 import _ from 'lodash';
 import cors from 'cors';
 import schema from './schema';
 
+function withContext<
+  F extends (req: Request, res: Response, context: Context) => void
+>(commonContext: Context, f: F) {
+  return async (req: Request, res: Response) => {
+    return f(req, res, await commonContext.withRequest(req, res));
+  };
+}
 const port = argv.port || 3000;
 
 cloudinary.config({
@@ -47,11 +57,6 @@ cloudinary.config({
   api_secret: `${process.env.CLOUDINARY_SECRET}`,
   secure: true,
 });
-declare module 'express-serve-static-core' {
-  interface Request {
-    logIn: any;
-  }
-}
 
 const devMode = process.env.NODE_ENV === 'development';
 
@@ -70,6 +75,9 @@ if (process.env.DB_URI) {
 }
 
 let ksConfig = (lists: any) => {
+  const routePrefix =
+    process.env.PRODUCTION_MODE === 'true' ? `/${appName}` : '';
+
   const config: KeystoneConfig = {
     db: dbConfig,
 
@@ -78,7 +86,7 @@ let ksConfig = (lists: any) => {
     server: {
       port,
       maxFileSize: 1024 * 1024 * 50,
-      extendExpressApp: (app: e.Express, createContext: any) => {
+      extendExpressApp: (app: e.Express, commonContext) => {
         app.use(cors({ credentials: true }));
         app.enable('trust proxy');
 
@@ -99,19 +107,14 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        app.use(
-          `/${process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''}rest`,
-          async (req, res, next) => {
-            (req as any).context = await createContext(req, res);
-            next();
-          }
-        );
+        // app.use(`${routePrefix}/rest`, async (req, res, next) => {
+        //   (req as any).context = await createContext(req, res);
+        //   next();
+        // });
 
         app.get(
-          `/${
-            process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
-          }rest/news/:key?`,
-          getNews
+          `${routePrefix}/rest/studios`,
+          withContext(commonContext as Context, getStudios)
         );
       },
     },
@@ -121,9 +124,7 @@ let ksConfig = (lists: any) => {
       }`,
     },
     graphql: {
-      path: `/${
-        process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
-      }api/graphql`,
+      path: `${routePrefix}/api/graphql`,
     },
   };
   return config;

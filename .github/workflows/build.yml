@@ -19,8 +19,11 @@ jobs:
     needs: initial-setup
     name: "Make build"
     # Do not run on automated commits (interpretation of TravisCI feature)
-    if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
+    # if: "!contains(github.event.head_commit.message, 'skip ci') && github.actor != 'dependabot[bot]'"
     runs-on: ubuntu-latest
+    outputs:
+      pa11y_outcome: ${{ steps.pa11y.outcome }}
+      lhci_outcome: ${{ steps.lhci.outcome }}
     strategy:
       matrix:
         node-version: [18.16]
@@ -75,11 +78,11 @@ jobs:
         with:
           fooApiToken: ${{ secrets.FOO_API_KEY }}
           configFile: 'lhconfig.json'
-
+                  
   notify-success:
     name: Send success Slack notification
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'success' }} 
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && needs.run-build.outputs.pa11y_outcome == 'success'}} 
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: true
@@ -89,7 +92,7 @@ jobs:
   notify-failure:
     name: Send failure Slack notification 
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && steps.lhci.outcome == 'success'  }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && needs.run-build.outputs.lhci_outcome == 'success' && needs.run-build.outputs.pa11y_outcome == 'success' }}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: false
@@ -98,9 +101,9 @@ jobs:
 
   # Build has failed due to a11y check(s) not successful
   notify-failure-a11y:
-    name: Send failure Slack notification 
+    name: Send failure Slack notification due to a11y check failure
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && (steps.lhci.outcome == 'failure' || steps.pa11y.outcome == 'failure') }} \
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && (needs.run-build.outputs.lhci_outcome == 'failure' || needs.run-build.outputs.pa11y_outcome == 'failure') }}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: false

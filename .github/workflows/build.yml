@@ -76,72 +76,33 @@ jobs:
           fooApiToken: ${{ secrets.FOO_API_KEY }}
           configFile: 'lhconfig.json'
 
-      - name: Send success Slack notification
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'success' }} 
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":goggles: The latest *test* build of our web apps succeeded. _(Build #${{ github.run_number }})_"
-                  }
-                }
-              ]
-            }
+  notify-success:
+    name: Send success Slack notification
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && steps.lhci.outcome == 'success' }} 
+    uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
+    with:
+      success: true
+      warn: false
+    secrets: inherit
 
-      # Build has failed due to a11y check(s) not successful
-      - name: Send Slack notification w/ a11y warning 
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && (steps.lhci.outcome == 'failure' || steps.pa11y.outcome == 'failure') }} 
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":goggles: The latest *test* build of our web apps succeeded with warnings. _(Build #${{ github.run_number }})_"
-                  }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": ":pushpin: Some accessibility issues exist."
-                    }
-                  ]
-                }
-              ]
-            }
+  notify-failure:
+    name: Send failure Slack notification 
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && steps.lhci.outcome == 'success'  }}
+    uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
+    with:
+      success: false
+      warn: false
+    secrets: inherit
 
-      - name: Send failed Slack notification
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && steps.lhci.outcome == 'success'  }}
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":woozy_face: The latest *test* build of our web apps failed. _(Build #${{ github.run_number }})_"
-                  }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "(Production deploys will probably fail right now)"
-                    }
-                  ]
-                }
-              ]
-            }
+  # Build has failed due to a11y check(s) not successful
+  notify-failure-a11y:
+    name: Send failure Slack notification 
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && (steps.lhci.outcome == 'failure' || steps.pa11y.outcome == 'failure') }} \
+    uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
+    with:
+      success: false
+      warn: true
+    secrets: inherit

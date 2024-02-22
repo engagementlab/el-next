@@ -35,12 +35,12 @@ export default function ResearchProject({
       {item && (
         <div className="text-grey">
           <Gutter>
-            <h1 className="font-extrabold text-6xl text-slate">{item.name}</h1>
+            <h1 className="font-extrabold text-4xl text-slate">{item.name}</h1>
             <h2>
               {item.startYear}&nbsp;
               {endLabel}
             </h2>
-            <div className="flex flex-col-reverse xl:flex-row gap-x-5 mt-16">
+            <div className="flex flex-col xl:flex-row gap-x-5 mt-16">
               <div className="w-full xl:w-1/2 xl:basis-1/2 flex-shrink-0">
                 <Image
                   id="thumb"
@@ -157,46 +157,49 @@ export default function ResearchProject({
                 </p>
               </>
             )}
-            {/* {item.publicationRelated && (
+            {item.publicationRelated && (
               <>
                 <h2
-                  className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
+                  className={`text-xl font-extrabold uppercase my-8 ${Theming['none'].heading}`}
                 >
                   Related Publication
                 </h2>
+
+                <h3 className="text-yellow text-3xl font-bold mb-0 pb-0">
+                  {item.publicationRelated.title}
+                </h3>
+                <div className="text-xl font-medium -mt-3">
+                  <DocumentRenderer
+                    document={item.publicationRelated.citations.document}
+                  />
+                </div>
+                <div className="flex flex-row gap-x-5 md:pl-10 mt-4 mb-16">
+                  {item.buttons &&
+                    item.buttons.length > 0 &&
+                    item.buttons.map(
+                      (button: {
+                        url: string;
+                        label: string;
+                        icon: string | undefined;
+                      }) => (
+                        <CTAButton
+                          link={button.url}
+                          external={true}
+                          label={button.label}
+                          theme={2}
+                          icon={button.icon}
+                          iconClassName={
+                            button.icon !== 'arrow' && button.icon !== 'book'
+                              ? 'max-w-[24px] scale-50 origin-left'
+                              : ''
+                          }
+                          className={`flex flex-row gap-x-3 items-center fill-teal`}
+                        />
+                      )
+                    )}
+                </div>
               </>
             )}
-            <h3 className="text-yellow text-4xl font-bold mb-0 pb-0">
-              {item.title}
-            </h3>
-            <div className="text-2xl font-medium -mt-3">
-              <DocumentRenderer document={item.citations.document} />
-            </div>
-            <div className="flex flex-row gap-x-5 md:pl-10 mt-4 mb-16">
-              {item.buttons &&
-                item.buttons.length > 0 &&
-                item.buttons.map(
-                  (button: {
-                    url: string;
-                    label: string;
-                    icon: string | undefined;
-                  }) => (
-                    <CTAButton
-                      link={button.url}
-                      external={true}
-                      label={button.label}
-                      theme={2}
-                      icon={button.icon}
-                      iconClassName={
-                        button.icon !== 'arrow' && button.icon !== 'book'
-                          ? 'max-w-[24px] scale-50 origin-left'
-                          : ''
-                      }
-                      className={`flex flex-row gap-x-3 items-center fill-teal`}
-                    />
-                  )
-                )}
-            </div> */}
           </Gutter>
         </div>
       )}

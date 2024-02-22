@@ -82,7 +82,7 @@ jobs:
   notify-success:
     name: Send success Slack notification
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && needs.run-build.outputs.pa11y_outcome == 'success'}} 
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'success' && needs.run-build.outputs.pa11y_outcome == 'success'}} 
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: true
@@ -92,7 +92,7 @@ jobs:
   notify-failure:
     name: Send failure Slack notification 
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && needs.run-build.outputs.lhci_outcome == 'success' && needs.run-build.outputs.pa11y_outcome == 'success' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'failure' && needs.run-build.outputs.lhci_outcome == 'success' && needs.run-build.outputs.pa11y_outcome == 'success' }}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: false
@@ -103,7 +103,7 @@ jobs:
   notify-failure-a11y:
     name: Send failure Slack notification due to a11y check failure
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && failure() && (needs.run-build.outputs.lhci_outcome == 'failure' || needs.run-build.outputs.pa11y_outcome == 'failure') }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'failure' && (needs.run-build.outputs.lhci_outcome == 'failure' || needs.run-build.outputs.pa11y_outcome == 'failure') }}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: false

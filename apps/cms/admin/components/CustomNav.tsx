@@ -82,10 +82,13 @@ const apps = [
             label: 'Jobs',
             url: '/abouts/cljzwastb0004bnvzwxhoudqu',
           },
-
           {
             label: 'Donate',
             url: '/abouts/cljzwcixj0008bnvznk510xy8',
+          },
+          {
+            label: 'Find Us',
+            url: '/abouts/cljzw50t41000bnvqzqplvatp',
           },
         ],
       ],

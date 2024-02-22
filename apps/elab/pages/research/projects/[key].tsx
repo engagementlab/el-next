@@ -157,7 +157,7 @@ export default function ResearchProject({
                 </p>
               </>
             )}
-            {item.publicationRelated && (
+            {/* {item.publicationRelated && (
               <>
                 <h2
                   className={`text-xl font-extrabold uppercase my-3 4 ${Theming['none'].heading}`}
@@ -196,7 +196,7 @@ export default function ResearchProject({
                     />
                   )
                 )}
-            </div>
+            </div> */}
           </Gutter>
         </div>
       )}

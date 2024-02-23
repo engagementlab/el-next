@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, wrap } from 'framer-motion';
 import Player from '@vimeo/player';
 import _ from 'lodash';
 
@@ -46,8 +46,38 @@ export default function Home({
   const [didScroll, setDidScroll] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
+
   const targetRef = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef();
+
+  const wordVariants = {
+    enter: {
+      y: 50,
+      opacity: 0,
+    },
+    center: {
+      y: 0,
+      opacity: 1,
+    },
+    exit: {
+      y: -50,
+      opacity: 0,
+    },
+  };
+  const definitionVariants = {
+    enter: {
+      y: -50,
+      opacity: 0,
+    },
+    center: {
+      y: 0,
+      opacity: 1,
+    },
+    exit: {
+      y: 50,
+      opacity: 0,
+    },
+  };
 
   const EnableVideoFallback = () => {
     // There is a problem with Vimeo, we will fall back to an image
@@ -99,6 +129,7 @@ export default function Home({
 
       player.on('loaded', () => {
         setShowVideo(true);
+        debugger;
       });
       player.on('error', () => {
         EnableVideoFallback();
@@ -137,6 +168,13 @@ export default function Home({
     }
   }, [bgVideoRef]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((wordIndex) => wrap(0, 3, wordIndex + 1));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [wordIndex]);
+
   const Definition = ({
     word,
     define,
@@ -148,30 +186,42 @@ export default function Home({
     index: number;
     color: string;
   }) => {
-    return (
-      <div className="h-full flex items-center">
+    if (wordIndex === index)
+      return (
         <motion.div
-          initial={{
-            opacity: 0,
-            filter: 'drop-shadow(0px 0px 13px #fff) blur(5px)',
+          variants={definitionVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            y: { duration: 1.5 },
+            opacity: { duration: 1 },
           }}
-          whileInView={{
-            opacity: 1,
-            filter: 'drop-shadow(0px 0px 13px #fff) blur(0px)',
-          }}
-          viewport={{ root: targetRef, amount: 'all' }}
-          onViewportEnter={() => {
-            if (didScroll) setWordIndex(index);
-          }}
-          className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
+          className="h-full flex items-center"
         >
-          <p className="flex flex-row w-3/4 justify-start items-center">
-            {word} <em className="text-sm font-semibold ml-3">noun</em>
-          </p>
-          <p className="text-grey font-normal text-sm">{define}</p>
+          <motion.div
+            // initial={{
+            //   opacity: 0,
+            //   filter: 'drop-shadow(0px 0px 13px #fff) blur(5px)',
+            // }}
+            // whileInView={{
+            //   opacity: 1,
+            //   filter: 'drop-shadow(0px 0px 13px #fff) blur(0px)',
+            // }}
+            // viewport={{ root: targetRef, amount: 'all' }}
+            // onViewportEnter={() => {
+            //   // if (didScroll) setWordIndex(index);
+            // }}
+            className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
+          >
+            <p className="flex flex-row w-3/4 justify-start items-center">
+              {word} <em className="text-sm font-semibold ml-3">noun</em>
+            </p>
+            <p className="text-grey font-normal text-sm">{define}</p>
+          </motion.div>
         </motion.div>
-      </div>
-    );
+      );
+    return <></>;
   };
 
   const EventsRenderer = ({
@@ -275,48 +325,102 @@ export default function Home({
       <Gutter noMarginY={true}>
         <div id="tagline" className="flex static flex-col pt-14">
           <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
-            {/* {showVideo && ( */}
-            <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_15px_#fff]">
+            <div className="text-slate w-3/4 drop-shadow-[0px_0px_15px_#fff]">
               Advancing&nbsp;
               <span className="inline-block text-purple">
                 peace<span className="text-slate">,</span>
               </span>
               &nbsp;
-              <span className="inline-block text-purple">equity</span>, &&nbsp;
+              <div className="inline-block">
+                <span className="inline-block text-purple">equity</span>,
+                &&nbsp;
+              </div>
               <span className="text-purple">justice</span>
               <br />
               through collaborative&nbsp;
-              <div className="inline-flex flex-col font-extrabold">
+              <div className="flex xl:inline-flex flex-col font-extrabold">
                 <div className="overflow-hidden h-8 md:h-12">
-                  <div
-                    className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left ${
-                      wordIndex !== 0
-                        ? wordIndex === 1
-                          ? 'translate-y-[-33%]'
-                          : 'translate-y-[-66%]'
-                        : ''
-                    }`}
-                  >
-                    <motion.span className="text-yellow">
-                      storytelling
-                    </motion.span>
-                    <motion.span className="text-green">research</motion.span>
-                    <motion.span className="text-red">design</motion.span>
+                  <div className="text-left">
+                    <AnimatePresence>
+                      {wordIndex === 0 && (
+                        <motion.div
+                          key={0}
+                          variants={wordVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{
+                            y: { duration: 1.5 },
+                            opacity: { duration: 1 },
+                          }}
+                          className="absolute pt-3 text-yellow"
+                        >
+                          storytelling
+                          <div
+                            className={`flex flex-col pt-3 w-full ${CustomEase} `}
+                          >
+                            <hr className="h-1 border-none bg-red w-full" />
+                            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+                            <hr className="h-1 border-none bg-yellow w-full" />
+                          </div>
+                        </motion.div>
+                      )}
+                      {wordIndex === 1 && (
+                        <motion.div
+                          key={1}
+                          variants={wordVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{
+                            // y: { type: 'spring', stiffness: 300, damping: 30 },
+                            // opacity: { duration: 0.2 },
+
+                            y: { duration: 2.2 },
+                            opacity: { duration: 2.2 },
+                          }}
+                          className="absolute pt-3 text-green"
+                        >
+                          research
+                          <div className="flex flex-col w-full">
+                            <hr className="h-1 border-none bg-red w-full" />
+                            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+                            <hr className="h-1 border-none bg-yellow w-full" />
+                          </div>
+                        </motion.div>
+                      )}
+                      {wordIndex === 2 && (
+                        <motion.span
+                          key={2}
+                          variants={wordVariants}
+                          initial="enter"
+                          animate="center"
+                          exit="exit"
+                          transition={{
+                            y: { duration: 2.2 },
+                            opacity: { duration: 2.2 },
+                          }}
+                          className="absolute pt-3 text-red"
+                        >
+                          design
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
-                <div
-                  className={`flex flex-col transition-all ${CustomEase} duration-300 ${
+                {/* <div
+                  className={`flex flex-col pt-3 transition-all delay-500 ${CustomEase} duration-1000 ${
                     wordIndex !== 0
                       ? wordIndex === 1
-                        ? 'w-9/12'
-                        : 'w-7/12'
-                      : ''
+                        ? 'w-[11vw]'
+                        : 'w-[8vw]'
+                      : ' w-[15vw]'
                   }`}
                 >
                   <hr className="h-1 border-none bg-red w-full" />
                   <hr className="h-1 my-1 border-none bg-green-blue w-full" />
                   <hr className="h-1 border-none bg-yellow w-full" />
-                </div>
+                </div> */}
               </div>
             </div>
             {/* )} */}
@@ -333,29 +437,31 @@ export default function Home({
                 transition: { duration: 0.5 },
               }}
               exit={{ opacity: 0 }}
-              className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen"
+              className="flex justify-center xl:justify-end max-h-screen"
               ref={targetRef}
             >
-              <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">
-                <Definition
-                  word="sto•ry•tell​•ing"
-                  define="The art of conveying a narrative or a sequence of events through
+              <div className="w-3/4 xl:w-1/3 h-1/3 relative text-xl font-extrabold">
+                <AnimatePresence>
+                  <Definition
+                    word="sto•ry•tell​•ing"
+                    define="The art of conveying a narrative or a sequence of events through
                   spoken, written, or visual means."
-                  index={0}
-                  color="text-yellow"
-                />
-                <Definition
-                  word="re•search"
-                  define="The systematic investigation of the observable world"
-                  index={1}
-                  color="text-green"
-                />
-                <Definition
-                  word="de•sign"
-                  define="The intentional shaping of futures"
-                  index={2}
-                  color="text-red"
-                />
+                    index={0}
+                    color="text-yellow"
+                  />
+                  <Definition
+                    word="re•search"
+                    define="The systematic investigation of the observable world"
+                    index={1}
+                    color="text-green"
+                  />
+                  <Definition
+                    word="de•sign"
+                    define="The intentional shaping of futures"
+                    index={2}
+                    color="text-red"
+                  />
+                </AnimatePresence>
               </div>
             </motion.div>
           )}

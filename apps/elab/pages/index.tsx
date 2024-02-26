@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { AnimatePresence, motion, wrap } from 'framer-motion';
 import Player from '@vimeo/player';
 import _ from 'lodash';
-
 import { Image, ImageUrl, Query } from '@el-next/components';
 import Layout from '../components/Layout';
 
@@ -61,6 +60,20 @@ export default function Home({
     },
     exit: {
       y: -50,
+      opacity: 0,
+    },
+  };
+  const underlineVariants = {
+    enter: {
+      width: 0,
+      opacity: 0,
+    },
+    center: {
+      width: '100%',
+      opacity: 1,
+    },
+    exit: {
+      // y: -50,
       opacity: 0,
     },
   };
@@ -129,7 +142,6 @@ export default function Home({
 
       player.on('loaded', () => {
         setShowVideo(true);
-        debugger;
       });
       player.on('error', () => {
         EnableVideoFallback();
@@ -356,13 +368,21 @@ export default function Home({
                           className="absolute pt-3 text-yellow"
                         >
                           storytelling
-                          <div
-                            className={`flex flex-col pt-3 w-full ${CustomEase} `}
+                          <motion.div
+                            variants={underlineVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                              width: { duration: 0.81 },
+                              opacity: { duration: 0.7 },
+                            }}
+                            className={`flex flex-col pt-3 ${CustomEase} `}
                           >
                             <hr className="h-1 border-none bg-red w-full" />
                             <hr className="h-1 my-1 border-none bg-green-blue w-full" />
                             <hr className="h-1 border-none bg-yellow w-full" />
-                          </div>
+                          </motion.div>
                         </motion.div>
                       )}
                       {wordIndex === 1 && (
@@ -382,11 +402,23 @@ export default function Home({
                           className="absolute pt-3 text-green"
                         >
                           research
-                          <div className="flex flex-col w-full">
+                          {/* <div className="flex flex-col w-full">
+                           */}
+                          <motion.div
+                            variants={underlineVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                              width: { duration: 0.81 },
+                              opacity: { duration: 0.7 },
+                            }}
+                            className={`flex flex-col pt-3 ${CustomEase} `}
+                          >
                             <hr className="h-1 border-none bg-red w-full" />
                             <hr className="h-1 my-1 border-none bg-green-blue w-full" />
                             <hr className="h-1 border-none bg-yellow w-full" />
-                          </div>
+                          </motion.div>
                         </motion.div>
                       )}
                       {wordIndex === 2 && (
@@ -403,6 +435,21 @@ export default function Home({
                           className="absolute pt-3 text-red"
                         >
                           design
+                          <motion.div
+                            variants={underlineVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                              width: { duration: 0.81 },
+                              opacity: { duration: 0.7 },
+                            }}
+                            className={`flex flex-col pt-3 ${CustomEase} `}
+                          >
+                            <hr className="h-1 border-none bg-red w-full" />
+                            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
+                            <hr className="h-1 border-none bg-yellow w-full" />
+                          </motion.div>
                         </motion.span>
                       )}
                     </AnimatePresence>

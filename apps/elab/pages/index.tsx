@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { AnimatePresence, motion, wrap } from 'framer-motion';
 import Player from '@vimeo/player';
 import _ from 'lodash';
-import { Image, ImageUrl, Query } from '@el-next/components';
+// import canAutoPlay from 'can-autoplay';
+
+import { Image, Query } from '@el-next/components';
 import Layout from '../components/Layout';
 
 import Divider from '@/components/Divider';
@@ -45,8 +47,10 @@ export default function Home({
   const [didScroll, setDidScroll] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
+  const [wordUnderlineIndex, setWordUnderlineIndex] = useState(0);
 
   const targetRef = useRef<HTMLDivElement>(null);
+  const videoPlayerRef = useRef<HTMLVideoElement>(null);
   const bgVideoRef = useRef();
 
   const wordVariants = {
@@ -73,7 +77,7 @@ export default function Home({
       opacity: 1,
     },
     exit: {
-      // y: -50,
+      y: -20,
       opacity: 0,
     },
   };
@@ -112,11 +116,18 @@ export default function Home({
           );
         setVideoHeight(height);
         setVideoOverlayHeight(img.clientHeight);
+        setShowVideo(true);
       });
     }
   };
 
   useEffect(() => {
+    const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
+    const videoUrlSuffixPortrait =
+      '855474088/rendition/540p/file.mp4?loc=external&signature=da990294f49e048e5bf3e9d32c58b7b4cf8f1d662eeccfddf5ad25ce056bd2c5';
+    const videoUrlSuffix =
+      '855473995/rendition/540p/file.mp4?loc=external&signature=6b54ff2124a38de9afea47e5c8db79a1a908ac4b7fe02e2304444e5c4159231e';
+
     window.addEventListener(
       'scroll',
       () => {
@@ -125,67 +136,60 @@ export default function Home({
       true
     );
     setBgVideo(bgVideoRef.current);
-    const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
-    try {
-      const player = new Player('video-bg', {
-        id: portraitVideo ? 855474088 : 855473995,
-        width: 1640,
-        height: 720,
-        controls: false,
-        autoplay: true,
-        autopause: true,
-        muted: true,
-        loop: true,
-        responsive: true,
-        quality: '720p',
-      });
 
-      player.on('loaded', () => {
-        setShowVideo(true);
-      });
-      player.on('error', () => {
-        EnableVideoFallback();
-      });
-      player.on('resize', (e) => {
-        // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
-        let height =
-          document.querySelector<HTMLElement>('iframe')!.clientHeight -
-          document.querySelector<HTMLElement>('nav')!.clientHeight -
-          document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
-          parseInt(
-            window
-              .getComputedStyle(document.getElementById('layout-daddy')!)
-              .marginTop.replace(/[^0-9-]/g, '')
+    if (videoPlayerRef.current) {
+      try {
+        videoPlayerRef.current.onplay = () => {
+          // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
+          let height =
+            videoPlayerRef.current!.clientHeight -
+            document.querySelector<HTMLElement>('nav')!.clientHeight -
+            document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
+            parseInt(
+              window
+                .getComputedStyle(document.getElementById('layout-daddy')!)
+                .marginTop.replace(/[^0-9-]/g, '')
+            );
+          if (
+            window.matchMedia('(orientation: portrait)').matches &&
+            height > 500
+          )
+            height = 500;
+
+          setVideoHeight(height);
+          setVideoOverlayHeight(
+            videoPlayerRef.current ? videoPlayerRef.current.clientHeight : 0
           );
-        if (
-          window.matchMedia('(orientation: portrait)').matches &&
-          height > 500
-        )
-          height = 500;
+          setShowVideo(true);
+        };
 
-        setVideoHeight(height);
-        setVideoOverlayHeight(
-          document.querySelector<HTMLElement>('iframe') !== null
-            ? document.querySelector<HTMLElement>('iframe')!.clientHeight
-            : 0
-        );
-      });
-      player
-        .loadVideo({ id: portraitVideo ? 855474088 : 855473995 })
-        .catch((e) => {
+        videoPlayerRef.current.onerror = () => {
           EnableVideoFallback();
-        });
-    } catch (e) {
-      EnableVideoFallback();
+        };
+        videoPlayerRef.current.src = `https://player.vimeo.com/progressive_redirect/playback/${
+          portraitVideo ? videoUrlSuffixPortrait : videoUrlSuffix
+        }`;
+      } catch (e) {
+        EnableVideoFallback();
+      }
     }
   }, [bgVideoRef]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setWordIndex((wordIndex) => wrap(0, 3, wordIndex + 1));
-    }, 3000);
+
+      // setInterval(() => {
+      //   setWordUnderlineIndex((wordUnderlineIndex) =>
+      //     wrap(0, 3, wordUnderlineIndex + 1)
+      //   );
+      // }, 4500);
+    }, 6000);
     return () => clearInterval(interval);
   }, [wordIndex]);
+  // useEffect(() => {
+  //   // return () => clearInterval(interval);
+  // }, [wordUnderlineIndex]);
 
   const Definition = ({
     word,
@@ -235,6 +239,53 @@ export default function Home({
       );
     return <></>;
   };
+  const KeywordUnderline = ({ index }: { index: number }) => {
+    if (wordUnderlineIndex === index)
+      return (
+        <div key={`underline-${index}`} className="flex flex-col pt-3">
+          <motion.hr
+            variants={underlineVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              width: { duration: 0.81 },
+              opacity: { duration: 0.7 },
+              y: { duration: 0.5 },
+              // delay: 0.2,
+            }}
+            className="h-1 border-none bg-red w-full"
+          />
+          <motion.hr
+            variants={underlineVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              width: { duration: 4.81 },
+              opacity: { duration: 0.5 },
+              y: { duration: 1 },
+              // delay: 0.4,
+            }}
+            className="h-1 my-1 border-none bg-green-blue w-full"
+          />
+          <motion.hr
+            variants={underlineVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              width: { duration: 3.81 },
+              opacity: { duration: 0.7 },
+              y: { duration: 0.41 },
+              // delay: 1,
+            }}
+            className="h-1 border-none bg-yellow w-full"
+          />
+        </div>
+      );
+    return <></>;
+  };
 
   const EventsRenderer = ({
     events,
@@ -279,7 +330,7 @@ export default function Home({
               alt="A group of people sitting around a table"
               imgId="elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8"
               width={1800}
-              className={`absolute top-0 h-screen w-full min-h-screen ${
+              className={`absolute top-0 h-[80vh] w-full ${
                 videoFallback ? 'block' : 'hidden'
               }`}
             />
@@ -291,20 +342,29 @@ export default function Home({
               transforms={`c_lfill,g_custom:faces,w_${window.innerWidth},h_820`}
               width={window.innerWidth}
               maxWidthDisable={true}
-              className={`absolute top-0 h-screen w-full min-h-screen ${
+              className={`absolute top-0 w-full h-[80vh] min-h-[900px] ${
                 videoFallback ? 'block' : 'hidden'
               }`}
             />
           )}
+
           {!videoFallback && (
             <div
               id="video-bg"
               ref={bgTargetElement}
-              className={`absolute top-0 h-screen w-full min-h-screen transition-all ${CustomEase} duration-300  ${
-                showVideo ? 'block' : 'hidden'
-              }`}
-              style={{ height: vidH }}
-            ></div>
+              className="absolute top-0 w-full transition-all ${CustomEase} duration-300 opacity-100"
+            >
+              <video
+                ref={videoPlayerRef}
+                preload=""
+                autoPlay={true}
+                playsInline={true}
+                muted={true}
+                loop={true}
+                poster="https://res.cloudinary.com/engagement-lab-home/image/upload/c_mpad,g_center,w_1024/v1709055933/elab-home-v3.x/loading.gif"
+                className="w-full"
+              ></video>
+            </div>
           )}
 
           <div
@@ -352,75 +412,52 @@ export default function Home({
               through collaborative&nbsp;
               <div className="flex xl:inline-flex flex-col font-extrabold">
                 <div className="overflow-hidden h-8 md:h-12">
-                  <div className="text-left">
-                    <AnimatePresence>
-                      {wordIndex === 0 && (
-                        <motion.div
-                          key={0}
-                          variants={wordVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            y: { duration: 1.5 },
-                            opacity: { duration: 1 },
-                          }}
-                          className="absolute pt-3 text-yellow"
-                        >
-                          storytelling
+                  <div className="text-left pt-3">
+                    <div className="absolute text-yellow">
+                      <AnimatePresence>
+                        {wordIndex === 0 && (
                           <motion.div
-                            variants={underlineVariants}
+                            key={0}
+                            variants={wordVariants}
                             initial="enter"
                             animate="center"
                             exit="exit"
                             transition={{
-                              width: { duration: 0.81 },
-                              opacity: { duration: 0.7 },
+                              y: { duration: 1.5 },
+                              opacity: { duration: 1 },
                             }}
-                            className={`flex flex-col pt-3 ${CustomEase} `}
                           >
-                            <hr className="h-1 border-none bg-red w-full" />
-                            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                            <hr className="h-1 border-none bg-yellow w-full" />
+                            storytelling
+                            <KeywordUnderline index={0} />
                           </motion.div>
-                        </motion.div>
-                      )}
-                      {wordIndex === 1 && (
-                        <motion.div
-                          key={1}
-                          variants={wordVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            // y: { type: 'spring', stiffness: 300, damping: 30 },
-                            // opacity: { duration: 0.2 },
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    <div className="absolute text-green">
+                      <AnimatePresence>
+                        {wordIndex === 1 && (
+                          <motion.div
+                            key={1}
+                            variants={wordVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                              // y: { type: 'spring', stiffness: 300, damping: 30 },
+                              // opacity: { duration: 0.2 },
 
-                            y: { duration: 2.2 },
-                            opacity: { duration: 2.2 },
-                          }}
-                          className="absolute pt-3 text-green"
-                        >
-                          research
-                          {/* <div className="flex flex-col w-full">
-                           */}
-                          <motion.div
-                            variants={underlineVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                              width: { duration: 0.81 },
-                              opacity: { duration: 0.7 },
+                              y: { duration: 1.2 },
+                              opacity: { duration: 2.2 },
                             }}
-                            className={`flex flex-col pt-3 ${CustomEase} `}
                           >
-                            <hr className="h-1 border-none bg-red w-full" />
-                            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                            <hr className="h-1 border-none bg-yellow w-full" />
+                            research
                           </motion.div>
-                        </motion.div>
-                      )}
+                        )}
+                        {/* <KeywordUnderline index={1} /> */}
+                      </AnimatePresence>
+                    </div>
+
+                    {/*
                       {wordIndex === 2 && (
                         <motion.span
                           key={2}
@@ -432,30 +469,16 @@ export default function Home({
                             y: { duration: 2.2 },
                             opacity: { duration: 2.2 },
                           }}
-                          className="absolute pt-3 text-red"
+                          className="absolute text-red"
                         >
                           design
-                          <motion.div
-                            variants={underlineVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                              width: { duration: 0.81 },
-                              opacity: { duration: 0.7 },
-                            }}
-                            className={`flex flex-col pt-3 ${CustomEase} `}
-                          >
-                            <hr className="h-1 border-none bg-red w-full" />
-                            <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                            <hr className="h-1 border-none bg-yellow w-full" />
-                          </motion.div>
                         </motion.span>
                       )}
-                    </AnimatePresence>
+                       <KeywordUnderline index={2} /> */}
                   </div>
                 </div>
-                {/* <div
+              </div>
+              {/* <div
                   className={`flex flex-col pt-3 transition-all delay-500 ${CustomEase} duration-1000 ${
                     wordIndex !== 0
                       ? wordIndex === 1
@@ -468,7 +491,6 @@ export default function Home({
                   <hr className="h-1 my-1 border-none bg-green-blue w-full" />
                   <hr className="h-1 border-none bg-yellow w-full" />
                 </div> */}
-              </div>
             </div>
             {/* )} */}
           </motion.div>

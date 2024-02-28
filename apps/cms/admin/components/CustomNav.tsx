@@ -95,9 +95,15 @@ const apps = [
       [
         'Curriculum',
         [
-          { label: 'Undergraduate', url: '/undergraduates' },
-          { label: 'Graduate', url: '/graduates' },
-          { label: 'Learning Partners', url: '/learning-partners' },
+          {
+            label: 'Undergraduate',
+            url: '/undergraduates/cll1crttb0000bn40eaofm1az',
+          },
+          { label: 'Graduate', url: '/graduates/cll1do7pe0002bn400g79mirw' },
+          {
+            label: 'Learning Partners',
+            url: '/learning-partners/cll1ciwqb0000bnmljrjacnkf',
+          },
         ],
       ],
       [
@@ -127,7 +133,7 @@ const apps = [
     ]),
     listItems: [
       {
-        label: 'Blurbs / Landing Pages',
+        label: 'Miscellaneous Blurbs',
         url: '/initiatives-landings/clj4hyoh90000bn0kcd669525',
       },
       {

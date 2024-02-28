@@ -133,7 +133,7 @@ const apps = [
     ]),
     listItems: [
       {
-        label: 'Blurbs / Landing Pages',
+        label: 'Miscellaneous Blurbs',
         url: '/initiatives-landings/clj4hyoh90000bn0kcd669525',
       },
       {

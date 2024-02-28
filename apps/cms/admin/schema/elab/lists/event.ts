@@ -76,16 +76,16 @@ const Event: Lists.Event = list({
       },
     }),
     registrationLink: text(),
-    address: text({
-      ui: {
-        displayMode: 'textarea',
-      },
-    }),
+    address: text(),
     blurb: document({
       formatting: true,
+      links: true,
+      label: 'Event Intro',
       ui: {
-        description: 'Appears when item is featured.',
+        description: 'Appears to right of header image',
+        views: './admin/components/component-blocks',
       },
+      componentBlocks,
     }),
     content: document({
       formatting: {

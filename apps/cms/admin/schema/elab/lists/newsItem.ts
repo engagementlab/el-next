@@ -80,11 +80,11 @@ const NewsItem: Lists.NewsItem = list({
           'This field is purely cosmetic, not to schedule this item for future publishing. News items for the future should not be enabled until ready for review and publishing.',
       },
     }),
-    source: text({
+    /* source: text({
       ui: {
         description: 'e.g. The Boston Globe, CommonWealth Magazine',
       },
-    }),
+    }), */
     linkHelper: helper({
       html: 'If external link is used, <em>body</em> is not required.',
       iconType: HelperIcon.info,
@@ -102,6 +102,7 @@ const NewsItem: Lists.NewsItem = list({
     }),
     blurb: document({
       formatting: true,
+      label: 'News Item Intros',
       ui: {
         description: 'Appears when item is featured.',
       },

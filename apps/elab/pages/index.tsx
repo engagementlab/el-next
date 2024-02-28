@@ -564,7 +564,7 @@ export default function Home({
 export async function getStaticProps() {
   const orderingQuery = await Query(
     'initiativesLanding',
-    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
+    `initiativesLanding(where: { name: "Miscellaneous Blurbs" }) {
         homepageOrder
       }`
   );

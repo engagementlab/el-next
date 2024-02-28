@@ -392,7 +392,7 @@ export async function getStaticProps() {
 
   const initiativeBlurbs = await Query(
     'initiativesLanding',
-    `initiativesLanding(where: { name: "Blurbs / Landing Pages" }) {
+    `initiativesLanding(where: { name: "Miscellaneous Blurbs" }) {
         projectsBlurb {
           document
         }

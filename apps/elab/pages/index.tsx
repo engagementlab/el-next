@@ -47,7 +47,7 @@ export default function Home({
   const [didScroll, setDidScroll] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
-  // const [wordUnderlineIndex, setWordUnderlineIndex] = useState(0);
+  const [underlineOrder, setWordUnderlineOrder] = useState([0, 1, 2]);
 
   const targetRef = useRef<HTMLDivElement>(null);
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
@@ -55,15 +55,15 @@ export default function Home({
 
   const wordVariants = {
     enter: {
-      x: -250,
+      y: -250,
       opacity: 0,
     },
     center: {
-      x: 0,
+      y: 0,
       opacity: 1,
     },
     exit: {
-      x: 450,
+      y: 450,
       opacity: 0,
     },
   };
@@ -233,62 +233,66 @@ export default function Home({
   const KeywordUnderline = ({ index }: { index: number }) => {
     // if (wordUnderlineIndex === index)
     return (
-      <div key={`underline-${index}`} className="flex flex-col pt-3">
-        <motion.hr
-          variants={{
-            enter: {
-              width: 0,
-              opacity: 0,
-            },
-            center: {
-              width: '100%',
-              opacity: 1,
-            },
-            exit: {
-              x: -40,
-              height: 20,
-              marginTop: 0,
-              marginBottom: 0,
-              // opacity: 0,
-            },
-          }}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            width: { duration: 0.71 },
-            opacity: { duration: 0.7 },
-            y: { duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] },
-            // delay: 0.2,
-          }}
-          className="h-1 border-none bg-red w-full"
-        />
-        <motion.hr
-          variants={underlineVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            width: { duration: 4.81 },
-            opacity: { duration: 0.5 },
-            y: { duration: 0.4 },
-            // delay: 0.4,
-          }}
-          className="h-1 my-1 border-none bg-green-blue w-full"
-        />
-        <motion.hr
-          variants={underlineVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            width: { duration: 3.81 },
-            opacity: { duration: 0.7 },
-            y: { duration: 0.41 },
-            // delay: 1,
-          }}
-          className="h-1 border-none bg-yellow w-full"
-        />
+      <div className="flex flex-col pt-3">
+        {underlineOrder.map((underlineI) => (
+          <>
+            {underlineI === 0 && (
+              <hr
+                // variants={{
+                //   enter: {
+                //     width: 0,
+                //     opacity: 0,
+                //   },
+                //   center: {
+                //     width: '100%',
+                //     opacity: 1,
+                //   },
+                //   exit: {
+                //     x: -40,
+                //     height: 20,
+                //     marginTop: 0,
+                //     marginBottom: 0,
+                //     // opacity: 0,
+                //   },
+                // }}
+                // initial="enter"
+                // animate="center"
+                // exit="exit"
+                className="h-1 border-none bg-red w-full"
+              />
+            )}
+            <motion.hr
+              // variants={underlineVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={
+                {
+                  // width: { duration: 4.81 },
+                  // opacity: { duration: 0.5 },
+                  // y: { duration: 0.4 },
+                  // delay: 0.4,
+                }
+              }
+              className="h-1 my-1 border-none bg-green-blue w-full"
+            />
+            <motion.hr
+              // variants={underlineVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={
+                {
+                  // width: { duration: 3.81 },
+                  // opacity: { duration: 0.7 },
+                  // y: { duration: 0.41 },
+                  // delay: 1,
+                }
+              }
+              className="h-1 border-none bg-yellow w-full"
+            />
+          </>
+        ))}
       </div>
     );
     // return <></>;
@@ -403,7 +407,7 @@ export default function Home({
     >
       <Gutter noMarginY={true}>
         <div id="tagline" className="flex static flex-col pt-14">
-          <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
+          <div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
             <div className="text-slate w-3/4 drop-shadow-[0px_0px_15px_#fff]">
               Advancing&nbsp;
               <span className="inline-block text-purple">
@@ -418,93 +422,85 @@ export default function Home({
               <br />
               <div className="flex h-20">
                 through collaborative&nbsp;
-                <div className="relative flex xl:inline-flex font-extrabold overflow-hidden h-8 w-72 md:h-24 mt-12">
-                  <div className="text-yellow ">
-                    <AnimatePresence>
-                      {wordIndex === 0 && (
-                        <motion.div
-                          key={0}
-                          variants={wordVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            x: { duration: 1.5 },
-                            opacity: { duration: 0.5 },
-                            delay: 0.5,
-                            transition: {
-                              delayChildren: 0.5,
-                            },
-                          }}
-                          className="absolute inline-block"
-                        >
-                          storytelling
-                          {<KeywordUnderline index={1} />}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <div className="text-green inline-block">
-                    <AnimatePresence>
-                      {wordIndex === 1 && (
-                        <motion.div
-                          key={1}
-                          variants={wordVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            // y: { type: 'spring', stiffness: 300, damping: 30 },
-                            // opacity: { duration: 0.2 },
+                <div className="flex flex-col font-extrabold">
+                  <div className="overflow-hidden h-8 w-72 md:h-12">
+                    <div className="relative">
+                      <div className="text-yellow ">
+                        <AnimatePresence>
+                          {wordIndex === 0 && (
+                            <motion.div
+                              key={0}
+                              variants={wordVariants}
+                              initial="enter"
+                              animate="center"
+                              exit="exit"
+                              transition={{
+                                x: { duration: 1.5 },
+                                opacity: { duration: 0.5 },
+                                delay: 0.5,
+                                transition: {
+                                  delayChildren: 0.5,
+                                },
+                              }}
+                              className="absolute inline-block"
+                            >
+                              storytelling
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                      <div className="text-green">
+                        <AnimatePresence>
+                          {wordIndex === 1 && (
+                            <motion.div
+                              key={1}
+                              variants={wordVariants}
+                              initial="enter"
+                              animate="center"
+                              exit="exit"
+                              transition={{
+                                // y: { type: 'spring', stiffness: 300, damping: 30 },
+                                // opacity: { duration: 0.2 },
 
-                            y: { duration: 1.2 },
-                            opacity: { duration: 2.2 },
-                          }}
-                          className="absolute inline-block"
-                        >
-                          research
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                                y: { duration: 1.2 },
+                                opacity: { duration: 2.2 },
+                              }}
+                              className="absolute inline-block"
+                            >
+                              research
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                      <div className="text-red">
+                        <AnimatePresence>
+                          {wordIndex === 2 && (
+                            <motion.div
+                              key={2}
+                              variants={wordVariants}
+                              initial="enter"
+                              animate="center"
+                              exit="exit"
+                              transition={{
+                                y: { duration: 2.2 },
+                                opacity: { duration: 2.2 },
+                              }}
+                              className="absolute inline-block"
+                            >
+                              design
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-red">
-                    <AnimatePresence>
-                      {wordIndex === 2 && (
-                        <motion.div
-                          key={2}
-                          variants={wordVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            y: { duration: 2.2 },
-                            opacity: { duration: 2.2 },
-                          }}
-                          className="absolute inline-block"
-                        >
-                          design
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                  <KeywordUnderline index={1} />
+                  {/* <hr className="border-none bg-red w-full h-1 translate-y-12" /> */}
+                  {/* <hr /> */}
                 </div>
               </div>
-              {/* <div
-                  className={`flex flex-col pt-3 transition-all delay-500 ${CustomEase} duration-1000 ${
-                    wordIndex !== 0
-                      ? wordIndex === 1
-                        ? 'w-[11vw]'
-                        : 'w-[8vw]'
-                      : ' w-[15vw]'
-                  }`}
-                >
-                  <hr className="h-1 border-none bg-red w-full" />
-                  <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                  <hr className="h-1 border-none bg-yellow w-full" />
-                </div> */}
             </div>
-            {/* )} */}
-          </motion.div>
+          </div>
         </div>
 
         <AnimatePresence>

@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import { AnimatePresence, Variants, motion, wrap } from 'framer-motion';
-import Player from '@vimeo/player';
-import _ from 'lodash';
-// import canAutoPlay from 'can-autoplay';
+import {
+  AnimatePresence,
+  Transition,
+  Variants,
+  cubicBezier,
+  motion,
+  wrap,
+} from 'framer-motion';
 
 import { Image, Query } from '@el-next/components';
 import Layout from '../components/Layout';
@@ -29,6 +33,7 @@ import {
   StudioUnion,
 } from '@/types';
 import { MoreButton } from '@/components/Buttons';
+import _ from 'lodash';
 
 type Home = {
   newsItem?: News;
@@ -53,38 +58,15 @@ export default function Home({
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
   const bgVideoRef = useRef();
 
-  const wordVariants = {
-    enter: {
-      y: -250,
-      opacity: 0,
+  const wordTransition: Transition = {
+    y: {
+      type: 'tween',
+      duration: 1.8,
+      ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
     },
-    center: {
-      y: 0,
-      opacity: 1,
-    },
-    exit: {
-      y: 450,
-      opacity: 0,
-    },
+    opacity: { duration: 1.1 },
   };
-  const underlineVariants: Variants = {
-    enter: {
-      width: 0,
-      opacity: 0,
-    },
-    center: {
-      width: '100%',
-      opacity: 1,
-    },
-    exit: {
-      y: -40,
-      // height: 20,
-      marginTop: 0,
-      marginBottom: 0,
-      // opacity: 0,
-    },
-  };
-  const definitionVariants = {
+  const wordVariants: Variants = {
     enter: {
       y: -50,
       opacity: 0,
@@ -95,6 +77,20 @@ export default function Home({
     },
     exit: {
       y: 50,
+      opacity: 0,
+    },
+  };
+  const definitionVariants: Variants = {
+    enter: {
+      y: 50,
+      opacity: 0,
+    },
+    center: {
+      y: 0,
+      opacity: 1,
+    },
+    exit: {
+      y: -50,
       opacity: 0,
     },
   };
@@ -181,18 +177,10 @@ export default function Home({
   useEffect(() => {
     const interval = setInterval(() => {
       setWordIndex((wordIndex) => wrap(0, 3, wordIndex + 1));
-
-      // setInterval(() => {
-      //   setWordUnderlineIndex((wordUnderlineIndex) =>
-      //     wrap(0, 3, wordUnderlineIndex + 1)
-      //   );
-      // }, 4500);
+      setWordUnderlineOrder([...underlineOrder.slice(1, 3), underlineOrder[0]]);
     }, 3500);
     return () => clearInterval(interval);
   }, [wordIndex]);
-  // useEffect(() => {
-  //   // return () => clearInterval(interval);
-  // }, [wordUnderlineIndex]);
 
   const Definition = ({
     word,
@@ -213,8 +201,8 @@ export default function Home({
           animate="center"
           exit="exit"
           transition={{
-            y: { duration: 1.5 },
-            opacity: { duration: 1 },
+            y: { duration: 1, ease: cubicBezier(0.075, 0.82, 0.165, 1.0) },
+            opacity: { duration: 0.8 },
           }}
           className="h-full flex items-center"
         >
@@ -222,80 +210,18 @@ export default function Home({
             className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
           >
             <p className="flex flex-row w-3/4 justify-start items-center">
-              {word} <em className="text-sm font-semibold ml-3">noun</em>
+              {word}{' '}
+              <em className="text-sm font-semibold ml-3 animate-enterNoun">
+                noun
+              </em>
             </p>
-            <p className="text-grey font-normal text-sm">{define}</p>
+            <p className="text-grey font-normal text-sm animate-unBlur">
+              {define}
+            </p>
           </motion.div>
         </motion.div>
       );
     return <></>;
-  };
-  const KeywordUnderline = ({ index }: { index: number }) => {
-    // if (wordUnderlineIndex === index)
-    return (
-      <div className="flex flex-col pt-3">
-        {underlineOrder.map((underlineI) => (
-          <>
-            {underlineI === 0 && (
-              <hr
-                // variants={{
-                //   enter: {
-                //     width: 0,
-                //     opacity: 0,
-                //   },
-                //   center: {
-                //     width: '100%',
-                //     opacity: 1,
-                //   },
-                //   exit: {
-                //     x: -40,
-                //     height: 20,
-                //     marginTop: 0,
-                //     marginBottom: 0,
-                //     // opacity: 0,
-                //   },
-                // }}
-                // initial="enter"
-                // animate="center"
-                // exit="exit"
-                className="h-1 border-none bg-red w-full"
-              />
-            )}
-            <motion.hr
-              // variants={underlineVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={
-                {
-                  // width: { duration: 4.81 },
-                  // opacity: { duration: 0.5 },
-                  // y: { duration: 0.4 },
-                  // delay: 0.4,
-                }
-              }
-              className="h-1 my-1 border-none bg-green-blue w-full"
-            />
-            <motion.hr
-              // variants={underlineVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={
-                {
-                  // width: { duration: 3.81 },
-                  // opacity: { duration: 0.7 },
-                  // y: { duration: 0.41 },
-                  // delay: 1,
-                }
-              }
-              className="h-1 border-none bg-yellow w-full"
-            />
-          </>
-        ))}
-      </div>
-    );
-    // return <></>;
   };
 
   const EventsRenderer = ({
@@ -420,10 +346,20 @@ export default function Home({
               </div>
               <span className="text-purple">justice</span>
               <br />
-              <div className="flex h-20">
+              <div className="flex flex-col lg:flex-row h-20">
                 through collaborative&nbsp;
-                <div className="flex flex-col font-extrabold">
-                  <div className="overflow-hidden h-8 w-72 md:h-12">
+                <div
+                  className={`flex flex-col font-extrabold ${
+                    wordIndex !== 0
+                      ? wordIndex === 1
+                        ? 'w-[4.1em]'
+                        : 'w-[3.1em]'
+                      : 'w-[5.5em]'
+                  }`}
+                >
+                  <div
+                    className={`flex lg:inline-flex flex-col transition-all duration-700 overflow-hidden h-8 md:h-12`}
+                  >
                     <div className="relative">
                       <div className="text-yellow ">
                         <AnimatePresence>
@@ -434,14 +370,7 @@ export default function Home({
                               initial="enter"
                               animate="center"
                               exit="exit"
-                              transition={{
-                                x: { duration: 1.5 },
-                                opacity: { duration: 0.5 },
-                                delay: 0.5,
-                                transition: {
-                                  delayChildren: 0.5,
-                                },
-                              }}
+                              transition={wordTransition}
                               className="absolute inline-block"
                             >
                               storytelling
@@ -458,13 +387,7 @@ export default function Home({
                               initial="enter"
                               animate="center"
                               exit="exit"
-                              transition={{
-                                // y: { type: 'spring', stiffness: 300, damping: 30 },
-                                // opacity: { duration: 0.2 },
-
-                                y: { duration: 1.2 },
-                                opacity: { duration: 2.2 },
-                              }}
+                              transition={wordTransition}
                               className="absolute inline-block"
                             >
                               research
@@ -481,10 +404,7 @@ export default function Home({
                               initial="enter"
                               animate="center"
                               exit="exit"
-                              transition={{
-                                y: { duration: 2.2 },
-                                opacity: { duration: 2.2 },
-                              }}
+                              transition={wordTransition}
                               className="absolute inline-block"
                             >
                               design
@@ -494,9 +414,19 @@ export default function Home({
                       </div>
                     </div>
                   </div>
-                  <KeywordUnderline index={1} />
-                  {/* <hr className="border-none bg-red w-full h-1 translate-y-12" /> */}
-                  {/* <hr /> */}
+
+                  {underlineOrder.map((underlineI, i) => {
+                    const colors = ['bg-yellow', 'bg-green', 'bg-red'];
+                    return (
+                      <motion.hr
+                        key={`u-${underlineI}`}
+                        layout
+                        className={`h-1 border-none w-full ${
+                          colors[underlineI]
+                        } ${i === 0 ? 'animate-fill' : 'mt-1'}`}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </div>

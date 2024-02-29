@@ -37,6 +37,37 @@ module.exports = {
           raw: '(orientation: landscape)',
         },
       },
+      animation: {
+        fill: 'fillBar 3500ms cubic-bezier(0.785, 0.135, 0.150, 0.860) forwards',
+        enterNoun:
+          'enterFromTop 900ms cubic-bezier(0.785, 0.135, 0.150, 0.860) forwards',
+        unBlur:
+          'fromBlur 750ms cubic-bezier(0.785, 0.135, 0.150, 0.860) forwards',
+      },
+      keyframes: {
+        fromBlur: {
+          '0%': { filter: 'blur(4px)' },
+          '100%': { filter: 'blur(0px)' },
+        },
+        fillBar: {
+          '0%': {
+            width: 0,
+          },
+          '100%': {
+            width: '100%',
+          },
+        },
+        enterFromTop: {
+          '0%': {
+            opacity: 0,
+            transform: 'translateY(-50%)',
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translate(0)',
+          },
+        },
+      },
     },
     colors: {
       black: '#000',

@@ -52,11 +52,7 @@ export default function NewsItem({
             <h1 className="text-coated text-4xl font-extrabold mt-5">
               {item.title}
             </h1>
-            {item.source && (
-              <h2 className="text-coated text-1xl mt-5">
-                <span className="italic">Source:</span> {item.source}
-              </h2>
-            )}
+
             <div className="text-coated text-2xl my-5 font-medium">
               {new Date(item.publishDate).toLocaleDateString('en-US', {
                 weekday: 'long',
@@ -121,7 +117,6 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        title 
        blurb { document }
        publishDate
-       source
        thumbnail { 
            publicId
        }

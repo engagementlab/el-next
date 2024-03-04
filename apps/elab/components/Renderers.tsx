@@ -321,17 +321,24 @@ const StudioGenericItemRenderer = (props: {
   item: StudioUnion;
   showBorder: boolean;
 }) => {
+  const multiInitiative =
+    'initiatives' in props.item && props.item.initiatives.length === 1;
   let borderColor = 'border-yellow';
-  if ('initiatives' in props.item && props.item.initiatives.length === 1) {
-    if (props.item.initiatives[0] === 'gunviolence')
-      borderColor = 'border-purple';
-    else if (props.item.initiatives[0] === 'climate')
-      borderColor = 'border-leaf';
-  } else {
-    if (props.item.initiative === 'gunviolence') borderColor = 'border-purple';
-    else if (props.item.initiative === 'climate') borderColor = 'border-leaf';
-  }
+  let textColor = 'text-yellow';
 
+  if (
+    (multiInitiative && props.item.initiatives[0] === 'gunviolence') ||
+    (!multiInitiative && props.item.initiative === 'gunviolence')
+  ) {
+    borderColor = Theming['tngv'].border;
+    textColor = Theming['tngv'].text;
+  } else if (
+    (multiInitiative && props.item.initiatives[0] === 'climate') ||
+    (!multiInitiative && props.item.initiative === 'climate')
+  ) {
+    borderColor = 'border-leaf';
+    textColor = Theming['tnej'].text;
+  }
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -373,6 +380,14 @@ const StudioGenericItemRenderer = (props: {
         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
           {props.item.name}
         </h3>
+        {props.item.semester && (
+          <p className={`mt-1 uppercase font-extrabold text-sm ${textColor}`}>
+            {props.item.semester[0].name.substring(
+              0,
+              props.item.semester[0].name.indexOf('-') - 1
+            )}
+          </p>
+        )}
         <p>{props.item.shortDescription}</p>
       </Link>
     </motion.div>

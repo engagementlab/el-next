@@ -382,6 +382,9 @@ export async function getStaticProps() {
       filters {
         key
       }
+      semester {
+        name
+      }
 			shortDescription 
 			initiative
 			thumbnail { 

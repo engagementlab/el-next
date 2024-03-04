@@ -572,7 +572,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                     <path d="M484-247q16 0 27-11t11-27q0-16-11-27t-27-11q-16 0-27 11t-11 27q0 16 11 27t27 11Zm-35-146h59q0-26 6.5-47.5T555-490q31-26 44-51t13-55q0-53-34.5-85T486-713q-49 0-86.5 24.5T345-621l53 20q11-28 33-43.5t52-15.5q34 0 55 18.5t21 47.5q0 22-13 41.5T508-512q-30 26-44.5 51.5T449-393Zm31 313q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" />
                   </svg>
                 </div>
-                <aside className=" opacity-0 absolute max-w-xs bg-stone text-xs text-white p-4 group-hover:opacity-100 -translate-x-12 -translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                <aside className="opacity-0 absolute max-w-xs bg-stone text-xs text-white p-4 group-hover:opacity-100 -translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                   This version of this app is a work-in-progress build and
                   shouldn't be shared with the wider public.
                 </aside>

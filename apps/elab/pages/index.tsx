@@ -350,7 +350,7 @@ export default function Home({
               alt="A group of people sitting around a table"
               imgId="elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8"
               width={1800}
-              className={`absolute top-0 h-[80vh] w-full ${
+              className={`absolute top-0 h-[100vh] w-full ${
                 videoFallback ? 'block' : 'hidden'
               }`}
             />
@@ -382,7 +382,7 @@ export default function Home({
                   playsInline={true}
                   muted={true}
                   loop={true}
-                  poster="https://res.cloudinary.com/engagement-lab-home/image/upload/c_mpad,g_center,w_1024/v1709055933/elab-home-v3.x/loading.gif"
+                  poster="https://res.cloudinary.com/engagement-lab-home/image/upload/c_mpad,g_center,w_1024/v1709576469/elab-home-v3.x/loading.gif"
                   className="w-full"
                 ></video>
               </div>

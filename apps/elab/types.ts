@@ -1,6 +1,24 @@
+type Category = 'core' | 'studentstaff' | 'fellow';
+type Initiative = 'gunviolence' | 'climate';
+
 export interface Breadcrumb {
   href: string;
   label: string;
+}
+
+export interface ThemeConfig {
+  arrow: string;
+  secodaryArrow: string;
+  text: string;
+  heading: string;
+  bg: string;
+  border: string;
+  borderLight: string;
+  fill: string;
+  gradient: string;
+  secodaryBg: string;
+  secodary: string;
+  theme: Theme;
 }
 
 export const enum Theme {
@@ -8,6 +26,19 @@ export const enum Theme {
   gunviolence,
   climate,
   incarceration,
+}
+
+export enum Partner {
+  all,
+  ficdc,
+  greenroots,
+  ldbpi,
+  mgh,
+  magv,
+  sftt,
+  swbcdc,
+  teenempowerment,
+  uncornered,
 }
 
 export const ThemeColors = [
@@ -30,21 +61,6 @@ export const ThemeColors = [
     secondaryHex: '#F6A536',
   },
 ];
-
-export interface ThemeConfig {
-  arrow: string;
-  secodaryArrow: string;
-  text: string;
-  heading: string;
-  bg: string;
-  border: string;
-  borderLight: string;
-  fill: string;
-  gradient: string;
-  secodaryBg: string;
-  secodary: string;
-  theme: Theme;
-}
 
 export const Theming: { [key: string]: ThemeConfig } = {
   none: {
@@ -106,129 +122,15 @@ export const Theming: { [key: string]: ThemeConfig } = {
   },
 };
 
-export enum Partner {
-  all,
-  ficdc,
-  greenroots,
-  ldbpi,
-  mgh,
-  magv,
-  sftt,
-  swbcdc,
-  teenempowerment,
-  uncornered,
-}
-
-export type Studio = {
-  name: string;
-  key: string;
-  flags: string[];
-  order: number;
-  initiatives: string[];
-  shortDescription: string;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-};
-export type StudioProject = {
-  name: string;
-  key: string;
-  home: boolean;
-  order: number;
-  initiative: string;
-  blurb: { document: any };
-
-  about: {
-    document: any;
-  };
-
-  filters: {
-    key: string;
-    name: string;
-  }[];
-  trailerId: string;
-  videoId: string;
-  buttons: any[];
-  semester: {
-    name: string;
-  };
-
-  partners: string[];
-  coCreation: {
-    document: any;
-  };
-  impact: {
-    document: any;
-  };
-  shortDescription: string;
-  thumbnail: {
-    publicId: string;
-    publicUrl?: string;
-  };
-  thumbAltText: string;
-  trailerThumbnail: {
-    publicUrl: string;
-  };
-  trailerThumbAltText: string;
-  instructors: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  learningPartners: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  studioStudents: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  studioStaff: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-};
-export type StudioUnion = Studio & StudioProject;
-
-export type News = {
-  title: string;
-  key: string;
-  home: boolean;
-  order: number;
-  initiatives: string[];
-  publishDate: string;
-  blurb: { document: any };
-  body: any;
-  thumbnail: {
-    publicId: string;
-  };
-  thumbAltText: string;
-  externalLink?: string;
-  summary: string;
-  source: string;
-};
+/* 
+  Page item types
+*/
 export type Event = {
   name: string;
   key: string;
   flags: string[];
   order: number;
-  initiatives: string[];
+  initiatives: Initiative[];
   eventDate: string;
   blurb: { document: any };
   registrationLink?: string;
@@ -240,6 +142,48 @@ export type Event = {
   thumbAltText: string;
   summary: string;
 } & OGParams;
+export type News = {
+  title: string;
+  key: string;
+  home: boolean;
+  order: number;
+  initiatives: Initiative[];
+  publishDate: string;
+  blurb: { document: any };
+  body: any;
+  thumbnail: {
+    publicId: string;
+  };
+  thumbAltText: string;
+  externalLink?: string;
+  summary: string;
+  source: string;
+} & OGParams;
+export type Person = {
+  name: string;
+  key: string;
+  title: string;
+  secondaryTitle?: string;
+  image: {
+    publicId: string;
+  };
+  category?: Category;
+  content?: {
+    document: any;
+  };
+};
+export type Publication = {
+  title: string;
+  citations: any;
+  buttons: {
+    label: string;
+    url: string;
+    icon: string;
+  }[];
+  relatedProject?: {
+    key: string;
+  };
+};
 export type ResearchProject = {
   name: string;
   type: string;
@@ -302,37 +246,95 @@ export type ResearchProject = {
     buttons: any[];
   };
 };
-
-export type Publication = {
-  title: string;
-  citations: any;
-  buttons: {
-    label: string;
-    url: string;
-    icon: string;
-  }[];
-  relatedProject?: {
-    key: string;
+export type Studio = {
+  name: string;
+  key: string;
+  flags: string[];
+  order: number;
+  initiatives: Initiative[];
+  shortDescription: string;
+  thumbnail: {
+    publicId: string;
   };
+  thumbAltText: string;
 };
+export type StudioProject = {
+  name: string;
+  key: string;
+  home: boolean;
+  order: number;
+  initiative: 'gunviolence' | 'climate';
+  blurb: { document: any };
+
+  about: {
+    document: any;
+  };
+
+  filters: {
+    key: string;
+    name: string;
+  }[];
+  trailerId: string;
+  videoId: string;
+  buttons: any[];
+  semester: {
+    name: string;
+  }[];
+
+  partners: string[];
+  coCreation: {
+    document: any;
+  };
+  impact: {
+    document: any;
+  };
+  shortDescription: string;
+  thumbnail: {
+    publicId: string;
+    publicUrl?: string;
+  };
+  thumbAltText: string;
+  trailerThumbnail: {
+    publicUrl: string;
+  };
+  trailerThumbAltText: string;
+  instructors: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  learningPartners: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  studioStudents: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  studioStaff: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+};
+export type StudioUnion = Studio & StudioProject;
 
 export type Item = News & Event & StudioProject;
 export type Project = ResearchProject & StudioProject;
-
-type Category = 'core' | 'studentstaff' | 'fellow';
-export type Person = {
-  name: string;
-  key: string;
-  title: string;
-  secondaryTitle?: string;
-  image: {
-    publicId: string;
-  };
-  category?: Category;
-  content?: {
-    document: any;
-  };
-};
 
 // Open Graph parameters
 export type OGParams = {
@@ -341,7 +343,6 @@ export type OGParams = {
   };
   ogDescription?: string;
 };
-
 export const DefaultOGImageOptions = {
   width: 600,
   transforms: 'f_auto,dpr_auto,c_thumb,g_custom:faces',

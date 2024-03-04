@@ -170,13 +170,9 @@ export default function AboutPage({
       title={`${item?.name} - About`}
       ogDescription={item.ogDescription}
       ogImageId={
-        item.ogImage
+        item.ogImage && item.ogImage.publicId
           ? item.ogImage.publicId
-          : ImageUrl({
-              imgId: item.headingImage.publicId,
-              width: 600,
-              transforms: `f_auto,dpr_auto,c_thumb,g_custom:faces`,
-            })
+          : item.headingImage.publicId
       }
     >
       {item && (

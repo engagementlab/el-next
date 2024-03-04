@@ -23,11 +23,11 @@ export default function NewsItem({
       breadcrumbs={[{ label: 'Back to News & Events', href: '/whats-new' }]}
       title={`${item.title} - News`}
       ogDescription={item.summary}
-      ogImageId={ImageUrl({
-        imgId: item.thumbnail.publicId,
-        width: 600,
-        transforms: `f_auto,dpr_auto,c_thumb,g_face`,
-      })}
+      ogImageId={
+        item.ogImage && item.ogImage.publicId
+          ? item.ogImage.publicId
+          : item.thumbnail.publicId
+      }
     >
       <div className="mt-14">
         <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">

@@ -130,106 +130,52 @@ export default function Home({
       true
     );
     const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
-    // Enable on QA only for now
-    if (process.env.NEXT_PUBLIC_STAGING === 'true') {
-      const videoUrlSuffixPortrait =
-        '855474088/rendition/540p/file.mp4?loc=external&signature=da990294f49e048e5bf3e9d32c58b7b4cf8f1d662eeccfddf5ad25ce056bd2c5';
-      const videoUrlSuffix =
-        '855473995/rendition/540p/file.mp4?loc=external&signature=6b54ff2124a38de9afea47e5c8db79a1a908ac4b7fe02e2304444e5c4159231e';
+    const videoUrlSuffixPortrait =
+      '855474088/rendition/540p/file.mp4?loc=external&signature=da990294f49e048e5bf3e9d32c58b7b4cf8f1d662eeccfddf5ad25ce056bd2c5';
+    const videoUrlSuffix =
+      '855473995/rendition/540p/file.mp4?loc=external&signature=6b54ff2124a38de9afea47e5c8db79a1a908ac4b7fe02e2304444e5c4159231e';
 
-      setBgVideo(bgVideoRef.current);
+    setBgVideo(bgVideoRef.current);
 
-      if (videoPlayerRef.current) {
-        try {
-          videoPlayerRef.current.onplay = () => {
-            // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
-            let height =
-              videoPlayerRef.current!.clientHeight -
-              document.querySelector<HTMLElement>('nav')!.clientHeight -
-              document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
-              parseInt(
-                window
-                  .getComputedStyle(document.getElementById('layout-daddy')!)
-                  .marginTop.replace(/[^0-9-]/g, '')
-              );
-            if (
-              window.matchMedia('(orientation: portrait)').matches &&
-              height > 500
-            )
-              height = 500;
-
-            setVideoHeight(height);
-            setVideoOverlayHeight(
-              videoPlayerRef.current ? videoPlayerRef.current.clientHeight : 0
+    if (videoPlayerRef.current) {
+      try {
+        videoPlayerRef.current.onplay = () => {
+          // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
+          let height =
+            videoPlayerRef.current!.clientHeight -
+            document.querySelector<HTMLElement>('nav')!.clientHeight -
+            document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
+            parseInt(
+              window
+                .getComputedStyle(document.getElementById('layout-daddy')!)
+                .marginTop.replace(/[^0-9-]/g, '')
             );
-            setShowVideo(true);
-          };
+          if (
+            window.matchMedia('(orientation: portrait)').matches &&
+            height > 500
+          )
+            height = 500;
 
-          videoPlayerRef.current.onerror = () => {
-            EnableVideoFallback();
-          };
-          videoPlayerRef.current.src = `https://player.vimeo.com/progressive_redirect/playback/${
-            portraitVideo ? videoUrlSuffixPortrait : videoUrlSuffix
-          }`;
-        } catch (e) {
-          EnableVideoFallback();
-        }
-      }
-    } else {
-      const player = new Player('video-bg', {
-        id: portraitVideo ? 855474088 : 855473995,
-        width: 1640,
-        height: 720,
-        controls: false,
-        autoplay: true,
-        autopause: true,
-        muted: true,
-        loop: true,
-        responsive: true,
-        quality: '720p',
-      });
-
-      player.on('loaded', () => {
-        setShowVideo(true);
-      });
-      player.on('error', () => {
-        EnableVideoFallback();
-      });
-      player.on('resize', (e) => {
-        // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
-        let height =
-          document.querySelector<HTMLElement>('iframe')!.clientHeight -
-          document.querySelector<HTMLElement>('nav')!.clientHeight -
-          document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
-          parseInt(
-            window
-              .getComputedStyle(document.getElementById('layout-daddy')!)
-              .marginTop.replace(/[^0-9-]/g, '')
+          setVideoHeight(height);
+          setVideoOverlayHeight(
+            videoPlayerRef.current ? videoPlayerRef.current.clientHeight : 0
           );
-        if (
-          window.matchMedia('(orientation: portrait)').matches &&
-          height > 500
-        )
-          height = 500;
+          setShowVideo(true);
+        };
 
-        setVideoHeight(height);
-        setVideoOverlayHeight(
-          document.querySelector<HTMLElement>('iframe') !== null
-            ? document.querySelector<HTMLElement>('iframe')!.clientHeight
-            : 0
-        );
-      });
-      player
-        .loadVideo({ id: portraitVideo ? 855474088 : 855473995 })
-        .catch((e) => {
+        videoPlayerRef.current.onerror = () => {
           EnableVideoFallback();
-        });
+        };
+        videoPlayerRef.current.src = `https://player.vimeo.com/progressive_redirect/playback/${
+          portraitVideo ? videoUrlSuffixPortrait : videoUrlSuffix
+        }`;
+      } catch (e) {
+        EnableVideoFallback();
+      }
     }
   }, [bgVideoRef]);
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_STAGING !== 'true') return;
-
     const interval = setInterval(() => {
       setWordIndex((wordIndex) => wrap(0, 3, wordIndex + 1));
       setWordUnderlineOrder([...underlineOrder.slice(1, 3), underlineOrder[0]]);
@@ -248,34 +194,6 @@ export default function Home({
     index: number;
     color: string;
   }) => {
-    if (process.env.NEXT_PUBLIC_STAGING !== 'true')
-      return (
-        <div className="h-full flex items-center">
-          <motion.div
-            initial={{
-              opacity: 0,
-              filter: 'drop-shadow(0px 0px 13px #fff) blur(5px)',
-            }}
-            whileInView={{
-              opacity: 1,
-              filter: 'drop-shadow(0px 0px 13px #fff) blur(0px)',
-            }}
-            viewport={{ root: targetRef, amount: 'all' }}
-            onViewportEnter={() => {
-              if (didScroll) {
-                setWordIndex(index);
-              }
-            }}
-            className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
-          >
-            <p className="flex flex-row w-3/4 justify-start items-center">
-              {word} <em className="text-sm font-semibold ml-3">noun</em>
-            </p>
-            <p className="text-grey font-normal text-sm">{define}</p>
-          </motion.div>
-        </div>
-      );
-
     if (wordIndex === index)
       return (
         <motion.div
@@ -368,34 +286,24 @@ export default function Home({
             />
           )}
 
-          {!videoFallback &&
-            (process.env.NEXT_PUBLIC_STAGING === 'true' ? (
-              <div
-                id="video-bg"
-                ref={bgTargetElement}
-                className="absolute top-0 w-full transition-all ${CustomEase} duration-300 opacity-100"
-              >
-                <video
-                  ref={videoPlayerRef}
-                  preload=""
-                  autoPlay={true}
-                  playsInline={true}
-                  muted={true}
-                  loop={true}
-                  poster="https://res.cloudinary.com/engagement-lab-home/image/upload/c_mpad,g_center,w_1024/v1709576469/elab-home-v3.x/loading.gif"
-                  className="w-full"
-                ></video>
-              </div>
-            ) : (
-              <div
-                id="video-bg"
-                ref={bgTargetElement}
-                className={`absolute top-0 h-screen w-full min-h-screen transition-all ${CustomEase} duration-300  ${
-                  showVideo ? 'block' : 'hidden'
-                }`}
-                style={{ height: vidH }}
-              ></div>
-            ))}
+          {!videoFallback && (
+            <div
+              id="video-bg"
+              ref={bgTargetElement}
+              className="absolute top-0 w-full transition-all ${CustomEase} duration-300 opacity-100"
+            >
+              <video
+                ref={videoPlayerRef}
+                preload=""
+                autoPlay={true}
+                playsInline={true}
+                muted={true}
+                loop={true}
+                poster="https://res.cloudinary.com/engagement-lab-home/image/upload/c_mpad,g_center,w_1024/v1709576469/elab-home-v3.x/loading.gif"
+                className="w-full"
+              ></video>
+            </div>
+          )}
 
           <div
             className={`absolute top-0 w-full bg-gradient-to-b from-[#EFC3C0] via-[#CDE6E1] to-[#F4E3C5] ${
@@ -425,218 +333,123 @@ export default function Home({
       error={error}
     >
       <Gutter noMarginY={true}>
-        {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
-          <>
-            <div id="tagline" className="flex static flex-col pt-14">
-              <div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
-                <div className="text-slate w-3/4 drop-shadow-[0px_0px_15px_#fff]">
-                  Advancing&nbsp;
-                  <span className="inline-block text-purple">
-                    peace<span className="text-slate">,</span>
-                  </span>
-                  &nbsp;
-                  <div className="inline-block">
-                    <span className="inline-block text-purple">equity</span>,
-                    &&nbsp;
-                  </div>
-                  <span className="text-purple">justice</span>
-                  <br />
-                  <div className="flex flex-col lg:flex-row h-20">
-                    through collaborative&nbsp;
+        <>
+          <div id="tagline" className="flex static flex-col pt-14">
+            <div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
+              <div className="text-slate w-3/4 drop-shadow-[0px_0px_15px_#fff]">
+                Advancing&nbsp;
+                <span className="inline-block text-purple">
+                  peace<span className="text-slate">,</span>
+                </span>
+                &nbsp;
+                <div className="inline-block">
+                  <span className="inline-block text-purple">equity</span>,
+                  &&nbsp;
+                </div>
+                <span className="text-purple">justice</span>
+                <br />
+                <div className="flex flex-col lg:flex-row h-20">
+                  through collaborative&nbsp;
+                  <div
+                    className={`flex flex-col font-extrabold ${
+                      wordIndex !== 0
+                        ? wordIndex === 1
+                          ? 'w-[4.1em]'
+                          : 'w-[3.1em]'
+                        : 'w-[5.5em]'
+                    }`}
+                  >
                     <div
-                      className={`flex flex-col font-extrabold ${
-                        wordIndex !== 0
-                          ? wordIndex === 1
-                            ? 'w-[4.1em]'
-                            : 'w-[3.1em]'
-                          : 'w-[5.5em]'
-                      }`}
+                      className={`flex lg:inline-flex flex-col transition-all duration-700 overflow-hidden h-8 md:h-12`}
                     >
-                      <div
-                        className={`flex lg:inline-flex flex-col transition-all duration-700 overflow-hidden h-8 md:h-12`}
-                      >
-                        <div className="relative">
-                          <div className="text-yellow ">
-                            <AnimatePresence>
-                              {wordIndex === 0 && (
-                                <motion.div
-                                  key={0}
-                                  variants={wordVariants}
-                                  initial="enter"
-                                  animate="center"
-                                  exit="exit"
-                                  transition={wordTransition}
-                                  className="absolute inline-block"
-                                >
-                                  storytelling
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
-                          <div className="text-green">
-                            <AnimatePresence>
-                              {wordIndex === 1 && (
-                                <motion.div
-                                  key={1}
-                                  variants={wordVariants}
-                                  initial="enter"
-                                  animate="center"
-                                  exit="exit"
-                                  transition={wordTransition}
-                                  className="absolute inline-block"
-                                >
-                                  research
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
-                          <div className="text-red">
-                            <AnimatePresence>
-                              {wordIndex === 2 && (
-                                <motion.div
-                                  key={2}
-                                  variants={wordVariants}
-                                  initial="enter"
-                                  animate="center"
-                                  exit="exit"
-                                  transition={wordTransition}
-                                  className="absolute inline-block"
-                                >
-                                  design
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
+                      <div className="relative">
+                        <div className="text-yellow ">
+                          <AnimatePresence>
+                            {wordIndex === 0 && (
+                              <motion.div
+                                key={0}
+                                variants={wordVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={wordTransition}
+                                className="absolute inline-block"
+                              >
+                                storytelling
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                        <div className="text-green">
+                          <AnimatePresence>
+                            {wordIndex === 1 && (
+                              <motion.div
+                                key={1}
+                                variants={wordVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={wordTransition}
+                                className="absolute inline-block"
+                              >
+                                research
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                        <div className="text-red">
+                          <AnimatePresence>
+                            {wordIndex === 2 && (
+                              <motion.div
+                                key={2}
+                                variants={wordVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={wordTransition}
+                                className="absolute inline-block"
+                              >
+                                design
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       </div>
-
-                      {underlineOrder.map((underlineI, i) => {
-                        const colors = ['bg-yellow', 'bg-green', 'bg-red'];
-                        return (
-                          <motion.hr
-                            key={`u-${underlineI}`}
-                            layout
-                            className={`h-1 border-none w-full ${
-                              colors[underlineI]
-                            } ${i === 0 ? 'animate-fill' : 'mt-1'}`}
-                          />
-                        );
-                      })}
                     </div>
+
+                    {underlineOrder.map((underlineI, i) => {
+                      const colors = ['bg-yellow', 'bg-green', 'bg-red'];
+                      return (
+                        <motion.hr
+                          key={`u-${underlineI}`}
+                          layout
+                          className={`h-1 border-none w-full ${
+                            colors[underlineI]
+                          } ${i === 0 ? 'animate-fill' : 'mt-1'}`}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <AnimatePresence>
-              {showVideo && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{
-                    opacity: 1,
-                    height: vidH,
-                    transition: { duration: 0.5 },
-                  }}
-                  exit={{ opacity: 0 }}
-                  className="flex justify-center xl:justify-end max-h-screen"
-                  ref={targetRef}
-                >
-                  <div className="w-3/4 xl:w-1/3 h-1/3 relative text-xl font-extrabold">
-                    <AnimatePresence>
-                      <Definition
-                        word="sto•ry•tell​•ing"
-                        define="The art of conveying a narrative or a sequence of events through
-                  spoken, written, or visual means."
-                        index={0}
-                        color="text-yellow"
-                      />
-                      <Definition
-                        word="re•search"
-                        define="The systematic investigation of the observable world"
-                        index={1}
-                        color="text-green"
-                      />
-                      <Definition
-                        word="de•sign"
-                        define="The intentional shaping of futures"
-                        index={2}
-                        color="text-red"
-                      />
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
-        ) : (
-          <>
-            <div id="tagline" className="flex static flex-col pt-14">
-              <motion.div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
-                {/* {showVideo && ( */}
-                <div className="text-slate w-3/4 max-[375px]:break-words drop-shadow-[0px_0px_15px_#fff]">
-                  Advancing&nbsp;
-                  <span className="inline-block text-purple">
-                    peace<span className="text-slate">,</span>
-                  </span>
-                  &nbsp;
-                  <span className="inline-block text-purple">equity</span>,
-                  &&nbsp;
-                  <span className="text-purple">justice</span>
-                  <br />
-                  through collaborative&nbsp;
-                  <div className="inline-flex flex-col font-extrabold">
-                    <div className="overflow-hidden h-8 md:h-12">
-                      <div
-                        className={`inline-flex flex-col transition-all ${CustomEase} duration-300 text-left ${
-                          wordIndex !== 0
-                            ? wordIndex === 1
-                              ? 'translate-y-[-33%]'
-                              : 'translate-y-[-66%]'
-                            : ''
-                        }`}
-                      >
-                        <motion.span className="text-yellow">
-                          storytelling
-                        </motion.span>
-                        <motion.span className="text-green">
-                          research
-                        </motion.span>
-                        <motion.span className="text-red">design</motion.span>
-                      </div>
-                    </div>
-                    <div
-                      className={`flex flex-col transition-all ${CustomEase} duration-300 ${
-                        wordIndex !== 0
-                          ? wordIndex === 1
-                            ? 'w-9/12'
-                            : 'w-7/12'
-                          : ''
-                      }`}
-                    >
-                      <hr className="h-1 border-none bg-red w-full" />
-                      <hr className="h-1 my-1 border-none bg-green-blue w-full" />
-                      <hr className="h-1 border-none bg-yellow w-full" />
-                    </div>
-                  </div>
-                </div>
-                {/* )} */}
-              </motion.div>
-            </div>
-
-            <AnimatePresence>
-              {showVideo && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{
-                    opacity: 1,
-                    height: vidH,
-                    transition: { duration: 0.5 },
-                  }}
-                  exit={{ opacity: 0 }}
-                  className="flex justify-center xl:justify-end overflow-y-scroll no-scrollbar max-h-screen"
-                  ref={targetRef}
-                >
-                  <div className="w-3/4 xl:w-1/3 h-full relative text-xl font-extrabold">
+          <AnimatePresence>
+            {showVideo && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{
+                  opacity: 1,
+                  height: vidH,
+                  transition: { duration: 0.5 },
+                }}
+                exit={{ opacity: 0 }}
+                className="flex justify-center xl:justify-end max-h-screen"
+                ref={targetRef}
+              >
+                <div className="w-3/4 xl:w-1/3 h-1/3 relative text-xl font-extrabold">
+                  <AnimatePresence>
                     <Definition
                       word="sto•ry•tell​•ing"
                       define="The art of conveying a narrative or a sequence of events through
@@ -656,12 +469,12 @@ export default function Home({
                       index={2}
                       color="text-red"
                     />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
-        )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
       </Gutter>
 
       {/* ===== PAGE CONTENT ===== */}
@@ -722,10 +535,6 @@ export default function Home({
                                 return (
                                   <div key={i}>
                                     <div className="flex-shrink">
-                                      {/*  &&
-                                      !item.externalLink.includes(
-                                        'elab.emerson.edu'
-                                      ) */}
                                       {item.externalLink ? (
                                         <a
                                           className="group"

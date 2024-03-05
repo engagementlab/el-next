@@ -16,7 +16,12 @@ import {
   QuoteRenderer,
 } from '../../../components/Renderers';
 
-import { CustomEase, StudioProject, Theming } from '@/types';
+import {
+  CustomEase,
+  DefaultWhereCondition,
+  StudioProject,
+  Theming,
+} from '@/types';
 import { subscribeWithSelector } from 'zustand/middleware';
 import Logos from '@/components/Logos';
 import { ReactElement, ReactNode, useEffect } from 'react';
@@ -384,7 +389,7 @@ export default function Studio({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const items = await Query(
     'studioProjects',
-    `studioProjects {
+    `studioProjects(${DefaultWhereCondition()}) {
         key
     }`
   );

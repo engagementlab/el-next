@@ -10,7 +10,12 @@ import { Image, Query } from '@el-next/components';
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 
-import { ResearchProject, Theme, Theming } from '@/types';
+import {
+  DefaultWhereCondition,
+  ResearchProject,
+  Theme,
+  Theming,
+} from '@/types';
 import Divider from '@/components/Divider';
 import { CTAButton } from '@/components/Buttons';
 import { PeopleList } from '@/components/People';
@@ -210,8 +215,8 @@ export default function ResearchProject({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const items = await Query(
     'researchProjects',
-    `researchProjects {
-        key
+    `researchProjects(${DefaultWhereCondition()}) {
+      key
     }`
   );
   if (items.error) {

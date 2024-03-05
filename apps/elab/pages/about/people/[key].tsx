@@ -10,7 +10,7 @@ import { Image, Query } from '@el-next/components';
 import Layout from '../../../components/Layout';
 import { Blocks, Doc } from '../../../components/Renderers';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { Person } from '@/types';
+import { DefaultWhereCondition, Person } from '@/types';
 
 export default function AboutPage({
   item,
@@ -93,7 +93,7 @@ export default function AboutPage({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const items = await Query(
     'people',
-    `people {
+    `people(${DefaultWhereCondition('category: {not: null}')}) {
         key
     }`
   );

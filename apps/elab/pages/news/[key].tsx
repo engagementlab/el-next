@@ -10,7 +10,7 @@ import { Image, ImageUrl, Query } from '@el-next/components';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import Layout from '../../components/Layout';
 import { Blocks, Doc } from '../../components/Renderers';
-import { News } from '@/types';
+import { DefaultWhereCondition, News } from '@/types';
 
 export default function NewsItem({
   item,
@@ -90,7 +90,7 @@ export default function NewsItem({
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const items = await Query(
     'newsItems',
-    `newsItems {
+    `newsItems(${DefaultWhereCondition()}) {
       key
      }`
   );

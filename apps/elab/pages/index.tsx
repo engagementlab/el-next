@@ -9,6 +9,7 @@ import {
   motion,
   wrap,
 } from 'framer-motion';
+import _ from 'lodash';
 
 import { Image, Query } from '@el-next/components';
 import Layout from '../components/Layout';
@@ -19,6 +20,7 @@ import {
   NewsEventRenderer,
   StudioGenericItemRenderer,
 } from '@/components/Renderers';
+import { MoreButton } from '@/components/Buttons';
 
 import {
   CustomEase,
@@ -32,9 +34,6 @@ import {
   StudioProject,
   StudioUnion,
 } from '@/types';
-import { MoreButton } from '@/components/Buttons';
-import _ from 'lodash';
-import Player from '@vimeo/player';
 
 type Home = {
   newsItem?: News;
@@ -133,14 +132,14 @@ export default function Home({
     const videoUrlSuffixPortrait =
       '855474088/rendition/540p/file.mp4?loc=external&signature=da990294f49e048e5bf3e9d32c58b7b4cf8f1d662eeccfddf5ad25ce056bd2c5';
     const videoUrlSuffix =
-      '855473995/rendition/540p/file.mp4?loc=external&signature=6b54ff2124a38de9afea47e5c8db79a1a908ac4b7fe02e2304444e5c4159231e';
+      '855473995/rendition/720p/file.mp4?loc=external&signature=b8c1e523cef66417157a29c9baf8a66a5d7701eaad2a44d723e71614f664a0fa';
 
     setBgVideo(bgVideoRef.current);
 
     if (videoPlayerRef.current) {
       try {
         videoPlayerRef.current.onplay = () => {
-          // We have to set the height of the video manually because we don't know the height of the iframe until the video is embedded based on the size of the device
+          // We have to set the height of the video manually because we don't know the height of the frame until the video is embedded based on the size of the device
           let height =
             videoPlayerRef.current!.clientHeight -
             document.querySelector<HTMLElement>('nav')!.clientHeight -
@@ -163,7 +162,7 @@ export default function Home({
           setShowVideo(true);
         };
 
-        videoPlayerRef.current.onerror = () => {
+        videoPlayerRef.current.onerror = (e) => {
           EnableVideoFallback();
         };
         videoPlayerRef.current.src = `https://player.vimeo.com/progressive_redirect/playback/${
@@ -197,6 +196,7 @@ export default function Home({
     if (wordIndex === index)
       return (
         <motion.div
+          key={`word-${wordIndex}`}
           variants={definitionVariants}
           initial="enter"
           animate="center"
@@ -207,7 +207,7 @@ export default function Home({
           }}
           className="h-full flex items-center"
         >
-          <motion.div
+          <div
             className={`h-1/5 relative drop-shadow-[0px_0px_10px_#fff] ${color}`}
           >
             <p className="flex flex-row w-3/4 justify-start items-center">
@@ -219,10 +219,10 @@ export default function Home({
             <p className="text-grey font-normal text-sm animate-unBlur">
               {define}
             </p>
-          </motion.div>
+          </div>
         </motion.div>
       );
-    return <></>;
+    return <span key={`word-${wordIndex}`}></span>;
   };
 
   const EventsRenderer = ({
@@ -240,7 +240,7 @@ export default function Home({
         <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
           {events.map((item: Event, i: number) => {
             return (
-              <div key={i}>
+              <div key={`event-${i}`}>
                 <div className="flex-shrink">
                   <Link href={`/events/${item.key}`} className="group">
                     <NewsEventRenderer item={item as Item} i={i} />
@@ -290,7 +290,7 @@ export default function Home({
             <div
               id="video-bg"
               ref={bgTargetElement}
-              className="absolute top-0 w-full transition-all ${CustomEase} duration-300 opacity-100"
+              className="absolute top-0 w-full duration-300 opacity-100"
             >
               <video
                 ref={videoPlayerRef}
@@ -334,8 +334,9 @@ export default function Home({
     >
       <Gutter noMarginY={true}>
         <>
-          <div id="tagline" className="flex static flex-col pt-14">
-            <div className="flex justify-center text-2xl md:text-5xl font-extrabold mt-10 xl:mt-24">
+          {/* --- TAGLINE --- */}
+          <div id="tagline" className="flex static flex-col xl:pt-14">
+            <div className="flex justify-center text-2xl md:text-3xl xl:text-5xl font-extrabold mt-10 xl:mt-24">
               <div className="text-slate w-3/4 drop-shadow-[0px_0px_15px_#fff]">
                 Advancing&nbsp;
                 <span className="inline-block text-purple">
@@ -438,6 +439,7 @@ export default function Home({
           <AnimatePresence>
             {showVideo && (
               <motion.div
+                key="definitions"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{
                   opacity: 1,
@@ -445,31 +447,29 @@ export default function Home({
                   transition: { duration: 0.5 },
                 }}
                 exit={{ opacity: 0 }}
-                className="flex justify-center xl:justify-end max-h-screen"
+                className="flex justify-center xl:justify-end min-h-[10rem] max-h-screen"
                 ref={targetRef}
               >
                 <div className="w-3/4 xl:w-1/3 h-1/3 relative text-xl font-extrabold">
-                  <AnimatePresence>
-                    <Definition
-                      word="sto•ry•tell​•ing"
-                      define="The art of conveying a narrative or a sequence of events through
+                  <Definition
+                    word="sto•ry•tell​•ing"
+                    define="The art of conveying a narrative or a sequence of events through
                   spoken, written, or visual means."
-                      index={0}
-                      color="text-yellow"
-                    />
-                    <Definition
-                      word="re•search"
-                      define="The systematic investigation of the observable world"
-                      index={1}
-                      color="text-green"
-                    />
-                    <Definition
-                      word="de•sign"
-                      define="The intentional shaping of futures"
-                      index={2}
-                      color="text-red"
-                    />
-                  </AnimatePresence>
+                    index={0}
+                    color="text-yellow"
+                  />
+                  <Definition
+                    word="re•search"
+                    define="The systematic investigation of the observable world"
+                    index={1}
+                    color="text-green"
+                  />
+                  <Definition
+                    word="de•sign"
+                    define="The intentional shaping of futures"
+                    index={2}
+                    color="text-red"
+                  />
                 </div>
               </motion.div>
             )}
@@ -500,31 +500,63 @@ export default function Home({
                       sections.events.upcomingEvents.length > 0
                     )
                       return (
-                        <>
+                        <div key="upcoming-events">
                           {index > 0 && <Divider />}
                           <EventsRenderer
                             events={sections.events.upcomingEvents}
                             upcoming={true}
                           />
-                        </>
+                        </div>
                       );
                     else if (
                       sections.events.recentEvents &&
                       sections?.events.recentEvents.length > 0
                     )
                       return (
-                        <>
+                        <div key="events">
                           {index > 0 && <Divider />}
                           <EventsRenderer
                             events={sections?.events.recentEvents}
                           />
-                        </>
+                          <Gutter>
+                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                              Events
+                            </h2>
+                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                              {sections.events.recentEvents.map(
+                                (item: Event, i: number) => {
+                                  return (
+                                    <div key={`event-${i}`}>
+                                      <div className="flex-shrink">
+                                        <Link
+                                          href={`/events/${item.key}`}
+                                          className="group"
+                                        >
+                                          <NewsEventRenderer
+                                            item={item as Item}
+                                            i={i}
+                                          />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                              <MoreButton
+                                label="See more events"
+                                link="/events"
+                              />
+                            </div>
+                          </Gutter>
+                        </div>
                       );
                     break;
                   case 'news':
                     if (sections.news && sections.news.length > 0)
                       return (
-                        <>
+                        <div key="news">
                           {index > 0 && <Divider />}
                           <Gutter>
                             <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
@@ -566,12 +598,12 @@ export default function Home({
                               <MoreButton label="See more news" link="/news" />
                             </div>
                           </Gutter>
-                        </>
+                        </div>
                       );
                   case 'projects':
                     if (sections.projects && sections.projects.length > 0)
                       return (
-                        <>
+                        <div key="projects">
                           {index > 0 && <Divider />}
                           <Gutter>
                             <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
@@ -630,14 +662,14 @@ export default function Home({
                               />
                             </div>
                           </Gutter>
-                        </>
+                        </div>
                       );
 
                     break;
                   case 'studios':
                     if (sections.studios && sections.studios.length > 0)
                       return (
-                        <>
+                        <div key="studioss">
                           {index > 0 && <Divider />}
                           <Gutter>
                             <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
@@ -663,7 +695,7 @@ export default function Home({
                               />
                             </div>
                           </Gutter>
-                        </>
+                        </div>
                       );
                 }
               })}

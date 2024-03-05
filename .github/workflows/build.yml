@@ -1,5 +1,5 @@
 name: Run full build
-on: 
+on:
   push:
     branches: [main]
 env:
@@ -12,12 +12,12 @@ env:
 
 jobs:
   initial-setup:
-    name: "Initial setup"
+    name: 'Initial setup'
     uses: engagementlab/el-next/.github/workflows/init.yml@main
 
   run-build:
     needs: initial-setup
-    name: "Make build"
+    name: 'Make build'
     # Do not run on automated commits (interpretation of TravisCI feature)
     # if: "!contains(github.event.head_commit.message, 'skip ci') && github.actor != 'dependabot[bot]'"
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.16]
-    steps:      
+    steps:
       - name: Setup node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Install local monorepo packages and run preconstruct
         run: yarn
- 
+
       - name: Make production build
         working-directory: apps/elab
         env:
@@ -61,12 +61,12 @@ jobs:
       - name: Install packages
         working-directory: apps/elab
         run: npm i -g pa11y-ci http-server pm2 && npm i
-          
-      - name: Serve build 
+
+      - name: Serve build
         working-directory: apps/elab/out
         run: pm2 start `which http-server` --name server
 
-      - name: Output all build paths to .pa11yci config and run a11y tests 
+      - name: Output all build paths to .pa11yci config and run a11y tests
         id: pa11y
         run: |
           node outputRoutes.mjs --app elab
@@ -78,11 +78,11 @@ jobs:
         with:
           fooApiToken: ${{ secrets.FOO_API_KEY }}
           configFile: 'lhconfig.json'
-                  
+
   notify-success:
     name: Send success Slack notification
     needs: [initial-setup, run-build]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'success' && needs.run-build.outputs.pa11y_outcome == 'success'}} 
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'success' && needs.run-build.outputs.pa11y_outcome == 'success'}}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: true
@@ -90,8 +90,8 @@ jobs:
     secrets: inherit
 
   notify-failure:
-    name: Send failure Slack notification 
-    needs: [initial-setup, run-build]
+    name: Send failure Slack notification
+    needs: [initial-setup]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'failure' && needs.run-build.outputs.lhci_outcome == 'success' && needs.run-build.outputs.pa11y_outcome == 'success' }}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:

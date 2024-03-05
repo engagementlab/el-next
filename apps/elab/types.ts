@@ -367,7 +367,7 @@ export const DefaultWhereCondition = (clauseAppendix?: string) => {
 };
 
 export const CustomEase = 'ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]';
-export const InitiativeKeyMap: { [key: string]: string } = {
+export const InitiativeKeyMap: { [key: string]: Initiative } = {
   tngv: 'gunviolence',
   tnej: 'climate',
 };

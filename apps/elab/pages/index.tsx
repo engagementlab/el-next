@@ -518,38 +518,38 @@ export default function Home({
                           <EventsRenderer
                             events={sections?.events.recentEvents}
                           />
-                          <Gutter>
-                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                              Events
-                            </h2>
-                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                              {sections.events.recentEvents.map(
-                                (item: Event, i: number) => {
-                                  return (
-                                    <div key={`event-${i}`}>
-                                      <div className="flex-shrink">
-                                        <Link
-                                          href={`/events/${item.key}`}
-                                          className="group"
-                                        >
-                                          <NewsEventRenderer
-                                            item={item as Item}
-                                            i={i}
-                                          />
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  );
-                                }
-                              )}
-                            </div>
-                            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
-                              <MoreButton
-                                label="See more events"
-                                link="/events"
-                              />
-                            </div>
-                          </Gutter>
+                          {/* // <Gutter>
+                          //   <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                          //     Events
+                          //   </h2>
+                          //   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                          //     {sections.events.recentEvents.map(
+                          //       (item: Event, i: number) => {
+                          //         return (
+                          //           <div key={`event-${i}`}>
+                          //             <div className="flex-shrink">
+                          //               <Link
+                          //                 href={`/events/${item.key}`}
+                          //                 className="group"
+                          //               >
+                          //                 <NewsEventRenderer
+                          //                   item={item as Item}
+                          //                   i={i}
+                          //                 />
+                          //               </Link>
+                          //             </div>
+                          //           </div>
+                          //         );
+                          //       }
+                          //     )}
+                          //   </div>
+                          //   <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                          //     <MoreButton
+                          //       label="See more events"
+                          //       link="/events"
+                          //     />
+                          //   </div>
+                          // </Gutter> */}
                         </div>
                       );
                     break;

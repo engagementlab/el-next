@@ -49,7 +49,6 @@ export default function Home({
   const [vidH, setVideoHeight] = useState(0);
   const [videoOverlayHeight, setVideoOverlayHeight] = useState(0);
   const [bgTargetElement, setBgVideo] = useState();
-  const [didScroll, setDidScroll] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [underlineOrder, setWordUnderlineOrder] = useState([0, 1, 2]);
@@ -119,69 +118,6 @@ export default function Home({
       });
     }
   };
-
-  useEffect(() => {
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (!didScroll) setDidScroll(true);
-      },
-      true
-    );
-    const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
-    const videoUrlSuffixPortrait =
-      '855474088/rendition/540p/file.mp4?loc=external&signature=da990294f49e048e5bf3e9d32c58b7b4cf8f1d662eeccfddf5ad25ce056bd2c5';
-    const videoUrlSuffix =
-      '855473995/rendition/720p/file.mp4?loc=external&signature=b8c1e523cef66417157a29c9baf8a66a5d7701eaad2a44d723e71614f664a0fa';
-
-    setBgVideo(bgVideoRef.current);
-
-    if (videoPlayerRef.current) {
-      try {
-        videoPlayerRef.current.onplay = () => {
-          // We have to set the height of the video manually because we don't know the height of the frame until the video is embedded based on the size of the device
-          let height =
-            videoPlayerRef.current!.clientHeight -
-            document.querySelector<HTMLElement>('nav')!.clientHeight -
-            document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
-            parseInt(
-              window
-                .getComputedStyle(document.getElementById('layout-daddy')!)
-                .marginTop.replace(/[^0-9-]/g, '')
-            );
-          if (
-            window.matchMedia('(orientation: portrait)').matches &&
-            height > 500
-          )
-            height = 500;
-
-          setVideoHeight(height);
-          setVideoOverlayHeight(
-            videoPlayerRef.current ? videoPlayerRef.current.clientHeight : 0
-          );
-          setShowVideo(true);
-        };
-
-        videoPlayerRef.current.onerror = (e) => {
-          EnableVideoFallback();
-        };
-        videoPlayerRef.current.src = `https://player.vimeo.com/progressive_redirect/playback/${
-          portraitVideo ? videoUrlSuffixPortrait : videoUrlSuffix
-        }`;
-      } catch (e) {
-        EnableVideoFallback();
-      }
-    }
-  }, [bgVideoRef]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((wordIndex) => wrap(0, 3, wordIndex + 1));
-      setWordUnderlineOrder([...underlineOrder.slice(1, 3), underlineOrder[0]]);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [wordIndex]);
-
   const Definition = ({
     word,
     define,
@@ -238,7 +174,7 @@ export default function Home({
           {upcoming ? 'Upcoming' : 'Recent'} Events
         </h2>
         <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-          {events.map((item: Event, i: number) => {
+          {/* {events.map((item: Event, i: number) => {
             return (
               <div key={`event-${i}`}>
                 <div className="flex-shrink">
@@ -248,7 +184,14 @@ export default function Home({
                 </div>
               </div>
             );
-          })}
+          })} */}
+          <div key={`event-${0}`}>
+            <div className="flex-shrink">
+              <Link href={`/events/`} className="group">
+                <NewsEventRenderer item={events[0] as Item} i={0} />
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
           <MoreButton label="See more events" link="/events" />
@@ -256,6 +199,61 @@ export default function Home({
       </Gutter>
     );
   };
+
+  useEffect(() => {
+    const portraitVideo = window.matchMedia('(orientation: portrait)').matches;
+    const videoUrlSuffixPortrait =
+      '855474088/rendition/540p/file.mp4?loc=external&signature=da990294f49e048e5bf3e9d32c58b7b4cf8f1d662eeccfddf5ad25ce056bd2c5';
+    const videoUrlSuffix =
+      '855473995/rendition/720p/file.mp4?loc=external&signature=b8c1e523cef66417157a29c9baf8a66a5d7701eaad2a44d723e71614f664a0fa';
+
+    setBgVideo(bgVideoRef.current);
+
+    if (videoPlayerRef.current) {
+      try {
+        videoPlayerRef.current.onplay = () => {
+          // We have to set the height of the video manually because we don't know the height of the frame until the video is embedded based on the size of the device
+          let height =
+            videoPlayerRef.current!.clientHeight -
+            document.querySelector<HTMLElement>('nav')!.clientHeight -
+            document.querySelector<HTMLElement>('#tagline')!.offsetHeight -
+            parseInt(
+              window
+                .getComputedStyle(document.getElementById('layout-daddy')!)
+                .marginTop.replace(/[^0-9-]/g, '')
+            );
+          if (
+            window.matchMedia('(orientation: portrait)').matches &&
+            height > 500
+          )
+            height = 500;
+
+          setVideoHeight(height);
+          setVideoOverlayHeight(
+            videoPlayerRef.current ? videoPlayerRef.current.clientHeight : 0
+          );
+          setShowVideo(true);
+        };
+
+        videoPlayerRef.current.onerror = (e) => {
+          EnableVideoFallback();
+        };
+        videoPlayerRef.current.src = `https://player.vimeo.com/progressive_redirect/playback/${
+          portraitVideo ? videoUrlSuffixPortrait : videoUrlSuffix
+        }`;
+      } catch (e) {
+        EnableVideoFallback();
+      }
+    }
+  }, [bgVideoRef]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((wordIndex) => wrap(0, 3, wordIndex + 1));
+      setWordUnderlineOrder([...underlineOrder.slice(1, 3), underlineOrder[0]]);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [wordIndex]);
 
   return (
     <Layout
@@ -502,10 +500,43 @@ export default function Home({
                       return (
                         <div key="upcoming-events">
                           {index > 0 && <Divider />}
-                          <EventsRenderer
+                          {/* <EventsRenderer
                             events={sections.events.upcomingEvents}
                             upcoming={true}
-                          />
+                          /> */}
+
+                          <Gutter>
+                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                              Upcoming Events
+                            </h2>
+                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                              {sections.events.upcomingEvents.map(
+                                (item: Event, i: number) => {
+                                  return (
+                                    <div key={`event-${i}`}>
+                                      <div className="flex-shrink">
+                                        <Link
+                                          href={`/events/${item.key}`}
+                                          className="group"
+                                        >
+                                          <NewsEventRenderer
+                                            item={item as Item}
+                                            i={i}
+                                          />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                              <MoreButton
+                                label="See more events"
+                                link="/events"
+                              />
+                            </div>
+                          </Gutter>
                         </div>
                       );
                     else if (
@@ -515,41 +546,41 @@ export default function Home({
                       return (
                         <div key="events">
                           {index > 0 && <Divider />}
-                          <EventsRenderer
+                          {/* <EventsRenderer
                             events={sections?.events.recentEvents}
-                          />
-                          {/* // <Gutter>
-                          //   <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
-                          //     Events
-                          //   </h2>
-                          //   <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                          //     {sections.events.recentEvents.map(
-                          //       (item: Event, i: number) => {
-                          //         return (
-                          //           <div key={`event-${i}`}>
-                          //             <div className="flex-shrink">
-                          //               <Link
-                          //                 href={`/events/${item.key}`}
-                          //                 className="group"
-                          //               >
-                          //                 <NewsEventRenderer
-                          //                   item={item as Item}
-                          //                   i={i}
-                          //                 />
-                          //               </Link>
-                          //             </div>
-                          //           </div>
-                          //         );
-                          //       }
-                          //     )}
-                          //   </div>
-                          //   <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
-                          //     <MoreButton
-                          //       label="See more events"
-                          //       link="/events"
-                          //     />
-                          //   </div>
-                          // </Gutter> */}
+                          /> */}
+                          <Gutter>
+                            <h2 className="text-2xl md:text-5xl text-grey font-bold my-14">
+                              Recent Events
+                            </h2>
+                            <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                              {sections.events.recentEvents.map(
+                                (item: Event, i: number) => {
+                                  return (
+                                    <div key={`event-${i}`}>
+                                      <div className="flex-shrink">
+                                        <Link
+                                          href={`/events/${item.key}`}
+                                          className="group"
+                                        >
+                                          <NewsEventRenderer
+                                            item={item as Item}
+                                            i={i}
+                                          />
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                            <div className="flex md:flex-row justify-end lg:ml-5 mt-8 mb-16">
+                              <MoreButton
+                                label="See more events"
+                                link="/events"
+                              />
+                            </div>
+                          </Gutter>
                         </div>
                       );
                     break;

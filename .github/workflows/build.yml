@@ -91,8 +91,8 @@ jobs:
 
   notify-failure:
     name: Send failure Slack notification
-    needs: [initial-setup]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'failure' && needs.run-build.outputs.lhci_outcome == 'success' && needs.run-build.outputs.pa11y_outcome == 'success' }}
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'failure' && needs.run-build.outputs.pa11y_outcome == 'success' }}
     uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
     with:
       success: false

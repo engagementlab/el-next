@@ -233,7 +233,9 @@ export default function Home({
       fullBleed={true}
       error={error}
     >
+      {/* --- TAGLINE --- */}
       <Tagline showVideo={showVideo} vidH={vidH} />
+
       {/* ===== PAGE CONTENT ===== */}
       <AnimatePresence>
         {showVideo && (

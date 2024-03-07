@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import {
   AnimatePresence,
   Transition,
@@ -6,9 +8,8 @@ import {
   motion,
   wrap,
 } from 'framer-motion';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
 import { Gutter } from './Gutter';
+
 const wordTransition: Transition = {
   y: {
     type: 'tween',
@@ -102,7 +103,6 @@ export const Tagline = ({ showVideo, vidH }: any) => {
   return (
     <Gutter noMarginY={true}>
       <>
-        {/* --- TAGLINE --- */}
         <div id="tagline" className="flex static flex-col xl:pt-14">
           <div className="flex justify-center text-2xl md:text-3xl xl:text-5xl font-extrabold mt-10 xl:mt-24">
             <div className="text-slate w-3/4 drop-shadow-[0px_0px_15px_#fff]">

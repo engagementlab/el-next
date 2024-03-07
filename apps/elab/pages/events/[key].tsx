@@ -6,18 +6,13 @@ import {
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Image, ImageUrl, Query } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { Blocks, Doc, Heading } from '../../components/Renderers';
 
-import {
-  DefaultOGImageOptions,
-  DefaultWhereCondition,
-  Event,
-  Theme,
-} from '@/types';
+import { DefaultWhereCondition, Event as EType, Theme } from '@/types';
 import { CTAButton } from '@/components/Buttons';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
@@ -218,7 +213,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     };
   }
 
-  const item = itemResult[0] as Event;
+  const item = itemResult[0] as EType;
   const date = `${new Date(item.eventDate).toLocaleDateString('en-US', {
     weekday: 'long',
   })}, ${new Date(item.eventDate).toLocaleDateString('en-US', {

@@ -68,7 +68,7 @@ const useStore = create<ProjectState>()(
       }),
   }))
 );
-export default function Studio({
+export default function Project({
   item,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {

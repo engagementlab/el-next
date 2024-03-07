@@ -1,5 +1,6 @@
 import { ReactElement, ReactNode, useEffect } from 'react';
 import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
+import { useRouter } from 'next/router';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Button, Image, Query } from '@el-next/components';
@@ -16,7 +17,6 @@ import {
 import {
   CustomEase,
   DefaultWhereCondition,
-  Theme,
   ThemeColors,
   Theming,
 } from '@/types';
@@ -29,7 +29,6 @@ import { PeopleList } from '@/components/People';
 import Partners from '@/components/Partners';
 import Slideshow from '@/components/Slideshow';
 import clsx from 'clsx';
-import { Router, useRouter } from 'next/router';
 
 type Semester = {
   key: string;

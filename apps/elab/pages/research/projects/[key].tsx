@@ -12,7 +12,7 @@ import { Blocks, Doc } from '../../../components/Renderers';
 
 import {
   DefaultWhereCondition,
-  ResearchProject,
+  ResearchProject as RType,
   Theme,
   Theming,
 } from '@/types';
@@ -303,7 +303,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       },
     };
   }
-  const item = itemResult[0] as ResearchProject;
+  const item = itemResult[0] as RType;
   // const relatedItems = (await query.MediaItem.findMany({
   //     where: {
   //         filters: {

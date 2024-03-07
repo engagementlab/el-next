@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { ParallaxBanner } from 'react-scroll-parallax';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
@@ -38,7 +38,11 @@ const rendererOverrides = {
 export default function Home({
   item,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [bgVideo, setBgVideo] = useState('');
+  const [bgTargetElement, setBgTargetVideo] = useState();
+  const [showVideo, setShowVideo] = useState(false);
+  const videoPlayerRef = useRef<HTMLVideoElement>(null);
+  const bgVideoRef = useRef();
+
   const scrollToLogos = () => {
     document.querySelector('#partners')!.scrollIntoView({
       behavior: 'smooth',
@@ -46,25 +50,52 @@ export default function Home({
   };
 
   useEffect(() => {
-    setBgVideo(
-      `https://res.cloudinary.com/engagement-lab-home/video/upload/ac_none,q_80,c_crop,f_auto,w_${window.innerWidth}/v1668549678/sjm/intro.mp4`
-    );
-  }, []);
+    setBgTargetVideo(bgVideoRef.current);
+
+    if (videoPlayerRef.current) {
+      videoPlayerRef.current.onplay = () => {
+        setShowVideo(true);
+      };
+      videoPlayerRef.current.src =
+        'https://player.vimeo.com/progressive_redirect/playback/920577441/rendition/540p/file.mp4?loc=external&signature=741d8d2cb33d4408adbd2abce1877c81090dee327fa3e92c15ef661fa1e7319c';
+      // `https://player.vimeo.com/progressive_redirect/playback/920577441/rendition/720p/file.mp4?loc=external&signature=f1b99cf205108b09a5242524bf604028e4a51b6a6c5cb02e7f5e4c43238ae845`
+      // 'https://player.vimeo.com/progressive_redirect/playback/920577441/rendition/240p/file.mp4?loc=external&signature=23509e3227c1eef8b1b8880da3a9a3d07de7199b97473d2f98562c52b9f3eb5d'
+    }
+  }, [bgVideoRef]);
+
   return (
     <>
-      <section className="relative mt-6 lg:mt-0 bg-black">
-        {bgVideo.length > 0 && (
-          <video
-            playsInline
-            autoPlay
-            muted
-            loop
-            className="min-h-[40vh] bg-black/50"
-          >
-            <source src={bgVideo} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+      <section ref={bgTargetElement} className="relative mt-6 lg:mt-0 bg-black">
+        <video
+          ref={videoPlayerRef}
+          playsInline
+          autoPlay
+          muted
+          loop
+          className={`${
+            showVideo ? 'h-full' : 'h-0'
+          } min-h-[40vh] bg-black/50 w-full`}
+        >
+          {/* <source src={bgVideo /.} type="video/mp4" /> */}
+          Your browser does not support the video tag.
+        </video>
+
+        {!showVideo && (
+          <div className="flex justify-center items-center min-h-[90vh]">
+            <svg
+              width="300"
+              height="300"
+              viewBox="0 0 24 24"
+              className="fill-white"
+            >
+              <path
+                d="M2,12A10.94,10.94,0,0,1,5,4.65c-.21-.19-.42-.36-.62-.55h0A11,11,0,0,0,12,23c.34,0,.67,0,1-.05C6,23,2,17.74,2,12Z"
+                className="animate-spin origin-center"
+              />
+            </svg>
+          </div>
         )}
+
         <div className="flex flex-col items-center w-full h-full absolute top-0 left-0 px-5 xl:px-10 bg-black/50 text-white z-20">
           <Image
             id="logos"

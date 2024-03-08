@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import _ from 'lodash';
 import { unfurl } from 'unfurl.js';
+import { WebClient } from '@slack/web-api';
 
 dotenv.config();
 
@@ -295,6 +296,40 @@ app.post('/link/create', async (req, res, next) => {
     res
       .status(500)
       .send({ status: err.response.status, info: err.response.data });
+  }
+});
+
+app.post('/slack', async (req, res) => {
+  if (!req.body) {
+    res.status(500).send('No body provided in payload.');
+    return;
+  }
+  try {
+    const web = new WebClient(process.env.SLACK_TOKEN);
+    let blocks = [
+      { type: 'section', text: { type: 'mrkdwn', text: req.body.text } },
+    ];
+
+    if (req.body.message) {
+      blocks.push({
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `> :postit: ${req.body.message}`,
+        },
+      });
+    }
+
+    await web.chat.postMessage({
+      channel: req.body.channel,
+      blocks,
+      icon_emoji: ':building_construction:',
+      username: 'Builds Helper',
+    });
+
+    res.status(200).send('ok');
+  } catch (err: any) {
+    res.status(500).send(err);
   }
 });
 

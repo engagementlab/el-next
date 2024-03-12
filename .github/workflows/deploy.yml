@@ -37,6 +37,13 @@ jobs:
       - name: Install local monorepo packages and run preconstruct
         run: yarn
 
+      - name: Generate build notes and summary from user
+        if: ${{ github.event.client_payload.note != 'null' && github.event.client_payload.note.length > 0 }}
+        run: |
+          echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
+          echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
+          
+
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
         env:
@@ -46,12 +53,6 @@ jobs:
           yarn add typescript @types/node
           yarn
           yarn build
-
-      - name: Generate build notes and summary from user
-        if: ${{ github.event.client_payload.note != 'null' && github.event.client_payload.note.length > 0 }}
-        run: |
-          echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
-          echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
           
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3

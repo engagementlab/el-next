@@ -283,6 +283,7 @@ export type StudioProject = {
   videoId: string;
   buttons: any[];
   semester: {
+    key: string;
     name: string;
   }[];
 

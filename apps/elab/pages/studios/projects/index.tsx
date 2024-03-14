@@ -1,17 +1,14 @@
 import { InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import _ from 'lodash';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Image, Query } from '@el-next/components';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
-  CustomEase,
   DefaultWhereCondition,
   InitiativeFilterGroups,
   StudioProject,
@@ -22,6 +19,7 @@ import {
 
 import Layout from '../../../components/Layout';
 import { StudioGenericItemRenderer } from '@/components/Renderers';
+import { StudioProjectsSort } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -43,6 +41,7 @@ export default function StudioProjects({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
+  console.log(studioProjects);
   // Create store with Zustand
   const useStore = create<FilterState>()(
     subscribeWithSelector((set) => ({
@@ -158,12 +157,9 @@ export default function StudioProjects({
 
   const FilteredItems = (props: { items: StudioProject[] | null }) => {
     // Store get/set
-    const {
-      currentFilters,
-      currentTheme,
-      filterGroupOpen,
-      toggleFilterGroupOpen,
-    } = useStore((state) => state);
+    const { currentFilters, currentTheme, filterGroupOpen } = useStore(
+      (state) => state
+    );
 
     const noGroupsOpen = () => {
       return filterGroupOpen === '';
@@ -374,7 +370,7 @@ export async function getStaticProps() {
     `studioProjects(
 			${DefaultWhereCondition()},
 			orderBy: {
-				createdDate: desc
+				name: asc
 			}		
 		) {
 			name
@@ -383,6 +379,7 @@ export async function getStaticProps() {
         key
       }
       semester {
+        key
         name
       }
 			shortDescription 
@@ -414,7 +411,7 @@ export async function getStaticProps() {
   return {
     props: {
       filters,
-      studioProjects: studioProjects as StudioProject[],
+      studioProjects: StudioProjectsSort(studioProjects as StudioProject[]),
       initiativeBlurbs,
     },
     revalidate: 1,

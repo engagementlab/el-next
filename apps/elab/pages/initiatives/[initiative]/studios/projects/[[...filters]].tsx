@@ -14,6 +14,7 @@ import {
   InitiativeFilterGroups,
   InitiativeKeyMap,
   StudioProject,
+  StudioUnion,
   Theme,
   Theming,
 } from '@/types';
@@ -22,6 +23,8 @@ import Layout from '../../../../../components/Layout';
 
 import { useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
+import { StudioGenericItemRenderer } from '@/components/Renderers';
+import { StudioProjectsSort } from '@/shared';
 
 export default function StudioProjects({
   filtersData,
@@ -181,7 +184,6 @@ export default function StudioProjects({
                     <button
                       onClick={(e) => {
                         e.preventDefault();
-                        // router.push(`${router.asPath}/${filter.key}`);
                         router.push(
                           `/initiatives/${initiative}/studios/projects?q=${createQueryString(
                             filter.key
@@ -199,15 +201,6 @@ export default function StudioProjects({
                 })}
               </div>
             </div>
-            {/* <button
-                className="text-grey text-base uppercase leading-6 opacity-70 mt-4"
-                onClick={(e) => {
-                  reset();
-                  e.preventDefault();
-                }}
-              >
-                CLEAR ALL FILTERS
-              </button> */}
           </>
         </div>
       );
@@ -257,7 +250,11 @@ export default function StudioProjects({
                 {filteredProjects && filteredProjects?.length > 0 && (
                   <AnimatePresence>
                     {filteredProjects.map((item, i: number) => (
-                      <ItemRenderer key={i} item={item} />
+                      <StudioGenericItemRenderer
+                        key={i}
+                        item={item as StudioUnion}
+                        showBorder={false}
+                      />
                     ))}
                   </AnimatePresence>
                 )}
@@ -312,13 +309,17 @@ export async function getStaticProps({
     `studioProjects(
 			${DefaultWhereCondition()},
 			orderBy: {
-				createdDate: desc
+				name: asc
 			}		
 		) {
 			name
 			key
       filters {
         key
+      }
+      semester {
+        key
+        name
       }
 			shortDescription 
 			initiative
@@ -355,7 +356,7 @@ export async function getStaticProps({
   return {
     props: {
       filtersData,
-      studioProjects: items,
+      studioProjects: StudioProjectsSort(items),
       initiativeBlurbs,
       initiative: params.initiative,
       filters: params.filters ? params.filters : null,

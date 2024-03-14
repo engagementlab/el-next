@@ -15,6 +15,7 @@ export interface ThemeConfig {
   border: string;
   borderLight: string;
   fill: string;
+  fillRgb: string;
   gradient: string;
   secodaryBg: string;
   secodary: string;
@@ -72,6 +73,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     borderLight: 'border-yellowlt',
     bg: 'bg-yellow',
     fill: 'fill-yellow',
+    fillRgb: 'rgba(246, 165, 54, .6)',
     gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
     secodary: 'bg-[#E2BDFE]',
     secodaryBg: 'bg-[#F6A536]/40',
@@ -86,6 +88,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     borderLight: 'border-[#E3BFFF]',
     bg: 'bg-purple',
     fill: 'fill-purple',
+    fillRgb: 'rgba(141, 51, 210, .6)',
     gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
     secodary: 'bg-green',
     secodaryBg: 'bg-[#E2BDFE]/40',
@@ -99,8 +102,8 @@ export const Theming: { [key: string]: ThemeConfig } = {
     border: 'border-yellow',
     borderLight: 'border-leaf',
     bg: 'bg-yellow',
-    // bgDivider: 'bg-yellow',
     fill: 'fill-leaf',
+    fillRgb: 'rgba(111, 180, 44, .6)',
     secodary: 'bg-yellow',
     secodaryBg: 'bg-[#D7EFC1]',
     gradient: 'from-[#D7EFC1] to-leaf',
@@ -115,6 +118,7 @@ export const Theming: { [key: string]: ThemeConfig } = {
     borderLight: 'border-teal',
     bg: 'bg-teal',
     fill: 'fill-teal',
+    fillRgb: 'rgba(0, 164, 148, .6)',
     secodary: 'bg-#00A494',
     secodaryBg: 'bg-[#D7EFC1]',
     gradient: 'from-[#D7EFC1] to-teal',
@@ -141,6 +145,7 @@ export type Event = {
   };
   thumbAltText: string;
   summary: string;
+  partners: string[];
 } & OGParams;
 export type News = {
   title: string;

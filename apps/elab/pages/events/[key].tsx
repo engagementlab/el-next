@@ -14,6 +14,7 @@ import { Blocks, Doc, Heading } from '../../components/Renderers';
 
 import { DefaultWhereCondition, Event as EType, Theme } from '@/types';
 import { CTAButton } from '@/components/Buttons';
+import Logos from '@/components/Logos';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
     const customRenderers = {
@@ -115,6 +116,17 @@ export default function Event({
             componentBlocks={Blocks()}
             renderers={Doc(rendererOverrides)}
           />
+          {item.partners && item.partners.length > 0 && (
+            <>
+              <h2 className={`text-xl font-extrabold uppercase mb-3 mt-8`}>
+                Event&nbsp;
+                {item.partners.length > 1 ? 'Partners' : 'Partner'}
+              </h2>
+              <div className="px-6">
+                <Logos partners={item.partners} />
+              </div>
+            </>
+          )}
           {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
@@ -182,25 +194,25 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const itemResult = await Query(
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
-       name
-       blurb { document }
-       eventDate
-       address
-       registrationLink
-       initiatives
-       content { 
-           document 
-       }
-       thumbAltText
-       thumbnail { 
-           publicId 
-       }
-       summary
-
-        ogImage { 
-            publicId
-        }
-        ogDescription
+      name
+      blurb { document }
+      eventDate
+      address
+      registrationLink
+      initiatives
+      content { 
+        document 
+      }
+      thumbAltText
+      thumbnail { 
+        publicId 
+      }
+      summary
+      ogImage { 
+        publicId
+      }
+      ogDescription
+      partners
       }`
   );
 

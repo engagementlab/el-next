@@ -17,6 +17,7 @@ import { Flags, Status } from '../flags';
 import { Featuring } from '../featuring';
 import { helper, HelperIcon } from '../../../components/helper';
 import { Social } from '../social';
+import { PartnersSelect } from './partners';
 
 const Event: Lists.Event = list({
   access: allowAll,
@@ -124,6 +125,7 @@ const Event: Lists.Event = list({
         },
       },
     }),
+    partners: PartnersSelect,
     ...group(Social('Event "Summary" used if not specified')),
   },
   hooks: {

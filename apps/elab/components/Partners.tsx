@@ -19,6 +19,7 @@ const Partners = ({ partners }: Props): string => {
     { key: 'greenroots', name: 'GreenRoots' },
     { key: 'sftt', name: 'Speak for the Trees' },
     { key: 'wabt', name: 'We Are Better Together' },
+    { key: 'zoone', name: 'Zoo New England' },
     // {
     //   key: 'swboston',
     //   name: 'Southwest Boston Community Development Corporation',

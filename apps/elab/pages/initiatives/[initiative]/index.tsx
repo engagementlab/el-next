@@ -12,7 +12,6 @@ import {
   Theming,
   Item,
   Person as PersonT,
-  CustomEase,
   InitiativeFilterGroups,
 } from '@/types';
 
@@ -72,6 +71,10 @@ export default function InitIndex({
     Theming[initiative].fill;
   (' group-hover:fill-purple');
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
+  const videoColor = {
+    stroke: Theming[initiative].arrow,
+    fill: Theming[initiative].fillRgb,
+  };
   const gridClass =
     'my-8 grid md:grid-cols-2 xl:grid-cols-3 md:gap-4 lg:gap-2 xl:gap-5 xl:gap-y-10 text-grey';
   const renderSlide = (props: { slide: Item }) => {
@@ -179,11 +182,6 @@ export default function InitIndex({
       {page && (
         <div className="text-grey">
           <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
-            {/* <h2 className="text-4xl lg:text-5xl text-slate font-extrabold">
-              {initiative === 'gunviolence'
-                ? ' Transforming Narratives of Gun Violence'
-                : 'Transforming Narratives for Environmental Justice'}
-            </h2> */}
             <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
                 <h2 className={subHeadClass}>About The Initiative</h2>
@@ -230,13 +228,15 @@ export default function InitIndex({
                 </div>
               </div>
               {page.videoId ? (
-                <div className="relative transition-all duration-500 max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-1/5">
-                  <div className="group w-full min-h-[inherit]">
-                    <div id="video" className={`min-h-[inherit]`}>
+                <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
+                  <div className="group w-full min-h-[inherit] ">
+                    <div id="video" className="min-h-[inherit]">
                       <Video
+                        isSlide={true}
                         videoLabel=""
                         videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
                         thumbUrl={page.videoThumbnail?.publicUrl}
+                        // themeColor={videoColor}
                       />
                     </div>
                   </div>
@@ -449,7 +449,7 @@ export default function InitIndex({
                 ]}
               />
             ) : (
-              <Logos partners={['ficdc', 'greenroots', 'sftt']} />
+              <Logos partners={['ficdc', 'greenroots', 'sftt', 'zoone']} />
             )}
           </Gutter>
           {page.associatedPeople && page.associatedPeople.length > 0 && (

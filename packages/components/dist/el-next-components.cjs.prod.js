@@ -21,16 +21,23 @@ var client = require('@apollo/client');
 var errors = require('@apollo/client/errors');
 var jsxRuntime = require('react/jsx-runtime');
 require('next/link');
+require('./slicedToArray-85dd2515.cjs.prod.js');
+require('./unsupportedIterableToArray-42309462.cjs.prod.js');
+require('next/image');
+require('zustand');
+require('react-player/lazy');
+require('@mui/icons-material/PlayCircleFilled');
+require('@mui/icons-material/PauseCircleFilled');
+require('@mui/material');
 require('react-scroll');
 require('@el-next/components/flexLayout');
 require('@el-next/components/headingStyle');
-require('./unsupportedIterableToArray-42309462.cjs.prod.js');
-require('zustand');
 require('zustand/middleware');
 require('lodash');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
-require('next/image');
+require('@mui/material/Box');
+require('@mui/material/Slider');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 

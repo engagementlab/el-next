@@ -2,160 +2,168 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
-var Image = require('next/image');
+var slicedToArray = require('../../dist/slicedToArray-b8687d91.cjs.dev.js');
 var react = require('react');
 var create = require('zustand');
+var ReactPlayer = require('react-player/lazy');
+var PlayCircleFilledIcon = require('@mui/icons-material/PlayCircleFilled');
+var PauseCircleFilledIcon = require('@mui/icons-material/PauseCircleFilled');
+var Box = require('@mui/material/Box');
+var Slider = require('@mui/material/Slider');
+var material = require('@mui/material');
 var jsxRuntime = require('react/jsx-runtime');
+require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 
-var Image__default = /*#__PURE__*/_interopDefault(Image);
 var create__default = /*#__PURE__*/_interopDefault(create);
+var ReactPlayer__default = /*#__PURE__*/_interopDefault(ReactPlayer);
+var PlayCircleFilledIcon__default = /*#__PURE__*/_interopDefault(PlayCircleFilledIcon);
+var PauseCircleFilledIcon__default = /*#__PURE__*/_interopDefault(PauseCircleFilledIcon);
+var Box__default = /*#__PURE__*/_interopDefault(Box);
+var Slider__default = /*#__PURE__*/_interopDefault(Slider);
 
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
-  if (null != _i) {
-    var _s,
-      _e,
-      _x,
-      _r,
-      _arr = [],
-      _n = !0,
-      _d = !1;
-    try {
-      if (_x = (_i = _i.call(arr)).next, 0 === i) {
-        if (Object(_i) !== _i) return;
-        _n = !1;
-      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
-    } catch (err) {
-      _d = !0, _e = err;
-    } finally {
-      try {
-        if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-    return _arr;
-  }
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || unsupportedIterableToArray._unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
+var Controls = function Controls(props) {
+  var seek = function seek(value) {
+    props.playerRef.current.seekTo(+value, 'seconds');
+  };
+  return /*#__PURE__*/jsxRuntime.jsxs("div", {
+    className: "absolute flex flex-row items-center bottom-0 left-[4rem] right-[4rem] bg-white/90 rounded-[50px]",
+    children: [/*#__PURE__*/jsxRuntime.jsx(material.IconButton, {
+      "aria-label": props.playing ? 'pause' : 'play',
+      size: "large",
+      onClick: function onClick() {
+        return props.setPlaying(!props.playing);
+      },
+      children: props.playing ? /*#__PURE__*/jsxRuntime.jsx(PauseCircleFilledIcon__default["default"], {}) : /*#__PURE__*/jsxRuntime.jsx(PlayCircleFilledIcon__default["default"], {})
+    }), /*#__PURE__*/jsxRuntime.jsx(Box__default["default"], {
+      sx: {
+        width: '75%'
+      },
+      children: /*#__PURE__*/jsxRuntime.jsx(Slider__default["default"], {
+        "aria-label": "Player Current Position",
+        defaultValue: 0,
+        value: props.playerRef.current ? props.playerRef.current.getCurrentTime() : 0,
+        getAriaValueText: function getAriaValueText() {
+          return props.playerRef.current ? props.playerRef.current.getCurrentTime().toString() : '0';
+        },
+        color: "secondary",
+        max: props.duration,
+        onChange: function onChange(event, value, activeThumb) {
+          return seek(value);
+        }
+      })
+    })]
+  });
+};
 var Video = function Video(_ref) {
-  var thumbUrl = _ref.thumbUrl,
-    videoUrl = _ref.videoUrl,
-    videoLabel = _ref.videoLabel,
-    isSlide = _ref.isSlide;
+  _ref.thumbUrl;
+    _ref.videoUrl;
+    _ref.videoLabel;
+    _ref.isSlide;
     _ref.themeColor;
-    var noUi = _ref.noUi,
-    play = _ref.play;
+    _ref.noUi;
+    _ref.play;
+  var _useState = react.useState(true),
+    _useState2 = slicedToArray._slicedToArray(_useState, 2),
+    playing = _useState2[0],
+    setPlaying = _useState2[1];
+  var _useState3 = react.useState(0),
+    _useState4 = slicedToArray._slicedToArray(_useState3, 2),
+    durationSeconds = _useState4[0],
+    setDurationSeconds = _useState4[1];
+  var _useState5 = react.useState(0),
+    _useState6 = slicedToArray._slicedToArray(_useState5, 2),
+    playedSeconds = _useState6[0],
+    setPlayedSeconds = _useState6[1];
   // Create store with Zustand
-  var _useState = react.useState(function () {
+  var _useState7 = react.useState(function () {
       return create__default["default"](function (set) {
         return {
           videoOpen: false,
+          videoHover: false,
           toggleOpen: function toggleOpen(open) {
             return set({
               videoOpen: open
+            });
+          },
+          toggleHover: function toggleHover(hover) {
+            return set({
+              videoHover: hover
             });
           }
         };
       });
     }),
-    _useState2 = _slicedToArray(_useState, 1),
-    useStore = _useState2[0];
-  var toggleOpen = useStore(function (state) {
+    _useState8 = slicedToArray._slicedToArray(_useState7, 1),
+    useStore = _useState8[0];
+  useStore(function (state) {
     return state.toggleOpen;
   });
-  var videoOpen = useStore(function (state) {
-    return state.videoOpen;
-  });
-  var buttonSize = isSlide ? 75 : 150;
+  var _useStore = useStore(function (state) {
+      return state;
+    });
+    _useStore.videoOpen;
+    var videoHover = _useStore.videoHover,
+    toggleHover = _useStore.toggleHover;
+  var playerRef = react.useRef();
   var classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
-  return /*#__PURE__*/jsxRuntime.jsxs("div", {
+  return /*#__PURE__*/jsxRuntime.jsx("div", {
     className: classStr,
-    children: [videoOpen || play || !thumbUrl ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
-      onClick: function onClick(e) {
-        toggleOpen(true);
-        e.preventDefault();
-      },
-      className: "group relative",
-      style: {
-        height: 'inherit'
-      },
-      children: [/*#__PURE__*/jsxRuntime.jsx(Image__default["default"], {
-        alt: "Thumbnail image for video with title \"".concat(videoLabel, "\""),
-        className: "pointer-events-none",
-        src: thumbUrl,
-        width: 1920,
-        height: 1080,
-        unoptimized: true,
-        draggable: "true"
-      }), !noUi && /*#__PURE__*/jsxRuntime.jsx("span", {
-        className: "absolute",
-        style: {
-          top: "calc(50% - ".concat(buttonSize / 2, "px)"),
-          left: "calc(50% - ".concat(buttonSize / 2, "px)")
-        },
-        children: /*#__PURE__*/jsxRuntime.jsxs("svg", {
-          viewBox: "0 0 151 151",
-          width: buttonSize,
-          height: buttonSize,
-          className: "transition-all group-hover:scale-110",
-          children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
-            style: {
-              strokeWidth: '0.8px',
-              stroke: '#B571E9',
-              fill: 'rgba(141, 51, 210, .6)'
-            },
-            cx: "49.467",
-            cy: "49.467",
-            r: "49.467",
-            transform: "matrix(1.521806, 0, 0, 1.510012, 0, 0)"
-          }), /*#__PURE__*/jsxRuntime.jsx("path", {
-            style: {
-              strokeWidth: '0.8px',
-              stroke: '#B571E9',
-              fill: 'rgba(237, 234, 229, .8)'
-            },
-            d: "M 214.012 155.256 L 252.117 221.256 L 175.907 221.256 L 214.012 155.256 Z",
-            "data-bx-shape": "triangle 175.907 155.256 76.21 66 0.5 0 1@b1f3cbc1",
-            transform: "matrix(-0.000024, 1, -1, -0.000024, 268.262054, -141.660278)",
-            "data-bx-origin": "0.53481 0.565042"
-          })]
-        })
-      })]
-    }), !videoOpen && !play ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
+    children: /*#__PURE__*/jsxRuntime.jsx("div", {
       id: "video-embed",
-      className: "w-full h-full min-h-[inherit]",
-      children: /*#__PURE__*/jsxRuntime.jsx("div", {
+      onMouseEnter: function onMouseEnter() {
+        return toggleHover(true);
+      },
+      onMouseLeave: function onMouseLeave() {
+        return toggleHover(false);
+      },
+      className: "w-full h-full min-h-[inherit] overflow-y-hidden",
+      children: /*#__PURE__*/jsxRuntime.jsxs("div", {
         className: "relative h-full min-h-[inherit]",
-        children: /*#__PURE__*/jsxRuntime.jsx("iframe", {
-          src: "".concat(videoUrl, "?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1"),
-          style: {
-            position: isSlide ? 'relative' : 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%'
-          },
-          allow: "autoplay; fullscreen;",
-          allowFullScreen: true
-        })
+        children: [/*#__PURE__*/jsxRuntime.jsx("div", {
+          className: "absolute h-full",
+          children: /*#__PURE__*/jsxRuntime.jsx(ReactPlayer__default["default"], {
+            url: "https://player.vimeo.com/progressive_redirect/playback/911300630/rendition/720p/file.mp4?loc=external&signature=6dadd6681fc191c020410ff373ac24e37231ac8760196c9a611c7400dac5f88c",
+            ref: playerRef,
+            controls: false,
+            playing: playing,
+            onProgress: function onProgress(_ref2) {
+              var playedSeconds = _ref2.playedSeconds;
+              return setPlayedSeconds(playedSeconds);
+            },
+            onSeek: setPlayedSeconds,
+            onDuration: setDurationSeconds,
+            config: {
+              file: {
+                tracks: [{
+                  src: 'https://captions.cloud.vimeo.com/captions/134131399.vtt?expires=1710536245&sig=49e06e5995dd5947770b13fff510efe2a9f55db5&download=auto_generated_captions.vtt',
+                  kind: 'subtitles',
+                  srcLang: 'en',
+                  "default": true,
+                  label: 'English'
+                }]
+              }
+            }
+          })
+        }), /*#__PURE__*/jsxRuntime.jsx("div", {
+          className: "relative top-[90%] transition-all duration-700 ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)] ".concat(videoHover ? 'translate-y-[0]' : 'translate-y-[0rem]')
+          // style={{
+          //   top: '90%',
+          //   position: 'relative',
+          //   transform: videoHover ? '' : 'translateY(3rem)',
+          // }}
+          ,
+          children: /*#__PURE__*/jsxRuntime.jsx(Controls, {
+            playerRef: playerRef,
+            playing: playing,
+            setPlaying: setPlaying,
+            playedSeconds: playedSeconds,
+            duration: durationSeconds
+          })
+        })]
       })
-    })]
+    })
   });
 };
 

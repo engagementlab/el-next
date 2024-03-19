@@ -14,7 +14,7 @@ import Slider from '@mui/material/Slider';
 import { IconButton } from '@mui/material';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
-  import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
 
 interface VideoProps {
@@ -29,8 +29,10 @@ interface VideoProps {
 interface VideoState {
   videoOpen: boolean;
   videoHover: boolean;
+  // volumeHover: boolean;
   toggleOpen: (open: boolean) => void;
   toggleHover: (hover: boolean) => void;
+  // toggleVolumeHover: (hover: boolean) => void;
 }
 type ControlsProps = {
   duration: number;
@@ -42,12 +44,15 @@ type ControlsProps = {
   setPlaying: Dispatch<SetStateAction<boolean>>;
   onVolumeChangeHandler: (e: any, value: string) => void;
   onVolumeSeekUp: (e: any, value: string) => void;
+  onMute: () => void;
 };
 
 const Controls = (props: ControlsProps) => {
   const seek = (value: number) => {
     props.playerRef.current.seekTo(+value, 'seconds');
   };
+
+  const [volumeHover, toggleHover] = useState(false);
 
   return (
     <div className="absolute flex flex-row items-center bottom-0 left-[4rem] right-[4rem] bg-white/90 rounded-[50px]">
@@ -65,7 +70,51 @@ const Controls = (props: ControlsProps) => {
         />
         */}
 
-      <Box sx={{ width: '75%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          flexBasis: volumeHover ? '100%' : '5%',
+          transition: 'all 420ms ease',
+        }}
+      >
+        <IconButton
+          aria-label={props.muted ? 'unmute' : 'mute'}
+          size="large"
+          onClick={() => props.onMute()}
+          onMouseEnter={() => toggleHover(true)}
+          onMouseLeave={() => toggleHover(false)}
+        >
+          {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
+        </IconButton>
+        <Slider
+          aria-label="Player Current Volume"
+          defaultValue={0}
+          value={props.volume}
+          getAriaValueText={() => {
+            return props.volume.toString();
+          }}
+          color="primary"
+          max={1}
+          // onChange={(event: Event, value: number, activeThumb: number) =>
+          //   seek(value)
+          // }
+          sx={{
+            opacity: volumeHover ? 1 : 0,
+            transition: 'all 420ms ease',
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexBasis: '75%',
+          alignItems: 'center',
+          opacity: volumeHover ? 0 : 1,
+          transition: 'all 320ms ease',
+        }}
+      >
         <Slider
           aria-label="Player Current Position"
           defaultValue={0}
@@ -86,17 +135,6 @@ const Controls = (props: ControlsProps) => {
           }
         />
       </Box>
-      <IconButton
-        aria-label={props.playing ? 'pause' : 'play'}
-        size="large"
-        onClick={() => props.playerRef.current.}
-      >
-        {props.playerRef.current.props.muted ? (
-          <VolumeMuteIcon />
-        ) : (
-          <VolumeUpIcon />
-        )}
-      </IconButton>
     </div>
   );
 };
@@ -110,7 +148,7 @@ export const Video = ({
   noUi,
   play,
 }: VideoProps) => {
-  // const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(true);
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
   // Create store with Zustand
@@ -118,8 +156,10 @@ export const Video = ({
     create<VideoState>((set) => ({
       videoOpen: false,
       videoHover: false,
+      // volumeHover: false,
       toggleOpen: (open: boolean) => set({ videoOpen: open }),
       toggleHover: (hover: boolean) => set({ videoHover: hover }),
+      // toggleVolumeHover: (hover: boolean) => set({volumeHover: hover }),
     }))
   );
 
@@ -128,31 +168,43 @@ export const Video = ({
   const playerRef = useRef() as MutableRefObject<ReactPlayer>;
   const buttonSize = isSlide ? 75 : 150;
   const [videoState, setVideoState] = useState({
-   playing: true,
-   muted: false,
-   volume: 0.5,
-   played: 0,
-   seeking: false,
-Buffer : true
- });
-  const {playing, muted, volume, playbackRate, played, seeking, buffer} = videoState
-const volumeChangeHandler = (e: any, value: string) => {
- const newVolume = parseFloat(value) / 100;
-   setVideoState({
-     ...videoState,
-     volume: newVolume,
-     muted: Number(newVolume) === 0 ? true : false, // volume === 0 then muted
-   })
+    playing: true,
+    muted: false,
+    volume: 0.5,
+    played: 0,
+    seeking: false,
+    buffer: true,
+  });
+  const { muted, volume, played, seeking, buffer } = videoState;
 
-};
+  const volumeChangeHandler = (e, value) => {
+    const newVolume = parseFloat(value) / 100;
 
-const volumeSeekUpHandler = (e: any, value: string) => {
- const newVolume = parseFloat(value) / 100;
-   setVideoState({
-     ...videoState,
-     volume: newVolume,
-     muted: newVolume === 0 ? true : false,
-   })};
+    setVideoState({
+      ...videoState,
+      volume: newVolume,
+      muted: Number(newVolume) === 0 ? true : false, // volume === 0 then muted
+    });
+  };
+
+  const volumeSeekUpHandler = (e, value) => {
+    const newVolume = parseFloat(value) / 100;
+
+    setVideoState({
+      ...videoState,
+      volume: newVolume,
+      muted: newVolume === 0 ? true : false,
+    });
+  };
+
+  const muteHandler = () => {
+    // Mutes the video player
+    setVideoState({
+      ...videoState,
+      muted: !videoState.muted,
+      volume: videoState.muted ? 1 : 0,
+    });
+  };
 
   let classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
   if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
@@ -276,8 +328,8 @@ const volumeSeekUpHandler = (e: any, value: string) => {
                 setPlayedSeconds(playedSeconds)
               }
               onSeek={setPlayedSeconds}
-              volume={}
-              muted
+              volume={volume}
+              muted={muted}
               config={{
                 file: {
                   tracks: [
@@ -292,14 +344,13 @@ const volumeSeekUpHandler = (e: any, value: string) => {
                   ],
                 },
               }}
-              
             />
           </div>
           {/* <AnimatePresence> */}
           {/* {videoHover && ( */}
           <div
             className={`relative top-[90%] transition-all duration-700 ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)] ${
-              videoHover ? 'translate-y-[0]' : 'translate-y-[0rem]'
+              videoHover ? 'translate-y-[0]' : 'translate-y-[6rem]'
             }`}
             // style={{
             //   top: '90%',
@@ -312,10 +363,12 @@ const volumeSeekUpHandler = (e: any, value: string) => {
               playerRef={playerRef}
               playing={playing}
               playedSeconds={playedSeconds}
-              // setPlaying={setPlaying}
-volume={volume}
-           onVolumeChangeHandler = {volumeChangeHandler}
-           onVolumeSeekUp = {volumeSeekUpHandler}
+              setPlaying={setPlaying}
+              volume={volume}
+              muted={muted}
+              onMute={muteHandler}
+              onVolumeChangeHandler={volumeChangeHandler}
+              onVolumeSeekUp={volumeSeekUpHandler}
             />
           </div>
           {/* )} */}

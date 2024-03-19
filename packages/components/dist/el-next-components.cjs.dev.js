@@ -32,12 +32,15 @@ require('@mui/material');
 require('react-scroll');
 require('@el-next/components/flexLayout');
 require('@el-next/components/headingStyle');
+require('./objectSpread2-62cbe323.cjs.dev.js');
 require('zustand/middleware');
 require('lodash');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
 require('@mui/material/Box');
 require('@mui/material/Slider');
+require('@mui/icons-material/VolumeUp');
+require('@mui/icons-material/VolumeMute');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 

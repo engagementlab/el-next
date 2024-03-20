@@ -4,7 +4,10 @@ interface VideoProps {
     videoLabel: string;
     thumbUrl?: string;
     isSlide?: boolean;
-    themeColor?: string;
+    themeColor?: {
+        fill: string;
+        stroke: string;
+    };
     noUi?: boolean;
     play?: boolean;
 }

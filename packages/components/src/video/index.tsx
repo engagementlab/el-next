@@ -11,7 +11,7 @@ import ReactPlayer from 'react-player/lazy';
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { IconButton } from '@mui/material';
+import { IconButton, createTheme } from '@mui/material';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -47,6 +47,8 @@ type ControlsProps = {
   onMute: () => void;
 };
 
+const easing = 'ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)]';
+
 const Controls = (props: ControlsProps) => {
   const seek = (value: number) => {
     props.playerRef.current.seekTo(+value, 'seconds');
@@ -55,7 +57,7 @@ const Controls = (props: ControlsProps) => {
   const [volumeHover, toggleHover] = useState(false);
 
   return (
-    <div className="absolute flex flex-row items-center bottom-0 left-[4rem] right-[4rem] bg-white/90 rounded-[50px]">
+    <div className="absolute flex flex-row items-center px-5 bottom-0 left-[4rem] right-[4rem] bg-[#D7EFC1]/80 rounded-[50px]">
       <IconButton
         aria-label={props.playing ? 'pause' : 'play'}
         size="large"
@@ -71,36 +73,39 @@ const Controls = (props: ControlsProps) => {
         */}
 
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          flexBasis: volumeHover ? '100%' : '5%',
-          transition: 'all 420ms ease',
-        }}
+        // sx={{
+        //   display: 'flex',
+        //   flexDirection: 'row',
+        //   alignItems: 'center',
+        //   flexBasis:
+        //   transition: 'all 420ms ease',
+        // }}
+        className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
+          volumeHover ? 'basis-[50%]' : 'basis-[5%]'
+        } ${easing}`}
+        onMouseEnter={() => toggleHover(true)}
+        onMouseLeave={() => toggleHover(false)}
       >
         <IconButton
           aria-label={props.muted ? 'unmute' : 'mute'}
           size="large"
           onClick={() => props.onMute()}
-          onMouseEnter={() => toggleHover(true)}
-          onMouseLeave={() => toggleHover(false)}
         >
           {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
         </IconButton>
         <Slider
           aria-label="Player Current Volume"
-          defaultValue={0}
-          value={props.volume}
+          defaultValue={0.5}
+          value={props.volume * 100}
           getAriaValueText={() => {
             return props.volume.toString();
           }}
-          color="primary"
-          max={1}
-          // onChange={(event: Event, value: number, activeThumb: number) =>
-          //   seek(value)
-          // }
+          onChange={(e: Event, value: number, activeThumb: number) => {
+            // console.log(value, activeThumb);
+            props.onVolumeChangeHandler(e, value.toString());
+          }}
           sx={{
+            color: '#5EB89E',
             opacity: volumeHover ? 1 : 0,
             transition: 'all 420ms ease',
           }}
@@ -111,7 +116,7 @@ const Controls = (props: ControlsProps) => {
           display: 'flex',
           flexBasis: '75%',
           alignItems: 'center',
-          opacity: volumeHover ? 0 : 1,
+          opacity: volumeHover ? 0.3 : 1,
           transition: 'all 320ms ease',
         }}
       >
@@ -128,11 +133,15 @@ const Controls = (props: ControlsProps) => {
               ? props.playerRef.current.getCurrentTime().toString()
               : '0';
           }}
-          color="secondary"
+          // color="#6FB42C"
           max={props.duration}
           onChange={(event: Event, value: number, activeThumb: number) =>
             seek(value)
           }
+          sx={{
+            color: '#F6A536',
+            filter: 'drop-shadow(1px 0px 12px #F6A515)',
+          }}
         />
       </Box>
     </div>
@@ -246,8 +255,8 @@ export const Video = ({
                 height={buttonSize}
                 viewBox="0 0 512 512"
               >
-                <g className="transition-all origin-center group-hover:scale-75 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
-                  <g>
+                <g className="transition-all origin-center group-hover:scale-75 -[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
+                  <g>ease
                     <path
                       d="M256,0C114.608,0,0,114.608,0,256s114.608,256,256,256s256-114.608,256-256S397.392,0,256,0z M256,496
 			C123.664,496,16,388.336,16,256S123.664,16,256,16s240,107.664,240,240S388.336,496,256,496z"
@@ -332,6 +341,9 @@ export const Video = ({
               muted={muted}
               config={{
                 file: {
+                  attributes: {
+                    crossOrigin: 'true',
+                  },
                   tracks: [
                     {
                       src: 'https://captions.cloud.vimeo.com/captions/134131399.vtt?expires=1710536245&sig=49e06e5995dd5947770b13fff510efe2a9f55db5&download=auto_generated_captions.vtt',
@@ -349,9 +361,9 @@ export const Video = ({
           {/* <AnimatePresence> */}
           {/* {videoHover && ( */}
           <div
-            className={`relative top-[90%] transition-all duration-700 ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)] ${
+            className={`relative top-[90%] transition-all duration-700 ${
               videoHover ? 'translate-y-[0]' : 'translate-y-[6rem]'
-            }`}
+            } ${easing}`}
             // style={{
             //   top: '90%',
             //   position: 'relative',

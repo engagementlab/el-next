@@ -28,6 +28,7 @@ var PauseCircleFilledIcon__default = /*#__PURE__*/_interopDefault(PauseCircleFil
 var VolumeUpIcon__default = /*#__PURE__*/_interopDefault(VolumeUpIcon);
 var VolumeMuteIcon__default = /*#__PURE__*/_interopDefault(VolumeMuteIcon);
 
+var easing = 'ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)]';
 var Controls = function Controls(props) {
   var seek = function seek(value) {
     props.playerRef.current.seekTo(+value, 'seconds');
@@ -37,7 +38,7 @@ var Controls = function Controls(props) {
     volumeHover = _useState2[0],
     toggleHover = _useState2[1];
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
-    className: "absolute flex flex-row items-center bottom-0 left-[4rem] right-[4rem] bg-white/90 rounded-[50px]",
+    className: "absolute flex flex-row items-center px-5 bottom-0 left-[4rem] right-[4rem] bg-[#D7EFC1]/80 rounded-[50px]",
     children: [/*#__PURE__*/jsxRuntime.jsx(material.IconButton, {
       "aria-label": props.playing ? 'pause' : 'play',
       size: "large",
@@ -45,13 +46,21 @@ var Controls = function Controls(props) {
         return props.setPlaying(!props.playing);
       },
       children: props.playing ? /*#__PURE__*/jsxRuntime.jsx(PauseCircleFilledIcon__default["default"], {}) : /*#__PURE__*/jsxRuntime.jsx(PlayCircleFilledIcon__default["default"], {})
-    }), /*#__PURE__*/jsxRuntime.jsxs(Box__default["default"], {
-      sx: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        flexBasis: volumeHover ? '100%' : '5%',
-        transition: 'all 420ms ease'
+    }), /*#__PURE__*/jsxRuntime.jsxs(Box__default["default"]
+    // sx={{
+    //   display: 'flex',
+    //   flexDirection: 'row',
+    //   alignItems: 'center',
+    //   flexBasis:
+    //   transition: 'all 420ms ease',
+    // }}
+    , {
+      className: "flex flex-row items-center transition-all duration-[420ms] mr-5 ".concat(volumeHover ? 'basis-[50%]' : 'basis-[5%]', " ").concat(easing),
+      onMouseEnter: function onMouseEnter() {
+        return toggleHover(true);
+      },
+      onMouseLeave: function onMouseLeave() {
+        return toggleHover(false);
       },
       children: [/*#__PURE__*/jsxRuntime.jsx(material.IconButton, {
         "aria-label": props.muted ? 'unmute' : 'mute',
@@ -59,27 +68,20 @@ var Controls = function Controls(props) {
         onClick: function onClick() {
           return props.onMute();
         },
-        onMouseEnter: function onMouseEnter() {
-          return toggleHover(true);
-        },
-        onMouseLeave: function onMouseLeave() {
-          return toggleHover(false);
-        },
         children: props.muted ? /*#__PURE__*/jsxRuntime.jsx(VolumeMuteIcon__default["default"], {}) : /*#__PURE__*/jsxRuntime.jsx(VolumeUpIcon__default["default"], {})
       }), /*#__PURE__*/jsxRuntime.jsx(Slider__default["default"], {
         "aria-label": "Player Current Volume",
-        defaultValue: 0,
-        value: props.volume,
+        defaultValue: 0.5,
+        value: props.volume * 100,
         getAriaValueText: function getAriaValueText() {
           return props.volume.toString();
         },
-        color: "primary",
-        max: 1
-        // onChange={(event: Event, value: number, activeThumb: number) =>
-        //   seek(value)
-        // }
-        ,
+        onChange: function onChange(e, value, activeThumb) {
+          // console.log(value, activeThumb);
+          props.onVolumeChangeHandler(e, value.toString());
+        },
         sx: {
+          color: '#5EB89E',
           opacity: volumeHover ? 1 : 0,
           transition: 'all 420ms ease'
         }
@@ -89,7 +91,7 @@ var Controls = function Controls(props) {
         display: 'flex',
         flexBasis: '75%',
         alignItems: 'center',
-        opacity: volumeHover ? 0 : 1,
+        opacity: volumeHover ? 0.3 : 1,
         transition: 'all 320ms ease'
       },
       children: /*#__PURE__*/jsxRuntime.jsx(Slider__default["default"], {
@@ -98,11 +100,16 @@ var Controls = function Controls(props) {
         value: props.playerRef.current ? props.playerRef.current.getCurrentTime() : 0,
         getAriaValueText: function getAriaValueText() {
           return props.playerRef.current ? props.playerRef.current.getCurrentTime().toString() : '0';
-        },
-        color: "secondary",
+        }
+        // color="#6FB42C"
+        ,
         max: props.duration,
         onChange: function onChange(event, value, activeThumb) {
           return seek(value);
+        },
+        sx: {
+          color: '#F6A536',
+          filter: 'drop-shadow(1px 0px 12px #F6A515)'
         }
       })
     })]
@@ -230,6 +237,9 @@ var Video = function Video(_ref) {
             muted: muted,
             config: {
               file: {
+                attributes: {
+                  crossOrigin: 'true'
+                },
                 tracks: [{
                   src: 'https://captions.cloud.vimeo.com/captions/134131399.vtt?expires=1710536245&sig=49e06e5995dd5947770b13fff510efe2a9f55db5&download=auto_generated_captions.vtt',
                   kind: 'subtitles',
@@ -241,7 +251,7 @@ var Video = function Video(_ref) {
             }
           })
         }), /*#__PURE__*/jsxRuntime.jsx("div", {
-          className: "relative top-[90%] transition-all duration-700 ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)] ".concat(videoHover ? 'translate-y-[0]' : 'translate-y-[6rem]')
+          className: "relative top-[90%] transition-all duration-700 ".concat(videoHover ? 'translate-y-[0]' : 'translate-y-[6rem]', " ").concat(easing)
           // style={{
           //   top: '90%',
           //   position: 'relative',

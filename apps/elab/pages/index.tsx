@@ -434,7 +434,7 @@ export async function getStaticProps() {
   const ordering: string[] = orderingQuery.homepageOrder;
 
   let recentEventsResult = [];
-  const eventQueryStr = (dateCondition: string) => {
+  const eventQueryStr = (dateCondition: string, upcoming?: boolean) => {
     return `events(
               ${DefaultWhereCondition(`
                 eventDate: {
@@ -442,7 +442,7 @@ export async function getStaticProps() {
                 }
               `)},
               orderBy: {
-                eventDate: desc
+                eventDate: ${upcoming ? 'asc' : 'desc'}
               }
             ) { 
                 name
@@ -462,7 +462,7 @@ export async function getStaticProps() {
   // We want events only on or after right now, If there aren't any we will look for most recent
   const eventsQuery = await Query(
     'events',
-    eventQueryStr(`gte: "${new Date().toISOString()}"`)
+    eventQueryStr(`gte: "${new Date().toISOString()}"`, true)
   );
   // If response for upcoming events is empty, look for past events
   // ErrorClass.empty = 1

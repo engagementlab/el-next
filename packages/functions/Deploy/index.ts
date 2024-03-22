@@ -1,6 +1,6 @@
 /**
- * @fileoverview Engagement Lab initiatives content service
- * @copyright Engagement Lab at Emerson College, 2022
+ * @fileoverview Engagement Lab production deployment service
+ * @copyright Engagement Lab at Emerson College, 2022-2024
  *
  * @author Johnny Richardson
  * @description
@@ -22,6 +22,7 @@ const httpTrigger: AzureFunction = async function (
   const note = req.body.note;
   const repoName = req.body.repo;
   const storageAccount = req.body.storageAccount;
+  const cdnName = req.body.cdnName;
   const userName = req.body.userName;
 
   const workflowError = `
@@ -75,10 +76,11 @@ const httpTrigger: AzureFunction = async function (
         event_type: event || 'deploy-prod',
         client_payload: {
           apexUrl,
-          appName: appName || 'tngvi',
-          note,
+          appName: appName || 'elab',
+          note: note && note !== 'null' ? note : 'null',
           storageAccount,
           userName,
+          cdnName: cdnName ? cdnName : storageAccount,
         },
       }
     );
@@ -98,6 +100,9 @@ const httpTrigger: AzureFunction = async function (
               );
 
               if (workflowResponse.status === 200) {
+                context.log(
+                  `${userName} deployed successfully to ${storageAccount} with note: "${note}".`
+                );
                 context.res = {
                   status: 200,
                   body: {
@@ -118,6 +123,7 @@ const httpTrigger: AzureFunction = async function (
                 status: 500,
                 body: workflowError,
               };
+              reject();
             }
           }, 5000);
         });

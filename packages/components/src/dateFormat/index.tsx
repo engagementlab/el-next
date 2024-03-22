@@ -1,11 +1,16 @@
 type Props = {
-    date: string
-}
+  date: string;
+};
 
-export default function DateFormat({ date }: Props) {
-    return {
-        weekday: new Date(date).toLocaleDateString('en-US', {
-            weekday: 'long',
-        })
-    }
-}
+/**
+ * Date formatter
+ * @alpha
+ *
+ */
+export const DateFormat = ({ date }: Props) => {
+  return {
+    weekday: new Date(date).toLocaleDateString('en-US', {
+      weekday: 'long',
+    }),
+  };
+};

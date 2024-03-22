@@ -1,0 +1,111 @@
+name: Run full build
+on:
+  push:
+    branches: [main]
+env:
+  CI: true
+  NODE_ENV: production
+  DB_URI: ${{ secrets.DB_URI }}
+  AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+jobs:
+  initial-setup:
+    name: 'Initial setup'
+    uses: engagementlab/el-next/.github/workflows/init.yml@main
+
+  run-build:
+    needs: initial-setup
+    name: 'Make build'
+    # Do not run on automated commits (interpretation of TravisCI feature)
+    # if: "!contains(github.event.head_commit.message, 'skip ci') && github.actor != 'dependabot[bot]'"
+    runs-on: ubuntu-latest
+    outputs:
+      pa11y_outcome: ${{ steps.pa11y.outcome }}
+      lhci_outcome: ${{ steps.lhci.outcome }}
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Setup node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Download artifacts from initial-setup job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ format('artifact-repo-{0}', github.run_id) }}
+
+      - name: Install global packages
+        run: npm install -g yarn pm2 @preconstruct/cli
+
+      - name: Install local monorepo packages and run preconstruct
+        run: yarn
+
+      - name: Make production build
+        working-directory: apps/elab
+        env:
+          GRAPHQL_APP: elab
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+        run: |
+          yarn add typescript @types/node
+          yarn          
+          yarn build
+
+      - name: Generate build notes and summary from user
+        if: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.note != 'null' }}
+        run: echo "(Build commit [${{ steps.commit.outputs.commit_sha }}](https://github.com/$GITHUB_REPOSITORY/commit/${{ steps.commit.outputs.commit_long_sha }}))" >> $GITHUB_STEP_SUMMARY"
+
+      - name: Install packages
+        working-directory: apps/elab
+        run: npm i -g pa11y-ci http-server pm2 && npm i
+
+      - name: Serve build
+        working-directory: apps/elab/out
+        run: pm2 start `which http-server` --name server
+
+      - name: Output all build paths to .pa11yci config and run a11y tests
+        id: pa11y
+        run: |
+          node outputRoutes.mjs --app elab
+          pa11y-ci
+
+      - name: Run Lighthouse
+        id: lhci
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          fooApiToken: ${{ secrets.FOO_API_KEY }}
+          configFile: 'lhconfig.json'
+
+  notify-success:
+    name: Send success Slack notification
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'success' && needs.run-build.outputs.pa11y_outcome == 'success'}}
+    uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
+    with:
+      success: true
+      warn: false
+    secrets: inherit
+
+  notify-failure:
+    name: Send failure Slack notification
+    needs: [initial-setup, run-build]
+    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(needs.*.result, 'failure') }}
+    uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
+    with:
+      success: false
+      warn: false
+    secrets: inherit
+
+  # Build has failed due to a11y check(s) not successful
+  notify-failure-a11y:
+    name: Send failure Slack notification due to a11y check failure
+    needs: [initial-setup, run-build]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.run-build.result == 'failure' && (needs.run-build.outputs.lhci_outcome == 'failure' || needs.run-build.outputs.pa11y_outcome == 'failure') }}
+    uses: engagementlab/el-next/.github/workflows/slack-ci.yml@main
+    with:
+      success: false
+      warn: true
+    secrets: inherit

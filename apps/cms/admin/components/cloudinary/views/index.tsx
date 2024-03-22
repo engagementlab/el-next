@@ -65,11 +65,16 @@ type CloudinaryImageValue =
       };
       previous: CloudinaryImageValue;
     }
-  | { kind: 'remove'; previous: Exclude<CloudinaryImageValue, { kind: 'remove' }> };
+  | {
+      kind: 'remove';
+      previous: Exclude<CloudinaryImageValue, { kind: 'remove' }>;
+    };
 
 type CloudinaryImageController = FieldController<CloudinaryImageValue>;
 
-export const controller = (config: FieldControllerConfig): CloudinaryImageController => {
+export const controller = (
+  config: FieldControllerConfig
+): CloudinaryImageController => {
   return {
     path: config.path,
     label: config.label,

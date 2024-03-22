@@ -1,0 +1,22 @@
+## Static configuration
+log:
+  # level: WARN
+  # level: INFO
+  level: DEBUG 
+accessLog: {}
+entryPoints:
+  web:
+   address: ":80"
+api:
+  insecure: true
+  dashboard: true
+providers:
+  docker: 
+    watch: false
+certificatesResolvers:
+  letsencrypt:
+    # Enable ACME (Let's Encrypt): automatic SSL.
+    acme:
+      email: "test@example.com"
+      storage: "acme.json"
+      tlsChallenge:

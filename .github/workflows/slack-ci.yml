@@ -1,0 +1,89 @@
+name: Send Slack notification
+on:
+  workflow_call:
+    inputs:
+      success:
+        required: true
+        type: boolean
+      warn:
+        type: boolean
+        required: true
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK  
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    steps:
+      - name: Send success Slack notification
+        uses: slackapi/slack-github-action@v1.23.0
+        if: ${{ inputs.success && !inputs.warn }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":goggles: The latest *test* build of our web apps succeeded. _(Build #${{ github.run_number }})_"
+                  }
+                }
+              ]
+            }
+
+      # Build has failed due to a11y check(s) not successful
+      - name: Send Slack notification w/ a11y warning 
+        uses: slackapi/slack-github-action@v1.23.0
+        if: ${{ !inputs.success && inputs.warn }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":goggles: The latest *test* build of our web apps succeeded with warnings. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": ":pushpin: Some accessibility issues exist."
+                    }
+                  ]
+                }
+              ]
+            }
+
+      - name: Send failed Slack notification
+        uses: slackapi/slack-github-action@v1.23.0
+        if: ${{ !inputs.success && !inputs.warn }}
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":woozy_face: The latest *test* build of our web apps failed. _(Build #${{ github.run_number }})_"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "(Production deploys will probably fail right now)"
+                    }
+                  ]
+                }
+              ]
+            }

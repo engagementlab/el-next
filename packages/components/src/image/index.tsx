@@ -1,6 +1,6 @@
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2021-2022
+ * Developed by Engagement Lab, 2021-2024
  *
  * @author Johnny Richardson
  * Cloudinary image component
@@ -9,12 +9,7 @@
 import React from 'react';
 
 import { Cloudinary } from '@cloudinary/url-gen';
-import {
-  AdvancedImage,
-  lazyload,
-  placeholder,
-  responsive,
-} from '@cloudinary/react';
+import { AdvancedImage, lazyload, responsive } from '@cloudinary/react';
 import { Plugins } from '@cloudinary/html';
 
 // Cloudinary instance
@@ -27,50 +22,74 @@ const cld = new Cloudinary({
   },
 });
 
-/**
- * @typedef ImageProps
- * @prop {string} alt - The image's alt text
- * @prop {string} id - The image's ID attribute
- * @prop {string} imgId - The image's cloud public id attribute
- * @prop {string} [className] - The image element's optional class
- * @prop {string} [transforms] - The image's optional cloud transformations
- * @prop {number} [width] - The image's optional width
- * @prop {number} [maxWidth] - The largest optional width for responsive steps
- * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
- * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
- */
-type ImageProps = {
+interface ImageProps {
+  /**
+   * The image's alt text
+   */
   alt: string;
+  /**
+   * The image's ID attribute
+   */
   id: string;
+  /**
+   * The image's cloud public id attribute
+   */
   imgId: string;
+  /**
+   * The image element's optional class
+   */
   className?: string;
+  /**
+   * The image's optional cloud transformations
+   * @defaultValue "f_auto,dpr_auto,ar_4:3,c_crop,g_center"
+   * - 'c_crop,g_center' are omitted if maxWidth defined
+   */
   transforms?: string;
+  /**
+   * The image's optional width
+   */
   width?: number;
+  /**
+   *  The largest optional width for responsive steps
+   */
   maxWidth?: number;
+  maxWidthDisable?: boolean;
+  /**
+   * @defaultValue true
+   *  - If set to false, the image will not be lazily-loaded
+   */
   lazy?: boolean;
+  /**
+   * @defaultValue true
+   * - If set to false, the image will not use a 4:3 aspect ratio
+   */
   aspectDefault?: boolean;
-};
+}
 
-/**
- * @typedef ImageUrlProps
- * @prop {string} imgId - The image's cloud public id attribute
- * @prop {number} width - The image's width
- * @prop {string} [transforms] - The image's optional cloud transformations
- * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
- */
-type ImageUrlProps = {
+interface ImageUrlProps {
+  /**
+   * The image's cloud public id attribute
+   */
   imgId: string;
+  /**
+   * The image's width
+   */
   width: number;
+  /**
+   * The image's optional cloud transformations
+   * @defaultValue "f_auto,dpr_auto,c_crop,g_center,ar_4:3"
+   */
   transforms?: string;
+  /**
+   * @defaultValue true
+   * - If set to false, the image will not use a 4:3 aspect ratio
+   */
   aspectDefault?: boolean;
-};
+}
 
 /**
  * Return a Cloudinary AdvancedImage component
- * @component
  * @returns {React.ReactElement} The image component
- *
- * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
@@ -82,11 +101,44 @@ const Image = ({
   transforms,
   width,
   maxWidth,
+  maxWidthDisable,
   lazy,
-  aspectDefault,
+  aspectDefault = true,
 }: ImageProps) => {
   // Instantiate a CloudinaryImage object for the image with public ID
-  const cloudImage = cld.image(`${imgId}`);
+  const cloudImage = cld.image(imgId);
+
+  if (process.env.NODE_ENV !== 'production' && maxWidth < 800)
+    return (
+      <div className="m-4 p-1 border-4 border-[#00ab9e]">
+        <svg viewBox="0 0 50 50" className="max-w-[45px]">
+          <circle style={{ fill: '#D75A4A' }} cx="25" cy="25" r="25" />
+          <polyline
+            style={{
+              fill: 'none',
+              stroke: '#FFFFFF',
+              strokeWidth: 2,
+              strokeLinecap: 'round',
+              strokeMiterlimit: 10,
+            }}
+            points="16,34 25,25 34,16 
+	"
+          />
+          <polyline
+            style={{
+              fill: 'none',
+              stroke: '#FFFFFF',
+              strokeWidth: 2,
+              strokeLinecap: 'round',
+              strokeMiterlimit: 10,
+            }}
+            points="16,16 25,25 34,34 
+	"
+          />
+        </svg>
+        Image error: maxWidth cannot be less than 800.
+      </div>
+    );
   // If maxWidth is defined, ensure that the image steps don't exceed it
   let plugins: Plugins = [
     responsive({
@@ -97,22 +149,24 @@ const Image = ({
   ];
 
   // Create image transforms;
-  // if maxWidth defined, ensure initial width is used
+  // For dev mode or low bandwidth, degrade image quality and use grayscale to save bandwidth
+  const lowBandwidth =
+    process.env.LOW_BANDWIDTH === 'true' ||
+    (typeof window !== 'undefined' &&
+      window.location.host.includes('localhost'));
+
+  let defaultTransforms = `f_auto,dpr_auto${aspectDefault ? '' : ',ar_4:3'}${
+    // if maxWidth defined, ensure initial width is used
+    maxWidth ? `,w_${maxWidth}` : ',c_crop,g_center'
+  }`;
   cloudImage.addTransformation(
-    transforms ||
-      `f_auto,dpr_auto${aspectDefault ? '' : ',ar_4:3'}${
-        maxWidth ? `,w_${maxWidth}` : ',c_crop,g_center'
-      }`
+    `${transforms || defaultTransforms}${
+      lowBandwidth ? ',e_grayscale,q_auto:eco' : ''
+    }`
   );
 
   // If lazyload not set to false, enable
-  if (lazy === undefined)
-    plugins.push(
-      lazyload(),
-      placeholder({
-        mode: 'blur',
-      })
-    );
+  if (lazy === undefined) plugins.push(lazyload());
 
   return (
     <AdvancedImage
@@ -121,7 +175,7 @@ const Image = ({
       cldImg={cloudImage}
       alt={alt}
       plugins={plugins}
-      style={{ maxWidth: width + `px` }}
+      style={!maxWidthDisable ? { maxWidth: `${width}px` } : {}}
     />
   );
 };
@@ -131,6 +185,7 @@ const Image = ({
  * @returns {string} The image URL
  *
  * @typedef {object} ImageUrlProps
+ * @
  *
  * @extends {Component<Props>}
  */
@@ -142,10 +197,14 @@ const ImageUrl = ({
 }: ImageUrlProps) => {
   // Instantiate a CloudinaryImage object for the image with public ID;
   const cloudImage = cld.image(`${imgId}`);
+  let transformsFormatted = transforms;
+
+  // If transforms missing width and width prop defined, use prop
+  if (!transforms.includes('w_') && width) transformsFormatted += `,w_${width}`;
 
   // Create image transforms
   cloudImage.addTransformation(
-    transforms ||
+    transformsFormatted ||
       `f_auto,dpr_auto,c_crop,g_center${
         aspectDefault ? '' : ',ar_4:3'
       },w_${width}`

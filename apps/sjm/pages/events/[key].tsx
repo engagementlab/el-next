@@ -16,8 +16,6 @@ import type { Swiper as SwiperT } from 'swiper';
 import { FreeMode, Navigation, Thumbs } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import query from '../../../../apollo-client';
-
 import { Blocks, Doc, ImageOverride } from '../../components/Renderers';
 
 // Import Swiper styles
@@ -25,6 +23,7 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import { Query } from '@el-next/components';
 
 type Event = {
   name: string;
@@ -53,7 +52,7 @@ const rendererOverrides = {
       2: 'text-3xl font-bold tracking-wide my-4',
       3: 'text-2xl font-medium tracking-wide my-4',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
 };
 const agendaRendererOverrides = {
@@ -86,6 +85,8 @@ const agendaRendererOverrides = {
 export default function Event({
   item,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (!item) return;
+
   const [bgImg1, setBgImg1] = useState('');
   const [bgImg2, setBgImg2] = useState('');
 
@@ -242,7 +243,7 @@ export default function Event({
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const items = (await query(
+  const items = (await Query(
     'events',
     ` events {
             key
@@ -256,12 +257,12 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
         name
@@ -293,5 +294,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
     }`
   );
   const item = itemResult[0] as Event;
-  return { props: { item } };
+  return { props: { item }, revalidate: 1 };
 }

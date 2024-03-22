@@ -21,11 +21,17 @@ import { HeadingStyle } from '@el-next/components/headingStyle';
  * @returns {function}
  */
 export const DocRenderers = (styles?: { linkClass?: string }) => {
+  /**
+   * @see https://keystonejs.com/docs/guides/document-fields#overriding-the-default-renderers
+   */
   return (renderOverrides?: {
     heading?: Function;
     layout?: Function;
     link?: Function;
     bold?: Function;
+    quote?: Function;
+    divider?: Function;
+    paragraph?: Function;
   }): DocumentRendererProps['renderers'] => {
     let blocks: DocumentRendererProps['renderers'] = {
       inline: {
@@ -56,7 +62,7 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
             <a
               href={fixedHref}
               target={href.indexOf('#') === 0 ? '_self' : '_blank'}
-              className={`no-underline border-b-2 transition-all ${
+              className={`no-underline border-b-2 ${
                 styles && styles.linkClass
               }`}
             >
@@ -69,12 +75,33 @@ export const DocRenderers = (styles?: { linkClass?: string }) => {
         heading: ({ level, children, textAlign }) => {
           return renderOverrides?.heading
             ? renderOverrides.heading(level, children, textAlign)
-            : HeadingStyle(level, children, textAlign);
+            : HeadingStyle({ level, children, textAlign });
         },
         layout: ({ layout, children }) => {
           return renderOverrides?.layout
             ? renderOverrides.layout(layout, children)
-            : FlexLayout(layout, children);
+            : FlexLayout({ layout, children });
+        },
+        blockquote: ({ children }) => {
+          return renderOverrides?.quote ? (
+            renderOverrides.quote(children)
+          ) : (
+            <p>{children}</p>
+          );
+        },
+        divider: ({}) => {
+          return renderOverrides?.divider ? (
+            renderOverrides.divider()
+          ) : (
+            <hr className="border-black" />
+          );
+        },
+        paragraph: ({ children }) => {
+          return renderOverrides?.paragraph ? (
+            renderOverrides.paragraph(children)
+          ) : (
+            <p className="my-4 whitespace-pre-wrap">{children}</p>
+          );
         },
       },
     };

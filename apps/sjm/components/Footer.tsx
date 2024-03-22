@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import Image from '@el-next/components/image';
+import { Image } from '@el-next/components';
 
 class Footer extends Component {
   render() {

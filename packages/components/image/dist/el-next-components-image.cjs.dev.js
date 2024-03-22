@@ -9,7 +9,7 @@ var jsxRuntime = require('react/jsx-runtime');
 
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2021-2022
+ * Developed by Engagement Lab, 2021-2024
  *
  * @author Johnny Richardson
  * Cloudinary image component
@@ -25,82 +25,110 @@ var cld = new urlGen.Cloudinary({
   }
 });
 /**
- * @typedef ImageProps
- * @prop {string} alt - The image's alt text
- * @prop {string} id - The image's ID attribute
- * @prop {string} imgId - The image's cloud public id attribute
- * @prop {string} [className] - The image element's optional class
- * @prop {string} [transforms] - The image's optional cloud transformations
- * @prop {number} [width] - The image's optional width
- * @prop {number} [maxWidth] - The largest optional width for responsive steps
- * @prop {boolean} [lazy=true] - If set to false, the image will not be lazily-loaded
- * @prop {boolean} [aspectDefault=true] - If set to false, the image will not use a 4:3 aspect ratio
- */
-
-/**
  * Return a Cloudinary AdvancedImage component
- * @component
  * @returns {React.ReactElement} The image component
- *
- * @typedef {object} ImageProps
  *
  * @extends {Component<Props>}
  */
 var Image = function Image(_ref) {
   var alt = _ref.alt,
-      className = _ref.className,
-      id = _ref.id,
-      imgId = _ref.imgId,
-      transforms = _ref.transforms,
-      width = _ref.width,
-      maxWidth = _ref.maxWidth,
-      lazy = _ref.lazy,
-      aspectDefault = _ref.aspectDefault;
+    className = _ref.className,
+    id = _ref.id,
+    imgId = _ref.imgId,
+    transforms = _ref.transforms,
+    width = _ref.width,
+    maxWidth = _ref.maxWidth,
+    maxWidthDisable = _ref.maxWidthDisable,
+    lazy = _ref.lazy,
+    _ref$aspectDefault = _ref.aspectDefault,
+    aspectDefault = _ref$aspectDefault === void 0 ? true : _ref$aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID
-  var cloudImage = cld.image("".concat(imgId)); // If maxWidth is defined, ensure that the image steps don't exceed it
-
+  var cloudImage = cld.image(imgId);
+  if (process.env.NODE_ENV !== 'production' && maxWidth < 800) return /*#__PURE__*/jsxRuntime.jsxs("div", {
+    className: "m-4 p-1 border-4 border-[#00ab9e]",
+    children: [/*#__PURE__*/jsxRuntime.jsxs("svg", {
+      viewBox: "0 0 50 50",
+      className: "max-w-[45px]",
+      children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
+        style: {
+          fill: '#D75A4A'
+        },
+        cx: "25",
+        cy: "25",
+        r: "25"
+      }), /*#__PURE__*/jsxRuntime.jsx("polyline", {
+        style: {
+          fill: 'none',
+          stroke: '#FFFFFF',
+          strokeWidth: 2,
+          strokeLinecap: 'round',
+          strokeMiterlimit: 10
+        },
+        points: "16,34 25,25 34,16  "
+      }), /*#__PURE__*/jsxRuntime.jsx("polyline", {
+        style: {
+          fill: 'none',
+          stroke: '#FFFFFF',
+          strokeWidth: 2,
+          strokeLinecap: 'round',
+          strokeMiterlimit: 10
+        },
+        points: "16,16 25,25 34,34  "
+      })]
+    }), "Image error: maxWidth cannot be less than 800."]
+  });
+  // If maxWidth is defined, ensure that the image steps don't exceed it
   var plugins = [react.responsive({
     steps: [800, 1000, 1400, 1800, 2200].filter(function (step) {
       return maxWidth ? step <= maxWidth : step;
     })
-  })]; // Create image transforms;
+  })];
+
+  // Create image transforms;
+  // For dev mode or low bandwidth, degrade image quality and use grayscale to save bandwidth
+  var lowBandwidth = process.env.LOW_BANDWIDTH === 'true' || typeof window !== 'undefined' && window.location.host.includes('localhost');
+  var defaultTransforms = "f_auto,dpr_auto".concat(aspectDefault ? '' : ',ar_4:3').concat(
   // if maxWidth defined, ensure initial width is used
+  maxWidth ? ",w_".concat(maxWidth) : ',c_crop,g_center');
+  cloudImage.addTransformation("".concat(transforms || defaultTransforms).concat(lowBandwidth ? ',e_grayscale,q_auto:eco' : ''));
 
-  cloudImage.addTransformation(transforms || "f_auto,dpr_auto".concat(aspectDefault ? '' : ',ar_4:3').concat(maxWidth ? ",w_".concat(maxWidth) : ',c_crop,g_center')); // If lazyload not set to false, enable
-
-  if (lazy === undefined) plugins.push(react.lazyload(), react.placeholder({
-    mode: 'blur'
-  }));
+  // If lazyload not set to false, enable
+  if (lazy === undefined) plugins.push(react.lazyload());
   return /*#__PURE__*/jsxRuntime.jsx(react.AdvancedImage, {
     id: id,
     className: className,
     cldImg: cloudImage,
     alt: alt,
     plugins: plugins,
-    style: {
-      maxWidth: width + "px"
-    }
+    style: !maxWidthDisable ? {
+      maxWidth: "".concat(width, "px")
+    } : {}
   });
 };
+
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL
  *
  * @typedef {object} ImageUrlProps
+ * @
  *
  * @extends {Component<Props>}
  */
-
-
 var ImageUrl = function ImageUrl(_ref2) {
   var imgId = _ref2.imgId,
-      width = _ref2.width,
-      transforms = _ref2.transforms,
-      aspectDefault = _ref2.aspectDefault;
+    width = _ref2.width,
+    transforms = _ref2.transforms,
+    aspectDefault = _ref2.aspectDefault;
   // Instantiate a CloudinaryImage object for the image with public ID;
-  var cloudImage = cld.image("".concat(imgId)); // Create image transforms
+  var cloudImage = cld.image("".concat(imgId));
+  var transformsFormatted = transforms;
 
-  cloudImage.addTransformation(transforms || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3', ",w_").concat(width));
+  // If transforms missing width and width prop defined, use prop
+  if (!transforms.includes('w_') && width) transformsFormatted += ",w_".concat(width);
+
+  // Create image transforms
+  cloudImage.addTransformation(transformsFormatted || "f_auto,dpr_auto,c_crop,g_center".concat(aspectDefault ? '' : ',ar_4:3', ",w_").concat(width));
   return cloudImage.toURL();
 };
 

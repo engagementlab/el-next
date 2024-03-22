@@ -1,19 +1,19 @@
 ## Static configuration
-log:
+# log:
   # level: WARN
   # level: INFO
-  level: DEBUG
+  # level: DEBUG
 accessLog: {}
 
 entryPoints:
   web:
    address: ":80"
-   http:
-     redirections:
-       entryPoint:
-         to: websecure
-         scheme: https
-         permanent: true
+  #  http:
+  #    redirections:
+  #      entryPoint:
+  #        to: websecure
+  #        scheme: https
+  #        permanent: true
   websecure:
    address: ":443"
 # api:
@@ -32,3 +32,9 @@ certificatesResolvers:
       storage: "acme.json"
       dnsChallenge:
         provider: cloudflare
+  # qa-elab:
+  #   acme:
+  #     email: "engagementlab@emerson.edu"
+  #     storage: "acme-qa-elab.json"
+  #     httpChallenge: 
+  #       entryPoint: web

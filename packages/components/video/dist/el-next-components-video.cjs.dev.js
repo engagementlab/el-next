@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-7cc9ff15.cjs.dev.js');
+var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
 var Image = require('next/image');
 var react = require('react');
 var create = require('zustand');
@@ -18,33 +18,31 @@ function _arrayWithHoles(arr) {
 }
 
 function _iterableToArrayLimit(arr, i) {
-  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-
-  if (_i == null) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-
-  var _s, _e;
-
-  try {
-    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
     try {
-      if (!_n && _i["return"] != null) _i["return"]();
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+    } catch (err) {
+      _d = !0, _e = err;
     } finally {
-      if (_d) throw _e;
+      try {
+        if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
     }
+    return _arr;
   }
-
-  return _arr;
 }
 
 function _nonIterableRest() {
@@ -55,58 +53,67 @@ function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || unsupportedIterableToArray._unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 
-var Video = function Video(_ref2) {
-  var thumbUrl = _ref2.thumbUrl,
-      videoUrl = _ref2.videoUrl,
-      videoLabel = _ref2.videoLabel;
-
+var Video = function Video(_ref) {
+  var thumbUrl = _ref.thumbUrl,
+    videoUrl = _ref.videoUrl,
+    videoLabel = _ref.videoLabel,
+    isSlide = _ref.isSlide;
+    _ref.themeColor;
+    var noUi = _ref.noUi,
+    play = _ref.play;
   // Create store with Zustand
   var _useState = react.useState(function () {
-    return create__default["default"](function (set) {
-      return {
-        videoOpen: false,
-        toggleOpen: function toggleOpen(open) {
-          return set({
-            videoOpen: open
-          });
-        }
-      };
-    });
-  }),
-      _useState2 = _slicedToArray(_useState, 1),
-      useStore = _useState2[0];
-
+      return create__default["default"](function (set) {
+        return {
+          videoOpen: false,
+          toggleOpen: function toggleOpen(open) {
+            return set({
+              videoOpen: open
+            });
+          }
+        };
+      });
+    }),
+    _useState2 = _slicedToArray(_useState, 1),
+    useStore = _useState2[0];
   var toggleOpen = useStore(function (state) {
     return state.toggleOpen;
   });
   var videoOpen = useStore(function (state) {
     return state.videoOpen;
   });
+  var buttonSize = isSlide ? 75 : 150;
+  var classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
   return /*#__PURE__*/jsxRuntime.jsxs("div", {
-    className: "relative video w-full h-full lg:mb-8",
-    children: [videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsxs("a", {
-      href: "#",
+    className: classStr,
+    children: [videoOpen || play || !thumbUrl ? '' : /*#__PURE__*/jsxRuntime.jsxs("button", {
       onClick: function onClick(e) {
         toggleOpen(true);
         e.preventDefault();
       },
+      className: "group relative",
+      style: {
+        height: 'inherit'
+      },
       children: [/*#__PURE__*/jsxRuntime.jsx(Image__default["default"], {
         alt: "Thumbnail image for video with title \"".concat(videoLabel, "\""),
+        className: "pointer-events-none",
         src: thumbUrl,
         width: 1920,
         height: 1080,
-        layout: "responsive",
-        unoptimized: true
-      }), /*#__PURE__*/jsxRuntime.jsx("span", {
+        unoptimized: true,
+        draggable: "true"
+      }), !noUi && /*#__PURE__*/jsxRuntime.jsx("span", {
         className: "absolute",
         style: {
-          top: 'calc(50% - 75px)',
-          left: 'calc(50% - 75px)'
+          top: "calc(50% - ".concat(buttonSize / 2, "px)"),
+          left: "calc(50% - ".concat(buttonSize / 2, "px)")
         },
         children: /*#__PURE__*/jsxRuntime.jsxs("svg", {
           viewBox: "0 0 151 151",
-          width: "151",
-          height: "151",
+          width: buttonSize,
+          height: buttonSize,
+          className: "transition-all group-hover:scale-110",
           children: [/*#__PURE__*/jsxRuntime.jsx("circle", {
             style: {
               strokeWidth: '0.8px',
@@ -130,24 +137,21 @@ var Video = function Video(_ref2) {
           })]
         })
       })]
-    }), !videoOpen ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
+    }), !videoOpen && !play ? '' : /*#__PURE__*/jsxRuntime.jsx("div", {
       id: "video-embed",
+      className: "w-full h-full min-h-[inherit]",
       children: /*#__PURE__*/jsxRuntime.jsx("div", {
-        className: "relative",
-        style: {
-          padding: '49.27% 0 0 0'
-        },
+        className: "relative h-full min-h-[inherit]",
         children: /*#__PURE__*/jsxRuntime.jsx("iframe", {
           src: "".concat(videoUrl, "?h=e72038724e&color=bf9eda&byline=0&portrait=0&autoplay=1"),
           style: {
-            position: 'absolute',
+            position: isSlide ? 'relative' : 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%'
           },
-          frameBorder: "0",
-          allow: "autoplay; fullscreen; picture-in-picture",
+          allow: "autoplay; fullscreen;",
           allowFullScreen: true
         })
       })

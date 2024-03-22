@@ -1,11 +1,13 @@
 import express, { Express } from 'express';
-import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import _ from 'lodash';
+import { unfurl } from 'unfurl.js';
+import { WebClient } from '@slack/web-api';
 
 dotenv.config();
 
@@ -102,15 +104,16 @@ app.get(`/media/get/:app/:type`, async (req, res) => {
   const appName = req.params.app;
   try {
     cloudinary.api.sub_folders(
-      appName || 'tngvi',
+      appName || 'elab-home-v3.x',
       { max_results: 100 },
       (e, foldersResponse) => {
         cloudinary.api.resources(
           {
-            prefix: appName || 'tngvi',
+            prefix: appName || 'elab-home-v3.x',
             resource_type: 'image',
             type: req.params.type,
             max_results: 500,
+            context: true,
           },
           (e, response) => {
             const sorted = response.resources.sort(
@@ -141,11 +144,32 @@ app.get(`/media/get/:app/:type`, async (req, res) => {
     res.status(500).send(err);
   }
 });
+
 app.get('/media/delete', async (req, res) => {
   try {
-    cloudinary.uploader.destroy(req.query.id as string, (e, response) =>
-      res.status(200).send(response)
+    cloudinary.uploader.destroy(
+      req.query.id as string,
+      { invalidate: true },
+      (e, response) => {
+        console.log(response, e);
+        res.status(200).send(response);
+      }
     );
+  } catch (err: any) {
+    res.status(500).send(err);
+  }
+});
+
+app.post('/embed', async (req, res) => {
+  if (!req.body) {
+    res.status(500).send('No body provided in payload.');
+    return;
+  }
+  const url = req.body.url;
+  try {
+    const oembed = await unfurl(url);
+
+    res.status(200).send(oembed);
   } catch (err: any) {
     res.status(500).send(err);
   }
@@ -153,12 +177,58 @@ app.get('/media/delete', async (req, res) => {
 
 app.post('/media/upload', upload.none(), async (req, res) => {
   try {
-    const response = await cloudinary.uploader.upload(req.body.img, {
-      folder: req.body.folder || req.body.app || 'tngvi',
-    });
+    let options: UploadApiOptions = {
+      folder:
+        req.body.folder !== 'undefined'
+          ? req.body.folder
+          : req.body.app || 'elab-home-v3.x',
+      context: { alt: req.body.alt ? req.body.alt : '' },
+    };
+    if (req.body.overwrite === 'true' && req.body.public_id) {
+      options.overwrite = true;
+      options.invalidate = true;
+      options.public_id = req.body.public_id.replace(
+        req.body.app || 'elab-home-v3.x',
+        ''
+      );
+    }
+
+    const response = await cloudinary.uploader.upload(req.body.img, options);
     res.status(200).send(response);
   } catch (err: any) {
     console.error(err);
+    res.status(500).send(err);
+  }
+});
+
+app.get('/media/update', (req, res) => {
+  try {
+    cloudinary.api.update(
+      req.query.id as string,
+      {
+        resource_type: 'image',
+
+        context: { alt: req.query.alt },
+      },
+      function (error, result) {
+        if (error) res.status(500).send(error);
+        res.status(200).send('ok');
+      }
+    );
+  } catch (err: any) {
+    res.status(500).send(err);
+  }
+});
+
+app.get('/media/update/usage', async (req, res) => {
+  try {
+    await cloudinary.uploader.add_context(
+      `doc_id_${req.query.doc_id}=${req.query.doc_name}`,
+      [req.query.public_id as string]
+    );
+
+    res.status(200).send('ok');
+  } catch (err: any) {
     res.status(500).send(err);
   }
 });
@@ -183,6 +253,7 @@ app.post('/prod-deploy', async (req, res, next) => {
           ? userEmail[0]
           : 'engagementlab@emerson.edu',
       note: req.body.note,
+      cdnName: req.body.cdnName ? req.body.cdnName : req.body.storageAccount,
     });
 
     res.status(200).send(response.data);
@@ -225,6 +296,40 @@ app.post('/link/create', async (req, res, next) => {
     res
       .status(500)
       .send({ status: err.response.status, info: err.response.data });
+  }
+});
+
+app.post('/slack', async (req, res) => {
+  if (!req.body) {
+    res.status(500).send('No body provided in payload.');
+    return;
+  }
+  try {
+    const web = new WebClient(process.env.SLACK_TOKEN);
+    let blocks = [
+      { type: 'section', text: { type: 'mrkdwn', text: req.body.text } },
+    ];
+
+    if (req.body.message) {
+      blocks.push({
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `> :postit: ${req.body.message}`,
+        },
+      });
+    }
+
+    await web.chat.postMessage({
+      channel: req.body.channel,
+      blocks,
+      icon_emoji: ':building_construction:',
+      username: 'Builds Helper',
+    });
+
+    res.status(200).send('ok');
+  } catch (err: any) {
+    res.status(500).send(err);
   }
 });
 

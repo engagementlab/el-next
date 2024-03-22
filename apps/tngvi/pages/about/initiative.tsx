@@ -1,12 +1,9 @@
 import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
-import {
-  DocumentRenderer,
-  DocumentRendererProps,
-} from '@keystone-6/document-renderer';
-import { HeadingStyle } from '@el-next/components';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { HeadingStyle, Query } from '@el-next/components';
 
-import query from '../../../../apollo-client';
+// import query from '../../../../apollo-client';
 import { Blocks, Doc } from '../../components/Renderers';
 import Layout from '../../components/Layout';
 
@@ -35,24 +32,25 @@ const valuesRendererOverrides = {
       4: 'text-xl font-semibold text-coated my-8',
       5: 'text-lg font-extrabold text-purple',
     };
-    return HeadingStyle(level, children, textAlign, customRenderers);
+    return HeadingStyle({ level, children, textAlign, customRenderers });
   },
 };
 
 export default function AboutInitiative({
   page,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout>
+    <Layout error={error}>
       <div className="about-container container mt-14 mb-24 xl:mt-16 px-4 xl:px-8 w-full lg:w-10/12 xl:w-9/12">
         <DocumentRenderer
-          document={page.content.document}
+          document={page?.content.document}
           renderers={Doc(rendererOverrides)}
           componentBlocks={Blocks()}
         />
 
         <DocumentRenderer
-          document={page.values.document}
+          document={page?.values.document}
           renderers={Doc(valuesRendererOverrides)}
           componentBlocks={Blocks()}
         />
@@ -62,7 +60,7 @@ export default function AboutInitiative({
 }
 
 export async function getStaticProps() {
-  const result = await query(
+  const result = await Query(
     'abouts',
     `abouts(where: { name: { equals: "About Page" } }) {
       content { 
@@ -73,7 +71,15 @@ export async function getStaticProps() {
       }
     }`
   );
-  // console.log(result[0].values.document[2]);
+
+  if (result.error) {
+    return {
+      props: {
+        error: result.error,
+        page: null,
+      },
+    };
+  }
 
   const page = result[0] as AboutPage;
   return {

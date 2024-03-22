@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc",
+    "build": "node -v; tsc",
     "watch": "tsc -w",
-    "prestart": "npm run build",
-    "start": "func start",
+    "prestart": "node -v; npm run build",
+    "start": "func start --verbose",
     "test": "echo \"No tests yet...\""
   },
   "devDependencies": {
@@ -26,6 +26,7 @@
     "cloudinary": "^1.31.0",
     "cuid": "^2.1.8",
     "durable-functions": "^2.0.2",
+    "googleapis": "^129.0.0",
     "graphql": "^16.6.0",
     "mongoose": "7.0.2",
     "pg": "^8.8.0",

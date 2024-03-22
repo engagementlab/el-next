@@ -1,6 +1,19 @@
 import { ReactNode } from 'react';
-declare type Props = {
+import { Transition, Variants } from 'framer-motion';
+import { TError } from '../query';
+type Props = {
     children: ReactNode;
+    title: string;
+    description: string;
+    ogTitle?: string;
+    ogDescription?: string;
+    ogImage?: string;
+    ogUrl?: string;
+    error?: TError;
+    transitions?: {
+        variants: Variants;
+        transition?: Transition;
+    };
 };
-declare const Layout: ({ children }: Props) => JSX.Element;
-export default Layout;
+export declare const Layout: ({ children, title, description, error, transitions, ogDescription, ogTitle, ogImage, ogUrl, }: Props) => JSX.Element;
+export {};

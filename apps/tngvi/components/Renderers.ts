@@ -1,5 +1,4 @@
-import { BlockRenderers } from '@el-next/components/blockRenderers';
-import { DocRenderers } from '@el-next/components/docRenderers';
+import { BlockRenderers, DocRenderers } from '@el-next/components';
 
 const Blocks: any = BlockRenderers({
   buttonClass:

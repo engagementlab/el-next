@@ -1,31 +1,15 @@
+import 'dotenv/config';
 import {
   BaseKeystoneTypeInfo,
   DatabaseConfig,
   KeystoneConfig,
 } from '@keystone-6/core/types';
-import axios from 'axios';
 
 import yargs from 'yargs/yargs';
-
-import 'dotenv/config';
 import e from 'express';
 
-import { v2 as cloudinary } from 'cloudinary';
-
-import { getNews } from './routes/news';
-import _ from 'lodash';
-import cors from 'cors';
-
-import { tngvi, sjm, elab } from './admin/schema';
-
-type schemaIndexType = {
-  [key: string]: object;
-};
-const schemaMap: schemaIndexType = {
-  elab: elab,
-  tngvi: tngvi,
-  sjm: sjm,
-};
+import type { Request, Response } from 'express';
+import { type Context } from '.keystone/types';
 
 const argv: any = yargs(process.argv.slice(2)).options({
   app: {
@@ -35,21 +19,6 @@ const argv: any = yargs(process.argv.slice(2)).options({
     type: 'number',
   },
 }).argv;
-
-const multer = require('multer');
-const upload = multer({
-  limits: {
-    fieldSize: 1024 * 1024 * 50,
-  },
-});
-const port = argv.port || 3000;
-
-cloudinary.config({
-  cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-  api_key: `${process.env.CLOUDINARY_KEY}`,
-  api_secret: `${process.env.CLOUDINARY_SECRET}`,
-  secure: true,
-});
 
 let appName: string = '';
 // --app takes precedence over environment variables
@@ -66,11 +35,28 @@ if (appName === undefined || appName.length === 0)
 
 console.log('Found app name: ' + appName);
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    logIn: any;
-  }
+import { v2 as cloudinary } from 'cloudinary';
+
+import { getStudios } from './routes/studios';
+import _ from 'lodash';
+import cors from 'cors';
+import schema from './schema';
+
+function withContext<
+  F extends (req: Request, res: Response, context: Context) => void
+>(commonContext: Context, f: F) {
+  return async (req: Request, res: Response) => {
+    return f(req, res, await commonContext.withRequest(req, res));
+  };
 }
+const port = argv.port || 3000;
+
+cloudinary.config({
+  cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+  api_key: `${process.env.CLOUDINARY_KEY}`,
+  api_secret: `${process.env.CLOUDINARY_SECRET}`,
+  secure: true,
+});
 
 const devMode = process.env.NODE_ENV === 'development';
 
@@ -89,20 +75,18 @@ if (process.env.DB_URI) {
 }
 
 let ksConfig = (lists: any) => {
-  return {
-    db: dbConfig,
+  const routePrefix =
+    process.env.PRODUCTION_MODE === 'true' ? `/${appName}` : '';
 
-    experimental: {
-      generateNextGraphqlAPI: true,
-      generateNodeAPI: true,
-    },
+  const config: KeystoneConfig = {
+    db: dbConfig,
 
     lists,
 
     server: {
       port,
       maxFileSize: 1024 * 1024 * 50,
-      extendExpressApp: (app: e.Express, createContext: any) => {
+      extendExpressApp: (app: e.Express, commonContext) => {
         app.use(cors({ credentials: true }));
         app.enable('trust proxy');
 
@@ -123,56 +107,30 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        app.use(
-          `/${process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''}rest`,
-          async (req, res, next) => {
-            (req as any).context = await createContext(req, res);
-            next();
-          }
-        );
+        // app.use(`${routePrefix}/rest`, async (req, res, next) => {
+        //   (req as any).context = await createContext(req, res);
+        //   next();
+        // });
 
         app.get(
-          `/${
-            process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
-          }rest/news/:key?`,
-          getNews
+          `${routePrefix}/rest/studios`,
+          withContext(commonContext as Context, getStudios)
         );
       },
     },
-    ui: {},
+    ui: {
+      basePath: `${
+        process.env.PRODUCTION_MODE === 'true' ? '/' + appName : ''
+      }`,
+    },
     graphql: {
-      path: `/${
-        process.env.PRODUCTION_MODE === 'true' ? appName + '/' : ''
-      }api/graphql`,
+      path: `${routePrefix}/api/graphql`,
     },
   };
+  return config;
 };
 
 export default (() => {
-  let config = ksConfig(schemaMap[appName]);
-
-  if (process.env.PRODUCTION_MODE === 'true')
-    config.ui = {
-      getAdditionalFiles: [
-        async (config: KeystoneConfig) => [
-          {
-            mode: 'write',
-            src: `
-            const keystoneConfig =
-              require("@keystone-6/core/___internal-do-not-use-will-break-in-patch/admin-ui/next-config").config;
-
-            const config = {
-              ...keystoneConfig,
-              basePath: "/${appName}",
-            };
-
-            module.exports = config;
-            `,
-            outputPath: 'next.config.js',
-          },
-        ],
-      ],
-    };
-
+  let config = ksConfig(schema);
   return config;
 })();

@@ -14,93 +14,115 @@ services:
       - ./proxy/certs.yml:/certs.yml
       - /etc/ssl/certs:/certs
       - ./proxy/acme.json:/acme.json
+      - ./proxy/acme-http.json:/acme-http.json
     environment:
       - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
+    command:
+      - '--log.level=DEBUG'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '5'
     labels:
       # - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       # - "traefik.http.routers.dashboard.tls=true"
       # - "traefik.http.routers.dashboard.entrypoints=websecure"
       # - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+      - 'traefik.http.routers.priority=1'
 
   cms-landing:
     image: ghcr.io/patrickdappollonio/docker-http-server:v2
     command: --path /html --title "ELab CMS Directory"
     volumes:
       - ./_site/index.html:/html/index.html
+    logging:
+      driver: none
     labels:
       traefik.http.routers.cms-landing.rule: PathPrefix(`/`)
       traefik.http.routers.cms-landing.tls: true
       traefik.http.routers.cms-landing.entrypoints: websecure
-
-  cms-tngvi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: cms-runner
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./apps/cms/.env
-    environment:
-      - APP_NAME=tngvi
-      - PORT=3000
-    labels:
-      - "traefik.http.routers.api-tngvi.rule=PathPrefix(`/tngvi/api/graphql`)"
-      - "traefik.http.routers.api-tngvi.tls=true"
-      - "traefik.http.routers.api-tngvi.entrypoints=websecure"
-      - "traefik.http.routers.api-tngvi.service=cms-tngvi-el-next"
-      - "traefik.http.routers.news-tngvi.rule=PathPrefix(`/tngvi/rest/news`)"
-      - "traefik.http.routers.news-tngvi.tls=true"
-      - "traefik.http.routers.news-tngvi.entrypoints=websecure"
-      - "traefik.http.routers.news-tngvi.service=cms-tngvi-el-next"
-      - "traefik.http.routers.cms-tngvi.rule=PathPrefix(`/tngvi`)"
-      - "traefik.http.routers.cms-tngvi.tls=true"
-      - "traefik.http.routers.cms-tngvi.entrypoints=websecure"
-      - "traefik.http.routers.cms-tngvi.service=cms-tngvi-el-next"
-      - "traefik.http.routers.cms-tngvi.middlewares=traefik-forward-auth,error-pages"
-      - "traefik.http.services.cms-tngvi-el-next.loadbalancer.server.port=3000"
 
   cms-sjm:
     build:
       context: .
       dockerfile: Dockerfile
       target: cms-runner
+      args:
+        - APP_NAME=sjm
+        - PORT=3001
     env_file:
       - ./apps/cms/.env
     environment:
-      - APP_NAME=sjm
       - PORT=3001
+    restart: on-failure
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '1'
     labels:
-      - "traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)"
-      - "traefik.http.routers.api-sjm.tls=true"
-      - "traefik.http.routers.api-sjm.entrypoints=websecure"
-      - "traefik.http.routers.api-sjm.service=cms-sjm-el-next"
-      - "traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)"
-      - "traefik.http.routers.cms-sjm.tls=true"
-      - "traefik.http.routers.cms-sjm.entrypoints=websecure"
-      - "traefik.http.routers.cms-sjm.service=cms-sjm-el-next"
-      - "traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages"
-      - "traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001"
+      - 'traefik.http.routers.api-sjm.rule=PathPrefix(`/sjm/api/graphql`)'
+      - 'traefik.http.routers.api-sjm.tls=true'
+      - 'traefik.http.routers.api-sjm.entrypoints=websecure'
+      - 'traefik.http.routers.api-sjm.service=cms-sjm-el-next'
+      - 'traefik.http.routers.cms-sjm.rule=PathPrefix(`/sjm`)'
+      - 'traefik.http.routers.cms-sjm.tls=true'
+      - 'traefik.http.routers.cms-sjm.entrypoints=websecure'
+      - 'traefik.http.routers.cms-sjm.service=cms-sjm-el-next'
+      - 'traefik.http.routers.cms-sjm.middlewares=traefik-forward-auth,error-pages'
+      - 'traefik.http.services.cms-sjm-el-next.loadbalancer.server.port=3001'
 
-  qa-tngvi:
+  cms-elab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cms-runner
+      args:
+        - APP_NAME=elab
+        - PORT=3002
+    env_file:
+      - ./apps/cms/.env
+    environment:
+      # - APP_NAME=elab
+      - PORT=3002
+    restart: on-failure
+    labels:
+      - 'traefik.http.routers.api-elab.rule=PathPrefix(`/elab/api/graphql`)'
+      - 'traefik.http.routers.api-elab.tls=true'
+      - 'traefik.http.routers.api-elab.entrypoints=websecure'
+      - 'traefik.http.routers.api-elab.service=cms-elab-el-next'
+      - 'traefik.http.routers.cms-elab.rule=PathPrefix(`/elab`)'
+      - 'traefik.http.routers.cms-elab.tls=true'
+      - 'traefik.http.routers.cms-elab.entrypoints=websecure'
+      - 'traefik.http.routers.cms-elab.service=cms-elab-el-next'
+      - 'traefik.http.routers.cms-elab.middlewares=traefik-forward-auth,error-pages'
+      - 'traefik.http.services.cms-elab-el-next.loadbalancer.server.port=3002'
+
+  qa-elab:
     build:
       context: .
       dockerfile: Dockerfile
       target: qa-image
       args:
-        APP: tngvi
-        CMS_ENDPOINT: cms-tngvi:3000
+        APP: elab
+        PORT: 8083
+        CMS_ENDPOINT: cms-elab:3002
+    restart: on-failure
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '1'
     labels:
-      - "traefik.http.routers.qa-tngvi-http.entrypoints=web"
-      - "traefik.http.routers.qa-tngvi-http.rule=Host(`qa.transformnarratives.org`)"
-      - "traefik.http.routers.qa-tngvi.entrypoints=websecure"
-      - "traefik.http.routers.qa-tngvi.rule=Host(`qa.transformnarratives.org`)"
-      - "traefik.http.routers.qa-tngvi.tls=true"
-      - "traefik.http.routers.qa-tngvi.service=qa-tngvi-el-next"
-      - "traefik.http.services.qa-tngvi-el-next.loadbalancer.server.port=8081"
-      - "traefik.http.routers.qa-tngvi.tls.certresolver=letsencrypt"
+      - 'traefik.http.routers.qa-elab-http.entrypoints=web'
+      - 'traefik.http.routers.qa-elab-http.rule=Host(`qa.elab.emerson.edu`)'
+      - 'traefik.http.routers.qa-elab.entrypoints=websecure'
+      - 'traefik.http.routers.qa-elab.rule=Host(`qa.elab.emerson.edu`)'
+      - 'traefik.http.routers.qa-elab.tls=true'
+      - 'traefik.http.routers.qa-elab.service=qa-elab-el-next'
+      - 'traefik.http.services.qa-elab-el-next.loadbalancer.server.port=8083'
+      # - 'traefik.http.routers.qa-elab.tls.certresolver=le-http'
 
   qa-sjm:
     build:
@@ -111,15 +133,21 @@ services:
         APP: sjm
         PORT: 8082
         CMS_ENDPOINT: cms-sjm:3001
+    restart: on-failure
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '1'
     labels:
-      - "traefik.http.routers.qa-sjm-http.entrypoints=web"
-      - "traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)"
-      - "traefik.http.routers.qa-sjm.entrypoints=websecure"
-      - "traefik.http.routers.qa-sjm.rule=Host(`qa.sjmsymposium.org`)"
-      - "traefik.http.routers.qa-sjm.tls=true"
-      - "traefik.http.routers.qa-sjm.service=qa-sjm-el-next"
-      - "traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082"
-      - "traefik.http.routers.qa-sjm.tls.certresolver=letsencrypt"
+      - 'traefik.http.routers.qa-sjm-http.entrypoints=web'
+      - 'traefik.http.routers.qa-sjm-http.rule=Host(`qa.sjmsymposium.org`)'
+      - 'traefik.http.routers.qa-sjm.entrypoints=websecure'
+      - 'traefik.http.routers.qa-sjm.rule=Host(`qa.sjmsymposium.org`)'
+      - 'traefik.http.routers.qa-sjm.tls=true'
+      - 'traefik.http.routers.qa-sjm.service=qa-sjm-el-next'
+      - 'traefik.http.services.qa-sjm-el-next.loadbalancer.server.port=8082'
+      - 'traefik.http.routers.qa-sjm.tls.certresolver=letsencrypt'
 
   api:
     build:
@@ -130,25 +158,32 @@ services:
       - ./apps/api/.env
     environment:
       - PORT=8000
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '1'
     labels:
-      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.api.tls=true"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.routers.api.service=api-el-next"
-      - "traefik.http.services.api-el-next.loadbalancer.server.port=8000"
-      - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api"
-      - "traefik.http.routers.api.middlewares=api-stripprefix"
+      - 'traefik.http.routers.api.rule=PathPrefix(`/api`)'
+      - 'traefik.http.routers.api.tls=true'
+      - 'traefik.http.routers.api.entrypoints=websecure'
+      - 'traefik.http.routers.api.service=api-el-next'
+      - 'traefik.http.services.api-el-next.loadbalancer.server.port=8000'
+      - 'traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api'
+      - 'traefik.http.routers.api.middlewares=api-stripprefix'
 
   traefik-forward-auth:
     image: thomseddon/traefik-forward-auth:latest
     env_file: ./apps/cms/.auth.env
+    logging:
+      driver: none
     labels:
-      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
-      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
-      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
-      - "traefik.http.routers.traefik-forward-auth.rule=PathPrefix(`/_oauth`)"
-      - "traefik.http.routers.traefik-forward-auth.tls=true"
-      - "traefik.http.routers.traefik-forward-auth.entrypoints=websecure"
+      - 'traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181'
+      - 'traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User'
+      - 'traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181'
+      - 'traefik.http.routers.traefik-forward-auth.rule=PathPrefix(`/_oauth`)'
+      - 'traefik.http.routers.traefik-forward-auth.tls=true'
+      - 'traefik.http.routers.traefik-forward-auth.entrypoints=websecure'
 
   error-pages:
     image: ghcr.io/patrickdappollonio/docker-http-server:v2
@@ -156,7 +191,7 @@ services:
     volumes:
       - ./_site:/html
     labels:
-      traefik.enable: "true"
+      traefik.enable: 'true'
       traefik.http.services.error-pages-el-next.loadbalancer.server.port: 5001
       traefik.http.routers.error-pages.entrypoints: websecure
       traefik.http.routers.error-pages.rule: HostRegexp(`error-pages.cms.elab.emerson.edu`)

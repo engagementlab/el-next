@@ -3,9 +3,7 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import query from '../../../../apollo-client';
-
-import Image from '@el-next/components/image';
+import { Image, Query } from '@el-next/components';
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 
@@ -97,28 +95,29 @@ const Item = (props: ItemProps) => {
 
 export default function Events({
   events,
+  error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const today = new Date();
-  const upcoming = events.filter((e) => {
+  const upcoming = events?.filter((e) => {
     return new Date(e.eventDate) > today;
   });
-  const past = events.filter((e) => {
+  const past = events?.filter((e) => {
     return new Date(e.eventDate) < today;
   });
 
   return (
-    <Layout>
+    <Layout error={error}>
       <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
         <h2 className="text-2xl text-bluegreen font-semibold mb-8">
           Upcoming Events
         </h2>
         <div className="flex flex-col mt-6">
-          {upcoming.length === 0 ? (
+          {upcoming?.length === 0 ? (
             <h3 className="">
               No upcoming events currently. Please check back soon.
             </h3>
           ) : (
-            upcoming.map((event, i) => (
+            upcoming?.map((event, i) => (
               <Item key={i} event={event} index={i} past={false} />
             ))
           )}
@@ -128,7 +127,7 @@ export default function Events({
           Past Events
         </h2>
         <div className="flex flex-col mt-6">
-          {past.map((event, i) => (
+          {past?.map((event, i) => (
             <Item key={i} event={event} index={i} past={true} />
           ))}
         </div>
@@ -140,7 +139,7 @@ export default function Events({
 export async function getStaticProps() {
   const evtQuery =
     'name key eventDate registrationLink address blurb thumbnail { publicId }';
-  const events = (await query(
+  const events = await Query(
     'events',
     `events(
             where: {
@@ -153,11 +152,20 @@ export async function getStaticProps() {
             }) {
                 ${evtQuery}
             }`
-  )) as Event[];
+  );
+
+  if (events.error) {
+    return {
+      props: {
+        error: events.error,
+        events: null,
+      },
+    };
+  }
 
   return {
     props: {
-      events,
+      events: events as Event[],
     },
   };
 }

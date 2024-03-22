@@ -65,7 +65,7 @@ jobs:
       - name: Send Slack message on success
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
-        if: ${{ inputs.success && inputs.note == 'null' }}
+        if: ${{ inputs.success && inputs.note == 'null'}}
         with:
           payload: |
             {
@@ -119,7 +119,7 @@ jobs:
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "<@U044WFR24> please look at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|build logs>."
+                      "text": "Error can be found in <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|build logs>."
                     }
                   ]
                 }

@@ -20,4 +20,7 @@ export declare const DocRenderers: (styles?: {
     layout?: Function;
     link?: Function;
     bold?: Function;
+    quote?: Function;
+    divider?: Function;
+    paragraph?: Function;
 }) => DocumentRendererProps['renderers'];

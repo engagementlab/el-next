@@ -1,9 +1,22 @@
 /* eslint-disable import/no-anonymous-default-export */
 require('dotenv').config();
-const fs = require('fs');
+// const fs = require('fs');
 const axios = require('axios').default;
 const _ = require('underscore');
 let videoData = '';
+
+import fs from 'fs';
+import _ from 'lodash';
+import recursiveReaddirFiles from 'recursive-readdir-files';
+import yargs from 'yargs/yargs';
+
+const argv = yargs(process.argv.slice(2))
+  .options({
+    app: {
+      type: 'string',
+    },
+  })
+  .demandOption('app', 'Argument --app is required.').argv;
 
 const getData = async (apiPath) => {
   const response = await axios.get(
@@ -17,24 +30,6 @@ const getData = async (apiPath) => {
     }
   );
   const resData = response.data;
-  let m = _.map(resData.data, (val) => {
-    return {
-      label: val.name,
-      value: val.player_embed_url,
-      thumb: val.pictures.sizes[val.pictures.sizes.length - 1].link,
-      thumbSm: val.pictures.sizes[1].link,
-    };
-  });
-  videoData += JSON.stringify(m);
-
-  // if(resData.paging.next)
-  //   getData(resData.paging.next);
-  // else {
-
-  if (fs.existsSync('videoData.js')) fs.unlinkSync('videoData.js');
-
-  fs.writeFileSync('videoData.js', `module.exports = ${videoData}`);
-  // }
 };
 
 module.exports = (async () => {

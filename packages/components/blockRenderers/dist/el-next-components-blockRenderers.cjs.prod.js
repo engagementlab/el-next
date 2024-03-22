@@ -9,7 +9,7 @@ var video_dist_elNextComponentsVideo = require('../../video/dist/el-next-compone
 var jsxRuntime = require('react/jsx-runtime');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
-require('../../dist/unsupportedIterableToArray-cb273b94.cjs.prod.js');
+require('../../dist/unsupportedIterableToArray-42309462.cjs.prod.js');
 require('next/image');
 require('zustand');
 
@@ -19,31 +19,29 @@ var Link__default = /*#__PURE__*/_interopDefault(Link);
 
 /**
  * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022
- *
+ * Developed by Engagement Lab, 2022-2023
+ * @packageDocumentation
  * @author Johnny Richardson
  * KeystoneJS document field block renderers
  * ==========
  */
 var BlockRenderers = function BlockRenderers(styles) {
-  return function (imageOveride, peopleOveride) {
+  /**
+   * @function
+   * @param {JSX.Element} [imageOveride] - optional app-globalized tailwindcss classes to all blocks
+   * @returns {function}
+   */
+  return function (blockOverrides) {
     var blocks = {
       image: function image(props) {
         var _props$image$image;
-
         var publicId = props.image.publicId || props.image.image.publicId;
         var alt = props.image.alt || ((_props$image$image = props.image.image) === null || _props$image$image === void 0 ? void 0 : _props$image$image.alt);
-        return imageOveride ? imageOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
-          style: {
-            display: 'flex',
-            flexDirection: 'column'
-          },
-          children: /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
-            id: 'img-' + publicId,
-            alt: alt || '',
-            imgId: publicId,
-            aspectDefault: true
-          })
+        return blockOverrides && blockOverrides.imageOverride ? blockOverrides.imageOverride(props) : /*#__PURE__*/jsxRuntime.jsx(image_dist_elNextComponentsImage["default"], {
+          id: 'img-' + publicId,
+          alt: alt || '',
+          imgId: publicId,
+          aspectDefault: true
         });
       },
       video: function video(props) {
@@ -54,7 +52,7 @@ var BlockRenderers = function BlockRenderers(styles) {
         });
       },
       button: function button(props) {
-        return /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
+        return blockOverrides && blockOverrides.buttonOverride ? blockOverrides.buttonOverride(props) : /*#__PURE__*/jsxRuntime.jsx(Link__default["default"], {
           href: props.link.props.node.children[0].text,
           passHref: true,
           children: /*#__PURE__*/jsxRuntime.jsx("button", {
@@ -69,7 +67,7 @@ var BlockRenderers = function BlockRenderers(styles) {
         });
       },
       associatedPeople: function associatedPeople(props) {
-        return peopleOveride ? peopleOveride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
+        return blockOverrides.peopleOverride ? blockOverrides.peopleOverride(props) : /*#__PURE__*/jsxRuntime.jsx("div", {
           style: {
             display: 'flex',
             flexDirection: 'column'

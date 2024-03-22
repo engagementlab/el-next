@@ -1,7 +1,15 @@
 /// <reference types="react" />
-declare type Props = {
+interface ExternalLinkProps {
     href: string;
     label: string;
-};
-export declare const ExternalLink: ({ href, label }: Props) => JSX.Element;
+    /**
+     * Optional tailwindcss class override
+     */
+    customClass?: string;
+}
+/**
+ * Return a link with "external" SVG icon
+ * @returns {JSX.Element} Element
+ */
+export declare const ExternalLink: ({ href, label, customClass, }: ExternalLinkProps) => JSX.Element;
 export {};

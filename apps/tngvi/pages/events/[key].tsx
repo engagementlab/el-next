@@ -1,12 +1,14 @@
 import { ReactNode } from 'react';
-import { GetStaticPathsResult, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
+import {
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import _ from 'lodash';
 
-import { HeadingStyle } from '@el-next/components/headingStyle';
-import Image from '@el-next/components/image';
-
-import query from "../../../../apollo-client";
+import { HeadingStyle } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 
 import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
@@ -21,42 +23,59 @@ type Event = {
 };
 
 const rendererOverrides = {
-    heading: (level: number, children: ReactNode, textAlign: any) => {
-        const customRenderers = {
-            4: 'font-semibold text-[18px] text-coated'
-        };
-        return HeadingStyle(level, children, textAlign, customRenderers);
-    }
+  heading: (level: number, children: ReactNode, textAlign: any) => {
+    const customRenderers = {
+      4: 'font-semibold text-[18px] text-coated',
+    };
+    return HeadingStyle({ level, children, textAlign, customRenderers });
+  },
 };
 
-export default function Event({ item }: InferGetStaticPropsType<typeof getStaticProps>) {
-    return (
-    !item ? 'Not found!' :
-    <Layout>
-        <div className='mt-14'>
-            {
-                item.thumbnail ?
-                <Image id='header-img' alt={item.thumbAltText} imgId={item.thumbnail.publicId} /> :
-                <ImagePlaceholder imageLabel='Header' width={1280} height={350} />
-            }
-            <div className='px-4 xl:px-8'>
-                <h1 className="text-coated text-2xl font-extrabold mt-5">{item.name}</h1>
-                <div className="text-coated font-medium">
-                    {new Date(item.eventDate).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                    })}, {new Date(item.eventDate).toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                    })}, {new Date(item.eventDate).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    })}
-                </div>
-  
-                <DocumentRenderer document={item.content.document} componentBlocks={Blocks()} renderers={Doc(rendererOverrides)} />
+export default function Event({
+  item,
+  error,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return (
+    <Layout error={error}>
+      {item && (
+        <div className="mt-14">
+          {item.thumbnail ? (
+            <Image
+              id="header-img"
+              alt={item.thumbAltText}
+              imgId={item.thumbnail.publicId}
+            />
+          ) : (
+            <ImagePlaceholder imageLabel="Header" width={1280} height={350} />
+          )}
+          <div className="px-4 xl:px-8">
+            <h1 className="text-coated text-2xl font-extrabold mt-5">
+              {item.name}
+            </h1>
+            <div className="text-coated font-medium">
+              {new Date(item.eventDate).toLocaleDateString('en-US', {
+                weekday: 'long',
+              })}
+              ,{' '}
+              {new Date(item.eventDate).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+              ,{' '}
+              {new Date(item.eventDate).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </div>
 
-               {/*  {relatedItems &&
+            <DocumentRenderer
+              document={item.content.document}
+              componentBlocks={Blocks()}
+              renderers={Doc(rendererOverrides)}
+            />
+
+            {/*  {relatedItems &&
                     <div>
                     <h3 className='text-2xl text-bluegreen font-semibold'>Explore Related Media</h3>
                     <div>
@@ -85,32 +104,40 @@ export default function Event({ item }: InferGetStaticPropsType<typeof getStatic
                     </div>
                     </div>
                 } */}
-            </div>
+          </div>
         </div>
+      )}
     </Layout>
-    );
+  );
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-    const items = await query(
-        'events',
-        `events {
+  const items = await Query(
+    'events',
+    `events {
             key
         }`
-    ) as { key: string }[];
+  );
 
-    const paths = items
+  if (items.error) {
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
+
+  const paths = (items as { key: string }[])
     .filter(({ key }) => !!key)
     .map(({ key }) => `/events/${key}`);
 
-    return {
+  return {
     paths,
     fallback: false,
-    };
+  };
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const itemResult = await query(
+  const itemResult = await Query(
     'events',
     `events(where: { key: { equals: "${params!.key}" } }) {
        name
@@ -122,8 +149,19 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
        thumbnail { 
            publicId 
        }
-      }`);
+      }`
+  );
+
+  if (itemResult.error) {
+    return {
+      props: {
+        error: itemResult.error,
+        item: null,
+      },
+    };
+  }
+
   const item = itemResult[0] as Event;
-  
-  return { props: { item, } };
+
+  return { props: { item } };
 }

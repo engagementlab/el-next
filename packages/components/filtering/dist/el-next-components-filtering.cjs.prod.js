@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-cb273b94.cjs.prod.js');
+var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-42309462.cjs.prod.js');
 require('react');
 var create = require('zustand');
 var middleware = require('zustand/middleware');
@@ -31,7 +31,24 @@ function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || unsupportedIterableToArray._unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
+function _toPrimitive(input, hint) {
+  if (typeof input !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (typeof res !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return typeof key === "symbol" ? key : String(key);
+}
+
 function _defineProperty(obj, key, value) {
+  key = _toPropertyKey(key);
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -42,23 +59,19 @@ function _defineProperty(obj, key, value) {
   } else {
     obj[key] = value;
   }
-
   return obj;
 }
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
-
   if (Object.getOwnPropertySymbols) {
     var symbols = Object.getOwnPropertySymbols(object);
     enumerableOnly && (symbols = symbols.filter(function (sym) {
       return Object.getOwnPropertyDescriptor(object, sym).enumerable;
     })), keys.push.apply(keys, symbols);
   }
-
   return keys;
 }
-
 function _objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = null != arguments[i] ? arguments[i] : {};
@@ -68,7 +81,6 @@ function _objectSpread2(target) {
       Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
     });
   }
-
   return target;
 }
 
@@ -84,10 +96,9 @@ function _defineProperties(target, props) {
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
+    Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);
   }
 }
-
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
@@ -97,51 +108,93 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+/**
+ * Creates an instance of Filtered items and a filtering UI
+ * @example
+ * type I = {
+ *  title: string;
+ *  key: string;
+ * };
+ *
+ * // Group filters by type
+ * const filtersGrouped = filters.reduce((filterMemo, { type, key, name }) => {
+ *   (filterMemo[type] = filterMemo[type] || []).push({
+ *     key,
+ *     name,
+ *   });
+ *   return filterMemo;
+ * }, {});
+ *
+ * const mediaItems = [some, some, some, some];
+ *
+ * const renderItem = (props: {
+ *   item: I;
+ *   toggleFilter: (filter: string) => void;
+ * }) => {
+ *   return (
+ *     <h3>
+ *     {props.title}
+ *     </h3>
+ *     ...
+ *   );
+ * };
+ *
+ * const filtering = new Filtering<Item>(
+ *  filtersGrouped,
+ *  [],
+ *  mediaItems,
+ *  renderItem,
+ * 'media'
+ * );
+ * ...
+ * <filtering.FilteredItems />
+ *
+ */
 var Filtering = /*#__PURE__*/function () {
+  /**
+   * @prop filtersGrouped Filters with a key and named grouped by type
+   * @prop preSelectedFilters Array of pre selected filters, for e.g. from `router.query`, or empty array
+   * @prop items Array of all possible data to render
+   * @prop ItemRenderer Function to render filtered items with props conforming to <ItemRendererProps<T>>
+   * @prop mode? Optional string of 'media' to change the count label
+   */
   function Filtering(filtersGrouped, preSelectedFilters, items, ItemRenderer, mode) {
     var _this = this;
-
     _classCallCheck(this, Filtering);
-
+    /**
+     * Zustand store
+     * @see https://github.com/pmndrs/zustand
+     */
     _defineProperty(this, "useStore", void 0);
-
     _defineProperty(this, "filtersGrouped", void 0);
-
     _defineProperty(this, "items", void 0);
-
     _defineProperty(this, "mode", void 0);
-
     _defineProperty(this, "ItemRenderer", void 0);
-
     _defineProperty(this, "FilteredItems", function () {
       var selectedFilters = _this.useStore(function (state) {
         return state.currentFilters;
       });
-
       var haveFilters = selectedFilters.length > 0;
-
       var reset = _this.useStore(function (state) {
         return state.reset;
       });
-
       var toggleFilter = _this.useStore(function (state) {
         return state.toggle;
       });
-
       var toggleFiltersOpen = _this.useStore(function (state) {
         return state.toggleFiltersOpen;
       });
-
-      var filteredItems = _this.items.filter( // If selected filters empty, show all...
+      var filteredItems = _this.items.filter(
+      // If selected filters empty, show all...
       function (item) {
-        return selectedFilters.length === 0 || // ...otherwise, item's filters must match ALL selected filters
+        return selectedFilters.length === 0 ||
+        // ...otherwise, item's filters must match ALL selected filters
         ___default["default"].every(selectedFilters, function (r) {
           return ___default["default"].map(item.filters, 'key').indexOf(r) >= 0;
         });
       });
-
-      var count = filteredItems.length; // Decide plural of item count
-
+      var count = filteredItems.length;
+      // Decide plural of item count
       var showing = "Showing ".concat(count, " ").concat(_this.mode === 'media' ? "Stor".concat(count === 1 ? 'y' : 'ies') : "Studio".concat(count === 1 ? '' : 's'));
       return /*#__PURE__*/jsxRuntime.jsxs("div", {
         className: "flex",
@@ -200,12 +253,12 @@ var Filtering = /*#__PURE__*/function () {
         })]
       });
     });
-
     this.filtersGrouped = filtersGrouped;
     this.items = items;
     this.ItemRenderer = ItemRenderer;
-    this.mode = mode; // Create store with Zustand
+    this.mode = mode;
 
+    // Create store with Zustand
     this.useStore = create__default["default"](middleware.subscribeWithSelector(function (set) {
       return {
         // If defined, pre-populate filter store
@@ -256,7 +309,6 @@ var Filtering = /*#__PURE__*/function () {
       history.replaceState({}, 'Filtered Data', "".concat(location.pathname, "?").concat(current.join('/')));
     });
   }
-
   _createClass(Filtering, [{
     key: "RenderFilters",
     value: function RenderFilters(filters) {
@@ -271,15 +323,12 @@ var Filtering = /*#__PURE__*/function () {
         return state.filterGroupsClosed;
       });
       var haveFilters = selectedFilters.length > 0;
-
       var haveSpecificFilter = function haveSpecificFilter(key) {
         return ___default["default"].values(selectedFilters).includes(key);
       };
-
       var haveGroupClosed = function haveGroupClosed(key) {
         return filterGroupsClosed.includes(key);
       };
-
       var toggleFilter = this.useStore(function (state) {
         return state.toggle;
       });
@@ -293,7 +342,6 @@ var Filtering = /*#__PURE__*/function () {
         return state.reset;
       });
       var linkClass = 'no-underline border-b-2 border-b-[rgba(2,102,112,0)] hover:border-b-[rgba(2,102,112,1)] transition-all';
-
       var menu = /*#__PURE__*/jsxRuntime.jsx("div", {
         children: Object.keys(filters).map(function (key) {
           return /*#__PURE__*/jsxRuntime.jsxs("div", {
@@ -313,7 +361,7 @@ var Filtering = /*#__PURE__*/function () {
                   children: /*#__PURE__*/jsxRuntime.jsx("polygon", {
                     points: "0,0 14,0 7.0,9.0",
                     style: {
-                      'fill': '#8D33D2'
+                      fill: '#8D33D2'
                     }
                   })
                 }), /*#__PURE__*/jsxRuntime.jsx("span", {
@@ -356,7 +404,6 @@ var Filtering = /*#__PURE__*/function () {
           }, key);
         })
       });
-
       return /*#__PURE__*/jsxRuntime.jsxs("div", {
         children: [/*#__PURE__*/jsxRuntime.jsxs("div", {
           className: "hidden lg:block",
@@ -406,7 +453,6 @@ var Filtering = /*#__PURE__*/function () {
       });
     }
   }]);
-
   return Filtering;
 }();
 

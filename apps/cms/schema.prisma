@@ -9,62 +9,428 @@ datasource postgresql {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "node_modules/.prisma/client"
 }
 
 model About {
-  id             String @id @default(cuid())
-  name           String @unique @default("About Moses Shumow")
-  intro          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  books          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  selectWritings Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-}
-
-model Award {
-  id             String @id @default(cuid())
-  name           String @unique @default("Award Name")
-  key            String @unique @default("")
-  intro          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  apply          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  bgImage1       Json?
-  pastRecipients Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                  String @id @default(cuid())
+  name                String @unique @default("About Page")
+  key                 String @default("")
+  intro               Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  headingImage        Json?
+  headingImageAltText String @default("")
+  headingImageCaption String @default("")
+  content             Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  ogImage             Json?
+  helper_html         String @default("<p>Need HTML!</p>")
+  helper_iconType     icon   @default(help)
+  ogDescription       String @default("")
 }
 
 model Event {
-  id            String         @id @default(cuid())
-  name          String         @unique @default("Event Name")
-  key           String         @unique @default("")
-  intro         Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  bgImage1      Json?
-  agenda        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  awards        Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  bgImage2      Json?
-  location      Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  gallerySlides GallerySlide[] @relation("Event_gallerySlides")
+  id                  String           @id @default(cuid())
+  name                String           @default("")
+  key                 String           @unique @default("")
+  createdDate         DateTime?
+  status              EventStatusType? @default(disabled)
+  initiatives         Json             @default("[]")
+  thumbnail           Json?
+  thumbAltText        String           @default("")
+  summary             String           @default("")
+  eventDate           DateTime
+  registrationLink    String           @default("")
+  address             String           @default("")
+  blurb               Json             @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  content             Json             @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  home                Boolean          @default(false)
+  order               Int?             @default(0)
+  initiativesWhatsNew Initiative[]     @relation("Event_initiativesWhatsNew")
+  ogImage             Json?
+  helper_html         String           @default("<p>Need HTML!</p>")
+  helper_iconType     icon             @default(help)
+  ogDescription       String           @default("")
 }
 
-model GallerySlide {
-  id            String  @id @default(cuid())
-  gallerySlides Event[] @relation("Event_gallerySlides")
-  image         Json?
-  altText       String  @default("")
-  caption       String  @default("")
+model Filter {
+  id              String          @id @default(cuid())
+  name            String          @default("")
+  key             String          @default("")
+  enabled         Boolean         @default(true)
+  helper_html     String          @default("<p>Need HTML!</p>")
+  helper_iconType icon            @default(help)
+  studioProjects  StudioProject[] @relation("Filter_studioProjects")
 }
 
-model Home {
-  id      String @id @default(cuid())
-  name    String @unique @default("")
-  content Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+model Graduate {
+  id                String          @id @default(cuid())
+  name              String          @unique @default("Graduate Landing Page")
+  intro             Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage        Json?
+  introImageAltText String          @default("")
+  introImageCaption String          @default("")
+  mediaDesign       Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  currentStudents   Person[]        @relation("Graduate_currentStudents")
+  alumni            Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  symposium         Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  salzburg          Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projectSpotlight  StudioProject[] @relation("Graduate_projectSpotlight")
+  alumniSpotlight   NewsItem[]      @relation("Graduate_alumniSpotlight")
+  ogImage           Json?
+  helper_html       String          @default("<p>Need HTML!</p>")
+  helper_iconType   icon            @default(help)
+  ogDescription     String          @default("")
+}
+
+model Initiative {
+  id               String            @id @default(cuid())
+  name             String            @unique @default("Initiative Name")
+  intro            Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  videoId          String            @default("")
+  videoThumbnail   Json?
+  videoCaption     Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  slides           Slide[]           @relation("Initiative_slides")
+  news             NewsItem[]        @relation("Initiative_news")
+  events           Event[]           @relation("Event_initiativesWhatsNew")
+  body             Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  partners         Json?
+  projectsBlurb    Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projects         StudioProject[]   @relation("Initiative_projects")
+  studiosBlurb     Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studios          Studio[]          @relation("Initiative_studios")
+  research         ResearchProject[] @relation("Initiative_research")
+  associatedPeople Person[]          @relation("Initiative_associatedPeople")
+  ogImage          Json?
+  helper_html      String            @default("<p>Need HTML!</p>")
+  helper_iconType  icon              @default(help)
+  ogDescription    String            @default("")
+}
+
+model InitiativesLanding {
+  id                    String @id @default(cuid())
+  name                  String @unique @default("Blurbs")
+  intro                 Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage            Json?
+  introImageAltText     String @default("")
+  introImageCaption     String @default("")
+  tngvi                 Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  tn4ej                 Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  everythingElse        Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projectsBlurb         Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studiosBlurb          Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  researchProjectsBlurb Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  publicationsBlurb     Json   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  homepageOrder         Json   @default("[]")
+  ogImage               Json?
+  helper_html           String @default("<p>Need HTML!</p>")
+  helper_iconType       icon   @default(help)
+  ogDescription         String @default("")
+}
+
+model LearningPartners {
+  id                String     @id @default(cuid())
+  name              String     @unique @default("Learning Partners Landing Page")
+  intro             Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage        Json?
+  introImageAltText String     @default("")
+  introImageCaption String     @default("")
+  what              Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  benefits          Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  spotlight         NewsItem[] @relation("LearningPartners_spotlight")
+  ogImage           Json?
+  helper_html       String     @default("<p>Need HTML!</p>")
+  helper_iconType   icon       @default(help)
+  ogDescription     String     @default("")
+}
+
+model NewsItem {
+  id                  String              @id @default(cuid())
+  title               String              @default("")
+  key                 String              @unique @default("")
+  createdDate         DateTime?
+  status              NewsItemStatusType? @default(disabled)
+  initiatives         Json                @default("[]")
+  thumbnail           Json?
+  thumbAltText        String              @default("")
+  summary             String              @default("")
+  publishDate         DateTime
+  source              String              @default("")
+  linkHelper_html     String              @default("<p>Need HTML!</p>")
+  linkHelper_iconType icon                @default(help)
+  externalLink        String              @default("")
+  blurb               Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  body                Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  home                Boolean             @default(false)
+  order               Int?                @default(0)
+  alumni              Graduate[]          @relation("Graduate_alumniSpotlight")
+  learningPartners    LearningPartners[]  @relation("LearningPartners_spotlight")
+  initiativesWhatsNew Initiative[]        @relation("Initiative_news")
+  ogImage             Json?
+  helper_html         String              @default("<p>Need HTML!</p>")
+  helper_iconType     icon                @default(help)
+  ogDescription       String              @default("")
+}
+
+model Partner {
+  id                     String            @id @default(cuid())
+  name                   String            @default("")
+  key                    String            @unique @default("")
+  url                    String            @default("")
+  logo                   Json?
+  researchProject        ResearchProject[] @relation("Partner_researchProject")
+  researchProjectFunders ResearchProject[] @relation("Partner_researchProjectFunders")
 }
 
 model Person {
-  id          String    @id @default(cuid())
-  name        String    @default("")
-  key         String    @default("")
-  title       String    @default("")
-  createdDate DateTime?
-  enabled     Boolean   @default(true)
-  image       Json?
-  blurb       String    @default("")
-  content     Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                 String            @id @default(cuid())
+  name               String            @unique @default("")
+  key                String            @default("")
+  createdDate        DateTime?
+  status             PersonStatusType? @default(disabled)
+  title              String            @default("")
+  secondaryTitle     String            @default("")
+  image              Json?
+  category           String?
+  orderInSection     Int?              @default(0)
+  content            Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studioInstructors  Semester[]        @relation("Person_studioInstructors")
+  learningPartners   Semester[]        @relation("Person_learningPartners")
+  studioStudents     Semester[]        @relation("Person_studioStudents")
+  studioStaff        Semester[]        @relation("Person_studioStaff")
+  projectStudents    StudioProject[]   @relation("Person_projectStudents")
+  projectPartners    StudioProject[]   @relation("Person_projectPartners")
+  projectInstructors StudioProject[]   @relation("Person_projectInstructors")
+  projectStaff       StudioProject[]   @relation("Person_projectStaff")
+  researchLeads      ResearchProject[] @relation("Person_researchLeads")
+  mdStudents         Graduate[]        @relation("Graduate_currentStudents")
+  initiatives        Initiative[]      @relation("Initiative_associatedPeople")
+}
+
+model Publication {
+  id               String                 @id @default(cuid())
+  title            String                 @default("")
+  key              String                 @unique @default("")
+  createdDate      DateTime?
+  status           PublicationStatusType? @default(disabled)
+  year             String                 @default("")
+  citations        Json                   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  file_filename    String?
+  file_filesize    Int?
+  buttons          Json?
+  relatedProject   ResearchProject?       @relation("Publication_relatedProject", fields: [relatedProjectId], references: [id])
+  relatedProjectId String?                @unique @map("relatedProject")
+}
+
+model ResearchProject {
+  id                 String                     @id @default(cuid())
+  name               String                     @default("")
+  key                String                     @unique @default("")
+  createdDate        DateTime?
+  status             ResearchProjectStatusType? @default(disabled)
+  pin                Boolean                    @default(false)
+  ongoing            Boolean                    @default(false)
+  startYear          Int?
+  endYear            Int?
+  thumbnail          Json?
+  thumbAltText       String                     @default("")
+  headingText        Json                       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  buttons            Json?
+  shortDescription   String                     @default("")
+  content            Json                       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  collaborators      Partner[]                  @relation("Partner_researchProject")
+  funders            Partner[]                  @relation("Partner_researchProjectFunders")
+  projectLeads       Person[]                   @relation("Person_researchLeads")
+  projectTeam        Json                       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  contact            String                     @default("")
+  initiativesRelated Initiative[]               @relation("Initiative_research")
+  mdProject          Boolean                    @default(false)
+  home               Boolean                    @default(false)
+  order              Int?                       @default(0)
+  publicationRelated Publication?               @relation("Publication_relatedProject")
+  ogImage            Json?
+  helper_html        String                     @default("<p>Need HTML!</p>")
+  helper_iconType    icon                       @default(help)
+  ogDescription      String                     @default("")
+}
+
+model Semester {
+  id               String              @id @default(cuid())
+  name             String              @default("")
+  key              String              @default("")
+  createdDate      DateTime?
+  status           SemesterStatusType? @default(disabled)
+  studio           Studio?             @relation("Semester_studio", fields: [studioId], references: [id])
+  studioId         String?             @map("studio")
+  type             SemesterTypeType?
+  courseNumber     String              @default("")
+  instructors      Person[]            @relation("Person_studioInstructors")
+  slides           Slideshow?          @relation("Semester_slides", fields: [slidesId], references: [id])
+  slidesId         String?             @map("slides")
+  description      String              @default("")
+  partners         Json                @default("[]")
+  coCreation       Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact           Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projects         StudioProject[]     @relation("Semester_projects")
+  learningPartners Person[]            @relation("Person_learningPartners")
+  studioStudents   Person[]            @relation("Person_studioStudents")
+  studioStaff      Person[]            @relation("Person_studioStaff")
+  contact          String              @default("")
+
+  @@index([studioId])
+  @@index([slidesId])
+}
+
+model Slide {
+  id               String       @id @default(cuid())
+  slideshowSlides  Slideshow[]  @relation("Slide_slideshowSlides")
+  initiativeSlides Initiative[] @relation("Initiative_slides")
+  image            Json?
+  helper_html      String       @default("<p>Need HTML!</p>")
+  helper_iconType  icon         @default(help)
+  altText          String       @default("")
+  caption          String       @default("")
+  videoId          String       @default("")
+  order            Int?         @default(0)
+}
+
+model Slideshow {
+  id             String     @id @default(cuid())
+  name           String     @default("")
+  key            String     @unique @default("")
+  slides         Slide[]    @relation("Slide_slideshowSlides")
+  semesterSlides Semester[] @relation("Semester_slides")
+}
+
+model Studio {
+  id                 String            @id @default(cuid())
+  name               String            @default("")
+  key                String            @unique @default("")
+  createdDate        DateTime?
+  status             StudioStatusType? @default(disabled)
+  thumbnail          Json?
+  thumbAltText       String            @default("")
+  shortDescription   String            @default("")
+  blurb              String            @default("")
+  semesters          Semester[]        @relation("Semester_studio")
+  initiatives        Json              @default("[]")
+  home               Boolean           @default(false)
+  order              Int?              @default(0)
+  initiativesRelated Initiative[]      @relation("Initiative_studios")
+  ogImage            Json?
+  helper_html        String            @default("<p>Need HTML!</p>")
+  helper_iconType    icon              @default(help)
+  ogDescription      String            @default("")
+}
+
+model StudioProject {
+  id                  String                      @id @default(cuid())
+  name                String                      @default("")
+  key                 String                      @unique @default("")
+  createdDate         DateTime?
+  status              StudioProjectStatusType?    @default(disabled)
+  initiative          StudioProjectInitiativeType @default(gunviolence)
+  filters             Filter[]                    @relation("Filter_studioProjects")
+  shortDescription    String                      @default("")
+  about               Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  buttons             Json?
+  thumbnail           Json?
+  thumbAltText        String                      @default("")
+  videoId             String                      @default("")
+  trailerId           String                      @default("")
+  trailerThumbnail    Json?
+  trailerThumbAltText String                      @default("")
+  partners            Json                        @default("[]")
+  coCreation          Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact              Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  learningPartners    Person[]                    @relation("Person_projectPartners")
+  studioStudents      Person[]                    @relation("Person_projectStudents")
+  studioStaff         Person[]                    @relation("Person_projectStaff")
+  instructors         Person[]                    @relation("Person_projectInstructors")
+  home                Boolean                     @default(false)
+  order               Int?                        @default(0)
+  semester            Semester[]                  @relation("Semester_projects")
+  undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
+  grad                Graduate[]                  @relation("Graduate_projectSpotlight")
+  initiativesRelated  Initiative[]                @relation("Initiative_projects")
+  mdProject           Boolean                     @default(false)
+  ogImage             Json?
+  helper_html         String                      @default("<p>Need HTML!</p>")
+  helper_iconType     icon                        @default(help)
+  ogDescription       String                      @default("")
+}
+
+model Undergraduate {
+  id                 String          @id @default(cuid())
+  name               String          @unique @default("Undergraduate Landing Page")
+  intro              Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introImage         Json?
+  introImageAltText  String          @default("")
+  introImageCaption  String          @default("")
+  socialImpactDesign Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projectSpotlight   StudioProject[] @relation("StudioProject_undergrad")
+  ogImage            Json?
+  helper_html        String          @default("<p>Need HTML!</p>")
+  helper_iconType    icon            @default(help)
+  ogDescription      String          @default("")
+}
+
+enum icon {
+  help
+  info
+}
+
+enum EventStatusType {
+  disabled
+  testing
+  live
+}
+
+enum NewsItemStatusType {
+  disabled
+  testing
+  live
+}
+
+enum PersonStatusType {
+  disabled
+  testing
+  live
+}
+
+enum PublicationStatusType {
+  disabled
+  testing
+  live
+}
+
+enum ResearchProjectStatusType {
+  disabled
+  testing
+  live
+}
+
+enum SemesterStatusType {
+  disabled
+  testing
+  live
+}
+
+enum SemesterTypeType {
+  current
+  upcoming
+}
+
+enum StudioStatusType {
+  disabled
+  testing
+  live
+}
+
+enum StudioProjectStatusType {
+  disabled
+  testing
+  live
+}
+
+enum StudioProjectInitiativeType {
+  gunviolence
+  climate
 }

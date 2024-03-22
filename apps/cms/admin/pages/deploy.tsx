@@ -7,7 +7,8 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import axios from 'axios';
 
-import create from 'zustand';
+import { create } from 'zustand';
+
 import React from 'react';
 import appConfigMap from '../../appConfig';
 
@@ -89,13 +90,15 @@ export default function Deploy() {
     const app =
       window.location.protocol === 'https:'
         ? window.location.pathname.replace('/', '').split('/')[0]
-        : 'sjm';
+        : 'elab';
     try {
       const response = await axios.post(
         `${endpointPrefix}/prod-deploy`,
         {
           app,
           storageAccount: appConfigMap[app].storageAccount,
+          cdnName:
+            appConfigMap[app].cdnName || appConfigMap[app].storageAccount,
           apexUrl: appConfigMap[app].apexUrl,
           note: noteContent,
         },
@@ -131,14 +134,6 @@ export default function Deploy() {
         </p>
       ) : (
         <>
-          <p style={{ color: 'grey' }}>
-            Looking to deploy <em>Engagement Lab Home</em>? Please go{' '}
-            <a href="https://api.elab.emerson.edu/cms/engagement-lab-home/deploy">
-              here
-            </a>
-            .
-          </p>
-          <hr style={{ borderWidth: '1px', width: '20%' }} />
           <p>
             This action will copy the content from the current QA build to
             production.

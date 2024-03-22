@@ -4,26 +4,52 @@ import { Global, css } from '@emotion/core';
 
 // admin/config.tsx
 function CustomLogo() {
+  // @ts-ignore
+  if (typeof tailwind !== 'undefined') {
+    // @ts-ignore
+    tailwind.config = {
+      corePlugins: {
+        preflight: false,
+      },
+    };
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <Global
         styles={css`
-        nav a:hover {
-              background-color: black !important;
-              color: white !important;
+        nav li a {
+          transition: all .2s;
+              background: transparent;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+            color: rgb(107, 114, 128);
+            display: block;
+            font-weight: 500;
+            margin-bottom: 4px;
+            margin-right: 24px;
+            padding: 8px 24px;
+            position: relative;
+            text-decoration: none;
         }
-          [class*='ChromefulComponentBlockElement']{
-            button{
-              color: black !important;
-              background-color: #f6a536 !important;
-            }
+          nav li a:hover {
+            background-color: black !important;
+            color: white !important;
+            transform-origin: left;
+            translate: 3% 0%;
           }
-
-          [class*='BaseToolbar'] {
-            button[data-form-type='action'] {
-              color: black !important;
-              background-color: #f6a536 !important;
-            }
+        }
+        [class*='ChromefulComponentBlockElement']{
+          button{
+            color: black !important;
+            background-color: #f6a536 !important;
+          }
+        }
+        [class*='BaseToolbar'] {
+          button[data-form-type='action'] {
+            color: black !important;
+            background-color: #f6a536 !important;
+          }
         `}
       />
       <div style={{ width: '80px' }}>

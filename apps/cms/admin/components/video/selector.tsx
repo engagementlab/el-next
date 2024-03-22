@@ -10,7 +10,7 @@
 import React, { useState } from 'react';
 import Script from 'next/script';
 import _ from 'lodash';
-import create from 'zustand';
+import { create } from 'zustand';
 
 import {
   Box,
@@ -70,6 +70,24 @@ type VideoGridState = {
   setVideo: (value: RelatedVideo) => void;
   setVideoSingle: (value: RelatedVideoField) => void;
   setGridOpen: (open: boolean) => void;
+};
+
+const TailwindCdnScript = () => {
+  return (
+    <>
+      <Script src="https://cdn.tailwindcss.com/3.3.0" />
+      <Script>
+        {`
+          if(typeof tailwind !== "undefined") {
+            tailwind.config = {
+              corePlugins: {
+                preflight: false,
+              },        
+            }
+          }`}
+      </Script>
+    </>
+  );
 };
 
 const VideoSelector = ({
@@ -154,17 +172,7 @@ const VideoSelector = ({
   const dataLength = Math.floor(data.length / 12) + 1;
   return (
     <>
-      <Script src="https://cdn.tailwindcss.com/3.3.0" />
-      <Script>
-        {`
-        if(tailwind) {
-          tailwind.config = {
-              corePlugins: {
-                preflight: false,
-              },        
-          }
-        }`}
-      </Script>
+      <TailwindCdnScript />
       <Modal
         open={open}
         onClose={() => {
@@ -223,7 +231,7 @@ const VideoSelector = ({
                         : _.map(currentVideos, 'value').includes(
                             (item as RelatedVideo).value
                           );
-                      console.log(selected, currentVideo);
+                      // console.log(selected, currentVideo);
                       return (
                         <Grid item xs={3} key={item.value}>
                           <a

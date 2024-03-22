@@ -3,7 +3,7 @@
         "editor.formatOnSave": true,
         "eslint.packageManager": "yarn",
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true
+            "source.fixAll.eslint": "explicit"
         },
         "[javascriptreact]": {
             "editor.formatOnSave": true,
@@ -21,6 +21,7 @@
             "https://json.schemastore.org/codecov.json": "file:///Users/john_richardson/Documents/Projects/transform-narratives/packages/functions/UserOrchestrator/dump.pm2"
         },
         "typescript.tsdk": "node_modules/typescript/lib",
+        "liveServer.settings.multiRootWorkspaceName": "./",
         // "WillLuke.nextjs.addTypesOnSave": true,
         // "WillLuke.nextjs.hasPrompted": true,
     },

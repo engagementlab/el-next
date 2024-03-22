@@ -2,6 +2,7 @@ type appConfigType = {
   [key: string]: {
     storageAccount: string;
     apexUrl: string;
+    cdnName?: string;
   };
 };
 
@@ -14,6 +15,10 @@ const appConfigMap: appConfigType = {
     storageAccount: 'sjmsymposium',
     apexUrl: 'sjmsymposium.org',
   },
-  elab: { storageAccount: 'elabhome', apexUrl: '' },
+  elab: {
+    storageAccount: 'elabapps',
+    apexUrl: 'elab.emerson.edu',
+    cdnName: 'engagementlab',
+  },
 };
 export default appConfigMap;

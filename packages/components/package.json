@@ -15,9 +15,10 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@keystone-6/fields-document": "^8.0.2",
-    "@mui/icons-material": "^5.15.13",
-    "@mui/material": "^5.12.1",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
     "@types/react-dom": "18.2.0",
+    "@types/screenfull": "^4.1.0",
     "change-case": "^5.1.0",
     "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.0",
@@ -28,6 +29,7 @@
     "react-dom": "18.2.0",
     "react-player": "^2.15.1",
     "react-scroll": "^1.8.9",
+    "screenfull": "^6.0.2",
     "typedoc-plugin-missing-exports": "^2.0.0",
     "zustand": "3.7.1"
   },
@@ -39,6 +41,9 @@
     "@types/react": "^18.0.15",
     "graphql": "^16.6.0",
     "lodash": "^4.17.21",
+    "react": "18.2.0"
+  },
+  "resolutions": {
     "react": "18.2.0"
   },
   "preconstruct": {

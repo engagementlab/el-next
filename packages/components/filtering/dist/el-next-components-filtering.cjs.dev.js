@@ -2,8 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
-var objectSpread2 = require('../../dist/objectSpread2-62cbe323.cjs.dev.js');
+var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-d9e5a90f.cjs.dev.js');
 require('react');
 var create = require('zustand');
 var middleware = require('zustand/middleware');
@@ -44,7 +43,7 @@ function _defineProperties(target, props) {
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, objectSpread2._toPropertyKey(descriptor.key), descriptor);
+    Object.defineProperty(target, unsupportedIterableToArray._toPropertyKey(descriptor.key), descriptor);
   }
 }
 function _createClass(Constructor, protoProps, staticProps) {
@@ -113,12 +112,12 @@ var Filtering = /*#__PURE__*/function () {
      * Zustand store
      * @see https://github.com/pmndrs/zustand
      */
-    objectSpread2._defineProperty(this, "useStore", void 0);
-    objectSpread2._defineProperty(this, "filtersGrouped", void 0);
-    objectSpread2._defineProperty(this, "items", void 0);
-    objectSpread2._defineProperty(this, "mode", void 0);
-    objectSpread2._defineProperty(this, "ItemRenderer", void 0);
-    objectSpread2._defineProperty(this, "FilteredItems", function () {
+    unsupportedIterableToArray._defineProperty(this, "useStore", void 0);
+    unsupportedIterableToArray._defineProperty(this, "filtersGrouped", void 0);
+    unsupportedIterableToArray._defineProperty(this, "items", void 0);
+    unsupportedIterableToArray._defineProperty(this, "mode", void 0);
+    unsupportedIterableToArray._defineProperty(this, "ItemRenderer", void 0);
+    unsupportedIterableToArray._defineProperty(this, "FilteredItems", function () {
       var selectedFilters = _this.useStore(function (state) {
         return state.currentFilters;
       });
@@ -215,22 +214,22 @@ var Filtering = /*#__PURE__*/function () {
         filterGroupsClosed: [],
         toggle: function toggle(filter) {
           return set(function (state) {
-            return state.currentFilters.includes(filter) ? objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
+            return state.currentFilters.includes(filter) ? unsupportedIterableToArray._objectSpread2(unsupportedIterableToArray._objectSpread2({}, state), {}, {
               currentFilters: state.currentFilters.filter(function (e) {
                 return e !== filter;
               })
-            }) : objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
+            }) : unsupportedIterableToArray._objectSpread2(unsupportedIterableToArray._objectSpread2({}, state), {}, {
               currentFilters: [].concat(_toConsumableArray(state.currentFilters), [filter])
             });
           });
         },
         toggleFilterGroupClosed: function toggleFilterGroupClosed(filterGroupKey) {
           return set(function (state) {
-            return state.filterGroupsClosed.includes(filterGroupKey) ? objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
+            return state.filterGroupsClosed.includes(filterGroupKey) ? unsupportedIterableToArray._objectSpread2(unsupportedIterableToArray._objectSpread2({}, state), {}, {
               filterGroupsClosed: state.filterGroupsClosed.filter(function (e) {
                 return e !== filterGroupKey;
               })
-            }) : objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
+            }) : unsupportedIterableToArray._objectSpread2(unsupportedIterableToArray._objectSpread2({}, state), {}, {
               filterGroupsClosed: [].concat(_toConsumableArray(state.filterGroupsClosed), [filterGroupKey])
             });
           });
@@ -239,7 +238,7 @@ var Filtering = /*#__PURE__*/function () {
           return set(function (state) {
             document.body.style.overflow = open ? 'hidden' : 'visible';
             if (open) window.scrollTo(0, 0);
-            return objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
+            return unsupportedIterableToArray._objectSpread2(unsupportedIterableToArray._objectSpread2({}, state), {}, {
               filtersNavOpen: open
             });
           });

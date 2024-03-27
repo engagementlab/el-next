@@ -3,6 +3,7 @@ import React, {
   Dispatch,
   MutableRefObject,
   SetStateAction,
+  useEffect,
   useRef,
 } from 'react';
 import { useState } from 'react';
@@ -11,7 +12,11 @@ import ReactPlayer from 'react-player/lazy';
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { IconButton, createTheme } from '@mui/material';
+import { IconButton } from '@mui/material';
+
+import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
+import ClosedCaptionDisabledIcon from '@mui/icons-material/ClosedCaptionDisabled';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -38,13 +43,16 @@ type ControlsProps = {
   duration: number;
   muted: boolean;
   playing: boolean;
+  hideCaptions: boolean;
   playedSeconds: number;
   volume: number;
   playerRef: MutableRefObject<ReactPlayer>;
   setPlaying: Dispatch<SetStateAction<boolean>>;
   onVolumeChangeHandler: (e: any, value: string) => void;
   onVolumeSeekUp: (e: any, value: string) => void;
+  onClickFullscreen: () => void;
   onMute: () => void;
+  onToggleCaptions: () => void;
 };
 
 const easing = 'ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)]';
@@ -57,68 +65,12 @@ const Controls = (props: ControlsProps) => {
   const [volumeHover, toggleHover] = useState(false);
 
   return (
-    <div className="absolute flex flex-row items-center px-5 bottom-0 left-[4rem] right-[4rem] bg-[#D7EFC1]/80 rounded-[50px]">
-      <IconButton
-        aria-label={props.playing ? 'pause' : 'play'}
-        size="large"
-        onClick={() => props.setPlaying(!props.playing)}
-      >
-        {props.playing ? <PauseCircleFilledIcon /> : <PlayCircleFilledIcon />}
-      </IconButton>
-      {/* <input
-          type="range"
-          value={props.playedSeconds}
-          min="0"
-        />
-        */}
-
-      <Box
-        // sx={{
-        //   display: 'flex',
-        //   flexDirection: 'row',
-        //   alignItems: 'center',
-        //   flexBasis:
-        //   transition: 'all 420ms ease',
-        // }}
-        className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
-          volumeHover ? 'basis-[50%]' : 'basis-[5%]'
-        } ${easing}`}
-        onMouseEnter={() => toggleHover(true)}
-        onMouseLeave={() => toggleHover(false)}
-      >
-        <IconButton
-          aria-label={props.muted ? 'unmute' : 'mute'}
-          size="large"
-          onClick={() => props.onMute()}
-        >
-          {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
-        </IconButton>
-        <Slider
-          aria-label="Player Current Volume"
-          defaultValue={0.5}
-          value={props.volume * 100}
-          getAriaValueText={() => {
-            return props.volume.toString();
-          }}
-          onChange={(e: Event, value: number, activeThumb: number) => {
-            // console.log(value, activeThumb);
-            props.onVolumeChangeHandler(e, value.toString());
-          }}
-          sx={{
-            color: '#5EB89E',
-            opacity: volumeHover ? 1 : 0,
-            transition: 'all 420ms ease',
-          }}
-        />
-      </Box>
+    <div className="absolute flex flex-col px-5 bottom-0 left-[1rem] right-[1rem] md:left-[3rem] md:right-[3rem] bg-[#D7EFC1]/80 rounded-[10px]">
       <Box
         sx={{
-          display: 'flex',
-          flexBasis: '75%',
-          alignItems: 'center',
           opacity: volumeHover ? 0.3 : 1,
-          transition: 'all 320ms ease',
         }}
+        className="flex basis-[75%] mt-2 items-center transition-all duration-[320ms] ease-in-out"
       >
         <Slider
           aria-label="Player Current Position"
@@ -144,6 +96,65 @@ const Controls = (props: ControlsProps) => {
           }}
         />
       </Box>
+      <div className="flex flex-row items-center justify-evenly">
+        <IconButton
+          aria-label={props.playing ? 'pause' : 'play'}
+          size="large"
+          onClick={() => props.setPlaying(!props.playing)}
+        >
+          {props.playing ? <PauseCircleFilledIcon /> : <PlayCircleFilledIcon />}
+        </IconButton>
+        <Box
+          className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
+            volumeHover ? 'basis-[50%]' : 'basis-[5%]'
+          } ${easing}`}
+          onMouseEnter={() => toggleHover(true)}
+          onMouseLeave={() => toggleHover(false)}
+        >
+          <IconButton
+            aria-label={props.muted ? 'unmute' : 'mute'}
+            size="large"
+            onClick={() => props.onMute()}
+          >
+            {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
+          </IconButton>
+          <Slider
+            aria-label="Player Current Volume"
+            defaultValue={0.5}
+            value={props.volume * 100}
+            getAriaValueText={() => {
+              return props.volume.toString();
+            }}
+            onChange={(e: Event, value: number, activeThumb: number) => {
+              // console.log(value, activeThumb);
+              props.onVolumeChangeHandler(e, value.toString());
+            }}
+            sx={{
+              color: '#5EB89E',
+              opacity: volumeHover ? 1 : 0,
+              transition: 'all 420ms ease',
+            }}
+          />
+        </Box>
+        <IconButton
+          // aria-label={props.playing ? 'pause' : 'play'}
+          size="large"
+          onClick={() => props.onToggleCaptions()}
+        >
+          {props.hideCaptions ? (
+            <ClosedCaptionDisabledIcon />
+          ) : (
+            <ClosedCaptionIcon />
+          )}
+        </IconButton>
+        <IconButton
+          aria-label="Enter fullscreen"
+          size="large"
+          onClick={() => props.onClickFullscreen()}
+        >
+          <FullscreenIcon />
+        </IconButton>
+      </div>
     </div>
   );
 };
@@ -180,11 +191,15 @@ export const Video = ({
     playing: true,
     muted: false,
     volume: 0.5,
+    cachedVolume: 0.5,
     played: 0,
     seeking: false,
     buffer: true,
+    hideCaptions: true,
+    isFullscreen: false,
   });
-  const { muted, volume, played, seeking, buffer } = videoState;
+  const { muted, volume, played, seeking, buffer, hideCaptions, isFullscreen } =
+    videoState;
 
   const volumeChangeHandler = (e, value) => {
     const newVolume = parseFloat(value) / 100;
@@ -211,12 +226,36 @@ export const Video = ({
     setVideoState({
       ...videoState,
       muted: !videoState.muted,
-      volume: videoState.muted ? 1 : 0,
+      volume: videoState.muted ? videoState.cachedVolume : 0,
+      cachedVolume: videoState.volume,
+    });
+  };
+
+  const onClickFullscreen = () => {
+    const video = document.querySelector('.video-player');
+    video.requestFullscreen();
+  };
+
+  const toggleCaptions = () => {
+    playerRef.current.getInternalPlayer().textTracks[0].mode = hideCaptions
+      ? 'showing'
+      : 'hidden';
+    setVideoState({
+      ...videoState,
+      hideCaptions: !hideCaptions,
     });
   };
 
   let classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
   if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
+
+  useEffect(() => {
+    document
+      .querySelector('.video-player')
+      .addEventListener('fullscreenchange', (e) =>
+        setVideoState({ ...videoState, isFullscreen: true })
+      );
+  }, [playerRef]);
 
   return (
     <div className={classStr}>
@@ -323,6 +362,7 @@ export const Video = ({
         id="video-embed"
         onMouseEnter={() => toggleHover(true)}
         onMouseLeave={() => toggleHover(false)}
+        onTouchEnd={() => toggleHover(true)}
         className="w-full h-full min-h-[inherit] overflow-y-hidden"
       >
         <div className="relative h-full min-h-[inherit]">
@@ -330,7 +370,11 @@ export const Video = ({
             <ReactPlayer
               url={`https://player.vimeo.com/progressive_redirect/playback/911300630/rendition/720p/file.mp4?loc=external&signature=6dadd6681fc191c020410ff373ac24e37231ac8760196c9a611c7400dac5f88c`}
               ref={playerRef}
-              controls={false}
+              id={`video-player-${videoUrl}`}
+              className="video-player"
+              controls={isFullscreen ? true : false}
+              width="100%"
+              height="100%"
               playing={playing}
               onDuration={setDurationSeconds}
               onProgress={({ playedSeconds }) =>
@@ -346,8 +390,7 @@ export const Video = ({
                   },
                   tracks: [
                     {
-                      src: 'https://captions.cloud.vimeo.com/captions/134131399.vtt?expires=1710536245&sig=49e06e5995dd5947770b13fff510efe2a9f55db5&download=auto_generated_captions.vtt',
-
+                      src: 'https://res.cloudinary.com/engagement-lab-home/raw/upload/v1711547945/0_yo8h2d.vtt',
                       kind: 'subtitles',
                       srcLang: 'en',
                       default: true,
@@ -358,11 +401,10 @@ export const Video = ({
               }}
             />
           </div>
-          {/* <AnimatePresence> */}
-          {/* {videoHover && ( */}
+
           <div
             className={`relative top-[90%] transition-all duration-700 ${
-              videoHover ? 'translate-y-[0]' : 'translate-y-[6rem]'
+              videoHover ? 'translate-y-[0]' : 'translate-y-[8rem]'
             } ${easing}`}
             // style={{
             //   top: '90%',
@@ -378,13 +420,14 @@ export const Video = ({
               setPlaying={setPlaying}
               volume={volume}
               muted={muted}
+              hideCaptions={hideCaptions}
               onMute={muteHandler}
+              onToggleCaptions={toggleCaptions}
               onVolumeChangeHandler={volumeChangeHandler}
               onVolumeSeekUp={volumeSeekUpHandler}
+              onClickFullscreen={onClickFullscreen}
             />
           </div>
-          {/* )} */}
-          {/* </AnimatePresence> */}
         </div>
       </div>
       {/* )} */}

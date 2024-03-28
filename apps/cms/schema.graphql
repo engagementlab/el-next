@@ -211,6 +211,7 @@ type Event {
   order: Int
   initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
+  partners: [EventPartnerType!]
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
@@ -235,6 +236,21 @@ type Event_blurb_Document {
 
 type Event_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+enum EventPartnerType {
+  uncornered
+  ficdc
+  greenroots
+  ldbpi
+  mgh
+  magv
+  sftt
+  swbcdc
+  teenempowerment
+  boston
+  wabt
+  zoone
 }
 
 input EventWhereUniqueInput {
@@ -346,6 +362,7 @@ input EventUpdateInput {
   home: Boolean
   order: Int
   initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
+  partners: [EventPartnerType!]
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
@@ -380,6 +397,7 @@ input EventCreateInput {
   home: Boolean
   order: Int
   initiativesWhatsNew: InitiativeRelateToManyForCreateInput
+  partners: [EventPartnerType!]
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
@@ -1030,7 +1048,6 @@ type NewsItem {
   thumbAltText: String
   summary: String
   publishDate: DateTime
-  source: String
   linkHelper: HelperFieldOutput
   externalLink: String
   blurb: NewsItem_blurb_Document
@@ -1084,7 +1101,6 @@ input NewsItemWhereInput {
   thumbAltText: StringFilter
   summary: StringFilter
   publishDate: DateTimeFilter
-  source: StringFilter
   externalLink: StringFilter
   home: BooleanFilter
   order: IntNullableFilter
@@ -1122,7 +1138,6 @@ input NewsItemOrderByInput {
   thumbAltText: OrderDirection
   summary: OrderDirection
   publishDate: OrderDirection
-  source: OrderDirection
   externalLink: OrderDirection
   home: OrderDirection
   order: OrderDirection
@@ -1139,7 +1154,6 @@ input NewsItemUpdateInput {
   thumbAltText: String
   summary: String
   publishDate: DateTime
-  source: String
   linkHelper: HelperFieldInput
   externalLink: String
   blurb: JSON
@@ -1183,7 +1197,6 @@ input NewsItemCreateInput {
   thumbAltText: String
   summary: String
   publishDate: DateTime
-  source: String
   linkHelper: HelperFieldInput
   externalLink: String
   blurb: JSON
@@ -1819,6 +1832,7 @@ enum SemesterPartnerType {
   swbcdc
   teenempowerment
   boston
+  wabt
   zoone
 }
 
@@ -2278,6 +2292,7 @@ enum StudioProjectPartnerType {
   swbcdc
   teenempowerment
   boston
+  wabt
   zoone
 }
 

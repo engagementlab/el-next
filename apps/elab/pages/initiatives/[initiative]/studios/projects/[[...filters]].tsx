@@ -287,8 +287,8 @@ export async function getStaticProps({
   const filtersData = await Query(
     'filters',
     `filters {
-          key
-          name
+        key
+        name
       }`
   );
 

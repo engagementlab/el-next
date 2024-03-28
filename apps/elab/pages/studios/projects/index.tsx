@@ -41,7 +41,6 @@ export default function StudioProjects({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
-  console.log(studioProjects);
   // Create store with Zustand
   const useStore = create<FilterState>()(
     subscribeWithSelector((set) => ({

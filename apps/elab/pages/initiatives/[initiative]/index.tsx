@@ -233,7 +233,11 @@ export default function InitIndex({
                     <div id="video" className="min-h-[inherit]">
                       <Video
                         isSlide={true}
-                        videoLabel=""
+                        videoLabel={`${
+                          InitiativeFilterGroups.find(
+                            (i) => i.key === initiative
+                          )?.label
+                        } Intro Video`}
                         videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
                         thumbUrl={page.videoThumbnail?.publicUrl}
                         // themeColor={videoColor}

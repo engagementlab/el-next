@@ -337,6 +337,7 @@ export default function Home({
                                     return (
                                       <StudioGenericItemRenderer
                                         key={i}
+                                        index={i}
                                         item={item as unknown as StudioUnion}
                                         showBorder={true}
                                       />
@@ -399,6 +400,7 @@ export default function Home({
                                   return (
                                     <StudioGenericItemRenderer
                                       key={i}
+                                      index={i}
                                       item={item as StudioUnion}
                                       showBorder={true}
                                     />

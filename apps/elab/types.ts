@@ -255,6 +255,7 @@ export type Studio = {
   name: string;
   key: string;
   flags: string[];
+  blurb: string;
   order: number;
   initiatives: Initiative[];
   shortDescription: string;
@@ -262,6 +263,68 @@ export type Studio = {
     publicId: string;
   };
   thumbAltText: string;
+  semesters: Semester[];
+};
+export type Semester = {
+  key: string;
+  name: string;
+  type: string;
+  courseNumber: string;
+  description: string;
+  partners: string[];
+  coCreation: {
+    document: any;
+  };
+  impact: {
+    document: any;
+  };
+  slides: {
+    slides: any[];
+  };
+
+  projects: {
+    name: string;
+    key: string;
+    shortDescription: string;
+    thumbnail: {
+      publicId: string;
+    };
+    thumbailAltText: string;
+  }[];
+
+  instructors: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  learningPartners: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  studioStudents: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  studioStaff: {
+    name: string;
+    key: string;
+    title: string;
+    image: {
+      publicId: string;
+    };
+  }[];
+  contact: string;
 };
 export type StudioProject = {
   name: string;

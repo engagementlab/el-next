@@ -239,6 +239,7 @@ export default function Studios({
                     {filteredItems.map((item, i: number) => (
                       <StudioGenericItemRenderer
                         key={i}
+                        index={i}
                         item={item as StudioUnion}
                         showBorder={noGroupsOpen()}
                       />
@@ -273,6 +274,10 @@ export async function getStaticProps() {
 				publicId
 			}
       thumbAltText
+      semesters {
+        key
+        name
+      }
 		}`
   );
   const initiativeBlurbs = await Query(

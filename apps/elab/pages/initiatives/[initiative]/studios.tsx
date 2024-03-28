@@ -11,10 +11,12 @@ import {
   InitiativeFilterGroups,
   InitiativeKeyMap,
   Studio,
+  StudioUnion,
   Theming,
 } from '@/types';
 
 import Layout from '../../../components/Layout';
+import { StudioGenericItemRenderer } from '@/components/Renderers';
 
 export default function Studios({
   studios,
@@ -28,7 +30,7 @@ export default function Studios({
       return key === initiative;
     };
 
-    const ItemRenderer = (props: { item: Studio }) => {
+    const ItemRenderer = (props: { item: Studio; index: number }) => {
       let borderColor = 'border-yellow';
       if (props.item.initiatives[0]) {
         if (props.item.initiatives[0] === 'gunviolence')
@@ -37,42 +39,12 @@ export default function Studios({
           borderColor = 'border-leaf';
       }
       return (
-        <motion.div
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="w-full"
-        >
-          <Link href={`/studios/${props.item.key}`} className="group relative">
-            <div>
-              {props.item.thumbnail ? (
-                <Image
-                  id={`thumb-${props.item.key}`}
-                  alt={props.item.thumbAltText}
-                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                  imgId={props.item.thumbnail.publicId}
-                  width={460}
-                  maxWidthDisable={true}
-                  className="w-full"
-                />
-              ) : (
-                <ImagePlaceholder
-                  imageLabel="Studio Project"
-                  width={335}
-                  height={200}
-                />
-              )}
-            </div>
-            {/* {noGroupsOpen() && (
-              <hr
-                className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
-              />
-            )}{' '} */}
-            <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-              {props.item.name}
-            </h3>
-            <p>{props.item.shortDescription}</p>
-          </Link>
-        </motion.div>
+        <StudioGenericItemRenderer
+          key={props.index}
+          index={props.index}
+          item={props.item as StudioUnion}
+          showBorder={true}
+        />
       );
     };
     const RenderFilters = () => {
@@ -162,7 +134,7 @@ export default function Studios({
                 {studios && studios?.length > 0 && (
                   <AnimatePresence>
                     {studios.map((item, i: number) => (
-                      <ItemRenderer key={i} item={item} />
+                      <ItemRenderer key={i} index={i} item={item} />
                     ))}
                   </AnimatePresence>
                 )}
@@ -199,12 +171,16 @@ export async function getStaticProps({
 		) {
 			name
 			key
-            initiatives
+      initiatives
 			shortDescription 
 			thumbnail { 
 				publicId
 			}
-            thumbAltText
+      thumbAltText
+      semesters {
+        key
+        name
+      }
 		}`
   );
   const initiativeBlurbs = await Query(

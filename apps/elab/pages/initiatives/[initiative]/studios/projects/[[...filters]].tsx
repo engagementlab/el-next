@@ -252,6 +252,7 @@ export default function StudioProjects({
                     {filteredProjects.map((item, i: number) => (
                       <StudioGenericItemRenderer
                         key={i}
+                        index={i}
                         item={item as StudioUnion}
                         showBorder={false}
                       />

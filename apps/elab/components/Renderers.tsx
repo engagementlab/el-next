@@ -317,13 +317,14 @@ const NewsEventRenderer = ({
 };
 
 const StudioGenericItemRenderer = (props: {
-  key: number;
+  index: number;
   item: StudioUnion;
   showBorder: boolean;
 }) => {
   const multiInitiative =
     'initiatives' in props.item && props.item.initiatives.length === 1;
   let borderColor = 'border-yellow';
+  let bgColor = 'bg-yellow';
   let textColor = 'text-yellow';
 
   if (
@@ -332,12 +333,14 @@ const StudioGenericItemRenderer = (props: {
   ) {
     borderColor = Theming['tngv'].border;
     textColor = Theming['tngv'].text;
+    bgColor = 'bg-purple';
   } else if (
     (multiInitiative && props.item.initiatives[0] === 'climate') ||
     (!multiInitiative && props.item.initiative === 'climate')
   ) {
     borderColor = 'border-leaf';
     textColor = Theming['tnej'].text;
+    bgColor = 'bg-leaf';
   }
   return (
     <motion.div
@@ -345,6 +348,11 @@ const StudioGenericItemRenderer = (props: {
       exit={{ opacity: 0 }}
       className="w-full"
     >
+      {props.index > 0 && (
+        <div className="flex justify-center my-8 lg:hidden">
+          <hr className={`border-1 ${borderColor} w-1/2 opacity-30`} />
+        </div>
+      )}
       <Link
         href={
           props.item.hasOwnProperty('initiative')
@@ -376,10 +384,23 @@ const StudioGenericItemRenderer = (props: {
           <hr
             className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
           />
-        )}{' '}
+        )}
         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
           {props.item.name}
         </h3>
+
+        {props.item.semesters && process.env.NEXT_PUBLIC_STAGING === 'true' && (
+          <div className="flex flex-wrap uppercase text-white text-xs gap-2">
+            {props.item.semesters.map((semester, i) => (
+              <Link
+                href={`/studios/${props.item.key}/${semester.key}`}
+                className={`inline transition-all ${CustomEase} p-2 rounded-large ${bgColor} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}
+              >
+                {semester.name.substring(0, semester.name.indexOf('-') - 1)}
+              </Link>
+            ))}
+          </div>
+        )}
         {props.item.semester && (
           <p className={`mt-1 uppercase font-extrabold text-sm ${textColor}`}>
             {props.item.semester[0].name.substring(

@@ -91,7 +91,7 @@ var Video = function Video(_ref) {
         toggleOpen(true);
         e.preventDefault();
       },
-      className: "group relative",
+      className: "group relative overflow-hidden",
       style: {
         height: 'inherit'
       },

@@ -51,7 +51,7 @@ export const Video = ({
             toggleOpen(true);
             e.preventDefault();
           }}
-          className="group relative"
+          className="group relative overflow-hidden"
           style={{ height: 'inherit' }}
         >
           <Image

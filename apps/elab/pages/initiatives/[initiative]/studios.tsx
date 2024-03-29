@@ -17,6 +17,7 @@ import {
 
 import Layout from '../../../components/Layout';
 import { StudioGenericItemRenderer } from '@/components/Renderers';
+import { ClassStudiosGrid } from '@/shared';
 
 export default function Studios({
   studios,
@@ -130,7 +131,7 @@ export default function Studios({
                 </p>
               )}
 
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
+              <div className={ClassStudiosGrid}>
                 {studios && studios?.length > 0 && (
                   <AnimatePresence>
                     {studios.map((item, i: number) => (

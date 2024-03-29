@@ -19,7 +19,7 @@ import {
 
 import Layout from '../../../components/Layout';
 import { StudioGenericItemRenderer } from '@/components/Renderers';
-import { StudioProjectsSort } from '@/shared';
+import { ClassStudiosGrid, StudioProjectsSort } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -322,7 +322,7 @@ export default function StudioProjects({
                   Sorry, no matches found. Please try other filters.
                 </p>
               )}
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
+              <div className={ClassStudiosGrid}>
                 {count > 0 && (
                   <AnimatePresence>
                     {filteredItems.map((item, i: number) => (

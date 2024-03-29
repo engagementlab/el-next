@@ -394,7 +394,7 @@ const StudioGenericItemRenderer = (props: {
             {props.item.semesters.map((semester, i) => (
               <Link
                 href={`/studios/${props.item.key}/${semester.key}`}
-                className={`inline transition-all ${CustomEase} p-2 rounded-large ${bgColor} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}
+                className={`inline transition-all ${CustomEase} p-2 rounded-[5px] ${bgColor} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}
               >
                 {semester.name.substring(0, semester.name.indexOf('-') - 1)}
               </Link>

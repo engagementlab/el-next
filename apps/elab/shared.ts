@@ -31,3 +31,6 @@ export const StudioProjectsSort = (projects: StudioProject[]) => {
     return a.name.localeCompare(b.name);
   });
 };
+
+export const ClassStudiosGrid =
+  'lg:ml-5 grid xl:grid-cols-3 xl:gap-x-3 xl:gap-y-12 lg:gap-x-6 lg:gap-y-10 lg:grid-cols-2 lg:gap-2 lg:my-11';

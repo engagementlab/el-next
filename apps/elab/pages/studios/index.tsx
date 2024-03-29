@@ -23,6 +23,7 @@ import {
 
 import Layout from '../../components/Layout';
 import { StudioGenericItemRenderer } from '@/components/Renderers';
+import { ClassStudiosGrid } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -146,10 +147,6 @@ export default function Studios({
                       className={`inline-block ${
                         !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
                       } `}
-                      // onClick={(e) => {
-                      //   toggle(group.key);
-                      //   e.preventDefault();
-                      // }}
                     >
                       <div className={groupButtonStyle}>
                         <span>{group.label}</span>
@@ -233,7 +230,7 @@ export default function Studios({
                 </p>
               )}
 
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
+              <div className={ClassStudiosGrid}>
                 {count > 0 && (
                   <AnimatePresence>
                     {filteredItems.map((item, i: number) => (

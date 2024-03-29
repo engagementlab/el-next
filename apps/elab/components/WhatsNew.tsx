@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { InitiativeFilterGroups, Item, Theming } from '@/types';
+import { CustomEase, InitiativeFilterGroups, Item, Theming } from '@/types';
 import { NewsEventRenderer } from './Renderers';
 
 type Props = {
@@ -40,7 +40,9 @@ ${
                       ? '/whats-new'
                       : `/initiatives/${group.key}/whats-new`
                   }
-                  className={`inline-block`}
+                  className={`inline-block transition-all ${CustomEase} ${
+                    group.key !== initiative ? 'hover:scale-105' : ''
+                  }`}
                 >
                   <div className={groupButtonStyle}>
                     <span>{group.label}</span>
@@ -69,8 +71,10 @@ ${
           const href = `/${
             initiative ? `initiatives/${initiative}/` : ''
           }${str.toLocaleLowerCase()}`;
-          const className = `${groupButtonStyle} text-green border-green ${
-            filter === str.toLocaleLowerCase() ? 'bg-green text-white' : ''
+          const className = `${groupButtonStyle} transition-all ${CustomEase} text-green border-green ${
+            filter === str.toLocaleLowerCase()
+              ? 'bg-green text-white'
+              : 'hover:scale-105'
           }`;
 
           return (

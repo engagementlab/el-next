@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Image, Query } from '@el-next/components';
 import {
+  CustomEase,
   DefaultWhereCondition,
   InitiativeFilterGroups,
   StudioProject,
@@ -19,7 +20,11 @@ import {
 
 import Layout from '../../../components/Layout';
 import { StudioGenericItemRenderer } from '@/components/Renderers';
-import { ClassStudiosGrid, StudioProjectsSort } from '@/shared';
+import {
+  ClassFilterButton,
+  ClassStudiosGrid,
+  StudioProjectsSort,
+} from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -182,12 +187,6 @@ export default function StudioProjects({
           </h2>
           <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
             {InitiativeFilterGroups.map((group) => {
-              const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
-                !haveGroupOpen(group.key)
-                  ? `bg-white ${Theming[group.key].text}`
-                  : `text-white ${Theming[group.key].bg}`
-              }
- `;
               return (
                 <>
                   <div key={group.key} className="flex flex-row">
@@ -200,9 +199,16 @@ export default function StudioProjects({
                       }
                       className={`inline-block ${
                         !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
-                      } `}
+                      }  transition-all ${CustomEase} ${
+                        !haveGroupOpen(group.key) ? 'hover:scale-105' : ''
+                      }`}
                     >
-                      <div className={groupButtonStyle}>
+                      <div
+                        className={ClassFilterButton(
+                          haveGroupOpen(group.key),
+                          group.key
+                        )}
+                      >
                         <span>{group.label}</span>
                         <svg
                           viewBox="185.411 115.41 11 11"

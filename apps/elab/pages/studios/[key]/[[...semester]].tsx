@@ -17,6 +17,8 @@ import {
 import {
   CustomEase,
   DefaultWhereCondition,
+  Semester,
+  Studio,
   ThemeColors,
   Theming,
 } from '@/types';
@@ -29,76 +31,7 @@ import { PeopleList } from '@/components/People';
 import Partners from '@/components/Partners';
 import Slideshow from '@/components/Slideshow';
 import clsx from 'clsx';
-
-type Semester = {
-  key: string;
-  name: string;
-  type: string;
-  courseNumber: string;
-  description: string;
-  partners: string[];
-  coCreation: {
-    document: any;
-  };
-  impact: {
-    document: any;
-  };
-  slides: {
-    slides: any[];
-  };
-
-  projects: {
-    name: string;
-    key: string;
-    shortDescription: string;
-    thumbnail: {
-      publicId: string;
-    };
-    thumbailAltText: string;
-  }[];
-
-  instructors: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  learningPartners: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  studioStudents: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  studioStaff: {
-    name: string;
-    key: string;
-    title: string;
-    image: {
-      publicId: string;
-    };
-  }[];
-  contact: string;
-};
-
-type Studio = {
-  name: string;
-  key: string;
-  blurb: string;
-  initiatives: string[];
-  semesters: Semester[];
-};
+import { SemestersSort } from '@/shared';
 
 export default function Studio({
   item,
@@ -107,28 +40,15 @@ export default function Studio({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
+  if (!item) return;
+
   useEffect(() => {
     // If there is only one semester, just redirect there immediately
     if (!currentSemester && item?.semesters.length === 1)
       router.replace(`/studios/${item.key}/${item.semesters[0].key}`);
   });
 
-  let sortedSemesters = item?.semesters
-    .filter((v) => v.type !== 'current')
-    .sort((a, b) => {
-      // Get year from semester key
-      const aYr = a.key.match(/\d{4}/gm);
-      const bYr = b.key.match(/\d{4}/gm);
-
-      if (aYr && bYr) {
-        // If years match, use fall vs spring
-        if (aYr[0] === bYr[0]) return a.key.includes('fall') ? 1 : -1;
-        return parseInt(aYr[0]) - parseInt(bYr[0]);
-      }
-      return 0;
-    });
-  const current = item?.semesters.filter((v) => v.type === 'current')[0];
-  if (current && sortedSemesters) sortedSemesters.push(current);
+  let sortedSemesters = SemestersSort(item.semesters);
 
   const selectedSemester = item?.semesters.find(
     (semester) => semester.key === currentSemester

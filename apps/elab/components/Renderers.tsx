@@ -22,6 +22,7 @@ import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
 import { ReactElement, ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { SemestersSort } from '@/shared';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -391,7 +392,7 @@ const StudioGenericItemRenderer = (props: {
 
         {props.item.semesters && process.env.NEXT_PUBLIC_STAGING === 'true' && (
           <div className="flex flex-wrap uppercase text-white text-xs gap-2">
-            {props.item.semesters.map((semester, i) => (
+            {SemestersSort(props.item.semesters).map((semester, i) => (
               <Link
                 href={`/studios/${props.item.key}/${semester.key}`}
                 className={`inline transition-all ${CustomEase} p-2 rounded-[5px] ${bgColor} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}

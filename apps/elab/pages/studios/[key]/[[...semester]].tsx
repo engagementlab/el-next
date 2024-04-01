@@ -18,7 +18,7 @@ import {
   CustomEase,
   DefaultWhereCondition,
   Semester,
-  Studio,
+  Studio as StudioT,
   ThemeColors,
   Theming,
 } from '@/types';
@@ -640,7 +640,7 @@ export async function getStaticProps({
       },
     };
   }
-  const item = itemResult[0] as Studio;
+  const item = itemResult[0] as StudioT;
   // const relatedItems = (await query.MediaItem.findMany({
   //     where: {
   //         filters: {

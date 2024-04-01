@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Interactive Fiction</title>
+    <meta name="description" content="Demonstration of Interactive Fiction JS Library">
+    <meta name="author" content="David Kelleher">
+    <link rel="stylesheet" type="text/css" href="style/interactive.css">
+    <script src="script/interactive.js"></script>
+</head>
+
+<body>
+<div id="page"></div>
+
+<script>
+// the story is stored in JSON format
+let storyJSON = `{
+   "story" : [
+      {
+         "node" : 0,
+         "time" : [4, 2, 1],
+         "source" : [
+            "https://player.vimeo.com/progressive_redirect/playback/929623909/rendition/1080p/file.mp4?loc=external&signature=d30f9460576825f51be158c70c58f260f98a2799ea7cca529c859f07b5f9bdc4",
+            "https://player.vimeo.com/progressive_redirect/playback/929623884/rendition/1080p/file.mp4?loc=external&signature=271f990fe9065262302d71e52598c4c1b1d946f6343ccdb5fdee9a4fa08e1764",
+            "https://player.vimeo.com/progressive_redirect/playback/929623852/rendition/1080p/file.mp4?loc=external&signature=d05f9889897c9737b05da44fd0b808602e83e640a9a2ff5395b533d19c20fccd"
+         ],
+         "links" : [
+            {
+               "targetnode" : 1,
+               "linktext" : "Flowers"
+            },
+            {
+               "targetnode" : 2,
+               "linktext" : "Butterfly"
+            },
+            {
+               "targetnode" : "https://en.wikipedia.org/wiki/Big_Buck_Bunny",
+               "linktext" : "About This Project"
+            }
+         ]
+      },
+    
+      {
+         "node" : 1,
+         "time" : [4, 1],
+         "source" : [
+            "https://player.vimeo.com/progressive_redirect/playback/929623827/rendition/1080p/file.mp4?loc=external&signature=eb71a2ed7d684b161b2f9eb423d48782d52ce495532ab99745b2f3e6c301e1f2",
+            "https://player.vimeo.com/progressive_redirect/playback/929623804/rendition/1080p/file.mp4?loc=external&signature=527874db685935dc935e9b3e3b1d3b50609403b3b68f8bf847b5a23027eac212"
+         ],
+         "links" : [
+            {
+               "targetnode" : 3,
+               "linktext" : "Rinky"
+            },
+            {
+               "targetnode" : 4,
+               "linktext" : "Gimera"
+            },
+            {
+               "targetnode" : 5,
+               "linktext" : "Frank"
+            }
+         ]
+      },
+
+      {
+         "node" : 2,
+         "time" : [4, 1],
+         "source" : [
+            "https://player.vimeo.com/progressive_redirect/playback/929623770/rendition/1080p/file.mp4?loc=external&signature=0915d6e883c37e51edc6da7d7155a0b92069eccd7e0bc73178a24a9cdfb3ec08",
+            "https://player.vimeo.com/progressive_redirect/playback/929623747/rendition/1080p/file.mp4?loc=external&signature=f685eb394405aaed8f49095155b88e3abf981771888f538bc66068ebe96479c4"
+         ],
+         "links" : [
+            {
+               "targetnode" : 3,
+               "linktext" : "Rinky"
+            },
+            {
+               "targetnode" : 4,
+               "linktext" : "Gimera"
+            },
+            {
+               "targetnode" : 5,
+               "linktext" : "Frank"
+            }
+         ]
+      },
+    
+      {
+         "node" : 3,
+         "customClass" : "rinky",
+         "time" : 13,
+         "source" : "https://player.vimeo.com/progressive_redirect/playback/929623720/rendition/1080p/file.mp4?loc=external&signature=2eb16be2ef1ecf970036291f6b5038c0d8e2c2d020a9192ad8d999b1786facd9",
+         "links" : [
+            {
+               "targetnode" : 0,
+               "linktext" : "Replay"
+            }
+         ],
+         "autoAdvance" : false,
+         "hideTimer" : true
+      },
+
+      {
+         "node" : 4,
+         "time" : 13,
+         "source" : "https://player.vimeo.com/progressive_redirect/playback/929623692/rendition/1080p/file.mp4?loc=external&signature=1ff3812725425698d082b01da8f63e136d935fd18c70597f4c73d8cdf95e60a3",
+         "links" : [
+            {
+               "targetnode" : 0,
+               "linktext" : "Replay"
+            }
+         ],
+         "autoAdvance" : false,
+         "hideTimer" : true
+      },
+
+      {
+         "node" : 5,
+         "time" : 10,
+         "source" : "https://player.vimeo.com/progressive_redirect/playback/929623646/rendition/1080p/file.mp4?loc=external&signature=97f9a43261e0ad31d8c835dabd0d8196877785450bf5f2b81612d3c391e553f1",
+         "links" : [
+            {
+               "targetnode" : 0,
+               "linktext" : "Replay"
+            }
+         ],
+         "autoAdvance" : false,
+         "hideTimer" : true
+      }
+   ]
+}`;
+    
+// launch the story
+let story = JSON.parse(storyJSON).story;
+    
+let page = document.getElementById("page");
+
+let video = document.createElement("video");
+video.setAttribute("playsinline", "playsinline");
+page.appendChild(video);
+
+let interfaceOverlay = document.createElement("div");
+interfaceOverlay.setAttribute("id", "interface-overlay");
+interfaceOverlay.style.visibility = "hidden";
+page.appendChild(interfaceOverlay);
+
+let timer = document.createElement("div");
+timer.setAttribute("id", "timer");
+timer.style.display = "none";
+interfaceOverlay.appendChild(timer);
+
+let links = document.createElement("div");
+links.setAttribute("id", "links");
+links.style.visibility = "hidden";
+interfaceOverlay.appendChild(links);
+    
+new Passage(story, page, video, timer, links, 0);
+</script>
+
+</body>
+</html>

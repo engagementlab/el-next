@@ -201,6 +201,8 @@ type Event {
   initiatives: [EventInitiativeType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slidesCount(where: SlideWhereInput! = {}): Int
   summary: String
   eventDate: DateTime
   registrationLink: String
@@ -268,6 +270,7 @@ input EventWhereInput {
   createdDate: DateTimeNullableFilter
   status: EventStatusTypeNullableFilter
   thumbAltText: StringFilter
+  slides: SlideManyRelationFilter
   summary: StringFilter
   eventDate: DateTimeFilter
   registrationLink: StringFilter
@@ -294,6 +297,12 @@ input EventStatusTypeNullableFilter {
   in: [EventStatusType!]
   notIn: [EventStatusType!]
   not: EventStatusTypeNullableFilter
+}
+
+input SlideManyRelationFilter {
+  every: SlideWhereInput
+  some: SlideWhereInput
+  none: SlideWhereInput
 }
 
 input DateTimeFilter {
@@ -353,6 +362,7 @@ input EventUpdateInput {
   initiatives: [EventInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForUpdateInput
   summary: String
   eventDate: DateTime
   registrationLink: String
@@ -366,6 +376,13 @@ input EventUpdateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
+}
+
+input SlideRelateToManyForUpdateInput {
+  disconnect: [SlideWhereUniqueInput!]
+  set: [SlideWhereUniqueInput!]
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
 }
 
 input InitiativeRelateToManyForUpdateInput {
@@ -388,6 +405,7 @@ input EventCreateInput {
   initiatives: [EventInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForCreateInput
   summary: String
   eventDate: DateTime
   registrationLink: String
@@ -401,6 +419,11 @@ input EventCreateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
+}
+
+input SlideRelateToManyForCreateInput {
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
 }
 
 input InitiativeRelateToManyForCreateInput {
@@ -697,12 +720,6 @@ input InitiativeWhereInput {
   ogDescription: StringFilter
 }
 
-input SlideManyRelationFilter {
-  every: SlideWhereInput
-  some: SlideWhereInput
-  none: SlideWhereInput
-}
-
 input EventManyRelationFilter {
   every: EventWhereInput
   some: EventWhereInput
@@ -748,13 +765,6 @@ input InitiativeUpdateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-}
-
-input SlideRelateToManyForUpdateInput {
-  disconnect: [SlideWhereUniqueInput!]
-  set: [SlideWhereUniqueInput!]
-  create: [SlideCreateInput!]
-  connect: [SlideWhereUniqueInput!]
 }
 
 input EventRelateToManyForUpdateInput {
@@ -803,11 +813,6 @@ input InitiativeCreateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-}
-
-input SlideRelateToManyForCreateInput {
-  create: [SlideCreateInput!]
-  connect: [SlideWhereUniqueInput!]
 }
 
 input EventRelateToManyForCreateInput {
@@ -1978,6 +1983,8 @@ type Slide {
   initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
   newsSlides(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   newsSlidesCount(where: NewsItemWhereInput! = {}): Int
+  eventSlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
+  eventSlidesCount(where: EventWhereInput! = {}): Int
   image: CloudinaryImage_File
   helper: HelperFieldOutput
   altText: String
@@ -1998,6 +2005,7 @@ input SlideWhereInput {
   slideshowSlides: SlideshowManyRelationFilter
   initiativeSlides: InitiativeManyRelationFilter
   newsSlides: NewsItemManyRelationFilter
+  eventSlides: EventManyRelationFilter
   altText: StringFilter
   caption: StringFilter
   videoId: StringFilter
@@ -2022,6 +2030,7 @@ input SlideUpdateInput {
   slideshowSlides: SlideshowRelateToManyForUpdateInput
   initiativeSlides: InitiativeRelateToManyForUpdateInput
   newsSlides: NewsItemRelateToManyForUpdateInput
+  eventSlides: EventRelateToManyForUpdateInput
   image: Upload
   helper: HelperFieldInput
   altText: String
@@ -2046,6 +2055,7 @@ input SlideCreateInput {
   slideshowSlides: SlideshowRelateToManyForCreateInput
   initiativeSlides: InitiativeRelateToManyForCreateInput
   newsSlides: NewsItemRelateToManyForCreateInput
+  eventSlides: EventRelateToManyForCreateInput
   image: Upload
   helper: HelperFieldInput
   altText: String

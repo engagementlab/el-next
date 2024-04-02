@@ -1,6 +1,5 @@
 import { group, list } from '@keystone-6/core';
 import {
-  checkbox,
   multiselect,
   relationship,
   text,
@@ -13,9 +12,8 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { CreatedTimestamp, CreateKey } from '../../hooks';
-import { Flags, Status } from '../flags';
+import { Status } from '../flags';
 import { Featuring } from '../featuring';
-import { helper, HelperIcon } from '../../../components/helper';
 import { Social } from '../social';
 import { PartnersSelect } from './partners';
 
@@ -67,6 +65,21 @@ const Event: Lists.Event = list({
       },
       label: 'Thumbnail Alt Text ♿',
       ui: { description: 'Describe appearance of Thumbnail/Header Image' },
+    }),
+    slides: relationship({
+      ref: 'Slide.eventSlides',
+      many: true,
+      ui: {
+        description: 'If defined, shows on event instead of thumbnail.',
+        displayMode: 'cards',
+        cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        inlineCreate: {
+          fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        },
+        inlineEdit: {
+          fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        },
+      },
     }),
     summary: text({
       ui: { displayMode: 'textarea', description: 'Appears below thumbnail.' },

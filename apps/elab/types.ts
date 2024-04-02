@@ -1,5 +1,15 @@
 type Category = 'core' | 'studentstaff' | 'fellow';
 type Initiative = 'gunviolence' | 'climate';
+type Slide = {
+  altText: string;
+  image?: {
+    publicId: string;
+    publicUrl: string;
+  };
+  caption: string;
+  videoId?: string;
+  order: number;
+};
 
 export interface Breadcrumb {
   href: string;
@@ -144,6 +154,7 @@ export type Event = {
     publicId: string;
   };
   thumbAltText: string;
+  slides: Slide[];
   summary: string;
   partners: string[];
 } & OGParams;
@@ -163,16 +174,7 @@ export type News = {
   externalLink?: string;
   summary: string;
   source: string;
-  slides: {
-    altText: string;
-    image?: {
-      publicId: string;
-      publicUrl: string;
-    };
-    caption: string;
-    videoId?: string;
-    order: number;
-  }[];
+  slides: Slide[];
 } & OGParams;
 export type Person = {
   name: string;

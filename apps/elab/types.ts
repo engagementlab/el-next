@@ -152,7 +152,7 @@ export type News = {
   key: string;
   home: boolean;
   order: number;
-  initiatives: Initiative[];
+  initiatives?: Initiative[];
   publishDate: string;
   blurb: { document: any };
   body: any;
@@ -163,6 +163,16 @@ export type News = {
   externalLink?: string;
   summary: string;
   source: string;
+  slides: {
+    altText: string;
+    image?: {
+      publicId: string;
+      publicUrl: string;
+    };
+    caption: string;
+    videoId?: string;
+    order: number;
+  }[];
 } & OGParams;
 export type Person = {
   name: string;

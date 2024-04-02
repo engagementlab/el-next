@@ -5,18 +5,26 @@ import {
 } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Image, ImageUrl, Query } from '@el-next/components';
+import { Image, Query } from '@el-next/components';
 
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import Layout from '../../components/Layout';
 import { Blocks, Doc } from '../../components/Renderers';
-import { DefaultWhereCondition, News } from '@/types';
+import { DefaultWhereCondition, News, Theme, Theming } from '@/types';
+import Slideshow from '@/components/Slideshow';
 
 export default function NewsItem({
   item,
   relatedItems,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  let theme = 'none';
+  if (item) {
+    if (item.initiatives && item.initiatives.length > 0) {
+      if (item.initiatives[0] === 'gunviolence') theme = 'tngv';
+      else if (item.initiatives[0] === 'climate') theme = 'tnej';
+    }
+  }
   return item ? (
     <Layout
       error={error}
@@ -32,7 +40,13 @@ export default function NewsItem({
       <div className="mt-14">
         <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">
           <div className="w-full xl:w-1/2 flex-shrink-0">
-            {item.thumbnail ? (
+            {item.slides && item.slides.length > 0 ? (
+              <Slideshow
+                slides={item?.slides}
+                theme={Theming[theme]}
+                className={`${Theming[theme].bg} bg-opacity-50`}
+              />
+            ) : item.thumbnail ? (
               <Image
                 id="header-img"
                 alt={item.thumbAltText}
@@ -114,17 +128,28 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const itemResult = await Query(
     'newsItems',
     `newsItems(where: { key: { equals: "${params!.key}" } }) {
-       title 
-       blurb { document }
-       publishDate
-       thumbnail { 
-           publicId
-       }
-       thumbAltText 
-       body { 
-           document(hydrateRelationships: true) 
+      title 
+      blurb { document }
+      publishDate
+      thumbnail { 
+          publicId
+      }
+      thumbAltText 
+      initiatives
+      body { 
+          document(hydrateRelationships: true) 
+      }
+      slides {
+        altText
+        image {
+          publicId
+          publicUrl
         }
-      }`
+        caption
+        videoId
+        order
+      }
+    }`
   );
 
   if (itemResult.error) {

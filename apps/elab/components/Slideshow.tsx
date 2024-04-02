@@ -99,15 +99,17 @@ const Slideshow = ({
       );
     else if (data.image && data.altText)
       return (
-        <Image
-          id={'img-' + data.image.publicId}
-          alt={data.altText}
-          imgId={data.image.publicId}
-          lazy={false}
-          // width={300}
-          transforms="c_crop,g_center"
-          className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
-        />
+        <div className="flex relative justify-center">
+          <Image
+            id={'img-' + data.image.publicId}
+            alt={data.altText}
+            imgId={data.image.publicId}
+            lazy={false}
+            // width={300}
+            transforms="c_crop,g_center"
+            className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
+          />
+        </div>
       );
     else
       return (

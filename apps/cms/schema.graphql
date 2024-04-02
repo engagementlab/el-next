@@ -1046,6 +1046,8 @@ type NewsItem {
   initiatives: [NewsItemInitiativeType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slidesCount(where: SlideWhereInput! = {}): Int
   summary: String
   publishDate: DateTime
   linkHelper: HelperFieldOutput
@@ -1099,6 +1101,7 @@ input NewsItemWhereInput {
   createdDate: DateTimeNullableFilter
   status: NewsItemStatusTypeNullableFilter
   thumbAltText: StringFilter
+  slides: SlideManyRelationFilter
   summary: StringFilter
   publishDate: DateTimeFilter
   externalLink: StringFilter
@@ -1152,6 +1155,7 @@ input NewsItemUpdateInput {
   initiatives: [NewsItemInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForUpdateInput
   summary: String
   publishDate: DateTime
   linkHelper: HelperFieldInput
@@ -1195,6 +1199,7 @@ input NewsItemCreateInput {
   initiatives: [NewsItemInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForCreateInput
   summary: String
   publishDate: DateTime
   linkHelper: HelperFieldInput
@@ -1971,6 +1976,8 @@ type Slide {
   slideshowSlidesCount(where: SlideshowWhereInput! = {}): Int
   initiativeSlides(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
+  newsSlides(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
+  newsSlidesCount(where: NewsItemWhereInput! = {}): Int
   image: CloudinaryImage_File
   helper: HelperFieldOutput
   altText: String
@@ -1990,6 +1997,7 @@ input SlideWhereInput {
   id: IDFilter
   slideshowSlides: SlideshowManyRelationFilter
   initiativeSlides: InitiativeManyRelationFilter
+  newsSlides: NewsItemManyRelationFilter
   altText: StringFilter
   caption: StringFilter
   videoId: StringFilter
@@ -2013,6 +2021,7 @@ input SlideOrderByInput {
 input SlideUpdateInput {
   slideshowSlides: SlideshowRelateToManyForUpdateInput
   initiativeSlides: InitiativeRelateToManyForUpdateInput
+  newsSlides: NewsItemRelateToManyForUpdateInput
   image: Upload
   helper: HelperFieldInput
   altText: String
@@ -2036,6 +2045,7 @@ input SlideUpdateArgs {
 input SlideCreateInput {
   slideshowSlides: SlideshowRelateToManyForCreateInput
   initiativeSlides: InitiativeRelateToManyForCreateInput
+  newsSlides: NewsItemRelateToManyForCreateInput
   image: Upload
   helper: HelperFieldInput
   altText: String

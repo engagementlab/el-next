@@ -18,6 +18,10 @@ const Slide: Lists.Slide = list({
       ref: 'Initiative.slides',
       many: true,
     }),
+    newsSlides: relationship({
+      ref: 'NewsItem.slides',
+      many: true,
+    }),
     image: cloudinaryImage({
       cloudinary: {
         cloudName: `${process.env.CLOUDINARY_CLOUD_NAME}`,

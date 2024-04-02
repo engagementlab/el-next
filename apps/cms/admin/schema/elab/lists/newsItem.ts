@@ -68,6 +68,21 @@ const NewsItem: Lists.NewsItem = list({
       label: 'Thumbnail Alt Text ♿',
       ui: { description: 'Describe appearance of Thumbnail/Header Image' },
     }),
+    slides: relationship({
+      ref: 'Slide.newsSlides',
+      many: true,
+      ui: {
+        description: 'If defined, shows on news item instead of thumbnail.',
+        displayMode: 'cards',
+        cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        inlineCreate: {
+          fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        },
+        inlineEdit: {
+          fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        },
+      },
+    }),
     summary: text({
       ui: { displayMode: 'textarea', description: 'Appears below thumbnail.' },
     }),

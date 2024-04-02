@@ -1,6 +1,7 @@
 type Category = 'core' | 'studentstaff' | 'fellow';
 type Initiative = 'gunviolence' | 'climate';
-type Slide = {
+
+export type Slide = {
   altText: string;
   image?: {
     publicId: string;

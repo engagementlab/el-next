@@ -1,9 +1,11 @@
+// import {Image as NextImage} from 'next/image';
 import { Image, Video } from '@el-next/components';
 import { AnimatePresence, motion, wrap } from 'framer-motion';
 import * as React from 'react';
 import { HTMLProps } from 'react';
-import { ThemeConfig } from '@/types';
+import { Slide, ThemeConfig } from '@/types';
 import _ from 'lodash';
+import ImagePlaceholder from './ImagePlaceholder';
 
 type Props = {
   slides: any[];
@@ -55,106 +57,132 @@ const Slideshow = ({
     setPage([slide + newDirection, newDirection]);
   };
 
+  const Slide = ({ data, index }: { data: Slide; index: number }) => {
+    if (ContentRenderer) return <ContentRenderer slide={data} />;
+    else if (data.videoId && data.image)
+      return (
+        <div className={`flex items-center min-h-[350px] lg:min-h-[465px]`}>
+          <Video
+            videoLabel={''}
+            videoUrl={`https://player.vimeo.com/video/${data.videoId}`}
+            thumbUrl={data.image.publicUrl}
+            isSlide={true}
+          />
+        </div>
+      );
+    else if (data.caption && data.image)
+      return (
+        <div className="flex relative justify-center">
+          <Image
+            id={'img-' + data.image.publicId}
+            alt={data.altText}
+            imgId={data.image.publicId}
+            className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
+          />
+          <aside
+            className={`absolute bottom-0 right-0 p-3 w-full lg:w-3/4 ${theme?.bg} text-white`}
+          >
+            <svg
+              height="20"
+              viewBox="0 -960 960 960"
+              width="20"
+              className="inline"
+            >
+              <path
+                d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z"
+                style={{ fill: '#fff' }}
+              />
+            </svg>{' '}
+            {data.caption}
+          </aside>
+        </div>
+      );
+    else if (data.image && data.altText)
+      return (
+        <Image
+          id={'img-' + data.image.publicId}
+          alt={data.altText}
+          imgId={data.image.publicId}
+          lazy={false}
+          // width={300}
+          transforms="c_crop,g_center"
+          className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
+        />
+      );
+    else
+      return (
+        <img
+          src={`https://dummyimage.com/850x850/F6A536/000.png&text=No image and alt or video and thumb provided`}
+          width={850}
+          height={850}
+        />
+      );
+  };
+
   return (
     <div className="flex-grow my-5">
       <div
-        className={`relative flex items-center ${
+        className={`relative flex items-center lg:min-h-[465px] overflow-hidden ${className} ${
           heightOverride ? heightOverride : 'min-h-[350px]'
-        } lg:min-h-[465px] overflow-hidden ${className}`}
+        }`}
       >
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
+        {slides.length > 1 ? (
+          <AnimatePresence initial={false} custom={direction}>
+            <motion.div
+              className={`absolute max-[1100px]:top-0 w-full ${
+                !ContentRenderer
+                  ? 'flex justify-center max-h-[350px] lg:max-h-[465px]'
+                  : ''
+              }`}
+              key={`slide-${slide}`}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              draggable="true"
+              transition={{
+                x: { type: 'spring', stiffness: 200, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(event, info) => {
+                if (!info) return;
+                const swipe = swipePower(info.offset.x, info.velocity.x);
+
+                if (swipe < -swipeConfidenceThreshold) {
+                  paginate(1);
+                } else if (swipe > swipeConfidenceThreshold) {
+                  paginate(-1);
+                }
+              }}
+            >
+              {_.orderBy(slides, 'order').map((slide, index) => {
+                return index === slideIndex ? (
+                  <div
+                    id={`slide-${index}`}
+                    key={`slide-${index}`}
+                    className="w-full"
+                  >
+                    <Slide data={slide} index={index} />
+                  </div>
+                ) : null;
+              })}
+            </motion.div>
+          </AnimatePresence>
+        ) : (
+          <div
             className={`absolute max-[1100px]:top-0 w-full ${
               !ContentRenderer
                 ? 'flex justify-center max-h-[350px] lg:max-h-[465px]'
                 : ''
             }`}
-            key={`slide-${slide}`}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            draggable="true"
-            transition={{
-              x: { type: 'spring', stiffness: 200, damping: 30 },
-              opacity: { duration: 0.2 },
-            }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onDragEnd={(event, info) => {
-              if (!info) return;
-              const swipe = swipePower(info.offset.x, info.velocity.x);
-
-              if (swipe < -swipeConfidenceThreshold) {
-                paginate(1);
-              } else if (swipe > swipeConfidenceThreshold) {
-                paginate(-1);
-              }
-            }}
           >
-            {_.orderBy(slides, 'order').map((slide, index) => {
-              return index === slideIndex ? (
-                <div
-                  id={`slide-${index}`}
-                  key={`slide-${index}`}
-                  className="w-full"
-                >
-                  {ContentRenderer ? (
-                    <ContentRenderer slide={slide} />
-                  ) : slide.videoId ? (
-                    <div
-                      className={`flex items-center min-h-[350px] lg:min-h-[465px]`}
-                    >
-                      <Video
-                        videoLabel={''}
-                        videoUrl={`https://player.vimeo.com/video/${slide.videoId}`}
-                        thumbUrl={slide.image.publicUrl}
-                        isSlide={true}
-                      />
-                    </div>
-                  ) : slide.caption ? (
-                    <div className="flex relative justify-center">
-                      <Image
-                        id={'img-' + slide.image.publicId}
-                        alt={slide.altText}
-                        imgId={slide.image.publicId}
-                        className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
-                      />
-                      <aside
-                        className={`absolute bottom-0 right-0 p-3 w-full lg:w-3/4 ${theme?.bg} text-white`}
-                      >
-                        <svg
-                          height="20"
-                          viewBox="0 -960 960 960"
-                          width="20"
-                          className="inline"
-                        >
-                          <path
-                            d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z"
-                            style={{ fill: '#fff' }}
-                          />
-                        </svg>{' '}
-                        {slide.caption}
-                      </aside>
-                    </div>
-                  ) : (
-                    <Image
-                      id={'img-' + slide.image.publicId}
-                      alt={slide.altText}
-                      imgId={slide.image.publicId}
-                      lazy={false}
-                      // width={300}
-                      transforms="c_crop,g_center"
-                      className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
-                    />
-                  )}
-                </div>
-              ) : null;
-            })}
-          </motion.div>
-        </AnimatePresence>
+            <Slide data={slides[0]} index={0} />
+          </div>
+        )}
       </div>
       {slides.length > 1 && (
         <div className="flex justify-center items-center mt-3">

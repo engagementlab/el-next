@@ -1,11 +1,15 @@
 // import {Image as NextImage} from 'next/image';
 import { Image, Video } from '@el-next/components';
-import { AnimatePresence, motion, wrap } from 'framer-motion';
+import {
+  AnimatePresence,
+  motion,
+  wrap,
+  Variants,
+} from 'framer-motion';
 import * as React from 'react';
-import { HTMLProps } from 'react';
-import { Slide, ThemeConfig } from '@/types';
+import { HTMLProps, useEffect } from 'react';
+import { CustomEase, Slide, ThemeConfig } from '@/types';
 import _ from 'lodash';
-import ImagePlaceholder from './ImagePlaceholder';
 
 type Props = {
   slides: any[];
@@ -15,7 +19,7 @@ type Props = {
   ContentRenderer?: React.ComponentType<any>;
 };
 
-const variants = {
+const variants: Variants = {
   enter: (direction: number) => {
     return {
       x: direction > 0 ? 500 : -500,
@@ -26,6 +30,11 @@ const variants = {
     zIndex: 1,
     x: 0,
     opacity: 1,
+    transition: {
+      type: 'spring',
+      duration: 0.8,
+      bounce: 0.2,
+    },
   },
   exit: (direction: number) => {
     return {
@@ -47,9 +56,9 @@ const Slideshow = ({
   heightOverride,
   ContentRenderer,
 }: Props): JSX.Element => {
-  const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-2 rounded-large inline-block transition-all hover:scale-125 cursor-pointer ${
+  const dotClass: HTMLProps<HTMLElement>['className'] = `relative w-10 h-3 mx-2 rounded-large inline-block transition-all hover:scale-[110%] cursor-pointer ${
     theme?.bg || ' bg-green-blue'
-  }`;
+  } ${CustomEase}`;
   const [[slide, direction], setPage] = React.useState([0, 0]);
   const slideIndex = wrap(0, slides.length, slide);
 
@@ -57,7 +66,19 @@ const Slideshow = ({
     setPage([slide + newDirection, newDirection]);
   };
 
-  const Slide = ({ data, index }: { data: Slide; index: number }) => {
+  const onKeyUp = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight') paginate(1);
+    else if (e.key === 'ArrowLeft') paginate(-1);
+  };
+
+  useEffect(() => {
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keyup', onKeyUp);
+    };
+  }, [slide]);
+
+  const Slide = ({ data }: { data: Slide }) => {
     if (ContentRenderer) return <ContentRenderer slide={data} />;
     else if (data.videoId && data.image)
       return (
@@ -168,7 +189,7 @@ const Slideshow = ({
                     key={`slide-${index}`}
                     className="w-full"
                   >
-                    <Slide data={slide} index={index} />
+                    <Slide data={slide} />
                   </div>
                 ) : null;
               })}
@@ -182,14 +203,14 @@ const Slideshow = ({
                 : ''
             }`}
           >
-            <Slide data={slides[0]} index={0} />
+            <Slide data={slides[0]} />
           </div>
         )}
       </div>
       {slides.length > 1 && (
         <div className="flex justify-center items-center mt-3">
           <button
-            className="transition-all hover:scale-125 cursor-pointer"
+            className={`transition-all hover:scale-125 cursor-pointer ${CustomEase}`}
             onClick={() => paginate(-1)}
           >
             <svg height="48" viewBox="0 -960 960 960" width="48">
@@ -213,7 +234,7 @@ const Slideshow = ({
             ></label>
           ))}
           <button
-            className="transition-all hover:scale-125 cursor-pointer"
+            className={`transition-all hover:scale-125 cursor-pointer ${CustomEase}`}
             onClick={() => paginate(1)}
           >
             <svg height="48" viewBox="0 -960 960 960" width="48">

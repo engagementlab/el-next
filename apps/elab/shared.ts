@@ -1,3 +1,4 @@
+import { HTMLProps } from 'react';
 import { Semester, StudioProject, Theming } from './types';
 
 export const StudioProjectsSort = (projects: StudioProject[]) => {
@@ -54,13 +55,16 @@ export const SemestersSort = (semesters: Semester[]) => {
   return sortedSemesters;
 };
 
-export const ClassFilterButton = (open: boolean, themeKey: string) => {
-  return `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
+export const ClassFilterButton = (
+  open: boolean,
+  themeKey: string
+): HTMLProps<HTMLElement>['className'] => {
+  return `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 leading-none ${
     !open
       ? `bg-white ${Theming[themeKey].text}`
       : `text-white ${Theming[themeKey].bg}`
   }`;
 };
 
-export const ClassStudiosGrid =
-  'lg:ml-5 grid xl:grid-cols-3 xl:gap-x-3 xl:gap-y-12 lg:gap-x-6 lg:gap-y-10 lg:grid-cols-2 lg:gap-2 lg:my-11';
+export const ClassStudiosGrid: HTMLProps<HTMLElement>['className'] =
+  'lg:ml-5 grid xl:grid-cols-3 xl:gap-x-3 xl:gap-y-24 lg:gap-x-6 lg:gap-y-24 lg:grid-cols-2 lg:my-11';

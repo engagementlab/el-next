@@ -176,7 +176,7 @@ export default function StudioProjects({
                 {filtersData.map((filter: { key: string; name: string }) => {
                   const filterButtonStyle = `font-bold text-center border-2 border-${
                     Theming[initiative].bg
-                  } rounded-large px-3 py-1 ${
+                  } rounded-large px-3 py-2 leading-none ${
                     !haveSpecificFilter(filter.key)
                       ? `${Theming[initiative].text} transition-all ${CustomEase} hover:scale-105`
                       : `text-white ${Theming[initiative].bg}`

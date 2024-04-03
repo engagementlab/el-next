@@ -59,12 +59,9 @@ export const ClassFilterButton = (
   open: boolean,
   themeKey: string
 ): HTMLProps<HTMLElement>['className'] => {
-  return `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 leading-none ${
+  return `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-2 leading-none ${
     !open
       ? `bg-white ${Theming[themeKey].text}`
       : `text-white ${Theming[themeKey].bg}`
   }`;
 };
-
-export const ClassStudiosGrid: HTMLProps<HTMLElement>['className'] =
-  'lg:ml-5 grid xl:grid-cols-3 xl:gap-x-3 xl:gap-y-24 lg:gap-x-6 lg:gap-y-24 lg:grid-cols-2 lg:my-11';

@@ -456,11 +456,20 @@ const QuoteRenderer = (
     );
 };
 
+const StudiosGridRenderer = (props: { children: JSX.Element }) => {
+  return (
+    <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-x-3 xl:gap-y-24 lg:gap-x-6 lg:gap-y-24 lg:grid-cols-2 lg:my-11">
+      {props.children}
+    </div>
+  );
+};
+
 export {
   Blocks,
   Doc,
   Heading,
   NewsEventRenderer,
   StudioGenericItemRenderer,
+  StudiosGridRenderer,
   QuoteRenderer,
 };

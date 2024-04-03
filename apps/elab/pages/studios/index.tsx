@@ -1,16 +1,13 @@
 import { InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
-import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { Query } from '@el-next/components';
 
-import { Image, Query } from '@el-next/components';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
   CustomEase,
   DefaultWhereCondition,
@@ -18,12 +15,14 @@ import {
   Studio,
   StudioUnion,
   Theme,
-  Theming,
 } from '@/types';
 
 import Layout from '../../components/Layout';
-import { StudioGenericItemRenderer } from '@/components/Renderers';
-import { ClassFilterButton, ClassStudiosGrid } from '@/shared';
+import {
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
+import { ClassFilterButton } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -110,11 +109,6 @@ export default function Studios({
 
     const noGroupsOpen = () => {
       return selectedFilter === '';
-    };
-    // const haveFilters = currentFilters.length > 0;
-
-    const haveSpecificFilter = (key: string) => {
-      return selectedFilter === key;
     };
     const haveGroupOpen = (key: string) => {
       return selectedFilter.toLowerCase() === key.toLowerCase();
@@ -231,8 +225,8 @@ export default function Studios({
                 </p>
               )}
 
-              <div className={ClassStudiosGrid}>
-                {count > 0 && (
+              {count > 0 && (
+                <StudiosGridRenderer>
                   <AnimatePresence>
                     {filteredItems.map((item, i: number) => (
                       <StudioGenericItemRenderer
@@ -243,8 +237,8 @@ export default function Studios({
                       />
                     ))}
                   </AnimatePresence>
-                )}
-              </div>
+                </StudiosGridRenderer>
+              )}
             </div>
           </div>
         </div>

@@ -17,8 +17,11 @@ import {
 } from '@/types';
 
 import Layout from '../../../components/Layout';
-import { StudioGenericItemRenderer } from '@/components/Renderers';
-import { ClassFilterButton, ClassStudiosGrid } from '@/shared';
+import {
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
+import { ClassFilterButton } from '@/shared';
 
 export default function Studios({
   studios,
@@ -133,15 +136,15 @@ export default function Studios({
                 </p>
               )}
 
-              <div className={ClassStudiosGrid}>
-                {studios && studios?.length > 0 && (
+              {studios && studios?.length > 0 && (
+                <StudiosGridRenderer>
                   <AnimatePresence>
                     {studios.map((item, i: number) => (
                       <ItemRenderer key={i} index={i} item={item} />
                     ))}
                   </AnimatePresence>
-                )}
-              </div>
+                </StudiosGridRenderer>
+              )}
             </div>
           </div>
         </div>

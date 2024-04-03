@@ -19,12 +19,11 @@ import {
 } from '@/types';
 
 import Layout from '../../../components/Layout';
-import { StudioGenericItemRenderer } from '@/components/Renderers';
 import {
-  ClassFilterButton,
-  ClassStudiosGrid,
-  StudioProjectsSort,
-} from '@/shared';
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
+import { ClassFilterButton, StudioProjectsSort } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -328,8 +327,8 @@ export default function StudioProjects({
                   Sorry, no matches found. Please try other filters.
                 </p>
               )}
-              <div className={ClassStudiosGrid}>
-                {count > 0 && (
+              {count > 0 && (
+                <StudiosGridRenderer>
                   <AnimatePresence>
                     {filteredItems.map((item, i: number) => (
                       <StudioGenericItemRenderer
@@ -340,8 +339,8 @@ export default function StudioProjects({
                       />
                     ))}
                   </AnimatePresence>
-                )}
-              </div>
+                </StudiosGridRenderer>
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { integer, json, relationship, text } from '@keystone-6/core/fields';
+import { integer, relationship, text } from '@keystone-6/core/fields';
 import { allowAll } from '@keystone-6/core/access';
 
 import { Lists } from '.keystone/types';

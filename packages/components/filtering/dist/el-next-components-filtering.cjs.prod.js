@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-42309462.cjs.prod.js');
+var objectSpread2 = require('../../dist/objectSpread2-ed5e3f4f.cjs.prod.js');
 require('react');
 var create = require('zustand');
 var middleware = require('zustand/middleware');
@@ -31,59 +32,6 @@ function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || unsupportedIterableToArray._unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
-function _toPrimitive(input, hint) {
-  if (typeof input !== "object" || input === null) return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== undefined) {
-    var res = prim.call(input, hint || "default");
-    if (typeof res !== "object") return res;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return (hint === "string" ? String : Number)(input);
-}
-
-function _toPropertyKey(arg) {
-  var key = _toPrimitive(arg, "string");
-  return typeof key === "symbol" ? key : String(key);
-}
-
-function _defineProperty(obj, key, value) {
-  key = _toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    enumerableOnly && (symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    })), keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-    });
-  }
-  return target;
-}
-
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -96,7 +44,7 @@ function _defineProperties(target, props) {
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);
+    Object.defineProperty(target, objectSpread2._toPropertyKey(descriptor.key), descriptor);
   }
 }
 function _createClass(Constructor, protoProps, staticProps) {
@@ -165,12 +113,12 @@ var Filtering = /*#__PURE__*/function () {
      * Zustand store
      * @see https://github.com/pmndrs/zustand
      */
-    _defineProperty(this, "useStore", void 0);
-    _defineProperty(this, "filtersGrouped", void 0);
-    _defineProperty(this, "items", void 0);
-    _defineProperty(this, "mode", void 0);
-    _defineProperty(this, "ItemRenderer", void 0);
-    _defineProperty(this, "FilteredItems", function () {
+    objectSpread2._defineProperty(this, "useStore", void 0);
+    objectSpread2._defineProperty(this, "filtersGrouped", void 0);
+    objectSpread2._defineProperty(this, "items", void 0);
+    objectSpread2._defineProperty(this, "mode", void 0);
+    objectSpread2._defineProperty(this, "ItemRenderer", void 0);
+    objectSpread2._defineProperty(this, "FilteredItems", function () {
       var selectedFilters = _this.useStore(function (state) {
         return state.currentFilters;
       });
@@ -267,22 +215,22 @@ var Filtering = /*#__PURE__*/function () {
         filterGroupsClosed: [],
         toggle: function toggle(filter) {
           return set(function (state) {
-            return state.currentFilters.includes(filter) ? _objectSpread2(_objectSpread2({}, state), {}, {
+            return state.currentFilters.includes(filter) ? objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
               currentFilters: state.currentFilters.filter(function (e) {
                 return e !== filter;
               })
-            }) : _objectSpread2(_objectSpread2({}, state), {}, {
+            }) : objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
               currentFilters: [].concat(_toConsumableArray(state.currentFilters), [filter])
             });
           });
         },
         toggleFilterGroupClosed: function toggleFilterGroupClosed(filterGroupKey) {
           return set(function (state) {
-            return state.filterGroupsClosed.includes(filterGroupKey) ? _objectSpread2(_objectSpread2({}, state), {}, {
+            return state.filterGroupsClosed.includes(filterGroupKey) ? objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
               filterGroupsClosed: state.filterGroupsClosed.filter(function (e) {
                 return e !== filterGroupKey;
               })
-            }) : _objectSpread2(_objectSpread2({}, state), {}, {
+            }) : objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
               filterGroupsClosed: [].concat(_toConsumableArray(state.filterGroupsClosed), [filterGroupKey])
             });
           });
@@ -291,7 +239,7 @@ var Filtering = /*#__PURE__*/function () {
           return set(function (state) {
             document.body.style.overflow = open ? 'hidden' : 'visible';
             if (open) window.scrollTo(0, 0);
-            return _objectSpread2(_objectSpread2({}, state), {}, {
+            return objectSpread2._objectSpread2(objectSpread2._objectSpread2({}, state), {}, {
               filtersNavOpen: open
             });
           });

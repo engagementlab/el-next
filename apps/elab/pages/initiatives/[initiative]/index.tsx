@@ -20,7 +20,9 @@ import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
 import Logos from '@/components/Logos';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { Button, Query, Image, Video } from '@el-next/components';
+import { Button, Query, Image } from '@el-next/components';
+import { Video } from '@el-next/components';
+
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
@@ -240,7 +242,7 @@ export default function InitIndex({
                         } Intro Video`}
                         videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
                         thumbUrl={page.videoThumbnail?.publicUrl}
-                        // themeColor={videoColor}
+                        // theme={videoColor}
                       />
                     </div>
                   </div>

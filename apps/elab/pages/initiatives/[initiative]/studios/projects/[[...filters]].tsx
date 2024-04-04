@@ -3,11 +3,10 @@ import { GetStaticPathsResult, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import _ from 'lodash';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Image, Query } from '@el-next/components';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
+import { Query } from '@el-next/components';
 import {
   CustomEase,
   DefaultWhereCondition,
@@ -28,7 +27,7 @@ import { ClassFilterButton, StudioProjectsSort } from '@/shared';
 
 export default function StudioProjects({
   filtersData,
-  filters,
+
   initiative,
   studioProjects,
   initiativeBlurbs,
@@ -67,54 +66,7 @@ export default function StudioProjects({
         : false;
     };
 
-    const ItemRenderer = (props: { item: StudioProject }) => {
-      let borderColor = 'border-yellow';
-      if (props.item.initiative) {
-        if (props.item.initiative === 'gunviolence')
-          borderColor = 'border-purple';
-        else if (props.item.initiative === 'climate')
-          borderColor = 'border-leaf';
-      }
-      return (
-        <motion.div
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="w-full"
-          key={`project-${props.item.key}`}
-        >
-          <Link
-            href={`/studios/projects/${props.item.key}`}
-            className="group relative"
-          >
-            <div>
-              {props.item.thumbnail ? (
-                <Image
-                  id={`thumb-${props.item.key}`}
-                  alt={props.item.thumbAltText}
-                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                  imgId={props.item.thumbnail.publicId}
-                  width={460}
-                  maxWidthDisable={true}
-                  className="w-full"
-                />
-              ) : (
-                <ImagePlaceholder
-                  imageLabel="Studio Project"
-                  width={335}
-                  height={200}
-                />
-              )}
-            </div>
-
-            <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-              {props.item.name}
-            </h3>
-            <p>{props.item.shortDescription}</p>
-          </Link>
-        </motion.div>
-      );
-    };
-    const RenderFilters = (filters: any[]) => {
+    const RenderFilters = () => {
       const menu = (
         <div className="mx-6 mt-7">
           <h2 className="uppercase leading-10 text-grey text-xl font-bold">
@@ -239,7 +191,7 @@ export default function StudioProjects({
               />
             </div>
           )}
-          {RenderFilters(filtersData)}
+          {RenderFilters()}
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
               {filteredProjects?.length === 0 && (
@@ -300,7 +252,6 @@ export async function getStaticProps({
         error: filtersData.error,
         studioProjects: null,
         filtersData: null,
-        filters: null,
         initiative: 'tngv',
       },
     };
@@ -361,7 +312,6 @@ export async function getStaticProps({
       studioProjects: StudioProjectsSort(items),
       initiativeBlurbs,
       initiative: params.initiative,
-      filters: params.filters ? params.filters : null,
     },
     revalidate: 1,
   };

@@ -25,11 +25,13 @@ require('react-scroll');
 require('@el-next/components/flexLayout');
 require('@el-next/components/headingStyle');
 require('./unsupportedIterableToArray-42309462.cjs.prod.js');
+require('./objectSpread2-ed5e3f4f.cjs.prod.js');
 require('zustand');
 require('zustand/middleware');
 require('lodash');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
+require('./slicedToArray-85dd2515.cjs.prod.js');
 require('next/image');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }

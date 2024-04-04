@@ -9,7 +9,6 @@ import {
   CustomEase,
   Item,
   Studio,
-  StudioProject,
   StudioUnion,
   Theme,
   ThemeConfig,

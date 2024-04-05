@@ -5,14 +5,26 @@ Object.defineProperty(exports, '__esModule', { value: true });
 require('react');
 var Link = require('next/link');
 var image_dist_elNextComponentsImage = require('../../image/dist/el-next-components-image.cjs.prod.js');
-var video_dist_elNextComponentsVideo = require('../../video/dist/el-next-components-video.cjs.prod.js');
+var video_v2_dist_elNextComponentsVideo_v2 = require('../../video.v2/dist/el-next-components-video.v2.cjs.prod.js');
 var jsxRuntime = require('react/jsx-runtime');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
+require('../../dist/objectSpread2-ed5e3f4f.cjs.prod.js');
 require('../../dist/slicedToArray-85dd2515.cjs.prod.js');
 require('../../dist/unsupportedIterableToArray-42309462.cjs.prod.js');
 require('next/image');
 require('zustand');
+require('react-player/lazy');
+require('@mui/material/Box');
+require('@mui/material/Slider');
+require('@mui/material');
+require('@mui/icons-material/ClosedCaption');
+require('@mui/icons-material/ClosedCaptionDisabled');
+require('@mui/icons-material/Fullscreen');
+require('@mui/icons-material/PlayCircleFilled');
+require('@mui/icons-material/PauseCircleFilled');
+require('@mui/icons-material/VolumeUp');
+require('@mui/icons-material/VolumeMute');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 
@@ -46,7 +58,7 @@ var BlockRenderers = function BlockRenderers(styles) {
         });
       },
       video: function video(props) {
-        return /*#__PURE__*/jsxRuntime.jsx(video_dist_elNextComponentsVideo.Video, {
+        return /*#__PURE__*/jsxRuntime.jsx(video_v2_dist_elNextComponentsVideo_v2.Video, {
           videoLabel: props.video.label,
           videoUrl: props.video.value,
           thumbUrl: props.video.thumb

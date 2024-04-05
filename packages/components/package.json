@@ -61,7 +61,7 @@
       "image/index.tsx",
       "layout/index.tsx",
       "video/index.tsx",
-      "video/new.tsx"
+      "video.v2/index.tsx"
     ]
   },
   "devDependencies": {

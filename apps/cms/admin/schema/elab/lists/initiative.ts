@@ -9,6 +9,7 @@ import { helper, HelperIcon } from '../../../components/helper';
 import { componentBlocks } from '../../../components';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
+import axios from 'axios';
 // import { HelperIcon, helper } from '../../../components/helper';
 
 const Initiative: Lists.Initiative = list({
@@ -144,12 +145,53 @@ const Initiative: Lists.Initiative = list({
       },
     }),
     ...group(Social()),
+    vimeoFile: text({
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+        listView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   ui: {
-    // hideCreate: true,
     hideDelete: true,
     listView: {
       initialColumns: ['name'],
+    },
+  },
+  hooks: {
+    resolveInput: async ({
+      listKey,
+      operation,
+      inputData,
+      item,
+      resolvedData,
+      context,
+    }) => {
+      if (resolvedData.videoId) {
+        const endpointPrefix =
+          process.env.NODE_ENV !== 'development'
+            ? '/api'
+            : 'http://localhost:8000';
+        console.log(
+          `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`
+        );
+        const fileUrlResponse = await axios.get(
+          `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`
+        );
+        resolvedData = {
+          ...resolvedData,
+          vimeoFile: fileUrlResponse.data,
+        };
+        return resolvedData;
+      }
+      return resolvedData;
     },
   },
 });

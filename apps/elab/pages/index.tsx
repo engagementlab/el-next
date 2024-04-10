@@ -552,6 +552,9 @@ export async function getStaticProps() {
 				publicId
 			}
       thumbAltText
+      initiativesRelated {
+        name
+      }
 		}`
   );
 

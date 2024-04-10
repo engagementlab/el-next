@@ -1,6 +1,6 @@
 // import {Image as NextImage} from 'next/image';
 import { Image } from '@el-next/components';
-import { Video } from '@el-next/components';
+import { Video } from '@el-next/components/video';
 import { AnimatePresence, motion, wrap, Variants } from 'framer-motion';
 import * as React from 'react';
 import { HTMLProps, useEffect } from 'react';

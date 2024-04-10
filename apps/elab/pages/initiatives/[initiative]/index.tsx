@@ -21,14 +21,15 @@ import Slideshow from '@/components/Slideshow';
 import Logos from '@/components/Logos';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { Button, Query, Image } from '@el-next/components';
-import { Video } from '@el-next/components';
+import { Video } from '@el-next/components/video';
+import { Video as VideoV2 } from '@el-next/components/video.v2';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Blocks, Doc } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
 
-type AboutPage = {
+type Initiative = {
   name?: string;
   intro: {
     document: any;
@@ -57,6 +58,7 @@ type AboutPage = {
       publicId: string;
     };
   }[];
+  vimeoFile?: string;
 };
 
 export default function InitIndex({
@@ -244,6 +246,17 @@ export default function InitIndex({
                         thumbUrl={page.videoThumbnail?.publicUrl}
                         // theme={videoColor}
                       />
+                      {/* <VideoV2
+                        isSlide={true}
+                        videoLabel={`${
+                          InitiativeFilterGroups.find(
+                            (i) => i.key === initiative
+                          )?.label
+                        } Intro Video`}
+                        videoFile={page.vimeoFile}
+                        thumbUrl={page.videoThumbnail?.publicUrl}
+                        theme={videoColor}
+                      /> */}
                     </div>
                   </div>
                   {page?.videoCaption && (
@@ -376,7 +389,7 @@ export default function InitIndex({
                             height={200}
                           />
                         )}
-                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
+                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1 brightness-150">
                           {item.name}
                         </h3>
                         <p>{item.shortDescription}</p>
@@ -597,6 +610,7 @@ export async function getStaticProps({
                 publicId
             }  
         }
+        vimeoFile
       }`
   );
 
@@ -610,7 +624,7 @@ export async function getStaticProps({
     };
   }
 
-  const page = result as AboutPage;
+  const page = result as Initiative;
   const mergedItems = (
     [...(result.events as Event[]), ...(result.news as News[])] as Item[]
   ).sort((a, b) => {

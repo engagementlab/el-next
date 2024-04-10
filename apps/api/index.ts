@@ -100,6 +100,30 @@ app.get('/media/videos', async (req, res, next) => {
   }
 });
 
+app.get('/media/videos/data/:videoId?', async (req, res, next) => {
+  if (!req.params.videoId) {
+    res.status(500).send('No videoId provided.');
+    return;
+  }
+  try {
+    const response = await axios.get(
+      `https://api.vimeo.com/videos/${req.params.videoId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
+        },
+      }
+    );
+    // Get path to 1080p mp4 file
+    const resData = (response.data.files as any[]).find(
+      (file) => file.rendition === '1080p'
+    ).link;
+    res.status(200).send(resData);
+  } catch (err: any) {
+    res.status(500).send(err.message);
+  }
+});
+
 app.get(`/media/get/:app/:type`, async (req, res) => {
   const appName = req.params.app;
   try {

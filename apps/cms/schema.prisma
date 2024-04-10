@@ -104,6 +104,7 @@ model Initiative {
   helper_html      String            @default("<p>Need HTML!</p>")
   helper_iconType  icon              @default(help)
   ogDescription    String            @default("")
+  vimeoFile        String            @default("")
 }
 
 model InitiativesLanding {

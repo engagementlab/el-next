@@ -29,7 +29,7 @@
     "react-dom": "18.2.0",
     "react-player": "^2.15.1",
     "react-scroll": "^1.8.9",
-    "screenfull": "^6.0.2",
+    "screenfull": "5.2.0",
     "typedoc-plugin-missing-exports": "^2.0.0",
     "zustand": "3.7.1"
   },

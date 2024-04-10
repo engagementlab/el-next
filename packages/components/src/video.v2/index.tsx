@@ -7,8 +7,12 @@ import React, {
   useRef,
 } from 'react';
 import { useState } from 'react';
+
+import { findDOMNode } from 'react-dom';
+
 import create from 'zustand';
 import ReactPlayer from 'react-player/lazy';
+import screenfull from 'screenfull';
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
@@ -23,7 +27,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
 
 interface VideoProps {
-  videoUrl: string;
+  videoFile?: string;
   videoLabel: string;
   thumbUrl?: string;
   isSlide?: boolean;
@@ -65,7 +69,7 @@ const Controls = (props: ControlsProps) => {
   const [volumeHover, toggleHover] = useState(false);
 
   return (
-    <div className="absolute flex flex-col px-5 bottom-0 left-[1rem] right-[1rem] md:left-[3rem] md:right-[3rem] bg-[#D7EFC1]/80 rounded-[10px]">
+    <div className="absolute flex flex-col justify-center max-w-md px-5 bottom-0 left-[1rem] right-[1rem] md:left-[3rem] md:right-[3rem] bg-[#D7EFC1]/80 rounded-[10px]">
       <Box
         sx={{
           opacity: volumeHover ? 0.3 : 1,
@@ -81,7 +85,8 @@ const Controls = (props: ControlsProps) => {
               : 0
           }
           getAriaValueText={() => {
-            return props.playerRef.current
+            return props.playerRef.current &&
+              props.playerRef.current.getCurrentTime() !== null
               ? props.playerRef.current.getCurrentTime().toString()
               : '0';
           }}
@@ -159,7 +164,7 @@ const Controls = (props: ControlsProps) => {
 
 export const Video = ({
   thumbUrl,
-  videoUrl,
+  videoFile,
   videoLabel,
   isSlide,
   theme,
@@ -183,6 +188,7 @@ export const Video = ({
 
   const toggleOpen = useStore((state) => state.toggleOpen);
   const { videoOpen, videoHover, toggleHover } = useStore((state) => state);
+  const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>;
   const playerRef = useRef() as MutableRefObject<ReactPlayer>;
   const buttonSize = isSlide ? 75 : 150;
   const [videoState, setVideoState] = useState({
@@ -196,8 +202,7 @@ export const Video = ({
     hideCaptions: true,
     isFullscreen: false,
   });
-  const { muted, volume, played, seeking, buffer, hideCaptions, isFullscreen } =
-    videoState;
+  const { muted, volume, hideCaptions, isFullscreen } = videoState;
 
   const volumeChangeHandler = (e, value) => {
     const newVolume = parseFloat(value) / 100;
@@ -230,8 +235,9 @@ export const Video = ({
   };
 
   const onClickFullscreen = () => {
-    const video = document.querySelector('.video-player');
-    video.requestFullscreen();
+    // const video = document.querySelector('.video-player');
+    // video.requestFullscreen();
+    screenfull.toggle(findDOMNode(wrapperRef.current) as Element);
   };
 
   const toggleCaptions = () => {
@@ -248,13 +254,18 @@ export const Video = ({
   if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
 
   useEffect(() => {
-    // if (videoOpen)
-    document
-      .querySelector('.video-player')
-      .addEventListener('fullscreenchange', (e) =>
-        setVideoState({ ...videoState, isFullscreen: true })
-      );
-  }, [playerRef, videoOpen]);
+    if (videoOpen) {
+      document
+        .querySelector('.video-player')
+        .addEventListener('fullscreenchange', (e) => {
+          setVideoState({
+            ...videoState,
+            isFullscreen: !(document.fullscreenElement === null),
+          });
+          console.log('video state changed', document.fullscreenElement);
+        });
+    }
+  }, [videoOpen]);
 
   return (
     <div className={classStr}>
@@ -271,7 +282,7 @@ export const Video = ({
         >
           <Image
             alt={`Thumbnail image for video with title "${videoLabel}"`}
-            className="pointer-events-none"
+            className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
             src={thumbUrl}
             width={1920}
             height={1080}
@@ -293,7 +304,9 @@ export const Video = ({
                 height={buttonSize}
                 viewBox="0 0 512 512"
               >
-                <g className="transition-all origin-center group-hover:scale-75 group-hover:opacity-0 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
+                <g
+                  className={`transition-all origin-center group-hover:scale-75 group-hover:opacity-0 ${easing}`}
+                >
                   <g>
                     <path
                       d="M256,0C114.608,0,0,114.608,0,256s114.608,256,256,256s256-114.608,256-256S397.392,0,256,0z M256,496
@@ -322,61 +335,53 @@ export const Video = ({
           )}
         </button>
       )}
-      <div
-        id="video-embed"
-        onMouseEnter={() => toggleHover(true)}
-        onMouseLeave={() => toggleHover(false)}
-        onTouchEnd={() => toggleHover(true)}
-        className={`w-full h-full min-h-[inherit] overflow-y-hidden ${
-          !videoOpen && !play ? 'hidden' : 'block'
-        }`}
-      >
-        <div className="relative h-full min-h-[inherit]">
-          <div className="absolute h-full">
-            <ReactPlayer
-              url={`https://player.vimeo.com/progressive_redirect/playback/911300630/rendition/720p/file.mp4?loc=external&signature=6dadd6681fc191c020410ff373ac24e37231ac8760196c9a611c7400dac5f88c`}
-              ref={playerRef}
-              id={`video-player-${videoUrl}`}
-              className="video-player"
-              controls={isFullscreen ? true : false}
-              width="100%"
-              height="100%"
-              playing={playing}
-              onDuration={setDurationSeconds}
-              onProgress={({ playedSeconds }) =>
-                setPlayedSeconds(playedSeconds)
+      {videoOpen && (
+        <div
+          id="video-embed"
+          ref={wrapperRef}
+          onMouseEnter={() => toggleHover(true)}
+          onMouseLeave={() => toggleHover(false)}
+          onTouchEnd={() => toggleHover(true)}
+          className={`w-full h-full min-h-[inherit] overflow-y-hidden`}
+        >
+          <ReactPlayer
+            url={videoFile || ''}
+            ref={playerRef}
+            id={`video-player-${Math.ceil(Math.random() * 10000)}`}
+            className="video-player"
+            controls={false}
+            width="100%"
+            height="100%"
+            playing={playing}
+            onDuration={setDurationSeconds}
+            onProgress={({ playedSeconds }) => setPlayedSeconds(playedSeconds)}
+            onSeek={setPlayedSeconds}
+            volume={volume}
+            muted={muted}
+            config={
+              {
+                // file: {
+                //   attributes: {
+                //     crossOrigin: 'true',
+                //   },
+                //   tracks: [
+                //     {
+                //       src: 'https://res.cloudinary.com/engagement-lab-home/raw/upload/v1711547945/0_yo8h2d.vtt',
+                //       kind: 'subtitles',
+                //       srcLang: 'en',
+                //       default: true,
+                //       label: 'English',
+                //     },
+                //   ],
+                // },
               }
-              onSeek={setPlayedSeconds}
-              volume={volume}
-              muted={muted}
-              config={{
-                file: {
-                  attributes: {
-                    crossOrigin: 'true',
-                  },
-                  tracks: [
-                    {
-                      src: 'https://res.cloudinary.com/engagement-lab-home/raw/upload/v1711547945/0_yo8h2d.vtt',
-                      kind: 'subtitles',
-                      srcLang: 'en',
-                      default: true,
-                      label: 'English',
-                    },
-                  ],
-                },
-              }}
-            />
-          </div>
+            }
+          />
 
           <div
-            className={`relative top-[90%] transition-all duration-700 ${
-              videoHover ? 'translate-y-[0]' : 'translate-y-[8rem]'
+            className={`relative transition-all duration-700 ${
+              videoHover ? '-translate-y-[1rem]' : 'translate-y-[8rem]'
             } ${easing}`}
-            // style={{
-            //   top: '90%',
-            //   position: 'relative',
-            //   transform: videoHover ? '' : 'translateY(3rem)',
-            // }}
           >
             <Controls
               duration={durationSeconds}
@@ -395,7 +400,7 @@ export const Video = ({
             />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

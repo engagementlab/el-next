@@ -26,12 +26,20 @@ import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
 
+type Theme = {
+  fill: string;
+  stroke: string;
+  bg: string;
+  buttons: string;
+  seekbar: string;
+};
+
 interface VideoProps {
   videoFile?: string;
   videoLabel: string;
+  theme: Theme;
   thumbUrl?: string;
   isSlide?: boolean;
-  theme?: { fill: string; stroke: string };
   noUi?: boolean;
   play?: boolean;
 }
@@ -48,9 +56,11 @@ type ControlsProps = {
   muted: boolean;
   playing: boolean;
   hideCaptions: boolean;
+  fullscreen: boolean;
   playedSeconds: number;
   volume: number;
   playerRef: MutableRefObject<ReactPlayer>;
+  theme: Theme;
   setPlaying: Dispatch<SetStateAction<boolean>>;
   onVolumeChangeHandler: (e: any, value: string) => void;
   onVolumeSeekUp: (e: any, value: string) => void;
@@ -69,7 +79,15 @@ const Controls = (props: ControlsProps) => {
   const [volumeHover, toggleHover] = useState(false);
 
   return (
-    <div className="absolute flex flex-col justify-center max-w-md px-5 bottom-0 left-[1rem] right-[1rem] md:left-[3rem] md:right-[3rem] bg-[#D7EFC1]/80 rounded-[10px]">
+    <div
+      className={`absolute flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
+        props.theme.bg
+      } ${
+        props.fullscreen
+          ? 'left-1/4 right-1/4'
+          : 'left-[1rem] right-[1rem] md:left-[3rem] md:right-[3rem]'
+      }`}
+    >
       <Box
         sx={{
           opacity: volumeHover ? 0.3 : 1,
@@ -95,7 +113,7 @@ const Controls = (props: ControlsProps) => {
             seek(value)
           }
           sx={{
-            color: '#F6A536',
+            color: props.theme.seekbar,
             filter: 'drop-shadow(1px 0px 12px #F6A515)',
           }}
         />
@@ -105,6 +123,7 @@ const Controls = (props: ControlsProps) => {
           aria-label={props.playing ? 'pause' : 'play'}
           size="large"
           onClick={() => props.setPlaying(!props.playing)}
+          sx={{ color: props.theme.buttons }}
         >
           {props.playing ? <PauseCircleFilledIcon /> : <PlayCircleFilledIcon />}
         </IconButton>
@@ -118,6 +137,7 @@ const Controls = (props: ControlsProps) => {
           <IconButton
             aria-label={props.muted ? 'unmute' : 'mute'}
             size="large"
+            sx={{ color: props.theme.buttons }}
             onClick={() => props.onMute()}
           >
             {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
@@ -133,16 +153,17 @@ const Controls = (props: ControlsProps) => {
               props.onVolumeChangeHandler(e, value.toString());
             }}
             sx={{
-              color: '#5EB89E',
+              color: props.theme.seekbar,
               opacity: volumeHover ? 1 : 0,
               transition: 'all 420ms ease',
             }}
           />
         </Box>
         <IconButton
-          // aria-label={props.playing ? 'pause' : 'play'}
+          aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
           size="large"
           onClick={() => props.onToggleCaptions()}
+          sx={{ color: props.theme.buttons }}
         >
           {props.hideCaptions ? (
             <ClosedCaptionDisabledIcon />
@@ -151,9 +172,10 @@ const Controls = (props: ControlsProps) => {
           )}
         </IconButton>
         <IconButton
-          aria-label="Enter fullscreen"
+          aria-label={props.fullscreen ? 'exit fullscreen' : 'Enter fullscreen'}
           size="large"
           onClick={() => props.onClickFullscreen()}
+          sx={{ color: props.theme.buttons }}
         >
           <FullscreenIcon />
         </IconButton>
@@ -235,9 +257,14 @@ export const Video = ({
   };
 
   const onClickFullscreen = () => {
-    // const video = document.querySelector('.video-player');
-    // video.requestFullscreen();
     screenfull.toggle(findDOMNode(wrapperRef.current) as Element);
+
+    setVideoState({
+      ...videoState,
+      isFullscreen: !isFullscreen,
+    });
+
+    console.log('onClickFullscreen', isFullscreen);
   };
 
   const toggleCaptions = () => {
@@ -342,7 +369,7 @@ export const Video = ({
           onMouseEnter={() => toggleHover(true)}
           onMouseLeave={() => toggleHover(false)}
           onTouchEnd={() => toggleHover(true)}
-          className={`w-full h-full min-h-[inherit] overflow-y-hidden`}
+          className="w-full h-full min-h-[inherit] overflow-y-hidden"
         >
           <ReactPlayer
             url={videoFile || ''}
@@ -391,7 +418,9 @@ export const Video = ({
               setPlaying={setPlaying}
               volume={volume}
               muted={muted}
+              theme={theme}
               hideCaptions={hideCaptions}
+              fullscreen={isFullscreen}
               onMute={muteHandler}
               onToggleCaptions={toggleCaptions}
               onVolumeChangeHandler={volumeChangeHandler}

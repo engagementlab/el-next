@@ -11,6 +11,8 @@ jobs:
   initial-setup:
     name: "Initial setup"
     uses: engagementlab/el-next/.github/workflows/init.yml@main
+    with: 
+      branch: production
   run-cms:
     needs: initial-setup
     name: "Run CMS, make build"

@@ -78,6 +78,9 @@ export default function InitIndex({
   const videoColor = {
     stroke: Theming[initiative].arrow,
     fill: Theming[initiative].fillRgb,
+    bg: Theming[initiative].bg,
+    seekbar: Theming[initiative].secodaryArrow,
+    buttons: '#fff',
   };
   const gridClass =
     'my-8 grid md:grid-cols-2 xl:grid-cols-3 md:gap-4 lg:gap-2 xl:gap-5 xl:gap-y-10 text-grey';
@@ -185,7 +188,7 @@ export default function InitIndex({
     >
       {page && (
         <div className="text-grey">
-          <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
+          <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full left bg-opacity-75">
             <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
                 <h2 className={subHeadClass}>About The Initiative</h2>
@@ -234,29 +237,32 @@ export default function InitIndex({
               {page.videoId ? (
                 <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
                   <div className="group w-full min-h-[inherit] ">
-                    <div id="video" className="min-h-[inherit]">
-                      <Video
-                        isSlide={true}
-                        videoLabel={`${
-                          InitiativeFilterGroups.find(
-                            (i) => i.key === initiative
-                          )?.label
-                        } Intro Video`}
-                        videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
-                        thumbUrl={page.videoThumbnail?.publicUrl}
-                        // theme={videoColor}
-                      />
-                      {/* <VideoV2
-                        isSlide={true}
-                        videoLabel={`${
-                          InitiativeFilterGroups.find(
-                            (i) => i.key === initiative
-                          )?.label
-                        } Intro Video`}
-                        videoFile={page.vimeoFile}
-                        thumbUrl={page.videoThumbnail?.publicUrl}
-                        theme={videoColor}
-                      /> */}
+                    <div id="video" className="min-h-[inherit] left">
+                      {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
+                        <VideoV2
+                          isSlide={true}
+                          videoLabel={`${
+                            InitiativeFilterGroups.find(
+                              (i) => i.key === initiative
+                            )?.label
+                          } Intro Video`}
+                          videoFile={page.vimeoFile}
+                          thumbUrl={page.videoThumbnail?.publicUrl}
+                          theme={videoColor}
+                        />
+                      ) : (
+                        <Video
+                          isSlide={true}
+                          videoLabel={`${
+                            InitiativeFilterGroups.find(
+                              (i) => i.key === initiative
+                            )?.label
+                          } Intro Video`}
+                          videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
+                          thumbUrl={page.videoThumbnail?.publicUrl}
+                          // theme={videoColor}
+                        />
+                      )}
                     </div>
                   </div>
                   {page?.videoCaption && (

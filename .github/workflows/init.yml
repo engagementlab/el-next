@@ -3,6 +3,10 @@ on:
   pull_request:
     branches: [production]
   workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
 env:
   NODE_ENV: production
 jobs:

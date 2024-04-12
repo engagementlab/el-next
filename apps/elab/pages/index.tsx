@@ -18,6 +18,7 @@ import Divider from '@/components/Divider';
 import { Gutter } from '@/components/Gutter';
 import {
   NewsEventRenderer,
+  ResearchProjectItemRenderer,
   StudioGenericItemRenderer,
 } from '@/components/Renderers';
 import { MoreButton } from '@/components/Buttons';
@@ -344,32 +345,11 @@ export default function Home({
                                     );
                                   else
                                     return (
-                                      <Link
-                                        href={`/research/projects/${item.key}`}
-                                        passHref
-                                        className="group"
-                                      >
-                                        <div className="relative">
-                                          <Image
-                                            id={`thumb-${item.key}`}
-                                            alt={item.thumbAltText}
-                                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                                            imgId={item.thumbnail.publicId}
-                                            width={460}
-                                            maxWidthDisable={true}
-                                            className="w-full"
-                                          />
-
-                                          <hr
-                                            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] border-red`}
-                                          />
-                                        </div>
-                                        <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-                                          {item.name}
-                                        </h3>
-
-                                        <p>{item.shortDescription}</p>
-                                      </Link>
+                                      <ResearchProjectItemRenderer
+                                        item={item as ResearchProject}
+                                        showBorder={true}
+                                        showYear={false}
+                                      />
                                     );
                                 }
                               )}

@@ -253,7 +253,6 @@ export type ResearchProject = {
       publicId: string;
     };
   }[];
-
   publicationRelated: {
     title: string;
     key: string;
@@ -263,6 +262,9 @@ export type ResearchProject = {
     };
     buttons: any[];
   };
+  initiativesRelated?: {
+    name: string;
+  }[];
 };
 export type Studio = {
   name: string;

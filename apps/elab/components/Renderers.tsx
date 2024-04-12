@@ -8,6 +8,7 @@ import { CTAButton } from './Buttons';
 import {
   CustomEase,
   Item,
+  ResearchProject,
   Studio,
   StudioUnion,
   Theme,
@@ -415,6 +416,76 @@ const StudioGenericItemRenderer = (props: {
   );
 };
 
+const ResearchProjectItemRenderer = (props: {
+  item: ResearchProject;
+  showBorder?: boolean;
+  showYear: boolean;
+  pin?: boolean;
+}) => {
+  let borderColor = 'border-red';
+  const endLabel = props.item.ongoing
+    ? '- Present'
+    : props.item.endYear
+    ? `- ${props.item.endYear}`
+    : '';
+  if (
+    props.item.initiativesRelated &&
+    props.item.initiativesRelated.length > 0
+  ) {
+    if (props.item.initiativesRelated[0].name === 'Gun Violence')
+      borderColor = Theming['tngv'].border;
+    else if (props.item.initiativesRelated[0].name === 'Environmental Justice')
+      borderColor = 'border-leaf';
+  }
+  return (
+    <Link href={`/research/projects/${props.item.key}`} className="group">
+      <div className="relative">
+        {' '}
+        {props.item.pin && (
+          <div className="absolute right-4 top-4 p-2 bg-white rounded-full group">
+            <>
+              <div className="relative">
+                <svg height="24" viewBox="0 -960 960 960" width="24">
+                  <path
+                    fill="#444"
+                    d="m640-480 80 80v80H520v240l-40 40-40-40v-240H240v-80l80-80v-280h-40v-80h400v80h-40v280Zm-286 80h252l-46-46v-314H400v314l-46 46Zm126 0Z"
+                  />
+                </svg>
+              </div>
+            </>
+          </div>
+        )}
+        <Image
+          id={`thumb-${props.item.key}`}
+          alt={props.item.thumbAltText}
+          transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+          imgId={props.item.thumbnail.publicId}
+          width={460}
+          maxWidthDisable={true}
+          className="w-full"
+        />
+        {props.showBorder && (
+          <hr
+            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+          />
+        )}
+      </div>
+      <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
+        {props.item.name}
+      </h3>
+      {props.showYear && (
+        <h2 className="text-sm">
+          {props.item.startYear === props.item.endYear
+            ? props.item.startYear
+            : `${props.item.startYear} ${endLabel}`}
+        </h2>
+      )}
+
+      <p>{props.item.shortDescription}</p>
+    </Link>
+  );
+};
+
 const QuoteRenderer = (
   children: ReactElement[],
   item: any,
@@ -469,6 +540,7 @@ export {
   Heading,
   NewsEventRenderer,
   StudioGenericItemRenderer,
+  ResearchProjectItemRenderer,
   StudiosGridRenderer,
   QuoteRenderer,
 };

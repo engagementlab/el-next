@@ -23,7 +23,7 @@ import Layout from '../../../../../components/Layout';
 import { useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { StudioGenericItemRenderer } from '@/components/Renderers';
-import { ClassFilterButton, StudioProjectsSort } from '@/shared';
+import { ClassFilterButton, ProjectsSort } from '@/shared';
 
 export default function StudioProjects({
   filtersData,
@@ -309,7 +309,7 @@ export async function getStaticProps({
   return {
     props: {
       filtersData,
-      studioProjects: StudioProjectsSort(items),
+      studioProjects: ProjectsSort(items),
       initiativeBlurbs,
       initiative: params.initiative,
     },

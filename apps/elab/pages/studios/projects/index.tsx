@@ -25,7 +25,7 @@ import {
   StudioGenericItemRenderer,
   StudiosGridRenderer,
 } from '@/components/Renderers';
-import { ClassFilterButton, StudioProjectsSort } from '@/shared';
+import { ClassFilterButton, ProjectsSort } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -353,7 +353,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      projects: StudioProjectsSort([
+      projects: ProjectsSort([
         ...(studioProjects as Project[]),
         ...(researchProjects as Project[]),
       ]),

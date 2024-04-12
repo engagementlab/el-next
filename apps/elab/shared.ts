@@ -7,7 +7,7 @@ import {
   Theming,
 } from './types';
 
-export const StudioProjectsSort = (projects: Project[]) => {
+export const ProjectsSort = (projects: Project[]) => {
   return projects.sort((a, b) => {
     // Get year from start year (research) or semester key
     const aYr = a.startYear

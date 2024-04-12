@@ -12,6 +12,7 @@ import {
   DefaultWhereCondition,
   InitiativeFilterGroups,
   InitiativeKeyMap,
+  Project,
   StudioProject,
   StudioUnion,
   Theme,
@@ -206,7 +207,7 @@ export default function StudioProjects({
                       <StudioGenericItemRenderer
                         key={i}
                         index={i}
-                        item={item as StudioUnion}
+                        item={item as unknown as StudioUnion}
                         showBorder={false}
                       />
                     ))}
@@ -309,7 +310,7 @@ export async function getStaticProps({
   return {
     props: {
       filtersData,
-      studioProjects: ProjectsSort(items),
+      studioProjects: ProjectsSort(items as Project[]),
       initiativeBlurbs,
       initiative: params.initiative,
     },

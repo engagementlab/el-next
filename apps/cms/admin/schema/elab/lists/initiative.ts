@@ -1,16 +1,14 @@
 import path from 'path';
+import axios from 'axios';
 import { graphql, group, list } from '@keystone-6/core';
 import { json, relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
-import { helper, HelperIcon } from '../../../components/helper';
 import { componentBlocks } from '../../../components';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
-import axios from 'axios';
-// import { HelperIcon, helper } from '../../../components/helper';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -176,8 +174,8 @@ const Initiative: Lists.Initiative = list({
     }) => {
       if (resolvedData.videoId) {
         const endpointPrefix =
-          process.env.NODE_ENV !== 'development'
-            ? '/api'
+          process.env.NODE_ENV === 'production'
+            ? 'https://cms.elab.emerson.edu/api'
             : 'http://localhost:8000';
         console.log(
           `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`

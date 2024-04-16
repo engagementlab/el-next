@@ -78,8 +78,8 @@ export default function InitIndex({
   const videoColor = {
     stroke: Theming[initiative].arrow,
     fill: Theming[initiative].fillRgb,
-    bg: Theming[initiative].bg,
-    seekbar: Theming[initiative].secodaryArrow,
+    bg: Theming[initiative].videoBg || Theming[initiative].secondaryBg,
+    seekbar: Theming[initiative].fillVideo || Theming[initiative].arrowHex,
     buttons: '#fff',
   };
   const gridClass =
@@ -304,7 +304,7 @@ export default function InitIndex({
             </div>
           </div>
           {page.projects && page.projects.length > 0 && (
-            <Divider color={Theming[initiative].secodary} />
+            <Divider color={Theming[initiative].secondary} />
           )}
           <Gutter noMarginY={false}>
             {page.projects && page.projects.length > 0 && (
@@ -364,7 +364,7 @@ export default function InitIndex({
           </Gutter>
 
           {page.studios && page.studios.length > 0 && (
-            <Divider color={Theming[initiative].secodary} />
+            <Divider color={Theming[initiative].secondary} />
           )}
           <Gutter noMarginY={false}>
             {page.studios && page.studios.length > 0 && (
@@ -415,7 +415,7 @@ export default function InitIndex({
           </Gutter>
 
           {page.research && page.research.length > 0 && (
-            <Divider color={Theming[initiative].secodary} />
+            <Divider color={Theming[initiative].secondary} />
           )}
           <Gutter noMarginY={false}>
             {page.research && page.research.length > 0 && (
@@ -458,7 +458,7 @@ export default function InitIndex({
               </div>
             )}
           </Gutter>
-          <Divider color={Theming[initiative].secodary} />
+          <Divider color={Theming[initiative].secondary} />
 
           <Gutter noMarginY={false}>
             <h2 className="text-3xl font-bold">Partner Organizations</h2>
@@ -479,7 +479,7 @@ export default function InitIndex({
           </Gutter>
           {page.associatedPeople && page.associatedPeople.length > 0 && (
             <>
-              <Divider color={Theming[initiative].secodary} />
+              <Divider color={Theming[initiative].secondary} />
               <Gutter noMarginY={false}>
                 <>
                   <h2 className="text-3xl font-bold">Learning Partners</h2>

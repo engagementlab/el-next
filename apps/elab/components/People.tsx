@@ -191,7 +191,7 @@ export const PeopleList = ({
             width="40"
           >
             <path
-              fill={theme.secodaryArrow}
+              fill={theme.arrowHex}
               d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"
             ></path>
           </svg>

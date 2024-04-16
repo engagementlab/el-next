@@ -241,7 +241,7 @@ export default function Studio({
                 <motion.div
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className={`my-20 ${theme.secodaryBg}`}
+                  className={`my-20 ${theme.secondaryBg}`}
                 >
                   <div className="p-6">
                     <h2 className={`uppercase font-extrabold ${theme.heading}`}>

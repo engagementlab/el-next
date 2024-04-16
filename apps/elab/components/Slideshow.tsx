@@ -1,11 +1,11 @@
-// import {Image as NextImage} from 'next/image';
-import { Image } from '@el-next/components';
-import { Video } from '@el-next/components/video';
-import { AnimatePresence, motion, wrap, Variants } from 'framer-motion';
 import * as React from 'react';
 import { HTMLProps, useEffect } from 'react';
-import { CustomEase, Slide, ThemeConfig } from '@/types';
+import { AnimatePresence, motion, wrap, Variants } from 'framer-motion';
 import _ from 'lodash';
+
+import { Image } from '@el-next/components';
+import { Video } from '@el-next/components/video';
+import { CustomEase, Slide, ThemeConfig } from '@/types';
 
 type Props = {
   slides: any[];

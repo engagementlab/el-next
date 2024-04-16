@@ -19,7 +19,7 @@ export interface Breadcrumb {
 
 export interface ThemeConfig {
   arrow: string;
-  secodaryArrow: string;
+  arrowHex: string;
   text: string;
   heading: string;
   bg: string;
@@ -27,9 +27,11 @@ export interface ThemeConfig {
   borderLight: string;
   fill: string;
   fillRgb: string;
+  fillVideo?: string;
   gradient: string;
-  secodaryBg: string;
-  secodary: string;
+  secondaryBg: string;
+  videoBg?: string;
+  secondary: string;
   theme: Theme;
 }
 
@@ -77,7 +79,7 @@ export const ThemeColors = [
 export const Theming: { [key: string]: ThemeConfig } = {
   none: {
     arrow: '#F6A536',
-    secodaryArrow: '#F6A536',
+    arrowHex: '#F6A536',
     text: 'text-yellow',
     heading: 'text-green-blue',
     border: 'border-yellow',
@@ -86,13 +88,13 @@ export const Theming: { [key: string]: ThemeConfig } = {
     fill: 'fill-yellow',
     fillRgb: 'rgba(246, 165, 54, .6)',
     gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
-    secodary: 'bg-[#E2BDFE]',
-    secodaryBg: 'bg-[#F6A536]/40',
+    secondary: 'bg-[#E2BDFE]',
+    secondaryBg: 'bg-[#F6A536]/40',
     theme: Theme.none,
   },
   tngv: {
     arrow: '#7C4E9F',
-    secodaryArrow: '#00A494',
+    arrowHex: '#00A494',
     text: 'text-purple',
     heading: 'text-green',
     border: 'border-purple',
@@ -101,13 +103,14 @@ export const Theming: { [key: string]: ThemeConfig } = {
     fill: 'fill-purple',
     fillRgb: 'rgba(141, 51, 210, .6)',
     gradient: 'from-[#E2BDFE] to-[#ecd0fe]',
-    secodary: 'bg-green',
-    secodaryBg: 'bg-[#E2BDFE]/40',
+    secondary: 'bg-green',
+    secondaryBg: 'bg-[#E2BDFE]/40',
+    videoBg: 'bg-purple',
     theme: Theme.gunviolence,
   },
   tnej: {
     arrow: '#00A494',
-    secodaryArrow: '#00A494',
+    arrowHex: '#00A494',
     text: 'text-leaf',
     heading: 'text-yellow',
     border: 'border-yellow',
@@ -115,14 +118,16 @@ export const Theming: { [key: string]: ThemeConfig } = {
     bg: 'bg-yellow',
     fill: 'fill-leaf',
     fillRgb: 'rgba(111, 180, 44, .6)',
-    secodary: 'bg-yellow',
-    secodaryBg: 'bg-[#D7EFC1]',
+    fillVideo: '#F6A536',
+    secondary: 'bg-yellow',
+    secondaryBg: 'bg-[#D7EFC1]',
+    videoBg: 'bg-leaf',
     gradient: 'from-[#D7EFC1] to-leaf',
     theme: Theme.climate,
   },
   teal: {
     arrow: '#00A494',
-    secodaryArrow: '#00A494',
+    arrowHex: '#00A494',
     text: 'text-teal',
     heading: 'text-yellow',
     border: 'border-teal',
@@ -130,8 +135,8 @@ export const Theming: { [key: string]: ThemeConfig } = {
     bg: 'bg-teal',
     fill: 'fill-teal',
     fillRgb: 'rgba(0, 164, 148, .6)',
-    secodary: 'bg-#00A494',
-    secodaryBg: 'bg-[#D7EFC1]',
+    secondary: 'bg-#00A494',
+    secondaryBg: 'bg-[#D7EFC1]',
     gradient: 'from-[#D7EFC1] to-teal',
     theme: Theme.none,
   },

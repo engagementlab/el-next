@@ -9,26 +9,6 @@ import { DefaultWhereCondition, ResearchProject, Theme } from '@/types';
 import Layout from '../../../components/Layout';
 import { ResearchProjectItemRenderer } from '@/components/Renderers';
 
-const ItemRenderer = (props: { item: ResearchProject }) => {
-  return (
-    <motion.div
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="w-full"
-    >
-      <ResearchProjectItemRenderer
-        item={props.item}
-        pin={props.item.pin}
-        showYear={true}
-        showBorder={
-          props.item.initiativesRelated &&
-          props.item.initiativesRelated.length > 0
-        }
-      />
-    </motion.div>
-  );
-};
-
 export default function ResearchProjects({
   blurb,
   researchProjects,
@@ -48,7 +28,15 @@ export default function ResearchProjects({
           )}
           <div className="mt-14 lg:ml-5 grid xl:grid-cols-3 gap-4 xl:gap-8 lg:grid-cols-2 lg:gap-2 lg:my-11">
             {researchProjects?.map((item, i: number) => (
-              <ItemRenderer key={i} item={item} />
+              <ResearchProjectItemRenderer
+                key={`research-project-${item.key}`}
+                item={item}
+                pin={item.pin}
+                showYear={true}
+                showBorder={
+                  item.initiativesRelated && item.initiativesRelated.length > 0
+                }
+              />
             ))}
           </div>
         </div>

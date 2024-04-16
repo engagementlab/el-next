@@ -129,7 +129,7 @@ const useStore = create<NavState>((set) => ({
 }));
 
 const Header = ({ theme = Theme.none }: Props): JSX.Element => {
-  const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full ease-out duration-500`;
+  const navHeaderClass = `inline-block text-grey font-bold border-b-4 transition-all group-hover:w-full duration-500 ${CustomEase}`;
   const navSubClass =
     'absolute flex flex-col text-stone text-sm border-t-2 border-t-white p-3';
 

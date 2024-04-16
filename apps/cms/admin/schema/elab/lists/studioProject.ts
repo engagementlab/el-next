@@ -204,18 +204,6 @@ const StudioProject: Lists.StudioProject = list({
         },
       },
     }),
-    grad: relationship({
-      ref: 'Graduate.projectSpotlight',
-      many: true,
-      ui: {
-        createView: {
-          fieldMode: 'hidden',
-        },
-        itemView: {
-          fieldMode: 'hidden',
-        },
-      },
-    }),
     initiativesRelated: relationship({
       ref: 'Initiative.projects',
       many: true,

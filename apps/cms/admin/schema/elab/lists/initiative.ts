@@ -175,11 +175,8 @@ const Initiative: Lists.Initiative = list({
       if (resolvedData.videoId) {
         const endpointPrefix =
           process.env.NODE_ENV === 'production'
-            ? 'https://cms.elab.emerson.edu/api'
+            ? 'https://cms.elab.emerson.edU/api'
             : 'http://localhost:8000';
-        console.log(
-          `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`
-        );
         const fileUrlResponse = await axios.get(
           `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`
         );

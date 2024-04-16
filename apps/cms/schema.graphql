@@ -515,8 +515,6 @@ type Graduate {
   alumni: Graduate_alumni_Document
   symposium: Graduate_symposium_Document
   salzburg: Graduate_salzburg_Document
-  projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
   alumniSpotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   alumniSpotlightCount(where: NewsItemWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
@@ -558,7 +556,6 @@ input GraduateWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   currentStudents: PersonManyRelationFilter
-  projectSpotlight: StudioProjectManyRelationFilter
   alumniSpotlight: NewsItemManyRelationFilter
   ogDescription: StringFilter
 }
@@ -594,7 +591,6 @@ input GraduateUpdateInput {
   alumni: JSON
   symposium: JSON
   salzburg: JSON
-  projectSpotlight: StudioProjectRelateToManyForUpdateInput
   alumniSpotlight: NewsItemRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
@@ -631,7 +627,6 @@ input GraduateCreateInput {
   alumni: JSON
   symposium: JSON
   salzburg: JSON
-  projectSpotlight: StudioProjectRelateToManyForCreateInput
   alumniSpotlight: NewsItemRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
@@ -2281,8 +2276,6 @@ type StudioProject {
   semesterCount(where: SemesterWhereInput! = {}): Int
   undergrad(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
   undergradCount(where: UndergraduateWhereInput! = {}): Int
-  grad(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
-  gradCount(where: GraduateWhereInput! = {}): Int
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
   mdProject: Boolean
@@ -2358,7 +2351,6 @@ input StudioProjectWhereInput {
   order: IntNullableFilter
   semester: SemesterManyRelationFilter
   undergrad: UndergraduateManyRelationFilter
-  grad: GraduateManyRelationFilter
   initiativesRelated: InitiativeManyRelationFilter
   mdProject: BooleanFilter
   ogDescription: StringFilter
@@ -2435,7 +2427,6 @@ input StudioProjectUpdateInput {
   order: Int
   semester: SemesterRelateToManyForUpdateInput
   undergrad: UndergraduateRelateToManyForUpdateInput
-  grad: GraduateRelateToManyForUpdateInput
   initiativesRelated: InitiativeRelateToManyForUpdateInput
   mdProject: Boolean
   ogImage: Upload
@@ -2489,7 +2480,6 @@ input StudioProjectCreateInput {
   order: Int
   semester: SemesterRelateToManyForCreateInput
   undergrad: UndergraduateRelateToManyForCreateInput
-  grad: GraduateRelateToManyForCreateInput
   initiativesRelated: InitiativeRelateToManyForCreateInput
   mdProject: Boolean
   ogImage: Upload

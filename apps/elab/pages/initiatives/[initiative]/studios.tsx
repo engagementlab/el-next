@@ -7,14 +7,21 @@ import { Image, Query } from '@el-next/components';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 
 import {
+  CustomEase,
   DefaultWhereCondition,
   InitiativeFilterGroups,
   InitiativeKeyMap,
   Studio,
+  StudioUnion,
   Theming,
 } from '@/types';
 
 import Layout from '../../../components/Layout';
+import {
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
+import { ClassFilterButton } from '@/shared';
 
 export default function Studios({
   studios,
@@ -28,7 +35,7 @@ export default function Studios({
       return key === initiative;
     };
 
-    const ItemRenderer = (props: { item: Studio }) => {
+    const ItemRenderer = (props: { item: Studio; index: number }) => {
       let borderColor = 'border-yellow';
       if (props.item.initiatives[0]) {
         if (props.item.initiatives[0] === 'gunviolence')
@@ -37,42 +44,12 @@ export default function Studios({
           borderColor = 'border-leaf';
       }
       return (
-        <motion.div
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="w-full"
-        >
-          <Link href={`/studios/${props.item.key}`} className="group relative">
-            <div>
-              {props.item.thumbnail ? (
-                <Image
-                  id={`thumb-${props.item.key}`}
-                  alt={props.item.thumbAltText}
-                  transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                  imgId={props.item.thumbnail.publicId}
-                  width={460}
-                  maxWidthDisable={true}
-                  className="w-full"
-                />
-              ) : (
-                <ImagePlaceholder
-                  imageLabel="Studio Project"
-                  width={335}
-                  height={200}
-                />
-              )}
-            </div>
-            {/* {noGroupsOpen() && (
-              <hr
-                className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
-              />
-            )}{' '} */}
-            <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
-              {props.item.name}
-            </h3>
-            <p>{props.item.shortDescription}</p>
-          </Link>
-        </motion.div>
+        <StudioGenericItemRenderer
+          key={props.index}
+          index={props.index}
+          item={props.item as StudioUnion}
+          showBorder={true}
+        />
       );
     };
     const RenderFilters = () => {
@@ -83,12 +60,6 @@ export default function Studios({
           </h2>
           <div className="flex flex-col lg:flex-row gap-x-5 gap-y-2">
             {InitiativeFilterGroups.map((group) => {
-              const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 ${
-                !haveGroupOpen(group.key)
-                  ? `bg-white ${Theming[group.key].text}`
-                  : `text-white ${Theming[group.key].bg}`
-              }
- `;
               return (
                 <>
                   <div key={group.key} className="flex flex-row">
@@ -99,9 +70,16 @@ export default function Studios({
                           ? '/studios'
                           : `/initiatives/${group.key}/studios`
                       }
-                      className={`inline-block`}
+                      className={`inline-block transition-all ${CustomEase} ${
+                        !haveGroupOpen(group.key) ? 'hover:scale-105' : ''
+                      }`}
                     >
-                      <div className={groupButtonStyle}>
+                      <div
+                        className={ClassFilterButton(
+                          haveGroupOpen(group.key),
+                          group.key
+                        )}
+                      >
                         <span>{group.label}</span>
                         <svg
                           viewBox="185.411 115.41 11 11"
@@ -158,15 +136,15 @@ export default function Studios({
                 </p>
               )}
 
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {studios && studios?.length > 0 && (
+              {studios && studios?.length > 0 && (
+                <StudiosGridRenderer>
                   <AnimatePresence>
                     {studios.map((item, i: number) => (
-                      <ItemRenderer key={i} item={item} />
+                      <ItemRenderer key={i} index={i} item={item} />
                     ))}
                   </AnimatePresence>
-                )}
-              </div>
+                </StudiosGridRenderer>
+              )}
             </div>
           </div>
         </div>
@@ -199,12 +177,16 @@ export async function getStaticProps({
 		) {
 			name
 			key
-            initiatives
+      initiatives
 			shortDescription 
 			thumbnail { 
 				publicId
 			}
-            thumbAltText
+      thumbAltText
+      semesters {
+        key
+        name
+      }
 		}`
   );
   const initiativeBlurbs = await Query(

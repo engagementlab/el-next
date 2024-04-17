@@ -31,6 +31,7 @@ export const PartnersSelect = multiselect({
     },
     { label: 'Teen Empowerment', value: 'teenempowerment' },
     { label: 'City of Boston', value: 'boston' },
+    { label: 'We Are Better Together', value: 'wabt' },
     { label: 'Zoo New England', value: 'zoone' },
   ],
 });

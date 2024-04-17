@@ -98,16 +98,12 @@ export const Person = ({
           {person.title.replace(', Engagement Lab at Emerson College', '')}
         </p>
         {person.secondaryTitle && (
-          <p className="text-sm mt-1">{person.secondaryTitle}</p>
+          <p className="text-sm mt-1 px-4">{person.secondaryTitle}</p>
         )}
       </Link>
     );
   return (
-    <div
-      // <motion.div
-      className="flex flex-col items-center text-center ml-0 group lg:basis-1/4 xl:basis-1/5"
-      // key={`thumb-${person.key}`}
-    >
+    <div className="flex flex-col items-center text-center ml-0 group lg:basis-1/4 xl:basis-1/5">
       {person.image ? (
         <Image
           id={`thumb-${person.key}`}
@@ -129,7 +125,7 @@ export const Person = ({
       )}
       <p className={`mt-3 ${theme.text} text-lg`}>{person.name}</p>
       {person.title && person.title.length > 0 && (
-        <p className="text-sm font-semibold mt-1">{person.title}</p>
+        <p className="text-sm font-semibold mt-1 px-2">{person.title}</p>
       )}
       {person.secondaryTitle && (
         <p className="text-sm mt-0 italic">{person.secondaryTitle}</p>
@@ -195,7 +191,7 @@ export const PeopleList = ({
             width="40"
           >
             <path
-              fill={theme.secodaryArrow}
+              fill={theme.arrowHex}
               d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"
             ></path>
           </svg>

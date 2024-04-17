@@ -7,19 +7,25 @@ import _ from 'lodash';
 import { AnimatePresence } from 'framer-motion';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Image, Query } from '@el-next/components';
+import { Query } from '@el-next/components';
 import {
+  CustomEase,
   DefaultWhereCondition,
   InitiativeFilterGroups,
+  Project,
+  ResearchProject,
   StudioProject,
   StudioUnion,
   Theme,
-  Theming,
 } from '@/types';
 
 import Layout from '../../../components/Layout';
-import { StudioGenericItemRenderer } from '@/components/Renderers';
-import { StudioProjectsSort } from '@/shared';
+import {
+  ResearchProjectItemRenderer,
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
+import { ClassFilterButton, ProjectsSort } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -34,14 +40,12 @@ let preSelectedGroup = '';
 let preSelectedFilters: never[] = [];
 let preSelectedTheme = Theme.none;
 export default function StudioProjects({
-  filters,
-  studioProjects,
+  projects,
   initiativeBlurbs,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
-  console.log(studioProjects);
   // Create store with Zustand
   const useStore = create<FilterState>()(
     subscribeWithSelector((set) => ({
@@ -157,157 +161,20 @@ export default function StudioProjects({
 
   const FilteredItems = (props: { items: StudioProject[] | null }) => {
     // Store get/set
-    const { currentFilters, currentTheme, filterGroupOpen } = useStore(
-      (state) => state
-    );
-
+    const { filterGroupOpen } = useStore((state) => state);
     const noGroupsOpen = () => {
       return filterGroupOpen === '';
-    };
-    // const haveFilters = currentFilters.length > 0;
-
-    const haveSpecificFilter = (key: string) => {
-      return _.values(currentFilters).includes(key as never);
     };
     const haveGroupOpen = (key: string) => {
       return filterGroupOpen.toLowerCase() === key.toLowerCase();
     };
-    const toggleFilter = useStore((state) => state.toggle);
-    const reset = useStore((state) => state.reset);
-
-    const RenderFilters = (filters: any[]) => {
-      const menu = (
-        <div className="mx-6 mt-7">
-          <h2 className="uppercase leading-10 text-grey text-xl font-bold">
-            Filter Projects By:
-          </h2>
-          <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
-            {InitiativeFilterGroups.map((group) => {
-              const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1  ${
-                !haveGroupOpen(group.key)
-                  ? `bg-white ${Theming[group.key].text}`
-                  : `text-white ${Theming[group.key].bg}`
-              }
- `;
-              return (
-                <>
-                  <div key={group.key} className="flex flex-row">
-                    {/* Hide group selector if other is selected */}
-                    <a
-                      href={
-                        haveGroupOpen(group.key)
-                          ? '/studios/projects'
-                          : `/initiatives/${group.key}/studios/projects`
-                      }
-                      className={`inline-block ${
-                        !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
-                      } `}
-                    >
-                      <div className={groupButtonStyle}>
-                        <span>{group.label}</span>
-                        <svg
-                          viewBox="185.411 115.41 11 11"
-                          width="11"
-                          height="11"
-                          className={`flex-shrink-0 ml-3 ${
-                            !haveGroupOpen(group.key) ? 'hidden' : 'block'
-                          }`}
-                        >
-                          <path
-                            d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
-                            className="fill-white"
-                          ></path>
-                        </svg>
-                      </div>
-                    </a>
-                  </div>
-                </>
-              );
-            })}
-          </div>
-
-          {!noGroupsOpen() && (
-            <>
-              <div className="flex mt-2 ml-3 lg:ml-5 flex-grow">
-                <svg
-                  height="20"
-                  viewBox="0 -960 960 960"
-                  width="20"
-                  className="inline"
-                >
-                  <path d="m566-120-43-43 162-162H200v-475h60v415h426L524-547l43-43 233 233-234 237Z" />
-                </svg>
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:flex flex-row items-center justify-start gap-x-1 transition-all">
-                  {filters.map((filter) => {
-                    const filterButtonStyle = `font-bold text-center border-2 border-${
-                      Theming[filterGroupOpen].bg
-                    } rounded-large px-3 py-1 ${
-                      !haveSpecificFilter(filter.key)
-                        ? `${Theming[filterGroupOpen].text}`
-                        : `text-white ${Theming[filterGroupOpen].bg}`
-                    } `;
-                    return (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          toggleFilter(filter.key);
-                          e.preventDefault();
-                        }}
-                        key={filter.key}
-                        className={filterButtonStyle}
-                      >
-                        {filter.name}
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-              <button
-                className="text-grey text-base uppercase leading-6 opacity-70 mt-4"
-                onClick={(e) => {
-                  reset();
-                  e.preventDefault();
-                }}
-              >
-                CLEAR ALL FILTERS
-              </button>
-            </>
-          )}
-        </div>
-      );
-
-      return <div>{menu}</div>;
-    };
-
-    let selectedFilters = useStore((state) => state.currentFilters);
-    const filteredItems = props.items
-      ? props.items.filter((item) => {
-          // If selected groups empty, show all...
-          const group =
-            item.initiative.toLowerCase() === 'gunviolence' ? 'tngv' : 'tnej';
-          return (
-            filterGroupOpen === '' ||
-            // ...otherwise, item's filters must match group and ALL selected sub-filters
-            (group === filterGroupOpen.toLowerCase() &&
-              _.every(
-                selectedFilters,
-                (r) => _.map(item.filters, 'key').indexOf(r) >= 0
-              ))
-          );
-        })
-      : [];
-
-    const count = filteredItems.length;
 
     return (
-      <Layout error={error} theme={currentTheme} title="Studio Projects">
+      <Layout error={error} title="Studio Projects">
         <div className="flex flex-col">
           <h1 className="mx-6 font-bold text-4xl xl:text-6xl text-slate">
             Studio Projects
           </h1>
-          {/* <div className="mx-6 my-8 xl:my-4 uppercase font-semibold opacity-60">
-            {showing}
-          </div> */}
           {initiativeBlurbs.projectsBlurb && (
             <div className="mx-6 w-full lg:w-1/2">
               <DocumentRenderer
@@ -315,27 +182,85 @@ export default function StudioProjects({
               />
             </div>
           )}
-          {RenderFilters(filters)}
+
+          <div className="mx-6 mt-7">
+            <h2 className="uppercase leading-10 text-grey text-xl font-bold">
+              Filter Projects By:
+            </h2>
+            <div className="flex flex-col md:flex-row gap-x-5 gap-y-2">
+              {InitiativeFilterGroups.map((group) => {
+                return (
+                  <>
+                    <div key={group.key} className="flex flex-row">
+                      {/* Hide group selector if other is selected */}
+                      <a
+                        href={
+                          haveGroupOpen(group.key)
+                            ? '/studios/projects'
+                            : `/initiatives/${group.key}/studios/projects`
+                        }
+                        className={`inline-block ${
+                          !noGroupsOpen() &&
+                          !haveGroupOpen(group.key) &&
+                          'hidden'
+                        }  transition-all ${CustomEase} ${
+                          !haveGroupOpen(group.key) ? 'hover:scale-105' : ''
+                        }`}
+                      >
+                        <div
+                          className={ClassFilterButton(
+                            haveGroupOpen(group.key),
+                            group.key
+                          )}
+                        >
+                          <span>{group.label}</span>
+                          <svg
+                            viewBox="185.411 115.41 11 11"
+                            width="11"
+                            height="11"
+                            className={`flex-shrink-0 ml-3 ${
+                              !haveGroupOpen(group.key) ? 'hidden' : 'block'
+                            }`}
+                          >
+                            <path
+                              d="M 195.198 115.41 L 190.911 119.695 L 186.624 115.41 L 185.411 116.623 L 189.696 120.91 L 185.411 125.197 L 186.624 126.41 L 190.911 122.125 L 195.198 126.41 L 196.411 125.197 L 192.126 120.91 L 196.411 116.623 Z"
+                              className="fill-white"
+                            ></path>
+                          </svg>
+                        </div>
+                      </a>
+                    </div>
+                  </>
+                );
+              })}
+            </div>
+          </div>
           <div className="container mt-14 mb-24 xl:mt-16 px-4 xl:px-8">
             <div className="w-full">
-              {count === 0 && (
-                <p className="w-full text-xl my-20 text-center">
-                  Sorry, no matches found. Please try other filters.
-                </p>
-              )}
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {count > 0 && (
-                  <AnimatePresence>
-                    {filteredItems.map((item, i: number) => (
-                      <StudioGenericItemRenderer
-                        key={i}
-                        item={item as StudioUnion}
-                        showBorder={noGroupsOpen()}
-                      />
-                    ))}
-                  </AnimatePresence>
-                )}
-              </div>
+              <StudiosGridRenderer>
+                <AnimatePresence>
+                  {props.items &&
+                    props.items.map((item, i: number) => {
+                      if ((item as Project).initiative)
+                        return (
+                          <StudioGenericItemRenderer
+                            key={i}
+                            index={i}
+                            item={item as unknown as StudioUnion}
+                            showBorder={true}
+                          />
+                        );
+                      else
+                        return (
+                          <ResearchProjectItemRenderer
+                            item={item as unknown as ResearchProject}
+                            showYear={true}
+                            showBorder={true}
+                          />
+                        );
+                    })}
+                </AnimatePresence>
+              </StudiosGridRenderer>
             </div>
           </div>
         </div>
@@ -343,28 +268,10 @@ export default function StudioProjects({
     );
   };
 
-  return <FilteredItems items={studioProjects} />;
+  return <FilteredItems items={projects} />;
 }
 
 export async function getStaticProps() {
-  const filters = await Query(
-    'filters',
-    `filters {
-            key
-            name
-        }`
-  );
-
-  if (filters.error) {
-    return {
-      props: {
-        error: filters.error,
-        studioProjects: null,
-        filters: null,
-      },
-    };
-  }
-
   const studioProjects = await Query(
     'studioProjects',
     `studioProjects(
@@ -389,7 +296,27 @@ export async function getStaticProps() {
 			}
 		}`
   );
-
+  const initiatives = await Query(
+    'initiatives',
+    `initiatives {
+      research {
+        name
+        key
+        pin
+        ongoing
+        startYear
+        endYear
+        shortDescription 
+        thumbnail { 
+          publicId
+        }
+        thumbAltText
+        initiativesRelated {
+          name
+        }
+      }
+		}`
+  );
   const initiativeBlurbs = await Query(
     'initiativesLanding',
     `initiativesLanding(where: { name: "Miscellaneous Blurbs" }) {
@@ -402,16 +329,35 @@ export async function getStaticProps() {
     return {
       props: {
         error: studioProjects.error,
-        studioProjects: null,
+        projects: null,
         initiativeBlurbs: null,
-        filters: null,
       },
     };
   }
+  if (initiatives.error) {
+    return {
+      props: {
+        error: initiatives.error,
+        projects: null,
+        initiativeBlurbs: null,
+      },
+    };
+  }
+
+  const researchProjects: ResearchProject[] = [];
+  (initiatives as any[]).forEach((initiative) => {
+    return (initiative.research as ResearchProject[]).forEach((project) => {
+      researchProjects.push(project);
+    });
+  });
+
   return {
     props: {
-      filters,
-      studioProjects: StudioProjectsSort(studioProjects as StudioProject[]),
+      projects: ProjectsSort([
+        ...(studioProjects as Project[]),
+        ...(researchProjects as Project[]),
+      ]),
+
       initiativeBlurbs,
     },
     revalidate: 1,

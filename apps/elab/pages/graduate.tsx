@@ -2,22 +2,27 @@ import { ReactNode } from 'react';
 import { InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import { Button, Image, ImageUrl, Query } from '@el-next/components';
+import { Button, Image, Query } from '@el-next/components';
 
 import Layout from '../components/Layout';
 import Divider from '../components/Divider';
 
 import {
-  CustomEase,
   News,
-  StudioProject,
   Person as PersonT,
   Theming,
   OGParams,
+  DefaultWhereCondition,
+  ResearchProject,
 } from '@/types';
 
 import CaptionedImage from '@/components/CaptionedImage';
-import { Blocks, Doc, Heading } from '@/components/Renderers';
+import {
+  Blocks,
+  Doc,
+  Heading,
+  ResearchProjectItemRenderer,
+} from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { Person } from '@/components/People';
@@ -34,7 +39,6 @@ type GradPage = {
   symposium: { document: any };
   salzburg: { document: any };
 
-  projectSpotlight: StudioProject[];
   alumniSpotlight: News[];
   alumni: {
     document: any;
@@ -60,6 +64,7 @@ const rendererOverrides = {
 
 export default function Graduate({
   page,
+  projects,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   if (!page) return;
@@ -117,6 +122,13 @@ export default function Graduate({
                   anchorId="sjm"
                   className="border-teal text-teal fill-yellow"
                 />
+                {projects && projects.length > 0 && (
+                  <Button
+                    label="Featured Projects"
+                    anchorId="projects"
+                    className="border-teal text-teal fill-yellow"
+                  />
+                )}
               </div>
             </div>
             <div className="flex justify-center my-12 w-full lg:w-3/5 max-w-xl">
@@ -128,7 +140,9 @@ export default function Graduate({
               />
             </div>
           </div>
+
           <Divider />
+
           <div id="ma">
             <Gutter>
               <div className="flex flex-col lg:flex-row-reverse lg:items-center justify-center gap-x-10">
@@ -238,22 +252,15 @@ export default function Graduate({
                 </div>
               </>
             )}
+
           <Divider />
+
           <div id="sjm">
             <Gutter>
               <div className="flex flex-col lg:flex-row items-center justify-start">
-                <h2 className="font-bold text-4xl lg:w-1/2">
+                <h2 className="font-bold text-4xl lg:w-1/2 mb-4">
                   Social Justice and Media Symposium
                 </h2>
-                {/* <Image
-                  id="sjm"
-                  alt="Social Justice and Media Symposium logo"
-                  // transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                  imgId="elab-home-v3.x/logos/sjm"
-                  width={300}
-                  // maxWidthDisable={true}
-                  // className="w-full"
-                /> */}
               </div>
               <DocumentRenderer
                 document={page.symposium.document}
@@ -262,9 +269,11 @@ export default function Graduate({
               />
             </Gutter>
           </div>
+
           <Divider />
+
           <Gutter>
-            <h2 className="font-bold text-4xl">
+            <h2 className="font-bold text-4xl mb-14">
               Salzburg Creativity, Media and Global Change Program
             </h2>
             <DocumentRenderer
@@ -273,59 +282,7 @@ export default function Graduate({
               renderers={Doc()}
             />
           </Gutter>
-          {page.projectSpotlight && page.projectSpotlight.length > 0 && (
-            <Divider />
-          )}
-          <Gutter>
-            {page.projectSpotlight && page.projectSpotlight.length > 0 && (
-              <div id="projects">
-                <h2 className="font-bold text-4xl">Project Spotlight</h2>
-                <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
-                  {page.projectSpotlight.map(
-                    (item: StudioProject, i: number) => {
-                      let borderColor = 'border-yellow';
-                      if (item.initiative === 'gunviolence')
-                        borderColor = 'border-purple';
-                      else if (item.initiative === 'climate')
-                        borderColor = 'border-leaf';
-                      return (
-                        <Link
-                          href={`/studios/projects/${item.key}`}
-                          className="group"
-                        >
-                          {item.thumbnail ? (
-                            <Image
-                              id={`thumb-${i}`}
-                              alt={item.thumbAltText}
-                              transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                              imgId={item.thumbnail.publicId}
-                              width={460}
-                              maxWidthDisable={true}
-                              className="w-full"
-                            />
-                          ) : (
-                            <ImagePlaceholder
-                              imageLabel="Project"
-                              width={200}
-                              height={200}
-                            />
-                          )}
 
-                          <hr
-                            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
-                          />
-                          <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
-                            {item.name}
-                          </h3>
-                          <p>{item.shortDescription}</p>
-                        </Link>
-                      );
-                    }
-                  )}
-                </div>
-              </div>
-            )}
-          </Gutter>
           {page.alumniSpotlight && page.alumniSpotlight.length > 0 && (
             <Divider />
           )}
@@ -366,6 +323,32 @@ export default function Graduate({
               </div>
             )}
           </Gutter>
+
+          {projects && projects.length > 0 && (
+            <>
+              <Divider />
+              <Gutter>
+                <h2 className="font-bold text-4xl">Featured Projects</h2>
+                <div
+                  id="projects"
+                  className="mt-14 lg:ml-5 grid xl:grid-cols-3 gap-4 xl:gap-8 lg:grid-cols-2 lg:gap-2 lg:my-11"
+                >
+                  {projects.map((item: ResearchProject, i: number) => (
+                    <ResearchProjectItemRenderer
+                      key={`research-project-${item.key}`}
+                      item={item}
+                      pin={item.pin}
+                      showYear={true}
+                      showBorder={
+                        item.initiativesRelated &&
+                        item.initiativesRelated.length > 0
+                      }
+                    />
+                  ))}
+                </div>
+              </Gutter>
+            </>
+          )}
         </div>
       )}
     </Layout>
@@ -373,7 +356,7 @@ export default function Graduate({
 }
 
 export async function getStaticProps() {
-  const result = await Query(
+  const gradRes = await Query(
     'graduates',
     `graduates {
         intro { document }
@@ -385,16 +368,6 @@ export async function getStaticProps() {
         mediaDesign { document }
         symposium { document }
         salzburg { document }
-        projectSpotlight {
-            name
-            key
-            shortDescription 
-            thumbnail { 
-                publicId
-            }
-            thumbAltText
-            initiative
-        }
         alumniSpotlight {
             title
             key
@@ -424,18 +397,53 @@ export async function getStaticProps() {
       }
     `
   );
-  if (result.error) {
+  if (gradRes.error) {
     return {
       props: {
-        error: result.error,
+        error: gradRes.error,
         page: null,
+        projects: null,
       },
     };
   }
-  const page = result[0] as GradPage;
+  const page = gradRes[0] as GradPage;
+  const projectsRes = await Query(
+    'researchProjects',
+    `researchProjects(
+			${DefaultWhereCondition(`mdProject: { equals: true }`)},
+			orderBy: {
+				endYear: desc
+			}
+		) {
+			name
+			key
+      pin
+      ongoing
+      startYear
+      endYear
+      shortDescription 
+			thumbnail { 
+				publicId
+			}
+      thumbAltText
+      initiativesRelated {
+        name
+      }
+		}`
+  );
+  if (projectsRes.error) {
+    return {
+      props: {
+        error: projectsRes.error,
+        page: null,
+        projects: null,
+      },
+    };
+  }
   return {
     props: {
       page,
+      projects: projectsRes,
       error: null,
     },
     revalidate: 1,

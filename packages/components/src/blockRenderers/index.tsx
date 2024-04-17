@@ -11,7 +11,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import Image from '../image';
-import { Video } from '../video';
+import { Video } from '../video.v2';
 
 /**
  * Create function that returns custom block renderers used by Keystone

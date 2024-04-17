@@ -1,16 +1,13 @@
 import { InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
-import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { Query } from '@el-next/components';
 
-import { Image, Query } from '@el-next/components';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import {
   CustomEase,
   DefaultWhereCondition,
@@ -18,11 +15,14 @@ import {
   Studio,
   StudioUnion,
   Theme,
-  Theming,
 } from '@/types';
 
 import Layout from '../../components/Layout';
-import { StudioGenericItemRenderer } from '@/components/Renderers';
+import {
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
+import { ClassFilterButton } from '@/shared';
 
 interface FilterState {
   currentTheme: Theme;
@@ -110,11 +110,6 @@ export default function Studios({
     const noGroupsOpen = () => {
       return selectedFilter === '';
     };
-    // const haveFilters = currentFilters.length > 0;
-
-    const haveSpecificFilter = (key: string) => {
-      return selectedFilter === key;
-    };
     const haveGroupOpen = (key: string) => {
       return selectedFilter.toLowerCase() === key.toLowerCase();
     };
@@ -127,12 +122,6 @@ export default function Studios({
           </h2>
           <div className="flex flex-col lg:flex-row gap-x-5 gap-y-2">
             {InitiativeFilterGroups.map((group) => {
-              const groupButtonStyle = `flex items-center transition-all text-sm font-bold border-2 rounded-large px-3 py-1 ${
-                !haveGroupOpen(group.key)
-                  ? `bg-white ${Theming[group.key].text}`
-                  : `text-white ${Theming[group.key].bg}`
-              }
- `;
               return (
                 <>
                   <div key={group.key} className="flex flex-row">
@@ -145,13 +134,16 @@ export default function Studios({
                       }
                       className={`inline-block ${
                         !noGroupsOpen() && !haveGroupOpen(group.key) && 'hidden'
-                      } `}
-                      // onClick={(e) => {
-                      //   toggle(group.key);
-                      //   e.preventDefault();
-                      // }}
+                      } transition-all ${CustomEase} ${
+                        !haveGroupOpen(group.key) ? 'hover:scale-105' : ''
+                      }`}
                     >
-                      <div className={groupButtonStyle}>
+                      <div
+                        className={ClassFilterButton(
+                          haveGroupOpen(group.key),
+                          group.key
+                        )}
+                      >
                         <span>{group.label}</span>
                         <svg
                           viewBox="185.411 115.41 11 11"
@@ -233,19 +225,20 @@ export default function Studios({
                 </p>
               )}
 
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {count > 0 && (
+              {count > 0 && (
+                <StudiosGridRenderer>
                   <AnimatePresence>
                     {filteredItems.map((item, i: number) => (
                       <StudioGenericItemRenderer
                         key={i}
+                        index={i}
                         item={item as StudioUnion}
                         showBorder={noGroupsOpen()}
                       />
                     ))}
                   </AnimatePresence>
-                )}
-              </div>
+                </StudiosGridRenderer>
+              )}
             </div>
           </div>
         </div>
@@ -273,6 +266,10 @@ export async function getStaticProps() {
 				publicId
 			}
       thumbAltText
+      semesters {
+        key
+        name
+      }
 		}`
   );
   const initiativeBlurbs = await Query(

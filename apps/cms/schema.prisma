@@ -35,6 +35,7 @@ model Event {
   initiatives         Json             @default("[]")
   thumbnail           Json?
   thumbAltText        String           @default("")
+  slides              Slide[]          @relation("Event_slides")
   summary             String           @default("")
   eventDate           DateTime
   registrationLink    String           @default("")
@@ -44,6 +45,7 @@ model Event {
   home                Boolean          @default(false)
   order               Int?             @default(0)
   initiativesWhatsNew Initiative[]     @relation("Event_initiativesWhatsNew")
+  partners            Json             @default("[]")
   ogImage             Json?
   helper_html         String           @default("<p>Need HTML!</p>")
   helper_iconType     icon             @default(help)
@@ -61,23 +63,22 @@ model Filter {
 }
 
 model Graduate {
-  id                String          @id @default(cuid())
-  name              String          @unique @default("Graduate Landing Page")
-  intro             Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                String     @id @default(cuid())
+  name              String     @unique @default("Graduate Landing Page")
+  intro             Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   introImage        Json?
-  introImageAltText String          @default("")
-  introImageCaption String          @default("")
-  mediaDesign       Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  currentStudents   Person[]        @relation("Graduate_currentStudents")
-  alumni            Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  symposium         Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  salzburg          Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  projectSpotlight  StudioProject[] @relation("Graduate_projectSpotlight")
-  alumniSpotlight   NewsItem[]      @relation("Graduate_alumniSpotlight")
+  introImageAltText String     @default("")
+  introImageCaption String     @default("")
+  mediaDesign       Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  currentStudents   Person[]   @relation("Graduate_currentStudents")
+  alumni            Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  symposium         Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  salzburg          Json       @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  alumniSpotlight   NewsItem[] @relation("Graduate_alumniSpotlight")
   ogImage           Json?
-  helper_html       String          @default("<p>Need HTML!</p>")
-  helper_iconType   icon            @default(help)
-  ogDescription     String          @default("")
+  helper_html       String     @default("<p>Need HTML!</p>")
+  helper_iconType   icon       @default(help)
+  ogDescription     String     @default("")
 }
 
 model Initiative {
@@ -102,6 +103,7 @@ model Initiative {
   helper_html      String            @default("<p>Need HTML!</p>")
   helper_iconType  icon              @default(help)
   ogDescription    String            @default("")
+  vimeoFile        String            @default("")
 }
 
 model InitiativesLanding {
@@ -150,9 +152,9 @@ model NewsItem {
   initiatives         Json                @default("[]")
   thumbnail           Json?
   thumbAltText        String              @default("")
+  slides              Slide[]             @relation("NewsItem_slides")
   summary             String              @default("")
   publishDate         DateTime
-  source              String              @default("")
   linkHelper_html     String              @default("<p>Need HTML!</p>")
   linkHelper_iconType icon                @default(help)
   externalLink        String              @default("")
@@ -282,6 +284,8 @@ model Slide {
   id               String       @id @default(cuid())
   slideshowSlides  Slideshow[]  @relation("Slide_slideshowSlides")
   initiativeSlides Initiative[] @relation("Initiative_slides")
+  newsSlides       NewsItem[]   @relation("NewsItem_slides")
+  eventSlides      Event[]      @relation("Event_slides")
   image            Json?
   helper_html      String       @default("<p>Need HTML!</p>")
   helper_iconType  icon         @default(help)
@@ -348,7 +352,6 @@ model StudioProject {
   order               Int?                        @default(0)
   semester            Semester[]                  @relation("Semester_projects")
   undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
-  grad                Graduate[]                  @relation("Graduate_projectSpotlight")
   initiativesRelated  Initiative[]                @relation("Initiative_projects")
   mdProject           Boolean                     @default(false)
   ogImage             Json?

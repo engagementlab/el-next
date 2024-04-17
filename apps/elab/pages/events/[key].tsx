@@ -12,9 +12,10 @@ import Layout from '../../components/Layout';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { Blocks, Doc, Heading } from '../../components/Renderers';
 
-import { DefaultWhereCondition, Event as EType, Theme } from '@/types';
+import { DefaultWhereCondition, Event as EType, Theme, Theming } from '@/types';
 import { CTAButton } from '@/components/Buttons';
 import Logos from '@/components/Logos';
+import Slideshow from '@/components/Slideshow';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
     const customRenderers = {
@@ -30,10 +31,16 @@ export default function Event({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   let theme = Theme.none;
+  let themeKey = 'none';
   if (item) {
     if (item.initiatives && item.initiatives.length > 0) {
-      if (item.initiatives[0] === 'gunviolence') theme = Theme.gunviolence;
-      else if (item.initiatives[0] === 'climate') theme = Theme.climate;
+      if (item.initiatives[0] === 'gunviolence') {
+        theme = Theme.gunviolence;
+        themeKey = 'tngv';
+      } else if (item.initiatives[0] === 'climate') {
+        theme = Theme.climate;
+        themeKey = 'tnej';
+      }
     }
   }
   return item ? (
@@ -51,7 +58,13 @@ export default function Event({
       <div className="mt-14">
         <div className="flex flex-col xl:flex-row gap-8 px-4 xl:px-8">
           <div className="w-full xl:w-1/2 flex-shrink-0">
-            {item.thumbnail ? (
+            {item.slides && item.slides.length > 0 ? (
+              <Slideshow
+                slides={item.slides}
+                theme={Theming[themeKey]}
+                className={`${Theming[themeKey].bg} bg-opacity-50`}
+              />
+            ) : item.thumbnail ? (
               <Image
                 id="header-img"
                 alt={item.thumbAltText}
@@ -208,12 +221,22 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
         publicId 
       }
       summary
+      slides {
+        altText
+        image {
+          publicId
+          publicUrl
+        }
+        caption
+        videoId
+        order
+      }
       ogImage { 
         publicId
       }
       ogDescription
       partners
-      }`
+    }`
   );
 
   if (itemResult.error) {

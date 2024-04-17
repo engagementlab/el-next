@@ -24,7 +24,7 @@ const Logos = ({
           <Image
             id="ldpni-logo"
             alt="Louis D. Brown Peace Institute (LDBPI) logo"
-            imgId="tngvi/logos/ldpi"
+            imgId="elab-home-v3.x/logos/ldbpi"
             width={150}
           />
         </a>

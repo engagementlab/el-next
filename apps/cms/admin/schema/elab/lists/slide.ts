@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { integer, json, relationship, text } from '@keystone-6/core/fields';
+import { integer, relationship, text } from '@keystone-6/core/fields';
 import { allowAll } from '@keystone-6/core/access';
 
 import { Lists } from '.keystone/types';
@@ -16,6 +16,14 @@ const Slide: Lists.Slide = list({
     }),
     initiativeSlides: relationship({
       ref: 'Initiative.slides',
+      many: true,
+    }),
+    newsSlides: relationship({
+      ref: 'NewsItem.slides',
+      many: true,
+    }),
+    eventSlides: relationship({
+      ref: 'Event.slides',
       many: true,
     }),
     image: cloudinaryImage({

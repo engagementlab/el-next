@@ -1,15 +1,14 @@
 import path from 'path';
+import axios from 'axios';
 import { graphql, group, list } from '@keystone-6/core';
 import { json, relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
-import { helper, HelperIcon } from '../../../components/helper';
 import { componentBlocks } from '../../../components';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
-// import { HelperIcon, helper } from '../../../components/helper';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -144,12 +143,50 @@ const Initiative: Lists.Initiative = list({
       },
     }),
     ...group(Social()),
+    vimeoFile: text({
+      ui: {
+        createView: {
+          fieldMode: 'hidden',
+        },
+        itemView: {
+          fieldMode: 'hidden',
+        },
+        listView: {
+          fieldMode: 'hidden',
+        },
+      },
+    }),
   },
   ui: {
-    // hideCreate: true,
     hideDelete: true,
     listView: {
       initialColumns: ['name'],
+    },
+  },
+  hooks: {
+    resolveInput: async ({
+      listKey,
+      operation,
+      inputData,
+      item,
+      resolvedData,
+      context,
+    }) => {
+      if (resolvedData.videoId) {
+        const endpointPrefix =
+          process.env.NODE_ENV === 'production'
+            ? 'https://cms.elab.emerson.edU/api'
+            : 'http://localhost:8000';
+        const fileUrlResponse = await axios.get(
+          `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`
+        );
+        resolvedData = {
+          ...resolvedData,
+          vimeoFile: fileUrlResponse.data,
+        };
+        return resolvedData;
+      }
+      return resolvedData;
     },
   },
 });

@@ -1,14 +1,8 @@
 import { InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
-
-import { Image, Query } from '@el-next/components';
-
-import Layout from '../components/Layout';
-import ImagePlaceholder from '../components/ImagePlaceholder';
-import { News, Event, Item, DefaultWhereCondition } from '@/types';
-import { useRouter } from 'next/router';
-import { NewsEventRenderer } from '@/components/Renderers';
+import { Query } from '@el-next/components';
+import { DefaultWhereCondition } from '@/types';
 import WhatsNewRenderer from '@/components/WhatsNew';
+import Layout from '../components/Layout';
 
 export default function WhatsNew({
   items,

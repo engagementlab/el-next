@@ -20,13 +20,21 @@ import Divider from '@/components/Divider';
 import Slideshow from '@/components/Slideshow';
 import Logos from '@/components/Logos';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { Button, Query, Image, Video } from '@el-next/components';
+import { Button, Query, Image } from '@el-next/components';
+import { Video } from '@el-next/components/video';
+import { Video as VideoV2 } from '@el-next/components/video.v2';
+
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Blocks, Doc } from '@/components/Renderers';
+import {
+  Blocks,
+  Doc,
+  ResearchProjectItemRenderer,
+} from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
+import { useEffect } from 'react';
 
-type AboutPage = {
+type Initiative = {
   name?: string;
   intro: {
     document: any;
@@ -55,6 +63,7 @@ type AboutPage = {
       publicId: string;
     };
   }[];
+  vimeoFile?: string;
 };
 
 export default function InitIndex({
@@ -63,17 +72,14 @@ export default function InitIndex({
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const jumpClass =
-    Theming[initiative].border +
-    ' ' +
-    Theming[initiative].text +
-    ' ' +
-    Theming[initiative].fill;
-  (' group-hover:fill-purple');
+  const jumpClass = `${Theming[initiative].border} ${Theming[initiative].text} ${Theming[initiative].fill} ml-3`;
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
   const videoColor = {
     stroke: Theming[initiative].arrow,
     fill: Theming[initiative].fillRgb,
+    bg: Theming[initiative].videoBg || Theming[initiative].secondaryBg,
+    seekbar: Theming[initiative].fillVideo || Theming[initiative].arrowHex,
+    buttons: '#fff',
   };
   const gridClass =
     'my-8 grid md:grid-cols-2 xl:grid-cols-3 md:gap-4 lg:gap-2 xl:gap-5 xl:gap-y-10 text-grey';
@@ -181,7 +187,7 @@ export default function InitIndex({
     >
       {page && (
         <div className="text-grey">
-          <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full">
+          <div className="mt-14 mb-24 xl:mt-16 md:px-20 px-5 xl:px-24 w-full left bg-opacity-75">
             <div className="flex flex-col-reverse lg:flex-row gap-x-5">
               <div className="w-full lg:w-1/2">
                 <h2 className={subHeadClass}>About The Initiative</h2>
@@ -199,45 +205,59 @@ export default function InitIndex({
                 )}
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
                   <h2 className={subHeadClass}>Jump to:</h2>
-                  <div className="flex flex-row">
-                    {/* <Button
-                      label="Context"
-                      anchorId="context"
-                      className={jumpClass}
-                    /> */}
-                    {/* <div className="flex flex-row lg:w-3/4 xl:w-4/6"> */}
+                  <div className={`flex flex-row`}>
                     {page.projects && page.projects.length > 0 && (
                       <Button
                         label="Featured Projects"
                         anchorId="projects"
-                        className={jumpClass + ' ml-3'}
+                        className={jumpClass}
                       />
                     )}
                     <Button
                       label="Featured Studios"
                       anchorId="studios"
-                      className={jumpClass + ' ml-3'}
+                      className={jumpClass}
                     />
-                    {/* <Button
-                        label="Research"
+                    {/* {page.research && page.research.length > 0 && (
+                      <Button
+                        label="Related Research"
                         anchorId="research"
-                        className={jumpClass}
-                      /> */}
-                    {/* </div> */}
+                        className={jumpClass + ' ml-3'}
+                      />
+                    )} */}
                   </div>
                 </div>
               </div>
               {page.videoId ? (
                 <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
                   <div className="group w-full min-h-[inherit] ">
-                    <div id="video" className="min-h-[inherit]">
-                      <Video
-                        isSlide={true}
-                        videoLabel=""
-                        videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
-                        thumbUrl={page.videoThumbnail?.publicUrl}
-                        // themeColor={videoColor}
-                      />
+                    <div id="video" className="min-h-[inherit] left">
+                      {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
+                        <VideoV2
+                          key={`video-player-${page.vimeoFile}`}
+                          isSlide={true}
+                          videoLabel={`${
+                            InitiativeFilterGroups.find(
+                              (i) => i.key === initiative
+                            )?.label
+                          } Intro Video`}
+                          videoFile={page.vimeoFile}
+                          thumbUrl={page.videoThumbnail?.publicUrl}
+                          theme={videoColor}
+                        />
+                      ) : (
+                        <Video
+                          isSlide={true}
+                          videoLabel={`${
+                            InitiativeFilterGroups.find(
+                              (i) => i.key === initiative
+                            )?.label
+                          } Intro Video`}
+                          videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
+                          thumbUrl={page.videoThumbnail?.publicUrl}
+                          // theme={videoColor}
+                        />
+                      )}
                     </div>
                   </div>
                   {page?.videoCaption && (
@@ -279,7 +299,7 @@ export default function InitIndex({
             </div>
           </div>
           {page.projects && page.projects.length > 0 && (
-            <Divider color={Theming[initiative].secodary} />
+            <Divider color={Theming[initiative].secondary} />
           )}
           <Gutter noMarginY={false}>
             {page.projects && page.projects.length > 0 && (
@@ -339,7 +359,7 @@ export default function InitIndex({
           </Gutter>
 
           {page.studios && page.studios.length > 0 && (
-            <Divider color={Theming[initiative].secodary} />
+            <Divider color={Theming[initiative].secondary} />
           )}
           <Gutter noMarginY={false}>
             {page.studios && page.studios.length > 0 && (
@@ -370,7 +390,7 @@ export default function InitIndex({
                             height={200}
                           />
                         )}
-                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
+                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1 brightness-150">
                           {item.name}
                         </h3>
                         <p>{item.shortDescription}</p>
@@ -390,7 +410,7 @@ export default function InitIndex({
           </Gutter>
 
           {page.research && page.research.length > 0 && (
-            <Divider color={Theming[initiative].secodary} />
+            <Divider color={Theming[initiative].secondary} />
           )}
           <Gutter noMarginY={false}>
             {page.research && page.research.length > 0 && (
@@ -399,41 +419,23 @@ export default function InitIndex({
                 <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
                   {page.research.map((item: ResearchProject, i: number) => {
                     return (
-                      <Link
-                        key={`research-${item.key}`}
-                        href={`research/${item.key}`}
-                        className="group"
-                      >
-                        {item.thumbnail ? (
-                          <Image
-                            id={`thumb-${i}`}
-                            alt={item.thumbAltText}
-                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                            imgId={item.thumbnail.publicId}
-                            width={460}
-                            maxWidthDisable={true}
-                            className="w-full"
-                          />
-                        ) : (
-                          <ImagePlaceholder
-                            imageLabel="Project"
-                            width={200}
-                            height={200}
-                          />
-                        )}
-
-                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm">{item.shortDescription}</p>
-                      </Link>
+                      <ResearchProjectItemRenderer
+                        key={`research-project-${item.key}`}
+                        item={item}
+                        pin={false}
+                        showYear={false}
+                        showBorder={
+                          item.initiativesRelated &&
+                          item.initiativesRelated.length > 0
+                        }
+                      />
                     );
                   })}
                 </div>
               </div>
             )}
           </Gutter>
-          <Divider color={Theming[initiative].secodary} />
+          <Divider color={Theming[initiative].secondary} />
 
           <Gutter noMarginY={false}>
             <h2 className="text-3xl font-bold">Partner Organizations</h2>
@@ -454,7 +456,7 @@ export default function InitIndex({
           </Gutter>
           {page.associatedPeople && page.associatedPeople.length > 0 && (
             <>
-              <Divider color={Theming[initiative].secodary} />
+              <Divider color={Theming[initiative].secondary} />
               <Gutter noMarginY={false}>
                 <>
                   <h2 className="text-3xl font-bold">Learning Partners</h2>
@@ -487,6 +489,7 @@ export default function InitIndex({
     </Layout>
   );
 }
+
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
     paths: ['/initiatives/tngv', '/initiatives/tnej'],
@@ -591,6 +594,7 @@ export async function getStaticProps({
                 publicId
             }  
         }
+        vimeoFile
       }`
   );
 
@@ -604,7 +608,7 @@ export async function getStaticProps({
     };
   }
 
-  const page = result as AboutPage;
+  const page = result as Initiative;
   const mergedItems = (
     [...(result.events as Event[]), ...(result.news as News[])] as Item[]
   ).sort((a, b) => {

@@ -2,56 +2,17 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
+var slicedToArray = require('../../dist/slicedToArray-b8687d91.cjs.dev.js');
 var Image = require('next/image');
 var react = require('react');
 var create = require('zustand');
 var jsxRuntime = require('react/jsx-runtime');
+require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 
 var Image__default = /*#__PURE__*/_interopDefault(Image);
 var create__default = /*#__PURE__*/_interopDefault(create);
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
-  if (null != _i) {
-    var _s,
-      _e,
-      _x,
-      _r,
-      _arr = [],
-      _n = !0,
-      _d = !1;
-    try {
-      if (_x = (_i = _i.call(arr)).next, 0 === i) {
-        if (Object(_i) !== _i) return;
-        _n = !1;
-      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
-    } catch (err) {
-      _d = !0, _e = err;
-    } finally {
-      try {
-        if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-    return _arr;
-  }
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || unsupportedIterableToArray._unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
 
 var Video = function Video(_ref) {
   var thumbUrl = _ref.thumbUrl,
@@ -74,7 +35,7 @@ var Video = function Video(_ref) {
         };
       });
     }),
-    _useState2 = _slicedToArray(_useState, 1),
+    _useState2 = slicedToArray._slicedToArray(_useState, 1),
     useStore = _useState2[0];
   var toggleOpen = useStore(function (state) {
     return state.toggleOpen;
@@ -91,7 +52,7 @@ var Video = function Video(_ref) {
         toggleOpen(true);
         e.preventDefault();
       },
-      className: "group relative",
+      className: "group relative overflow-hidden",
       style: {
         height: 'inherit'
       },

@@ -201,6 +201,8 @@ type Event {
   initiatives: [EventInitiativeType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slidesCount(where: SlideWhereInput! = {}): Int
   summary: String
   eventDate: DateTime
   registrationLink: String
@@ -211,6 +213,7 @@ type Event {
   order: Int
   initiativesWhatsNew(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesWhatsNewCount(where: InitiativeWhereInput! = {}): Int
+  partners: [EventPartnerType!]
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
@@ -237,6 +240,21 @@ type Event_content_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
+enum EventPartnerType {
+  uncornered
+  ficdc
+  greenroots
+  ldbpi
+  mgh
+  magv
+  sftt
+  swbcdc
+  teenempowerment
+  boston
+  wabt
+  zoone
+}
+
 input EventWhereUniqueInput {
   id: ID
   key: String
@@ -252,6 +270,7 @@ input EventWhereInput {
   createdDate: DateTimeNullableFilter
   status: EventStatusTypeNullableFilter
   thumbAltText: StringFilter
+  slides: SlideManyRelationFilter
   summary: StringFilter
   eventDate: DateTimeFilter
   registrationLink: StringFilter
@@ -278,6 +297,12 @@ input EventStatusTypeNullableFilter {
   in: [EventStatusType!]
   notIn: [EventStatusType!]
   not: EventStatusTypeNullableFilter
+}
+
+input SlideManyRelationFilter {
+  every: SlideWhereInput
+  some: SlideWhereInput
+  none: SlideWhereInput
 }
 
 input DateTimeFilter {
@@ -337,6 +362,7 @@ input EventUpdateInput {
   initiatives: [EventInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForUpdateInput
   summary: String
   eventDate: DateTime
   registrationLink: String
@@ -346,9 +372,17 @@ input EventUpdateInput {
   home: Boolean
   order: Int
   initiativesWhatsNew: InitiativeRelateToManyForUpdateInput
+  partners: [EventPartnerType!]
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
+}
+
+input SlideRelateToManyForUpdateInput {
+  disconnect: [SlideWhereUniqueInput!]
+  set: [SlideWhereUniqueInput!]
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
 }
 
 input InitiativeRelateToManyForUpdateInput {
@@ -371,6 +405,7 @@ input EventCreateInput {
   initiatives: [EventInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForCreateInput
   summary: String
   eventDate: DateTime
   registrationLink: String
@@ -380,9 +415,15 @@ input EventCreateInput {
   home: Boolean
   order: Int
   initiativesWhatsNew: InitiativeRelateToManyForCreateInput
+  partners: [EventPartnerType!]
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
+}
+
+input SlideRelateToManyForCreateInput {
+  create: [SlideCreateInput!]
+  connect: [SlideWhereUniqueInput!]
 }
 
 input InitiativeRelateToManyForCreateInput {
@@ -474,8 +515,6 @@ type Graduate {
   alumni: Graduate_alumni_Document
   symposium: Graduate_symposium_Document
   salzburg: Graduate_salzburg_Document
-  projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
-  projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
   alumniSpotlight(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
   alumniSpotlightCount(where: NewsItemWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
@@ -517,7 +556,6 @@ input GraduateWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   currentStudents: PersonManyRelationFilter
-  projectSpotlight: StudioProjectManyRelationFilter
   alumniSpotlight: NewsItemManyRelationFilter
   ogDescription: StringFilter
 }
@@ -553,7 +591,6 @@ input GraduateUpdateInput {
   alumni: JSON
   symposium: JSON
   salzburg: JSON
-  projectSpotlight: StudioProjectRelateToManyForUpdateInput
   alumniSpotlight: NewsItemRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
@@ -590,7 +627,6 @@ input GraduateCreateInput {
   alumni: JSON
   symposium: JSON
   salzburg: JSON
-  projectSpotlight: StudioProjectRelateToManyForCreateInput
   alumniSpotlight: NewsItemRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
@@ -635,6 +671,7 @@ type Initiative {
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
+  vimeoFile: String
 }
 
 type Initiative_intro_Document {
@@ -677,12 +714,7 @@ input InitiativeWhereInput {
   research: ResearchProjectManyRelationFilter
   associatedPeople: PersonManyRelationFilter
   ogDescription: StringFilter
-}
-
-input SlideManyRelationFilter {
-  every: SlideWhereInput
-  some: SlideWhereInput
-  none: SlideWhereInput
+  vimeoFile: StringFilter
 }
 
 input EventManyRelationFilter {
@@ -708,6 +740,7 @@ input InitiativeOrderByInput {
   name: OrderDirection
   videoId: OrderDirection
   ogDescription: OrderDirection
+  vimeoFile: OrderDirection
 }
 
 input InitiativeUpdateInput {
@@ -730,13 +763,7 @@ input InitiativeUpdateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-}
-
-input SlideRelateToManyForUpdateInput {
-  disconnect: [SlideWhereUniqueInput!]
-  set: [SlideWhereUniqueInput!]
-  create: [SlideCreateInput!]
-  connect: [SlideWhereUniqueInput!]
+  vimeoFile: String
 }
 
 input EventRelateToManyForUpdateInput {
@@ -785,11 +812,7 @@ input InitiativeCreateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-}
-
-input SlideRelateToManyForCreateInput {
-  create: [SlideCreateInput!]
-  connect: [SlideWhereUniqueInput!]
+  vimeoFile: String
 }
 
 input EventRelateToManyForCreateInput {
@@ -1028,9 +1051,10 @@ type NewsItem {
   initiatives: [NewsItemInitiativeType!]
   thumbnail: CloudinaryImage_File
   thumbAltText: String
+  slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
+  slidesCount(where: SlideWhereInput! = {}): Int
   summary: String
   publishDate: DateTime
-  source: String
   linkHelper: HelperFieldOutput
   externalLink: String
   blurb: NewsItem_blurb_Document
@@ -1082,9 +1106,9 @@ input NewsItemWhereInput {
   createdDate: DateTimeNullableFilter
   status: NewsItemStatusTypeNullableFilter
   thumbAltText: StringFilter
+  slides: SlideManyRelationFilter
   summary: StringFilter
   publishDate: DateTimeFilter
-  source: StringFilter
   externalLink: StringFilter
   home: BooleanFilter
   order: IntNullableFilter
@@ -1122,7 +1146,6 @@ input NewsItemOrderByInput {
   thumbAltText: OrderDirection
   summary: OrderDirection
   publishDate: OrderDirection
-  source: OrderDirection
   externalLink: OrderDirection
   home: OrderDirection
   order: OrderDirection
@@ -1137,9 +1160,9 @@ input NewsItemUpdateInput {
   initiatives: [NewsItemInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForUpdateInput
   summary: String
   publishDate: DateTime
-  source: String
   linkHelper: HelperFieldInput
   externalLink: String
   blurb: JSON
@@ -1181,9 +1204,9 @@ input NewsItemCreateInput {
   initiatives: [NewsItemInitiativeType!]
   thumbnail: Upload
   thumbAltText: String
+  slides: SlideRelateToManyForCreateInput
   summary: String
   publishDate: DateTime
-  source: String
   linkHelper: HelperFieldInput
   externalLink: String
   blurb: JSON
@@ -1819,6 +1842,7 @@ enum SemesterPartnerType {
   swbcdc
   teenempowerment
   boston
+  wabt
   zoone
 }
 
@@ -1957,6 +1981,10 @@ type Slide {
   slideshowSlidesCount(where: SlideshowWhereInput! = {}): Int
   initiativeSlides(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativeSlidesCount(where: InitiativeWhereInput! = {}): Int
+  newsSlides(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
+  newsSlidesCount(where: NewsItemWhereInput! = {}): Int
+  eventSlides(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
+  eventSlidesCount(where: EventWhereInput! = {}): Int
   image: CloudinaryImage_File
   helper: HelperFieldOutput
   altText: String
@@ -1976,6 +2004,8 @@ input SlideWhereInput {
   id: IDFilter
   slideshowSlides: SlideshowManyRelationFilter
   initiativeSlides: InitiativeManyRelationFilter
+  newsSlides: NewsItemManyRelationFilter
+  eventSlides: EventManyRelationFilter
   altText: StringFilter
   caption: StringFilter
   videoId: StringFilter
@@ -1999,6 +2029,8 @@ input SlideOrderByInput {
 input SlideUpdateInput {
   slideshowSlides: SlideshowRelateToManyForUpdateInput
   initiativeSlides: InitiativeRelateToManyForUpdateInput
+  newsSlides: NewsItemRelateToManyForUpdateInput
+  eventSlides: EventRelateToManyForUpdateInput
   image: Upload
   helper: HelperFieldInput
   altText: String
@@ -2022,6 +2054,8 @@ input SlideUpdateArgs {
 input SlideCreateInput {
   slideshowSlides: SlideshowRelateToManyForCreateInput
   initiativeSlides: InitiativeRelateToManyForCreateInput
+  newsSlides: NewsItemRelateToManyForCreateInput
+  eventSlides: EventRelateToManyForCreateInput
   image: Upload
   helper: HelperFieldInput
   altText: String
@@ -2242,8 +2276,6 @@ type StudioProject {
   semesterCount(where: SemesterWhereInput! = {}): Int
   undergrad(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
   undergradCount(where: UndergraduateWhereInput! = {}): Int
-  grad(where: GraduateWhereInput! = {}, orderBy: [GraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: GraduateWhereUniqueInput): [Graduate!]
-  gradCount(where: GraduateWhereInput! = {}): Int
   initiativesRelated(where: InitiativeWhereInput! = {}, orderBy: [InitiativeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: InitiativeWhereUniqueInput): [Initiative!]
   initiativesRelatedCount(where: InitiativeWhereInput! = {}): Int
   mdProject: Boolean
@@ -2278,6 +2310,7 @@ enum StudioProjectPartnerType {
   swbcdc
   teenempowerment
   boston
+  wabt
   zoone
 }
 
@@ -2318,7 +2351,6 @@ input StudioProjectWhereInput {
   order: IntNullableFilter
   semester: SemesterManyRelationFilter
   undergrad: UndergraduateManyRelationFilter
-  grad: GraduateManyRelationFilter
   initiativesRelated: InitiativeManyRelationFilter
   mdProject: BooleanFilter
   ogDescription: StringFilter
@@ -2395,7 +2427,6 @@ input StudioProjectUpdateInput {
   order: Int
   semester: SemesterRelateToManyForUpdateInput
   undergrad: UndergraduateRelateToManyForUpdateInput
-  grad: GraduateRelateToManyForUpdateInput
   initiativesRelated: InitiativeRelateToManyForUpdateInput
   mdProject: Boolean
   ogImage: Upload
@@ -2449,7 +2480,6 @@ input StudioProjectCreateInput {
   order: Int
   semester: SemesterRelateToManyForCreateInput
   undergrad: UndergraduateRelateToManyForCreateInput
-  grad: GraduateRelateToManyForCreateInput
   initiativesRelated: InitiativeRelateToManyForCreateInput
   mdProject: Boolean
   ogImage: Upload

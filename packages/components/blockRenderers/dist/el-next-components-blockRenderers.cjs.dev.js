@@ -5,13 +5,28 @@ Object.defineProperty(exports, '__esModule', { value: true });
 require('react');
 var Link = require('next/link');
 var image_dist_elNextComponentsImage = require('../../image/dist/el-next-components-image.cjs.dev.js');
-var video_dist_elNextComponentsVideo = require('../../video/dist/el-next-components-video.cjs.dev.js');
+var video_v2_dist_elNextComponentsVideo_v2 = require('../../video.v2/dist/el-next-components-video.v2.cjs.dev.js');
 var jsxRuntime = require('react/jsx-runtime');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
+require('../../dist/objectSpread2-62cbe323.cjs.dev.js');
+require('../../dist/slicedToArray-b8687d91.cjs.dev.js');
 require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
 require('next/image');
+require('react-dom');
 require('zustand');
+require('react-player/lazy');
+require('screenfull');
+require('@mui/material/Box');
+require('@mui/material/Slider');
+require('@mui/material');
+require('@mui/icons-material/ClosedCaption');
+require('@mui/icons-material/ClosedCaptionDisabled');
+require('@mui/icons-material/Fullscreen');
+require('@mui/icons-material/PlayCircleFilled');
+require('@mui/icons-material/PauseCircleFilled');
+require('@mui/icons-material/VolumeUp');
+require('@mui/icons-material/VolumeMute');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 
@@ -45,7 +60,7 @@ var BlockRenderers = function BlockRenderers(styles) {
         });
       },
       video: function video(props) {
-        return /*#__PURE__*/jsxRuntime.jsx(video_dist_elNextComponentsVideo.Video, {
+        return /*#__PURE__*/jsxRuntime.jsx(video_v2_dist_elNextComponentsVideo_v2.Video, {
           videoLabel: props.video.label,
           videoUrl: props.video.value,
           thumbUrl: props.video.thumb

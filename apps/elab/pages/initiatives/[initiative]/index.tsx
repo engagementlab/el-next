@@ -25,9 +25,14 @@ import { Video } from '@el-next/components/video';
 import { Video as VideoV2 } from '@el-next/components/video.v2';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { Blocks, Doc } from '@/components/Renderers';
+import {
+  Blocks,
+  Doc,
+  ResearchProjectItemRenderer,
+} from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
+import { useEffect } from 'react';
 
 type Initiative = {
   name?: string;
@@ -67,13 +72,7 @@ export default function InitIndex({
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const jumpClass =
-    Theming[initiative].border +
-    ' ' +
-    Theming[initiative].text +
-    ' ' +
-    Theming[initiative].fill;
-  (' group-hover:fill-purple');
+  const jumpClass = `${Theming[initiative].border} ${Theming[initiative].text} ${Theming[initiative].fill} ml-3`;
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
   const videoColor = {
     stroke: Theming[initiative].arrow,
@@ -206,31 +205,26 @@ export default function InitIndex({
                 )}
                 <div className="hidden lg:block w-3/4 lg:w-full mt-6">
                   <h2 className={subHeadClass}>Jump to:</h2>
-                  <div className="flex flex-row">
-                    {/* <Button
-                      label="Context"
-                      anchorId="context"
-                      className={jumpClass}
-                    /> */}
-                    {/* <div className="flex flex-row lg:w-3/4 xl:w-4/6"> */}
+                  <div className={`flex flex-row`}>
                     {page.projects && page.projects.length > 0 && (
                       <Button
                         label="Featured Projects"
                         anchorId="projects"
-                        className={jumpClass + ' ml-3'}
+                        className={jumpClass}
                       />
                     )}
                     <Button
                       label="Featured Studios"
                       anchorId="studios"
-                      className={jumpClass + ' ml-3'}
+                      className={jumpClass}
                     />
-                    {/* <Button
-                        label="Research"
+                    {/* {page.research && page.research.length > 0 && (
+                      <Button
+                        label="Related Research"
                         anchorId="research"
-                        className={jumpClass}
-                      /> */}
-                    {/* </div> */}
+                        className={jumpClass + ' ml-3'}
+                      />
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -240,6 +234,7 @@ export default function InitIndex({
                     <div id="video" className="min-h-[inherit] left">
                       {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
                         <VideoV2
+                          key={`video-player-${page.vimeoFile}`}
                           isSlide={true}
                           videoLabel={`${
                             InitiativeFilterGroups.find(
@@ -424,34 +419,16 @@ export default function InitIndex({
                 <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
                   {page.research.map((item: ResearchProject, i: number) => {
                     return (
-                      <Link
-                        key={`research-${item.key}`}
-                        href={`research/${item.key}`}
-                        className="group"
-                      >
-                        {item.thumbnail ? (
-                          <Image
-                            id={`thumb-${i}`}
-                            alt={item.thumbAltText}
-                            transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                            imgId={item.thumbnail.publicId}
-                            width={460}
-                            maxWidthDisable={true}
-                            className="w-full"
-                          />
-                        ) : (
-                          <ImagePlaceholder
-                            imageLabel="Project"
-                            width={200}
-                            height={200}
-                          />
-                        )}
-
-                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm">{item.shortDescription}</p>
-                      </Link>
+                      <ResearchProjectItemRenderer
+                        key={`research-project-${item.key}`}
+                        item={item}
+                        pin={false}
+                        showYear={false}
+                        showBorder={
+                          item.initiativesRelated &&
+                          item.initiativesRelated.length > 0
+                        }
+                      />
                     );
                   })}
                 </div>
@@ -512,6 +489,7 @@ export default function InitIndex({
     </Layout>
   );
 }
+
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   return {
     paths: ['/initiatives/tngv', '/initiatives/tnej'],

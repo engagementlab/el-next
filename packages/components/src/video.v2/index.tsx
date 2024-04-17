@@ -43,14 +43,22 @@ interface VideoProps {
   noUi?: boolean;
   play?: boolean;
 }
+
 interface VideoState {
+  buffer: boolean;
+  cachedVolume: number;
+  hideCaptions: boolean;
+  isFullscreen: boolean;
+  muted: boolean;
+  played: number;
+  playing: boolean;
+  seeking: boolean;
   videoOpen: boolean;
   videoHover: boolean;
-  // volumeHover: boolean;
-  toggleOpen: (open: boolean) => void;
-  toggleHover: (hover: boolean) => void;
-  // toggleVolumeHover: (hover: boolean) => void;
+  volume: number;
+  setVideoState: (state: VideoState) => void;
 }
+
 type ControlsProps = {
   duration: number;
   muted: boolean;
@@ -184,6 +192,20 @@ const Controls = (props: ControlsProps) => {
   );
 };
 
+const initialState = {
+  playing: true,
+  muted: false,
+  volume: 0.5,
+  cachedVolume: 0.5,
+  played: 0,
+  seeking: false,
+  buffer: true,
+  hideCaptions: true,
+  isFullscreen: false,
+  videoOpen: false,
+  videoHover: false,
+};
+
 export const Video = ({
   thumbUrl,
   videoFile,
@@ -196,35 +218,27 @@ export const Video = ({
   const [playing, setPlaying] = useState(true);
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
+
   // Create store with Zustand
   const [useStore] = useState(() =>
     create<VideoState>((set) => ({
-      videoOpen: false,
-      videoHover: false,
-      // volumeHover: false,
-      toggleOpen: (open: boolean) => set({ videoOpen: open }),
-      toggleHover: (hover: boolean) => set({ videoHover: hover }),
-      // toggleVolumeHover: (hover: boolean) => set({volumeHover: hover }),
+      ...initialState,
+      setVideoState: (state: VideoState) => set({ ...state }),
     }))
   );
-
-  const toggleOpen = useStore((state) => state.toggleOpen);
-  const { videoOpen, videoHover, toggleHover } = useStore((state) => state);
+  const buttonSize = isSlide ? 75 : 150;
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>;
   const playerRef = useRef() as MutableRefObject<ReactPlayer>;
-  const buttonSize = isSlide ? 75 : 150;
-  const [videoState, setVideoState] = useState({
-    playing: true,
-    muted: false,
-    volume: 0.5,
-    cachedVolume: 0.5,
-    played: 0,
-    seeking: false,
-    buffer: true,
-    hideCaptions: true,
-    isFullscreen: false,
-  });
-  const { muted, volume, hideCaptions, isFullscreen } = videoState;
+  const videoState = useStore();
+  const {
+    muted,
+    volume,
+    hideCaptions,
+    isFullscreen,
+    videoOpen,
+    videoHover,
+    setVideoState,
+  } = useStore();
 
   const volumeChangeHandler = (e, value) => {
     const newVolume = parseFloat(value) / 100;
@@ -247,7 +261,6 @@ export const Video = ({
   };
 
   const muteHandler = () => {
-    // Mutes the video player
     setVideoState({
       ...videoState,
       muted: !videoState.muted,
@@ -263,8 +276,6 @@ export const Video = ({
       ...videoState,
       isFullscreen: !isFullscreen,
     });
-
-    console.log('onClickFullscreen', isFullscreen);
   };
 
   const toggleCaptions = () => {
@@ -274,6 +285,20 @@ export const Video = ({
     setVideoState({
       ...videoState,
       hideCaptions: !hideCaptions,
+    });
+  };
+
+  const toggleOpen = (open: boolean) => {
+    setVideoState({
+      ...videoState,
+      videoOpen: open,
+    });
+  };
+
+  const toggleHover = (hover: boolean) => {
+    setVideoState({
+      ...videoState,
+      videoHover: hover,
     });
   };
 
@@ -289,10 +314,19 @@ export const Video = ({
             ...videoState,
             isFullscreen: !(document.fullscreenElement === null),
           });
-          console.log('video state changed', document.fullscreenElement);
         });
     }
   }, [videoOpen]);
+
+  useEffect(() => {
+    // debugger;
+    return () => {
+      setVideoState({
+        ...videoState,
+        ...initialState,
+      });
+    };
+  }, []);
 
   return (
     <div className={classStr}>

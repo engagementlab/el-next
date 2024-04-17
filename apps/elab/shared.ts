@@ -18,21 +18,29 @@ export const ProjectsSort = (projects: Project[]) => {
       : b.semester[0].key.match(/\d{4}/gm);
 
     if (aYr && bYr) {
-      // Compare seasons only for studio projects
-      if (aYr[0] === bYr[0] && !a.startYear && !b.startYear) {
-        // Get season name
-        const aSeason = a.semester[0].name.substring(
-          0,
-          a.semester[0].name.indexOf('-') - 1
-        );
-        const bSeason = b.semester[0].name.substring(
-          0,
-          b.semester[0].name.indexOf('-') - 1
-        );
-        // If years AND season match maintain alphabetic order by name
-        if (aSeason === bSeason) return a.name.localeCompare(b.name);
-        // otherwise, if just years match, use fall vs spring
-        return a.semester[0].name.includes('Fall') ? -1 : 1;
+      const strAYr = parseInt(aYr[0].toString());
+      const strBYr = parseInt(bYr[0].toString());
+      if (strAYr === strBYr) {
+        // Compare seasons only for studio projects
+        if (!a.startYear && !b.startYear) {
+          // Get season name
+          const aSeason = a.semester[0].name.substring(
+            0,
+            a.semester[0].name.indexOf('-') - 1
+          );
+          const bSeason = b.semester[0].name.substring(
+            0,
+            b.semester[0].name.indexOf('-') - 1
+          );
+          // If years AND season match maintain alphabetic order by name
+          if (aSeason === bSeason) return a.name.localeCompare(b.name);
+          // otherwise, if just years match, use fall vs spring
+          return a.semester[0].name.includes('Fall') ? -1 : 1;
+        }
+        console.log(a.name, a.startYear, b.name, b.startYear, aYr[0], bYr[0]);
+
+        // if (a.startYear && !b.startYear)
+        return -1;
       }
 
       // Just use year

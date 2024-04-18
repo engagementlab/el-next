@@ -215,7 +215,7 @@ export default function StudioProjects({
                             key={i}
                             index={i}
                             item={item as unknown as StudioUnion}
-                            showBorder={true}
+                            showBorder={false}
                           />
                         );
                       else
@@ -223,7 +223,7 @@ export default function StudioProjects({
                           <ResearchProjectItemRenderer
                             item={item as unknown as ResearchProject}
                             showYear={true}
-                            showBorder={true}
+                            showBorder={false}
                           />
                         );
                     })}

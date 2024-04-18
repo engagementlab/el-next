@@ -13,6 +13,7 @@ import {
   InitiativeFilterGroups,
   InitiativeKeyMap,
   Project,
+  ResearchProject,
   StudioProject,
   StudioUnion,
   Theme,
@@ -23,14 +24,18 @@ import Layout from '../../../../../components/Layout';
 
 import { useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { StudioGenericItemRenderer } from '@/components/Renderers';
+import {
+  ResearchProjectItemRenderer,
+  StudioGenericItemRenderer,
+  StudiosGridRenderer,
+} from '@/components/Renderers';
 import { ClassFilterButton, ProjectsSort } from '@/shared';
 
 export default function StudioProjects({
   filtersData,
 
   initiative,
-  studioProjects,
+  projects,
   initiativeBlurbs,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -56,7 +61,7 @@ export default function StudioProjects({
     [searchParams]
   );
 
-  const FilteredItems = (props: { items: StudioProject[] | null }) => {
+  const FilteredItems = (props: { items: Project[] | null }) => {
     const haveGroupOpen = (key: string) => {
       return key === initiative;
     };
@@ -162,8 +167,8 @@ export default function StudioProjects({
       return <div>{menu}</div>;
     };
 
-    const filteredProjects = studioProjects
-      ? studioProjects.filter((item) => {
+    const filteredProjects = projects
+      ? projects.filter((item) => {
           return !filtersQuery
             ? true
             : _.some(
@@ -200,20 +205,31 @@ export default function StudioProjects({
                   Sorry, no matches found. Please try other filters.
                 </p>
               )}
-              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-3 lg:grid-cols-2 lg:gap-2 lg:my-11">
-                {filteredProjects && filteredProjects?.length > 0 && (
+              {filteredProjects && filteredProjects?.length > 0 && (
+                <StudiosGridRenderer>
                   <AnimatePresence>
-                    {filteredProjects.map((item, i: number) => (
-                      <StudioGenericItemRenderer
-                        key={i}
-                        index={i}
-                        item={item as unknown as StudioUnion}
-                        showBorder={false}
-                      />
-                    ))}
+                    {filteredProjects.map((item, i: number) => {
+                      if ((item as Project).initiative)
+                        return (
+                          <StudioGenericItemRenderer
+                            key={i}
+                            index={i}
+                            item={item as unknown as StudioUnion}
+                            showBorder={true}
+                          />
+                        );
+                      else
+                        return (
+                          <ResearchProjectItemRenderer
+                            item={item as unknown as ResearchProject}
+                            showYear={true}
+                            showBorder={true}
+                          />
+                        );
+                    })}
                   </AnimatePresence>
-                )}
-              </div>
+                </StudiosGridRenderer>
+              )}
             </div>
           </div>
         </div>
@@ -221,7 +237,7 @@ export default function StudioProjects({
     );
   };
 
-  return <FilteredItems items={studioProjects} />;
+  return <FilteredItems items={projects} />;
 }
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
@@ -239,6 +255,9 @@ export async function getStaticProps({
 }: {
   params: { initiative: string; filters?: string[] };
 }) {
+  let objectName = 'Gun Violence';
+  if (params.initiative === 'tnej') objectName = 'Environmental Justice';
+
   const filtersData = await Query(
     'filters',
     `filters {
@@ -251,7 +270,7 @@ export async function getStaticProps({
     return {
       props: {
         error: filtersData.error,
-        studioProjects: null,
+        projects: null,
         filtersData: null,
         initiative: 'tngv',
       },
@@ -283,6 +302,25 @@ export async function getStaticProps({
 		}`
   );
 
+  const initiativeResearch = await Query(
+    'initiative',
+    `initiative(where: { name: "${objectName}" }) {
+      research {
+        name
+        key
+        pin
+        ongoing
+        startYear
+        endYear
+        shortDescription 
+        thumbnail { 
+          publicId
+        }
+        thumbAltText
+      }
+		}`
+  );
+
   const initiativeBlurbs = await Query(
     'initiativesLanding',
     `initiativesLanding(where: { name: "Miscellaneous Blurbs" }) {
@@ -295,7 +333,7 @@ export async function getStaticProps({
     return {
       props: {
         error: studioProjects.error,
-        studioProjects: null,
+        projects: null,
         initiativeBlurbs: null,
         filtersData: null,
         initiative: params.initiative,
@@ -307,10 +345,19 @@ export async function getStaticProps({
     (item: StudioProject) =>
       item.initiative === InitiativeKeyMap[params.initiative]
   );
+
+  const researchProjects: ResearchProject[] =
+    initiativeResearch.research as ResearchProject[];
+  // .forEach((project) => {
+  //     researchProjects.push(project);
+  //   });
   return {
     props: {
       filtersData,
-      studioProjects: ProjectsSort(items as Project[]),
+      projects: ProjectsSort([
+        ...(items as Project[]),
+        ...(researchProjects as Project[]),
+      ]),
       initiativeBlurbs,
       initiative: params.initiative,
     },

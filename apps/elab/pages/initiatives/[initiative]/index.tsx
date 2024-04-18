@@ -584,6 +584,7 @@ export async function getStaticProps({
                 publicId
             }
             thumbAltText
+            pin
         }
         associatedPeople {
             name

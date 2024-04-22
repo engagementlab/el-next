@@ -1800,6 +1800,7 @@ type Semester {
   createdDate: DateTime
   status: SemesterStatusType
   studio: Studio
+  initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
   courseNumber: String
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
@@ -1824,6 +1825,11 @@ enum SemesterStatusType {
   disabled
   testing
   live
+}
+
+enum SemesterInitiativeType {
+  gunviolence
+  climate
 }
 
 enum SemesterTypeType {
@@ -1912,6 +1918,7 @@ input SemesterUpdateInput {
   createdDate: DateTime
   status: SemesterStatusType
   studio: StudioRelateToOneForUpdateInput
+  initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
   courseNumber: String
   instructors: PersonRelateToManyForUpdateInput
@@ -1950,6 +1957,7 @@ input SemesterCreateInput {
   createdDate: DateTime
   status: SemesterStatusType
   studio: StudioRelateToOneForCreateInput
+  initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
   courseNumber: String
   instructors: PersonRelateToManyForCreateInput

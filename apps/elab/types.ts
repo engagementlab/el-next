@@ -289,6 +289,7 @@ export type Semester = {
   key: string;
   name: string;
   type: string;
+  initiatives?: Initiative[];
   courseNumber: string;
   description: string;
   partners: string[];

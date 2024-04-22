@@ -50,7 +50,7 @@ export default function Studio({
 
   let sortedSemesters = SemestersSort(item.semesters);
 
-  const selectedSemester = item?.semesters.find(
+  const selectedSemester = item.semesters.find(
     (semester) => semester.key === currentSemester
   );
   const [semestersNavOpen, toggleMenuHover] = useCycle(false, true);
@@ -70,10 +70,18 @@ export default function Studio({
 
   if (item) {
     let theme = Theming['none'];
-    if (item.initiatives && item.initiatives.length === 1) {
-      if (item.initiatives[0] === 'gunviolence') theme = Theming['tngv'];
-      else if (item.initiatives[0] === 'climate') theme = Theming['tnej'];
+    // Decide theme based on the selected semester
+    if (
+      selectedSemester &&
+      selectedSemester.initiatives &&
+      selectedSemester.initiatives.length > 0
+    ) {
+      if (selectedSemester.initiatives[0] === 'gunviolence')
+        theme = Theming['tngv'];
+      else if (selectedSemester.initiatives[0] === 'climate')
+        theme = Theming['tnej'];
     }
+
     const rendererOverrides = {
       heading: (level: number, children: ReactNode, textAlign: any) => {
         const customRenderers = {
@@ -184,8 +192,8 @@ export default function Studio({
                   'absolute cursor-pointer font-semibold uppercase block border-[1px] ml-1 mt-1 p-2 w-full h-full text-center transition-colors group-hover:text-white ';
                 let initiativeClass = 'group-hover:bg-yellow';
 
-                if (item.initiatives && item.initiatives[0]) {
-                  if (item.initiatives[0] === 'gunviolence')
+                if (se.initiatives && se.initiatives[0]) {
+                  if (se.initiatives[0] === 'gunviolence')
                     initiativeClass = `group-hover:bg-purple`;
                   else initiativeClass = `group-hover:bg-leaf`;
                 }
@@ -231,6 +239,7 @@ export default function Studio({
                         <br />,
                         se.name.split(' ')[1],
                       ]}
+                      {/* {se.initiatives} */}
                     </Link>
                   </button>
                 );
@@ -521,6 +530,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
       key
       semesters(${DefaultWhereCondition()}) {
         key
+        initiatives
       }
     }`
   );
@@ -562,6 +572,7 @@ export async function getStaticProps({
           key
           name
           type
+          initiatives
           courseNumber
           description
           partners

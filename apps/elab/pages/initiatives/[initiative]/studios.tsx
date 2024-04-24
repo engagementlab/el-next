@@ -186,6 +186,7 @@ export async function getStaticProps({
       semesters {
         key
         name
+        initiatives
       }
 		}`
   );

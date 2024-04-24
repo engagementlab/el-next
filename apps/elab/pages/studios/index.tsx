@@ -194,8 +194,6 @@ export default function Studios({
       : [];
 
     const count = filteredItems.length;
-    // Decide plural of item count
-    const showing = `Showing ${count}`;
 
     return (
       <Layout
@@ -269,6 +267,7 @@ export async function getStaticProps() {
       semesters {
         key
         name
+        initiatives
       }
 		}`
   );

@@ -383,7 +383,7 @@ const StudioGenericItemRenderer = (props: {
         </div>
         {props.showBorder && (
           <hr
-            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+            className={`block h-4 border-none transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] bg-gradient-to-r from-leaf to-purple`}
           />
         )}
         <h3 className="text-bluegreen text-xl font-semibold mt-4 hover:text-green-blue group-hover:text-green-blue">
@@ -392,14 +392,23 @@ const StudioGenericItemRenderer = (props: {
 
         {props.item.semesters && (
           <div className="flex flex-wrap uppercase text-white text-xs gap-2">
-            {SemestersSort(props.item.semesters).map((semester, i) => (
-              <Link
-                href={`/studios/${props.item.key}/${semester.key}`}
-                className={`inline transition-all ${CustomEase} p-2 leading-none rounded-[5px] ${bgColor} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}
-              >
-                {semester.name.substring(0, semester.name.indexOf('-') - 1)}
-              </Link>
-            ))}
+            {SemestersSort(props.item.semesters).map((semester, i) => {
+              let initiativeClass = 'bg-yellow';
+
+              if (semester.initiatives && semester.initiatives[0]) {
+                if (semester.initiatives[0] === 'gunviolence')
+                  initiativeClass = `bg-purple`;
+                else initiativeClass = `bg-leaf`;
+              }
+              return (
+                <Link
+                  href={`/studios/${props.item.key}/${semester.key}`}
+                  className={`inline transition-all ${CustomEase} p-2 leading-none rounded-[5px] ${initiativeClass} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}
+                >
+                  {semester.name.substring(0, semester.name.indexOf('-') - 1)}
+                </Link>
+              );
+            })}
           </div>
         )}
         {props.item.semester && (
@@ -440,7 +449,6 @@ const ResearchProjectItemRenderer = (props: {
   return (
     <Link href={`/research/projects/${props.item.key}`} className="group">
       <div className="relative">
-        {' '}
         {props.item.pin && (
           <div className="absolute right-4 top-4 p-2 bg-white rounded-full group">
             <>

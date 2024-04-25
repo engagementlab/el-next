@@ -5,7 +5,13 @@ import { useRouter } from 'next/router';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import { Button, Image, Query } from '@el-next/components';
 
-import { AnimatePresence, motion, useCycle } from 'framer-motion';
+import {
+  AnimatePresence,
+  Variants,
+  cubicBezier,
+  motion,
+  useCycle,
+} from 'framer-motion';
 
 import Layout from '../../../components/Layout';
 import {
@@ -38,26 +44,35 @@ export default function Studio({
   currentSemester,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const router = useRouter();
-
   if (!item) return;
-
-  useEffect(() => {
-    // If there is only one semester, just redirect there immediately
-    if (!currentSemester && item?.semesters.length === 1)
-      router.replace(`/studios/${item.key}/${item.semesters[0].key}`);
-  });
-
   let sortedSemesters = SemestersSort(item.semesters);
 
+  const router = useRouter();
   const selectedSemester = item?.semesters.find(
     (semester) => semester.key === currentSemester
   );
   const [semestersNavOpen, toggleMenuHover] = useCycle(false, true);
-
   const semesterInstructors = selectedSemester?.instructors
     .map((i) => i.name)
     .join(', ');
+  const dropdownVariants: Variants = {
+    hover: {
+      height: '80px',
+      transition: {
+        ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+        duration: 0.3,
+      },
+    },
+  };
+  const arrowVariants: Variants = {
+    hover: {
+      scale: 1.5,
+      transition: {
+        ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+        duration: 0.3,
+      },
+    },
+  };
 
   const GetLabel = (selectedSemester: Semester) => {
     if (selectedSemester.type === 'upcoming')
@@ -67,6 +82,12 @@ export default function Studio({
     if (selectedSemester.type === null)
       return <span>{selectedSemester.name}</span>;
   };
+
+  useEffect(() => {
+    // If there is only one semester, just redirect there immediately
+    if (!currentSemester && item?.semesters.length === 1)
+      router.replace(`/studios/${item.key}/${item.semesters[0].key}`);
+  });
 
   if (item) {
     let theme = Theming['none'];
@@ -100,6 +121,7 @@ export default function Studio({
             <h1 className="font-extrabold text-4xl">{item.name}</h1>
             <p className="my-6">{item.blurb}</p>
 
+            {/* SMALL screens */}
             <div className="flex items-center uppercase mb-2">
               <svg height="36" viewBox="0 -960 960 960" width="36">
                 <path d="m627-287 45-45-159-160v-201h-60v225l174 181ZM480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-82 31.5-155t86-127.5Q252-817 325-848.5T480-880q82 0 155 31.5t127.5 86Q817-708 848.5-635T880-480q0 82-31.5 155t-86 127.5Q708-143 635-111.5T480-80Zm0-400Zm0 340q140 0 240-100t100-240q0-140-100-240T480-820q-140 0-240 100T140-480q0 140 100 240t240 100Z" />
@@ -107,49 +129,63 @@ export default function Studio({
               <p className="ml-2 mt-0">CHOOSE A SEMESTER TO EXPLORE:</p>
             </div>
             <div
-              className={`relative z-10 border-l-[1px] border-r-[1px] border-t-[1px] w-full h-[67px] xl:hidden ${
+              className={`relative z-10 bg-white border-l-[1px] border-r-[1px] border-t-[1px] w-full h-[67px] xl:hidden ${
                 !semestersNavOpen && 'border-b-[1px]'
               } ${theme.border}`}
             >
-              <button
-                className={`absolute z-10 mt-2 ml-2 mr-2 pb-2 pr-2 w-full uppercase font-extrabold border-l-[1px] border-r-[1px] border-t-[1px] ${
+              <motion.button
+                className={`absolute group z-10 mt-2 ml-2 mr-2 pb-2 pr-2 w-full uppercase font-extrabold border-l-[1px] border-r-[1px] border-t-[1px] ${
                   !semestersNavOpen && 'border-b-[1px]'
                 } ${theme.border} ${theme.text}`}
                 onClick={() => {
                   toggleMenuHover();
                 }}
+                variants={dropdownVariants}
+                whileTap={!semestersNavOpen ? 'hover' : ''}
+                whileHover={!semestersNavOpen ? 'hover' : ''}
               >
                 <div className="flex items-center justify-between p-2 w-full">
                   <span>
                     {selectedSemester ? GetLabel(selectedSemester) : 'Select'}
                   </span>
-                  <svg
-                    className={`transition-transform ${CustomEase} duration-300 ${
+                  <motion.svg
+                    className={`transition-transform ${CustomEase} duration-100 group-target:scale-150 ${
                       semestersNavOpen && 'rotate-180'
                     } ${theme.fill}`}
                     viewBox="0 -960 960 960"
                     width="40"
                     height="40"
+                    variants={arrowVariants}
                   >
                     <path d="M 500 -280.021 L 280 -559 L 720 -559 L 500 -280.021 Z"></path>
-                  </svg>
+                  </motion.svg>
                 </div>
-              </button>
+              </motion.button>
             </div>
 
             <AnimatePresence>
               {semestersNavOpen && (
                 <motion.div
-                  className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full -top-1/2 opacity-0 ${theme.border}`}
+                  className={`relative border-l-[1px] border-r-[1px] border-b-[1px] w-full opacity-0 ${theme.border}`}
+                  initial={{
+                    opacity: 0,
+                    top: -50,
+                  }}
                   animate={{
                     opacity: 1,
                     top: 0,
-                    transition: { ease: 'easeOut', duration: 0.3 },
+                    transition: {
+                      ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                      duration: 0.3,
+                    },
                   }}
                   exit={{
                     opacity: 0,
-                    top: -40,
-                    transition: { duration: 0.3 },
+                    top: -65,
+                    transition: {
+                      ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                      duration: 0.3,
+                    },
                   }}
                 >
                   <ul
@@ -163,7 +199,12 @@ export default function Studio({
                               se.type ? theme.heading : theme.text
                             }`}
                           >
-                            <Link href={`/studios/${item.key}/${se.key}`}>
+                            <Link
+                              href={`/studios/${item.key}/${se.key}`}
+                              onClick={() => {
+                                toggleMenuHover();
+                              }}
+                            >
                               {se.type === 'upcoming' && 'Upcoming Semester'}
                               {se.type === 'current' && 'Current Semester'}
                               {se.type === null && se.name.split(' - ')[0]}

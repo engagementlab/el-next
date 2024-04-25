@@ -440,7 +440,6 @@ const ResearchProjectItemRenderer = (props: {
   return (
     <Link href={`/research/projects/${props.item.key}`} className="group">
       <div className="relative">
-        {' '}
         {props.item.pin && (
           <div className="absolute right-4 top-4 p-2 bg-white rounded-full group">
             <>

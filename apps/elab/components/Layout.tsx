@@ -25,7 +25,7 @@ type Props = {
 
 const appName = 'Engagement Lab';
 const defaultDescription =
-  'Advancing peace, equity, and justice through collaborative design and storytelling.';
+  'Advancing peace, equity, and justice through collaborative design, storytelling, and research.';
 const DefaultOGImageId = 'elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8';
 
 const Layout = ({

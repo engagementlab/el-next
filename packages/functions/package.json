@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@analytics/google-analytics": "^1.0.5",
+    "@azure/identity": "^4.1.0",
+    "@azure/storage-blob": "^12.17.0",
     "@mailchimp/mailchimp_marketing": "^3.0.74",
     "@octokit/request": "^5.6.3",
     "@slack/events-api": "^3.0.1",
@@ -31,5 +33,8 @@
     "mongoose": "7.0.2",
     "pg": "^8.8.0",
     "qs": "^6.11.1"
+  },
+  "resolutions": {
+    "@types/react": "^18.0.9"
   }
 }

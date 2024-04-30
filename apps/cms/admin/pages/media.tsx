@@ -9,6 +9,7 @@ import _ from 'lodash';
 
 import {
   Alert,
+  Backdrop,
   Box,
   Button,
   Chip,
@@ -34,12 +35,14 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
   Switch,
   TextField,
 } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
 
-import AddIcon from '@mui/icons-material/Add';
+import LoadingButton from '@mui/lab/LoadingButton';
 import DoneIcon from '@mui/icons-material/Done';
 import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -48,8 +51,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import QueryBuilderRoundedIcon from '@mui/icons-material/QueryBuilderRounded';
+import ImageIcon from '@mui/icons-material/Image';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 import { Image } from '@el-next/components';
+
 type ImageData = {
   public_id: string;
   context?: { custom?: { [key: string]: string } };
@@ -102,7 +108,8 @@ type NavState = {
   selectedImg: ImageData;
   pgIndex: number;
   waiting: boolean;
-  uploadOpen: boolean;
+  imageUploadOpen: boolean;
+  fileUploadOpen: boolean;
 
   toggleConfirm: () => void;
   toggleWaiting: () => void;
@@ -115,7 +122,8 @@ type NavState = {
   setAltTextState: (state: string) => void;
   setIndex: (imgIndex: number) => void;
   setErrorOpen: (open: boolean) => void;
-  setUploadOpen: (open: boolean) => void;
+  setImageUploadOpen: (open: boolean) => void;
+  setFileUploadOpen: (open: boolean) => void;
   setEditOpen: (open: boolean) => void;
 };
 export default function Media() {
@@ -128,14 +136,8 @@ export default function Media() {
   const endpointPrefix =
     window.location.protocol === 'https:' ? '/api' : 'http://localhost:8000';
 
-  const [myFiles, setMyFiles] = useState<File[]>([]);
-
-  const onDrop = useCallback(
-    (acceptedFiles: any) => {
-      setMyFiles([...myFiles, ...acceptedFiles]);
-    },
-    [myFiles]
-  );
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -143,17 +145,43 @@ export default function Media() {
       'image/png': [],
     },
     maxFiles: 1,
-    onDrop,
+    onDrop: useCallback(
+      (acceptedFiles: any) => {
+        setImageFiles([...imageFiles, ...acceptedFiles]);
+      },
+      [imageFiles]
+    ),
+  });
+  const otherFileDropzone = useDropzone({
+    maxFiles: 1,
+    onDrop: useCallback(
+      (acceptedFiles: any) => {
+        setFiles([...files, ...acceptedFiles]);
+      },
+      [files]
+    ),
   });
 
-  const removeFile = (file: File) => () => {
-    const newFiles = [...myFiles];
+  const removeImageFile = (file: File) => () => {
+    const newFiles = [...imageFiles];
     newFiles.splice(newFiles.indexOf(file), 1);
-    setMyFiles(newFiles);
+    setImageFiles(newFiles);
+  };
+  const removeFile = (file: File) => () => {
+    const newFiles = [...files];
+    newFiles.splice(newFiles.indexOf(file), 1);
+    setFiles(newFiles);
   };
 
-  // const { acceptedFiles, fileRejections } = useDropzone({});
-  const acceptedFileItems = myFiles.map((file) => (
+  const acceptedImages = imageFiles.map((file) => (
+    <li key={file.name}>
+      {file.name}
+      <IconButton onClick={removeImageFile(file)}>
+        <DoNotDisturbOnIcon fontSize="small" />
+      </IconButton>
+    </li>
+  ));
+  const acceptedFiles = files.map((file) => (
     <li key={file.name}>
       {file.name}
       <IconButton onClick={removeFile(file)}>
@@ -161,6 +189,7 @@ export default function Media() {
       </IconButton>
     </li>
   ));
+
   // Create store with Zustand
   const [useStore] = useState(() =>
     create<NavState>((set) => ({
@@ -174,7 +203,8 @@ export default function Media() {
       altText: undefined,
       altTextState: '',
       usageData: [],
-      uploadOpen: false,
+      imageUploadOpen: false,
+      fileUploadOpen: false,
       editOpen: false,
       waiting: true,
       pgIndex: 0,
@@ -268,7 +298,7 @@ export default function Media() {
         }),
       setEditOpen: (open: boolean) => {
         if (!open) {
-          setMyFiles([]);
+          setImageFiles([]);
         }
 
         set((state) => {
@@ -289,13 +319,21 @@ export default function Media() {
             errorOpen: open,
           };
         }),
-      setUploadOpen: (open: boolean) => {
-        if (!open) setMyFiles([]);
-
+      setImageUploadOpen: (open: boolean) => {
+        if (!open) setImageFiles([]);
         set((state) => {
           return {
             ...state,
-            uploadOpen: open,
+            imageUploadOpen: open,
+          };
+        });
+      },
+      setFileUploadOpen: (open: boolean) => {
+        if (!open) setFiles([]);
+        set((state) => {
+          return {
+            ...state,
+            fileUploadOpen: open,
           };
         });
       },
@@ -316,7 +354,8 @@ export default function Media() {
     data,
     waiting,
     pgIndex,
-    uploadOpen,
+    imageUploadOpen,
+    fileUploadOpen,
 
     toggleConfirm,
     toggleWaiting,
@@ -330,9 +369,13 @@ export default function Media() {
     setAltText,
     setAltTextState,
     setIndex,
-    setUploadOpen,
+    setImageUploadOpen,
+    setFileUploadOpen,
   } = useStore((state) => state);
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const filteredData = data.filter(
     // If selected filters empty, show all...
     (item) =>
@@ -341,11 +384,20 @@ export default function Media() {
       selectedFolders.indexOf(item.folder) > -1
   );
 
+  const actions = [
+    { icon: <ImageIcon />, name: 'Image', function: setImageUploadOpen },
+    {
+      icon: <InsertDriveFileIcon />,
+      name: 'Other',
+      function: setFileUploadOpen,
+    },
+  ];
   const beginIndex = pgIndex * 30;
   const endIndex = beginIndex + 30;
   const dataLength = Math.floor(filteredData.length / 30) + 1;
+
+  // IMAGE MANAGEMENT
   const refreshMedia = () => {
-    // toggleWaiting();
     axios
       .get(
         `${endpointPrefix}/media/get/${
@@ -386,7 +438,7 @@ export default function Media() {
             if (e.loaded !== e.total) return;
 
             setTimeout(() => {
-              setUploadOpen(false);
+              setImageUploadOpen(false);
               setEditOpen(false);
               refreshMedia();
             }, 2500);
@@ -402,7 +454,7 @@ export default function Media() {
           setErrorOpen(true);
         }
       };
-      reader.readAsDataURL(myFiles[0]);
+      reader.readAsDataURL(imageFiles[0]);
     } catch (err) {
       setErrorOpen(true);
     }
@@ -456,16 +508,98 @@ export default function Media() {
     }
   };
 
+  // FILE MANAGEMENT
+  const uploadFile = async () => {
+    try {
+      const reader = new FileReader();
+      const makeRequest = async (
+        file: string | ArrayBuffer | null = null,
+        fileName: string
+      ) => {
+        try {
+          const params = new URLSearchParams({
+            file: file as string,
+            filename: fileName,
+          });
+          const requestResult = await axios.post(
+            `${endpointPrefix}/file/upload`,
+            {
+              file: file as string,
+              filename: fileName,
+            }
+          );
+
+          // Request was accepted
+          if (requestResult.status === 202) {
+            const getUpdate = () => {
+              setTimeout(async () => {
+                const requestUpdate = await axios.get(
+                  requestResult.data.statusQueryGetUri
+                );
+
+                if (requestUpdate.data.runtimeStatus === 'Pending') {
+                  // Try to get update in a bit
+                  getUpdate();
+                  return;
+                } else if (requestUpdate.data.runtimeStatus === 'Completed') {
+                  // setUserToken(requestUpdate.data.customStatus);
+                  // setStatus('success');
+
+                  // if (edit) setEditStatus('success');
+
+                  return;
+                }
+                // else if (requestUpdate.data.runtimeStatus === 'Failed') {
+                //   setStatus('error');
+                //   if (edit) setEditStatus('error');
+                //   return;
+                // }
+              }, 3000);
+            };
+
+            // Get durable function status after a bit of time
+            getUpdate();
+          }
+        } catch (err) {
+          // setSubmitted(false);
+          // setStatus('error');
+          // if (edit) setEditStatus('error');
+        }
+      };
+
+      reader.onabort = () => {
+        // setStatus('error');
+        // if (edit) setEditStatus('error');
+      };
+      reader.onerror = () => {
+        // setStatus('error');
+        // if (edit) setEditStatus('error');
+      };
+      reader.onload = async () => {
+        makeRequest(reader.result, files[0].name);
+      };
+
+      if (acceptedFiles[0]) reader.readAsDataURL(files[0]);
+    } catch (err) {
+      // console.error(err);
+      // setStatus('error');
+      // if (edit) setEditStatus('error');
+      // setSubmitted(false);
+    }
+  };
+
   useEffect(() => {
     if (data && data.length > 1) return;
     refreshMedia();
   });
+
   return (
     <PageContainer header="Media Library">
+      {/* IMAGE UPLOAD */}
       <Modal
-        open={uploadOpen}
+        open={imageUploadOpen}
         onClose={() => {
-          setUploadOpen(false);
+          setImageUploadOpen(false);
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -524,10 +658,10 @@ export default function Media() {
               <p>Drag and drop an image here, or click to select one.</p>
               <em>(Only *.jpeg and *.png images will be accepted)</em>
             </div>
-            {acceptedFileItems.length > 0 && (
+            {acceptedImages.length > 0 && (
               <aside>
                 <h4>Accepted files</h4>
-                <ul>{acceptedFileItems}</ul>
+                <ul>{acceptedImages}</ul>
                 <br />
 
                 <LoadingButton
@@ -544,6 +678,49 @@ export default function Media() {
                 </LoadingButton>
               </aside>
             )}{' '}
+          </section>
+        </Box>
+      </Modal>
+      {/* OTHER FILE UPLOAD */}
+      <Modal
+        open={fileUploadOpen}
+        onClose={() => {
+          setFileUploadOpen(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styles.modal}>
+          <section className="container">
+            <div
+              {...otherFileDropzone.getRootProps({
+                className: 'dropzone',
+                style: { backgroundColor: '#FFF1DB', padding: '1rem' },
+              })}
+            >
+              <input {...otherFileDropzone.getInputProps()} />
+              <p>Drag and drop a file here, or click to select one.</p>
+            </div>
+            {acceptedFiles.length > 0 && (
+              <aside>
+                <h4>Accepted file</h4>
+                <ul>{acceptedFiles}</ul>
+                <br />
+
+                <LoadingButton
+                  loading={waiting}
+                  loadingPosition="start"
+                  startIcon={<FileUploadTwoToneIcon />}
+                  variant="outlined"
+                  color="success"
+                  onClick={() => {
+                    uploadFile();
+                  }}
+                >
+                  Done
+                </LoadingButton>
+              </aside>
+            )}
           </section>
         </Box>
       </Modal>
@@ -644,10 +821,10 @@ export default function Media() {
                 <p>Drag and drop an image here, or click to select one.</p>
                 <em>(Only *.jpeg and *.png images will be accepted)</em>
               </div>
-              {acceptedFileItems.length > 0 && (
+              {acceptedImages.length > 0 && (
                 <aside>
                   <h4>Accepted files</h4>
-                  <ul>{acceptedFileItems}</ul>
+                  <ul>{acceptedImages}</ul>
                   <br />
 
                   <LoadingButton
@@ -691,18 +868,6 @@ export default function Media() {
               </Button>
             </Paper>
           </Dialog>
-
-          <Fab
-            color="secondary"
-            aria-label="add"
-            onClick={() => {
-              setUploadOpen(true);
-            }}
-            style={{ margin: '2rem' }}
-          >
-            <AddIcon />
-          </Fab>
-          <hr />
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <IconButton
               aria-label="go to last page"
@@ -852,6 +1017,31 @@ export default function Media() {
                 );
               })}
             </ImageList>
+          </Box>
+          <Box sx={{ position: 'fixed', right: '2rem', bottom: '2rem' }}>
+            <Backdrop open={open} />
+            <SpeedDial
+              ariaLabel="add"
+              sx={{ position: 'absolute', bottom: 16, right: 16 }}
+              icon={<SpeedDialIcon />}
+              onClose={handleClose}
+              onOpen={handleOpen}
+              open={open}
+              color="secondary"
+            >
+              {actions.map((action) => (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  tooltipOpen
+                  onClick={() => {
+                    action.function(true);
+                    handleClose();
+                  }}
+                />
+              ))}
+            </SpeedDial>
           </Box>
         </div>
       ) : errorOpen ? (

@@ -9,35 +9,29 @@ const httpTrigger: AzureFunction = async function (
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
   if (!accountName) throw Error('Azure Storage accountName not found');
 
-  const blobServiceClient = new BlobServiceClient(
-    `https://${accountName}.blob.core.windows.net`,
-    new DefaultAzureCredential()
-  );
-  // Get a reference to a container
-  const containerClient = blobServiceClient.getContainerClient('downloads');
-  // Create a unique name for the blob
-  const blobName = 'quickstart.pdf';
+  try {
+    const blobServiceClient = new BlobServiceClient(
+      `https://${accountName}.blob.core.windows.net`,
+      new DefaultAzureCredential()
+    );
+    // Get a reference to a container
+    const containerClient = blobServiceClient.getContainerClient('downloads');
 
-  // Get a block blob client
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    console.log(req.body);
+    // Get a block blob client
+    const blockBlobClient = containerClient.getBlockBlobClient(req.body.name);
+    // Upload data to the blob
+    await blockBlobClient.upload(req.body.file, req.body.file.length);
 
-  // Display blob name and url
-  console.log(
-    `\nUploading to Azure storage as blob\n\tname: ${blobName}:\n\tURL: ${blockBlobClient.url}`
-  );
-
-  // Upload data to the blob
-  const uploadBlobResponse = await blockBlobClient.upload(
-    req.body,
-    req.body.length
-  );
-  console.log(
-    `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
-  );
-
-  context.res = {
-    body: 'done',
-  };
+    context.res = {
+      body: {
+        url: `https://files.elab.works/downloads/${req.body.name}`,
+      },
+    };
+  } catch (e) {
+    context.log(e);
+    context.res = { body: `Error: ${e.message}` };
+  }
 };
 
 export default httpTrigger;

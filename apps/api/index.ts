@@ -257,6 +257,25 @@ app.get('/media/update/usage', async (req, res) => {
   }
 });
 
+app.post('/file/upload', upload.none(), async (req, res, next) => {
+  try {
+    if (!req.body) {
+      res.status(500).send('No body provided in payload.');
+      return;
+    }
+
+    const response = await axios.post(process.env.UPLOAD_API_PATH as string, {
+      file: req.body.file,
+      name: req.body.filename.toLocaleLowerCase().replace(/\s+/gi, '-'),
+    });
+
+    res.status(200).send({ url: response.data.url });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).send(err.message);
+  }
+});
+
 app.post('/prod-deploy', async (req, res, next) => {
   try {
     if (!req.body) {

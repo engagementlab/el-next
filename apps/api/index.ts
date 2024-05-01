@@ -257,7 +257,7 @@ app.get('/media/update/usage', async (req, res) => {
   }
 });
 
-app.post('/file/upload', upload.none(), async (req, res, next) => {
+app.post('/file/upload', upload.single('data'), async (req, res, next) => {
   try {
     if (!req.body) {
       res.status(500).send('No body provided in payload.');
@@ -265,11 +265,11 @@ app.post('/file/upload', upload.none(), async (req, res, next) => {
     }
 
     const response = await axios.post(process.env.UPLOAD_API_PATH as string, {
-      file: req.body.file,
-      name: req.body.filename.toLocaleLowerCase().replace(/\s+/gi, '-'),
+      file: req.file?.buffer,
+      name: req.file?.originalname.toLocaleLowerCase().replace(/\s+/gi, '-'),
     });
 
-    res.status(200).send({ url: response.data.url });
+    res.status(200).send(response.data);
   } catch (err: any) {
     console.error(err);
     res.status(500).send(err.message);

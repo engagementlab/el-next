@@ -17,11 +17,13 @@ const httpTrigger: AzureFunction = async function (
     // Get a reference to a container
     const containerClient = blobServiceClient.getContainerClient('downloads');
 
-    console.log(req.body);
     // Get a block blob client
     const blockBlobClient = containerClient.getBlockBlobClient(req.body.name);
+
+    const fileBuffer = Buffer.from(req.body.file);
+    console.log(typeof req.body.file, fileBuffer);
     // Upload data to the blob
-    await blockBlobClient.upload(req.body.file, req.body.file.length);
+    const response = await blockBlobClient.uploadData(fileBuffer);
 
     context.res = {
       body: {

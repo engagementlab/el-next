@@ -103,6 +103,7 @@ type NavState = {
   altText: string | undefined;
   usageData: ImageUsageData[] | undefined;
   altTextState: string;
+  fileDownloadUrl: string;
   confirmed: boolean;
   errorOpen: boolean;
   selectedImg: ImageData;
@@ -120,6 +121,7 @@ type NavState = {
   setSelectedTargetFolder: (event: string) => void;
   setAltText: (txt: string) => void;
   setAltTextState: (state: string) => void;
+  setFileDownloadUrl: (url: string) => void;
   setIndex: (imgIndex: number) => void;
   setErrorOpen: (open: boolean) => void;
   setImageUploadOpen: (open: boolean) => void;
@@ -202,6 +204,7 @@ export default function Media() {
       selectedTargetFolder: undefined,
       altText: undefined,
       altTextState: '',
+      fileDownloadUrl: '',
       usageData: [],
       imageUploadOpen: false,
       fileUploadOpen: false,
@@ -289,6 +292,13 @@ export default function Media() {
             altTextState: newState,
           };
         }),
+      setFileDownloadUrl: (newState: string) =>
+        set((state) => {
+          return {
+            ...state,
+            fileDownloadUrl: newState,
+          };
+        }),
       setIndex: (imgIndex: number) =>
         set((state) => {
           return {
@@ -349,6 +359,7 @@ export default function Media() {
     selectedTargetFolder,
     altText,
     altTextState,
+    fileDownloadUrl,
     usageData,
     folders,
     data,
@@ -368,6 +379,7 @@ export default function Media() {
     setSelectedTargetFolder,
     setAltText,
     setAltTextState,
+    setFileDownloadUrl,
     setIndex,
     setImageUploadOpen,
     setFileUploadOpen,
@@ -517,74 +529,53 @@ export default function Media() {
         fileName: string
       ) => {
         try {
-          const params = new URLSearchParams({
-            file: file as string,
-            filename: fileName,
+          toggleWaiting();
+          const data = new FormData();
+          const blob = new Blob([file as ArrayBuffer], {
+            type: 'multipart/form-data',
           });
-          const requestResult = await axios.post(
-            `${endpointPrefix}/file/upload`,
-            {
-              file: file as string,
-              filename: fileName,
+          data.append('data', blob, fileName);
+
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', `${endpointPrefix}/file/upload`, true);
+          xhr.send(data);
+
+          xhr.onload = () => {
+            toggleWaiting();
+            if (xhr.readyState === xhr.DONE) {
+              if (xhr.status === 200) {
+                setFileDownloadUrl(JSON.parse(xhr.response).url);
+
+                return;
+              }
+              setErrorOpen(true);
             }
-          );
-
-          // Request was accepted
-          if (requestResult.status === 202) {
-            const getUpdate = () => {
-              setTimeout(async () => {
-                const requestUpdate = await axios.get(
-                  requestResult.data.statusQueryGetUri
-                );
-
-                if (requestUpdate.data.runtimeStatus === 'Pending') {
-                  // Try to get update in a bit
-                  getUpdate();
-                  return;
-                } else if (requestUpdate.data.runtimeStatus === 'Completed') {
-                  // setUserToken(requestUpdate.data.customStatus);
-                  // setStatus('success');
-
-                  // if (edit) setEditStatus('success');
-
-                  return;
-                }
-                // else if (requestUpdate.data.runtimeStatus === 'Failed') {
-                //   setStatus('error');
-                //   if (edit) setEditStatus('error');
-                //   return;
-                // }
-              }, 3000);
-            };
-
-            // Get durable function status after a bit of time
-            getUpdate();
-          }
+          };
+          xhr.onabort = () => {
+            setErrorOpen(true);
+          };
+          xhr.onerror = () => {
+            setErrorOpen(true);
+          };
         } catch (err) {
-          // setSubmitted(false);
-          // setStatus('error');
-          // if (edit) setEditStatus('error');
+          setErrorOpen(true);
         }
       };
 
       reader.onabort = () => {
-        // setStatus('error');
-        // if (edit) setEditStatus('error');
+        setErrorOpen(true);
       };
       reader.onerror = () => {
-        // setStatus('error');
-        // if (edit) setEditStatus('error');
+        setErrorOpen(true);
       };
       reader.onload = async () => {
         makeRequest(reader.result, files[0].name);
       };
 
-      if (acceptedFiles[0]) reader.readAsDataURL(files[0]);
+      if (acceptedFiles[0]) reader.readAsArrayBuffer(files[0]);
     } catch (err) {
-      // console.error(err);
-      // setStatus('error');
-      // if (edit) setEditStatus('error');
-      // setSubmitted(false);
+      console.error(err);
+      setErrorOpen(true);
     }
   };
 
@@ -692,34 +683,40 @@ export default function Media() {
       >
         <Box sx={styles.modal}>
           <section className="container">
-            <div
-              {...otherFileDropzone.getRootProps({
-                className: 'dropzone',
-                style: { backgroundColor: '#FFF1DB', padding: '1rem' },
-              })}
-            >
-              <input {...otherFileDropzone.getInputProps()} />
-              <p>Drag and drop a file here, or click to select one.</p>
-            </div>
-            {acceptedFiles.length > 0 && (
-              <aside>
-                <h4>Accepted file</h4>
-                <ul>{acceptedFiles}</ul>
-                <br />
-
-                <LoadingButton
-                  loading={waiting}
-                  loadingPosition="start"
-                  startIcon={<FileUploadTwoToneIcon />}
-                  variant="outlined"
-                  color="success"
-                  onClick={() => {
-                    uploadFile();
-                  }}
+            {fileDownloadUrl.length === 0 ? (
+              <>
+                <div
+                  {...otherFileDropzone.getRootProps({
+                    className: 'dropzone',
+                    style: { backgroundColor: '#FFF1DB', padding: '1rem' },
+                  })}
                 >
-                  Done
-                </LoadingButton>
-              </aside>
+                  <input {...otherFileDropzone.getInputProps()} />
+                  <p>Drag and drop a file here, or click to select one.</p>
+                </div>
+                {acceptedFiles.length > 0 && (
+                  <aside>
+                    <h4>Accepted file</h4>
+                    <ul>{acceptedFiles}</ul>
+                    <br />
+
+                    <LoadingButton
+                      loading={waiting}
+                      loadingPosition="start"
+                      startIcon={<FileUploadTwoToneIcon />}
+                      variant="outlined"
+                      color="success"
+                      onClick={() => {
+                        uploadFile();
+                      }}
+                    >
+                      Done
+                    </LoadingButton>
+                  </aside>
+                )}
+              </>
+            ) : (
+              <a href={fileDownloadUrl}>{fileDownloadUrl}</a>
             )}
           </section>
         </Box>

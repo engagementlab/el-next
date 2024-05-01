@@ -390,7 +390,7 @@ export default function InitIndex({
                             height={200}
                           />
                         )}
-                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1 brightness-150">
+                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
                           {item.name}
                         </h3>
                         <p>{item.shortDescription}</p>

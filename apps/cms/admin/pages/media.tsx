@@ -44,6 +44,7 @@ import {
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import DoneIcon from '@mui/icons-material/Done';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import FolderIcon from '@mui/icons-material/Folder';
 import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone';
@@ -156,6 +157,7 @@ export default function Media() {
   });
   const otherFileDropzone = useDropzone({
     maxFiles: 1,
+    maxSize: 1024 * 1024 * 50,
     onDrop: useCallback(
       (acceptedFiles: any) => {
         setFiles([...files, ...acceptedFiles]);
@@ -396,6 +398,16 @@ export default function Media() {
       selectedFolders.indexOf(item.folder) > -1
   );
 
+  /**
+   * Copy URL to clipboard
+   * @function
+   * @param {String} [url] - URL to copy to clipboard
+   */
+  const copyUrl = async (url: string) => {
+    navigator.clipboard.writeText(url);
+    // useStore.setState({ copied: true });
+  };
+
   const actions = [
     { icon: <ImageIcon />, name: 'Image', function: setImageUploadOpen },
     {
@@ -541,13 +553,17 @@ export default function Media() {
           xhr.send(data);
 
           xhr.onload = () => {
-            toggleWaiting();
             if (xhr.readyState === xhr.DONE) {
+              console.log(xhr.response);
               if (xhr.status === 200) {
                 setFileDownloadUrl(JSON.parse(xhr.response).url);
 
                 return;
               }
+              toggleWaiting();
+
+              // setFileUploadOpen(false);
+              // setFileDownloadUrl('');
               setErrorOpen(true);
             }
           };
@@ -558,6 +574,8 @@ export default function Media() {
             setErrorOpen(true);
           };
         } catch (err) {
+          setFileUploadOpen(false);
+          setFileDownloadUrl('');
           setErrorOpen(true);
         }
       };
@@ -672,11 +690,13 @@ export default function Media() {
           </section>
         </Box>
       </Modal>
+
       {/* OTHER FILE UPLOAD */}
       <Modal
         open={fileUploadOpen}
         onClose={() => {
           setFileUploadOpen(false);
+          setFileDownloadUrl('');
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -693,6 +713,7 @@ export default function Media() {
                 >
                   <input {...otherFileDropzone.getInputProps()} />
                   <p>Drag and drop a file here, or click to select one.</p>
+                  <p style={{ fontWeight: 'bold' }}>(100 MB size limit).</p>
                 </div>
                 {acceptedFiles.length > 0 && (
                   <aside>
@@ -716,7 +737,22 @@ export default function Media() {
                 )}
               </>
             ) : (
-              <a href={fileDownloadUrl}>{fileDownloadUrl}</a>
+              <>
+                <h2>File Uploaded.</h2>
+                <a href={fileDownloadUrl} target="_blank">
+                  {fileDownloadUrl}
+                </a>
+
+                <Button
+                  disableElevation
+                  size="small"
+                  aria-label="copy url"
+                  onClick={() => {
+                    copyUrl(fileDownloadUrl);
+                  }}
+                  startIcon={<ContentCopyIcon />}
+                />
+              </>
             )}
           </section>
         </Box>

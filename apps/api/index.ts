@@ -4,11 +4,12 @@ import axios from 'axios';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import multer from 'multer';
+// import multer from 'multer';
 import _ from 'lodash';
 import { unfurl } from 'unfurl.js';
 import { WebClient } from '@slack/web-api';
-
+import FormData from 'form-data';
+import fileUpload from 'express-fileupload';
 dotenv.config();
 
 cloudinary.config({
@@ -21,23 +22,27 @@ cloudinary.config({
 const app: Express = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: 1024 * 1024 * 100 }));
 
 const port = process.env.PORT || 3000;
 
-const upload = multer({
-  limits: {
-    fieldSize: 1024 * 1024 * 50,
-  },
-});
+// const upload = multer({
+//   limits: {
+//     fieldSize: 1024 * 1024 * 100,
+//   },
+// });
 
 const devMode = process.env.NODE_ENV === 'development';
 
 app.use(cors({ credentials: true }));
 app.enable('trust proxy');
+
+app.use(fileUpload());
+
+axios.defaults.maxBodyLength = 1024 * 1024 * 100;
 
 app.all('/*', (req, res, next) => {
   res.header(
@@ -199,31 +204,31 @@ app.post('/embed', async (req, res) => {
   }
 });
 
-app.post('/media/upload', upload.none(), async (req, res) => {
-  try {
-    let options: UploadApiOptions = {
-      folder:
-        req.body.folder !== 'undefined'
-          ? req.body.folder
-          : req.body.app || 'elab-home-v3.x',
-      context: { alt: req.body.alt ? req.body.alt : '' },
-    };
-    if (req.body.overwrite === 'true' && req.body.public_id) {
-      options.overwrite = true;
-      options.invalidate = true;
-      options.public_id = req.body.public_id.replace(
-        req.body.app || 'elab-home-v3.x',
-        ''
-      );
-    }
+// app.post('/media/upload', upload.none(), async (req, res) => {
+//   try {
+//     let options: UploadApiOptions = {
+//       folder:
+//         req.body.folder !== 'undefined'
+//           ? req.body.folder
+//           : req.body.app || 'elab-home-v3.x',
+//       context: { alt: req.body.alt ? req.body.alt : '' },
+//     };
+//     if (req.body.overwrite === 'true' && req.body.public_id) {
+//       options.overwrite = true;
+//       options.invalidate = true;
+//       options.public_id = req.body.public_id.replace(
+//         req.body.app || 'elab-home-v3.x',
+//         ''
+//       );
+//     }
 
-    const response = await cloudinary.uploader.upload(req.body.img, options);
-    res.status(200).send(response);
-  } catch (err: any) {
-    console.error(err);
-    res.status(500).send(err);
-  }
-});
+//     const response = await cloudinary.uploader.upload(req.body.img, options);
+//     res.status(200).send(response);
+//   } catch (err: any) {
+//     console.error(err);
+//     res.status(500).send(err);
+//   }
+// });
 
 app.get('/media/update', (req, res) => {
   try {
@@ -257,21 +262,29 @@ app.get('/media/update/usage', async (req, res) => {
   }
 });
 
-app.post('/file/upload', upload.single('data'), async (req, res, next) => {
+app.post('/file/upload', async (req, res, next) => {
   try {
     if (!req.body) {
       res.status(500).send('No body provided in payload.');
       return;
     }
+    // if (!req.file) {
+    //   res.status(500).send('Invalid file.');
+    //   return;
+    // }
 
+    const form = new FormData();
+    // form.append('file', req.files[0])
+    console.log(req.files);
+    // form.append();
     const response = await axios.post(process.env.UPLOAD_API_PATH as string, {
-      file: req.file?.buffer,
-      name: req.file?.originalname.toLocaleLowerCase().replace(/\s+/gi, '-'),
+      file: req.files[0],
+      name: 'test',
     });
 
     res.status(200).send(response.data);
   } catch (err: any) {
-    console.error(err);
+    console.log(err);
     res.status(500).send(err.message);
   }
 });

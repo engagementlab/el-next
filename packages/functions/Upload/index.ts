@@ -1,8 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { BlobServiceClient } from '@azure/storage-blob';
 import { DefaultAzureCredential } from '@azure/identity';
-import type { FormData, FormDataEntryValue } from 'undici';
-import parseMultipartFormData from '@anzp/azure-function-multipart';
+import busboy = require('busboy');
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -12,29 +11,43 @@ const httpTrigger: AzureFunction = async function (
   if (!accountName) throw Error('Azure Storage accountName not found');
 
   try {
-    // const { fields, files } = await parseMultipartFormData(req);
-
     const blobServiceClient = new BlobServiceClient(
       `https://${accountName}.blob.core.windows.net`,
       new DefaultAzureCredential()
     );
-    const dataFromReq = new Uint8Array(req.bufferBody);
-    console.log(dataFromReq);
-    // Get a reference to a container
-    const containerClient = blobServiceClient.getContainerClient('downloads');
 
-    // Get a block blob client
-    const blockBlobClient = containerClient.getBlockBlobClient(req.body.name);
+    const dataFromReq = req.body as Buffer;
+    const fileName = req.query.name.toLocaleLowerCase().replace(/\s+/gi, '-');
 
-    // const fileBuffer = Buffer.from(req.);
-    // Upload data to the blob
-    const response = await blockBlobClient.uploadData(req.bufferBody);
+    // Create a promise that resolves only after file is fully upload to prevent premature response
+    return new Promise((resolve, reject) => {
+      const bb = busboy({
+        headers: { 'content-type': req.headers['content-type'] },
+      });
 
-    context.res = {
-      body: {
-        url: `https://files.elab.works/downloads/${req.body.name}`,
-      },
-    };
+      // Monitor piped filestream and then begin upload
+      bb.on('file', function (fieldname, file, filename, encoding, mimetype) {
+        file.on('data', async function (data) {
+          // Get a reference to a container
+          const containerClient =
+            blobServiceClient.getContainerClient('downloads');
+
+          // Get a block blob client
+          const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+          // Upload data to the blob
+          await blockBlobClient.uploadData(data as Buffer);
+          context.res = {
+            body: {
+              url: `https://files.elab.works/downloads/${fileName}`,
+            },
+          };
+          resolve();
+        });
+      });
+
+      bb.write(dataFromReq);
+    });
   } catch (e) {
     context.log(e);
     context.res = { status: 500, body: `Error: ${e.message}` };

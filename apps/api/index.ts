@@ -8,8 +8,8 @@ import dotenv from 'dotenv';
 import _ from 'lodash';
 import { unfurl } from 'unfurl.js';
 import { WebClient } from '@slack/web-api';
-import FormData from 'form-data';
-import fileUpload from 'express-fileupload';
+// import FormData from 'form-data';
+import fileUpload, { UploadedFile } from 'express-fileupload';
 dotenv.config();
 
 cloudinary.config({
@@ -268,21 +268,28 @@ app.post('/file/upload', async (req, res, next) => {
       res.status(500).send('No body provided in payload.');
       return;
     }
-    // if (!req.file) {
-    //   res.status(500).send('Invalid file.');
-    //   return;
-    // }
+    if (!req.files || (!req.files.file as any).data) {
+      res.status(500).send('Invalid file.');
+      return;
+    }
 
     const form = new FormData();
-    // form.append('file', req.files[0])
-    console.log(req.files);
-    // form.append();
-    const response = await axios.post(process.env.UPLOAD_API_PATH as string, {
-      file: req.files[0],
-      name: 'test',
-    });
+    const file = new Blob([(req.files.file as any).data]);
+    const fileName = (req.files.file as any).name
+      .toLocaleLowerCase()
+      .replace(/\s+/gi, '-');
+    form.append('file', file);
 
-    res.status(200).send(response.data);
+    const response = await fetch(
+      `${process.env.UPLOAD_API_PATH as string}/?name=${fileName}`,
+      {
+        method: 'POST',
+        body: form,
+      }
+    );
+
+    const result = await response.json();
+    res.status(200).send(result);
   } catch (err: any) {
     console.log(err);
     res.status(500).send(err.message);

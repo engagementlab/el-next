@@ -157,7 +157,7 @@ export default function Media() {
   });
   const otherFileDropzone = useDropzone({
     maxFiles: 1,
-    maxSize: 1024 * 1024 * 50,
+    maxSize: 1024 * 1024 * 100,
     onDrop: useCallback(
       (acceptedFiles: any) => {
         setFiles([...files, ...acceptedFiles]);
@@ -546,7 +546,7 @@ export default function Media() {
           const blob = new Blob([file as ArrayBuffer], {
             type: 'multipart/form-data',
           });
-          data.append('data', blob, fileName);
+          data.append('file', blob, fileName);
 
           var xhr = new XMLHttpRequest();
           xhr.open('POST', `${endpointPrefix}/file/upload`, true);

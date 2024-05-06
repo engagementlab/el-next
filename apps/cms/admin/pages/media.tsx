@@ -115,17 +115,9 @@ type NavState = {
   fileUploadOpen: boolean;
   copied: boolean;
 
-  toggleConfirm: () => void;
-  toggleWaiting: () => void;
   setData: (imgData: any[], folders: { name: string; path: string }[]) => void;
-  setId: (id: string) => void;
   setSelectedImage: (image: any) => void;
   setSelecedFolders: (event: SelectChangeEvent<string[]>) => void;
-  setSelectedTargetFolder: (event: string) => void;
-  setAltText: (txt: string) => void;
-  setAltTextState: (state: string) => void;
-  setFileDownloadUrl: (url: string) => void;
-  setIndex: (imgIndex: number) => void;
   setErrorOpen: (open: boolean) => void;
   setImageUploadOpen: (open: boolean) => void;
   setFileUploadOpen: (open: boolean) => void;
@@ -214,30 +206,14 @@ export default function Media() {
       fileUploadOpen: false,
       editOpen: false,
       waiting: true,
+      copied: false,
       pgIndex: 0,
-      toggleConfirm: () =>
-        set((state) => {
-          return { confirmed: !state.confirmed };
-        }),
-      toggleWaiting: () =>
-        set((state) => {
-          return {
-            waiting: !state.waiting,
-          };
-        }),
       setData: (imgData: any[], folders: { name: string; path: string }[]) =>
         set((state) => {
           return {
             ...state,
             data: imgData,
             folders,
-          };
-        }),
-      setId: (id: string) =>
-        set((state) => {
-          return {
-            ...state,
-            selectedImgId: id,
           };
         }),
       setSelectedImage: (image: ImageData) => {
@@ -248,14 +224,15 @@ export default function Media() {
             key.startsWith('doc_id_')
           );
           usageKeys.forEach((key) => {
-            // if (image.context.custom)
-            const category = image.context.custom[key].split('>')[0];
-            const name = image.context.custom[key].split('>')[1];
-            usages.push({
-              docId: key.replace('doc_id_', ''),
-              docCategory: category,
-              docName: name,
-            });
+            if (image.context && image.context.custom) {
+              const category = image.context.custom[key].split('>')[0];
+              const name = image.context.custom[key].split('>')[1];
+              usages.push({
+                docId: key.replace('doc_id_', ''),
+                docCategory: category,
+                docName: name,
+              });
+            }
           });
           if (image.context.custom['alt']) alt = image.context.custom['alt'];
         }
@@ -282,34 +259,6 @@ export default function Media() {
             selectedTargetFolder: event,
           };
         }),
-      setAltText: (txt: string) =>
-        set((state) => {
-          return {
-            ...state,
-            altText: txt,
-          };
-        }),
-      setAltTextState: (newState: string) =>
-        set((state) => {
-          return {
-            ...state,
-            altTextState: newState,
-          };
-        }),
-      setFileDownloadUrl: (newState: string) =>
-        set((state) => {
-          return {
-            ...state,
-            fileDownloadUrl: newState,
-          };
-        }),
-      setIndex: (imgIndex: number) =>
-        set((state) => {
-          return {
-            ...state,
-            pgIndex: imgIndex,
-          };
-        }),
       setEditOpen: (open: boolean) => {
         if (!open) {
           setImageFiles([]);
@@ -326,7 +275,7 @@ export default function Media() {
       },
       setErrorOpen: (open: boolean) =>
         set((state) => {
-          if (!open) toggleWaiting();
+          if (!open) toggleWaiting(false);
 
           return {
             ...state,
@@ -373,19 +322,11 @@ export default function Media() {
     fileUploadOpen,
     copied,
 
-    toggleConfirm,
-    toggleWaiting,
     setData,
     setEditOpen,
     setErrorOpen,
-    setId,
     setSelectedImage,
     setSelecedFolders,
-    setSelectedTargetFolder,
-    setAltText,
-    setAltTextState,
-    setFileDownloadUrl,
-    setIndex,
     setImageUploadOpen,
     setFileUploadOpen,
   } = useStore((state) => state);
@@ -393,6 +334,12 @@ export default function Media() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const setState = (state: any) => {
+    useStore.setState(state);
+  };
+  const toggleWaiting = (waiting: boolean) => setState({ waiting });
+
   const filteredData = data.filter(
     // If selected filters empty, show all...
     (item) =>
@@ -433,7 +380,7 @@ export default function Media() {
       )
       .then((response) => {
         setData(response.data.imgs, response.data.folders);
-        toggleWaiting();
+        toggleWaiting(false);
       });
   };
 
@@ -447,7 +394,7 @@ export default function Media() {
         setErrorOpen(true);
       };
       reader.onload = () => {
-        toggleWaiting();
+        toggleWaiting(true);
         try {
           var formData = new FormData();
           formData.append('img', reader.result as string);
@@ -493,7 +440,7 @@ export default function Media() {
         .then((response) => {
           if (response.data.result === 'ok') {
             setEditOpen(false);
-            toggleWaiting();
+            toggleWaiting(false);
 
             refreshMedia();
             return;
@@ -508,7 +455,7 @@ export default function Media() {
     }
   };
   const updateImg = () => {
-    setAltTextState('waiting');
+    setState({ altTextState: 'waiting' });
     try {
       axios
         .get(
@@ -516,22 +463,18 @@ export default function Media() {
         )
         .then((response) => {
           if (response.data === 'ok') {
-            // setEditOpen(false);
-
-            // toggleWaiting();
-            setAltTextState('done');
-            // refreshMedia();
+            setState({ altTextState: 'done' });
             return;
           }
           setErrorOpen(true);
         })
         .catch((error) => {
           setErrorOpen(true);
-          setAltTextState('error');
+          setState({ altTextState: 'error' });
         });
     } catch (err: any) {
       setErrorOpen(true);
-      setAltTextState('error');
+      setState({ altTextState: 'error' });
     }
   };
 
@@ -544,7 +487,7 @@ export default function Media() {
         fileName: string
       ) => {
         try {
-          toggleWaiting();
+          toggleWaiting(true);
           const data = new FormData();
           const blob = new Blob([file as ArrayBuffer], {
             type: 'multipart/form-data',
@@ -557,9 +500,9 @@ export default function Media() {
 
           xhr.onload = () => {
             if (xhr.readyState === xhr.DONE) {
-              toggleWaiting();
+              toggleWaiting(false);
               if (xhr.status === 200) {
-                setFileDownloadUrl(JSON.parse(xhr.response).url);
+                setState({ fileDownloadUrl: JSON.parse(xhr.response).url });
 
                 return;
               }
@@ -574,7 +517,7 @@ export default function Media() {
           };
         } catch (err) {
           setFileUploadOpen(false);
-          setFileDownloadUrl('');
+          setState({ fileDownloadUrl: '' });
           setErrorOpen(true);
         }
       };
@@ -623,7 +566,7 @@ export default function Media() {
                 id="folders-sel"
                 value={selectedTargetFolder}
                 onChange={(val) => {
-                  setSelectedTargetFolder(val.target.value);
+                  setState({ selectedFolders: val.target.value });
                 }}
                 input={<OutlinedInput id="select-fld" label="Chip" />}
                 MenuProps={MenuProps}
@@ -652,7 +595,7 @@ export default function Media() {
                 multiline={true}
                 rows={4}
                 onChange={(val) => {
-                  setAltText(val.target.value);
+                  setState({ altText: val.target.value });
                 }}
               />
             </FormControl>
@@ -695,8 +638,7 @@ export default function Media() {
         open={fileUploadOpen}
         onClose={() => {
           setFileUploadOpen(false);
-          setFileDownloadUrl('');
-          useStore.setState({ copied: false });
+          useStore.setState({ copied: false, fileDownloadUrl: '' });
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -766,7 +708,7 @@ export default function Media() {
             open={editOpen}
             onClose={() => {
               setEditOpen(false);
-              setId('');
+              setState({ id: '' });
             }}
             maxWidth="xl"
             fullWidth={true}
@@ -796,7 +738,7 @@ export default function Media() {
                     rows={4}
                     defaultValue={selectedImg.context?.custom?.alt}
                     onChange={(val) => {
-                      setAltText(val.target.value);
+                      setState({ altText: val.target.value });
                     }}
                   />
                   <Box sx={{ display: 'flex' }}>
@@ -889,7 +831,7 @@ export default function Media() {
                   defaultChecked={false}
                   value={confirm}
                   onClick={() => {
-                    toggleConfirm();
+                    setState({ confirmed: true });
                   }}
                 />{' '}
                 I Understand
@@ -909,7 +851,7 @@ export default function Media() {
               aria-label="go to last page"
               disabled={pgIndex === 0}
               onClick={(val) => {
-                setIndex(pgIndex - 1);
+                setState({ index: pgIndex - 1 });
               }}
             >
               <ArrowCircleLeftOutlinedIcon fontSize="large" />
@@ -919,7 +861,7 @@ export default function Media() {
               value={pgIndex}
               label="Page"
               onChange={(val) => {
-                setIndex(!val ? 0 : (val.target.value as number));
+                setState({ index: !val ? 0 : (val.target.value as number) });
               }}
             >
               {[...new Array(dataLength)].map((v, i) => (
@@ -932,7 +874,7 @@ export default function Media() {
               aria-label="go to right page"
               disabled={pgIndex === filteredData.length - 1}
               onClick={(val) => {
-                setIndex(pgIndex + 1);
+                setState({ index: pgIndex + 1 });
               }}
             >
               <ArrowCircleRightOutlinedIcon fontSize="large" />
@@ -991,10 +933,10 @@ export default function Media() {
                     key={d.public_id}
                     sx={styles.item}
                     onMouseEnter={() => {
-                      setId(d.public_id);
+                      setState({ id: d.public_id });
                     }}
                     onMouseLeave={() => {
-                      setId('');
+                      setState({ id: '' });
                     }}
                   >
                     <Image

@@ -54,6 +54,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import QueryBuilderRoundedIcon from '@mui/icons-material/QueryBuilderRounded';
 import ImageIcon from '@mui/icons-material/Image';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import CheckIcon from '@mui/icons-material/Check';
 
 import { Image } from '@el-next/components';
 
@@ -112,6 +113,7 @@ type NavState = {
   waiting: boolean;
   imageUploadOpen: boolean;
   fileUploadOpen: boolean;
+  copied: boolean;
 
   toggleConfirm: () => void;
   toggleWaiting: () => void;
@@ -369,6 +371,7 @@ export default function Media() {
     pgIndex,
     imageUploadOpen,
     fileUploadOpen,
+    copied,
 
     toggleConfirm,
     toggleWaiting,
@@ -405,7 +408,7 @@ export default function Media() {
    */
   const copyUrl = async (url: string) => {
     navigator.clipboard.writeText(url);
-    // useStore.setState({ copied: true });
+    useStore.setState({ copied: true });
   };
 
   const actions = [
@@ -554,16 +557,12 @@ export default function Media() {
 
           xhr.onload = () => {
             if (xhr.readyState === xhr.DONE) {
-              console.log(xhr.response);
+              toggleWaiting();
               if (xhr.status === 200) {
                 setFileDownloadUrl(JSON.parse(xhr.response).url);
 
                 return;
               }
-              toggleWaiting();
-
-              // setFileUploadOpen(false);
-              // setFileDownloadUrl('');
               setErrorOpen(true);
             }
           };
@@ -697,6 +696,7 @@ export default function Media() {
         onClose={() => {
           setFileUploadOpen(false);
           setFileDownloadUrl('');
+          useStore.setState({ copied: false });
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -720,7 +720,7 @@ export default function Media() {
                     <h4>Accepted file</h4>
                     <ul>{acceptedFiles}</ul>
                     <br />
-
+                    <p>(Large files may take awhile.)</p>
                     <LoadingButton
                       loading={waiting}
                       loadingPosition="start"
@@ -742,16 +742,19 @@ export default function Media() {
                 <a href={fileDownloadUrl} target="_blank">
                   {fileDownloadUrl}
                 </a>
-
-                <Button
-                  disableElevation
-                  size="small"
-                  aria-label="copy url"
-                  onClick={() => {
-                    copyUrl(fileDownloadUrl);
-                  }}
-                  startIcon={<ContentCopyIcon />}
-                />
+                {copied ? (
+                  <CheckIcon htmlColor="#00d103" />
+                ) : (
+                  <Button
+                    disableElevation
+                    size="small"
+                    aria-label="copy url"
+                    onClick={() => {
+                      copyUrl(fileDownloadUrl);
+                    }}
+                    startIcon={<ContentCopyIcon />}
+                  />
+                )}
               </>
             )}
           </section>

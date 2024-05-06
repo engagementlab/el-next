@@ -281,7 +281,7 @@ app.post('/file/upload', async (req, res, next) => {
     form.append('file', file);
 
     const response = await fetch(
-      `${process.env.UPLOAD_API_PATH as string}/?name=${fileName}`,
+      `${process.env.UPLOAD_API_PATH as string}&name=${fileName}`,
       {
         method: 'POST',
         body: form,

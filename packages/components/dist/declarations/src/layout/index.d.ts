@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Transition, Variants } from 'framer-motion';
-import { TError } from '../query';
+import { TError } from "../query/index.js";
 type Props = {
     children: ReactNode;
     title: string;

@@ -1,2 +1,2 @@
 export * from "../../dist/declarations/src/headingStyle/index";
-//# sourceMappingURL=el-next-components-headingStyle.cjs.d.ts.map
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZWwtbmV4dC1jb21wb25lbnRzLWhlYWRpbmdTdHlsZS5janMuZC50cyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL2Rpc3QvZGVjbGFyYXRpb25zL3NyYy9oZWFkaW5nU3R5bGUvaW5kZXguZC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSJ9

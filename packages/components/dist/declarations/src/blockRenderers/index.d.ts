@@ -6,7 +6,7 @@
  * KeystoneJS document field block renderers
  * ==========
  */
-/// <reference types="react" />
+import React from 'react';
 /**
  * Create function that returns custom block renderers used by Keystone
  * @function
@@ -21,9 +21,9 @@ export declare const BlockRenderers: (styles?: {
     peopleOverride?: (peopleProps: any) => JSX.Element;
     buttonOverride?: (props: any) => JSX.Element;
 }) => {
-    image: (props: any) => JSX.Element;
-    video: (props: any) => JSX.Element;
-    button: (props: any) => JSX.Element;
-    pageAnchor: (props: any) => JSX.Element;
-    associatedPeople: (props: any) => JSX.Element;
+    image: (props: any) => React.JSX.Element;
+    video: (props: any) => React.JSX.Element;
+    button: (props: any) => React.JSX.Element;
+    pageAnchor: (props: any) => React.JSX.Element;
+    associatedPeople: (props: any) => React.JSX.Element;
 };

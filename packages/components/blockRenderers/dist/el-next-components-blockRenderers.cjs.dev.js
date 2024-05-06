@@ -9,8 +9,8 @@ var video_v2_dist_elNextComponentsVideo_v2 = require('../../video.v2/dist/el-nex
 var jsxRuntime = require('react/jsx-runtime');
 require('@cloudinary/url-gen');
 require('@cloudinary/react');
-require('../../dist/objectSpread2-62cbe323.cjs.dev.js');
-require('../../dist/slicedToArray-b8687d91.cjs.dev.js');
+require('../../dist/objectSpread2-c088c990.cjs.dev.js');
+require('../../dist/slicedToArray-11a666de.cjs.dev.js');
 require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
 require('next/image');
 require('react-dom');

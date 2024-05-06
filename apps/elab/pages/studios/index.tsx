@@ -50,7 +50,6 @@ export default function Studios({
         set((state) => {
           const group = filter.toLocaleLowerCase();
           let theme = Theme.none;
-          // debugger;
 
           if (state.selectedFilter !== group) {
             if (group === 'tngv') {
@@ -194,8 +193,6 @@ export default function Studios({
       : [];
 
     const count = filteredItems.length;
-    // Decide plural of item count
-    const showing = `Showing ${count}`;
 
     return (
       <Layout
@@ -269,6 +266,7 @@ export async function getStaticProps() {
       semesters {
         key
         name
+        initiatives
       }
 		}`
   );

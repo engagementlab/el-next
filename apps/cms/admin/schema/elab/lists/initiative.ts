@@ -9,6 +9,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
+import { video } from '../../../components/video-field';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -29,6 +30,7 @@ const Initiative: Lists.Initiative = list({
     ...group({
       label: 'Intro Video/Slideshow',
       fields: {
+        introVideo: video(),
         videoId: text({
           label: 'Intro Video ID',
           ui: {
@@ -45,9 +47,8 @@ const Initiative: Lists.Initiative = list({
             folder: 'elab-home-v3.x/studios/projects',
           },
         }),
-        videoCaption: document({
+        videoCaption: text({
           label: 'Intro Video Caption',
-          formatting: true,
         }),
         slides: relationship({
           ref: 'Slide.initiativeSlides',

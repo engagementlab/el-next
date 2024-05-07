@@ -82,28 +82,30 @@ model Graduate {
 }
 
 model Initiative {
-  id               String            @id @default(cuid())
-  name             String            @unique @default("Initiative Name")
-  intro            Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  videoId          String            @default("")
-  videoThumbnail   Json?
-  videoCaption     Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  slides           Slide[]           @relation("Initiative_slides")
-  news             NewsItem[]        @relation("Initiative_news")
-  events           Event[]           @relation("Event_initiativesWhatsNew")
-  body             Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  partners         Json?
-  projectsBlurb    Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  projects         StudioProject[]   @relation("Initiative_projects")
-  studiosBlurb     Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  studios          Studio[]          @relation("Initiative_studios")
-  research         ResearchProject[] @relation("Initiative_research")
-  associatedPeople Person[]          @relation("Initiative_associatedPeople")
-  ogImage          Json?
-  helper_html      String            @default("<p>Need HTML!</p>")
-  helper_iconType  icon              @default(help)
-  ogDescription    String            @default("")
-  vimeoFile        String            @default("")
+  id                 String            @id @default(cuid())
+  name               String            @unique @default("Initiative Name")
+  intro              Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  introVideo_file    String            @default("none")
+  introVideo_caption String?
+  videoId            String            @default("")
+  videoThumbnail     Json?
+  videoCaption       String            @default("")
+  slides             Slide[]           @relation("Initiative_slides")
+  news               NewsItem[]        @relation("Initiative_news")
+  events             Event[]           @relation("Event_initiativesWhatsNew")
+  body               Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  partners           Json?
+  projectsBlurb      Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projects           StudioProject[]   @relation("Initiative_projects")
+  studiosBlurb       Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  studios            Studio[]          @relation("Initiative_studios")
+  research           ResearchProject[] @relation("Initiative_research")
+  associatedPeople   Person[]          @relation("Initiative_associatedPeople")
+  ogImage            Json?
+  helper_html        String            @default("<p>Need HTML!</p>")
+  helper_iconType    icon              @default(help)
+  ogDescription      String            @default("")
+  vimeoFile          String            @default("")
 }
 
 model InitiativesLanding {

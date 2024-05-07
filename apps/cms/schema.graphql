@@ -647,9 +647,10 @@ type Initiative {
   id: ID!
   name: String
   intro: Initiative_intro_Document
+  introVideo: VideoFieldOutput
   videoId: String
   videoThumbnail: CloudinaryImage_File
-  videoCaption: Initiative_videoCaption_Document
+  videoCaption: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
   news(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
@@ -678,8 +679,9 @@ type Initiative_intro_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-type Initiative_videoCaption_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
+type VideoFieldOutput {
+  file: String
+  caption: String
 }
 
 type Initiative_body_Document {
@@ -706,6 +708,7 @@ input InitiativeWhereInput {
   id: IDFilter
   name: StringFilter
   videoId: StringFilter
+  videoCaption: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
   events: EventManyRelationFilter
@@ -739,6 +742,7 @@ input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
   videoId: OrderDirection
+  videoCaption: OrderDirection
   ogDescription: OrderDirection
   vimeoFile: OrderDirection
 }
@@ -746,9 +750,10 @@ input InitiativeOrderByInput {
 input InitiativeUpdateInput {
   name: String
   intro: JSON
+  introVideo: VideoFieldInput
   videoId: String
   videoThumbnail: Upload
-  videoCaption: JSON
+  videoCaption: String
   slides: SlideRelateToManyForUpdateInput
   news: NewsItemRelateToManyForUpdateInput
   events: EventRelateToManyForUpdateInput
@@ -764,6 +769,11 @@ input InitiativeUpdateInput {
   helper: HelperFieldInput
   ogDescription: String
   vimeoFile: String
+}
+
+input VideoFieldInput {
+  file: String
+  caption: String
 }
 
 input EventRelateToManyForUpdateInput {
@@ -795,9 +805,10 @@ input InitiativeUpdateArgs {
 input InitiativeCreateInput {
   name: String
   intro: JSON
+  introVideo: VideoFieldInput
   videoId: String
   videoThumbnail: Upload
-  videoCaption: JSON
+  videoCaption: String
   slides: SlideRelateToManyForCreateInput
   news: NewsItemRelateToManyForCreateInput
   events: EventRelateToManyForCreateInput

@@ -35,8 +35,9 @@ type Theme = {
 };
 
 interface VideoProps {
-  videoFile?: string;
+  videoFile: string;
   videoLabel: string;
+  caption?: string;
   theme: Theme;
   thumbUrl?: string;
   isSlide?: boolean;
@@ -135,6 +136,26 @@ const Controls = (props: ControlsProps) => {
         >
           {props.playing ? <PauseCircleFilledIcon /> : <PlayCircleFilledIcon />}
         </IconButton>
+        <IconButton
+          aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
+          size="large"
+          onClick={() => props.onToggleCaptions()}
+          sx={{ color: props.theme.buttons }}
+        >
+          {props.hideCaptions ? (
+            <ClosedCaptionDisabledIcon />
+          ) : (
+            <ClosedCaptionIcon />
+          )}
+        </IconButton>
+        <IconButton
+          aria-label={props.fullscreen ? 'exit fullscreen' : 'Enter fullscreen'}
+          size="large"
+          onClick={() => props.onClickFullscreen()}
+          sx={{ color: props.theme.buttons }}
+        >
+          <FullscreenIcon />
+        </IconButton>
         <Box
           className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
             volumeHover ? 'basis-[50%]' : 'basis-[5%]'
@@ -167,26 +188,6 @@ const Controls = (props: ControlsProps) => {
             }}
           />
         </Box>
-        <IconButton
-          aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
-          size="large"
-          onClick={() => props.onToggleCaptions()}
-          sx={{ color: props.theme.buttons }}
-        >
-          {props.hideCaptions ? (
-            <ClosedCaptionDisabledIcon />
-          ) : (
-            <ClosedCaptionIcon />
-          )}
-        </IconButton>
-        <IconButton
-          aria-label={props.fullscreen ? 'exit fullscreen' : 'Enter fullscreen'}
-          size="large"
-          onClick={() => props.onClickFullscreen()}
-          sx={{ color: props.theme.buttons }}
-        >
-          <FullscreenIcon />
-        </IconButton>
       </div>
     </div>
   );
@@ -210,6 +211,7 @@ export const Video = ({
   thumbUrl,
   videoFile,
   videoLabel,
+  caption,
   isSlide,
   theme,
   noUi,
@@ -393,6 +395,14 @@ export const Video = ({
                 </g>
               </svg>
             </span>
+          )}
+
+          {caption && (
+            <aside
+              className={`absolute bottom-0 right-3 p-3 text-left w-3/4 ${theme.bg} text-white sm:max-w-xs sm:right-20 lg:right-0`}
+            >
+              ↳ {caption}
+            </aside>
           )}
         </button>
       )}

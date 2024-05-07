@@ -41,9 +41,7 @@ type Initiative = {
   };
   slides?: any[];
   videoId?: string;
-  videoCaption?: {
-    document: any;
-  };
+  videoCaption?: string;
   videoThumbnail?: {
     publicUrl: string;
   };
@@ -63,7 +61,7 @@ type Initiative = {
       publicId: string;
     };
   }[];
-  vimeoFile?: string;
+  vimeoFile: string;
 };
 
 export default function InitIndex({
@@ -233,18 +231,21 @@ export default function InitIndex({
                   <div className="group w-full min-h-[inherit] ">
                     <div id="video" className="min-h-[inherit] left">
                       {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
-                        <VideoV2
-                          key={`video-player-${page.vimeoFile}`}
-                          isSlide={true}
-                          videoLabel={`${
-                            InitiativeFilterGroups.find(
-                              (i) => i.key === initiative
-                            )?.label
-                          } Intro Video`}
-                          videoFile={page.vimeoFile}
-                          thumbUrl={page.videoThumbnail?.publicUrl}
-                          theme={videoColor}
-                        />
+                        <>
+                          <VideoV2
+                            key={`video-player-${page.vimeoFile}`}
+                            isSlide={true}
+                            videoLabel={`${
+                              InitiativeFilterGroups.find(
+                                (i) => i.key === initiative
+                              )?.label
+                            } Intro Video`}
+                            videoFile={page.vimeoFile}
+                            caption={page.videoCaption}
+                            thumbUrl={page.videoThumbnail?.publicUrl}
+                            theme={videoColor}
+                          />
+                        </>
                       ) : (
                         <Video
                           isSlide={true}
@@ -260,14 +261,6 @@ export default function InitIndex({
                       )}
                     </div>
                   </div>
-                  {page?.videoCaption && (
-                    <div className={Theming[initiative].text}>
-                      <DocumentRenderer
-                        document={page?.videoCaption.document}
-                        componentBlocks={Blocks(Theming[initiative])}
-                      />
-                    </div>
-                  )}
                 </div>
               ) : (
                 page?.slides &&
@@ -520,9 +513,7 @@ export async function getStaticProps({
         videoThumbnail {
           publicUrl
         }
-        videoCaption {
-          document
-        }
+        videoCaption
         slides {
           image {
             publicId

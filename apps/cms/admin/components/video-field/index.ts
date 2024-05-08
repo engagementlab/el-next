@@ -12,6 +12,7 @@ import { GraphQLResolveInfo } from 'graphql';
 type PairInput = {
   file: string;
   caption?: string;
+  thumbUrl: string;
 };
 type PairOutput = PairInput;
 
@@ -22,6 +23,7 @@ const VideoFieldInput = graphql.inputObject({
       type: graphql.String,
     }),
     caption: graphql.arg({ type: graphql.String }),
+    thumbUrl: graphql.arg({ type: graphql.String }),
   },
 });
 const VideoFieldOutput = graphql.object<PairOutput>()({
@@ -29,20 +31,18 @@ const VideoFieldOutput = graphql.object<PairOutput>()({
   fields: {
     file: graphql.field({ type: graphql.String }),
     caption: graphql.field({ type: graphql.String }),
+    thumbUrl: graphql.field({ type: graphql.String }),
   },
 });
-
-function resolveOutput(value: PairOutput) {
-  return value;
-}
 
 export type VideoFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
   CommonFieldConfig<ListTypeInfo> & PairOutput;
 
 export function video<ListTypeInfo extends BaseListTypeInfo>(
-  { file, caption, ...config }: VideoFieldConfig<ListTypeInfo> = {
+  { file, caption, thumbUrl, ...config }: VideoFieldConfig<ListTypeInfo> = {
     file: 'none',
     caption: '',
+    thumbUrl: '',
   }
 ): FieldTypeFunc<ListTypeInfo> {
   return (meta) =>
@@ -59,6 +59,15 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           },
         },
         caption: { kind: 'scalar', scalar: 'String', mode: 'optional' },
+        thumbUrl: {
+          kind: 'scalar',
+          scalar: 'String',
+          mode: 'required',
+          default: {
+            kind: 'literal',
+            value: 'none',
+          },
+        },
       },
     })({
       ...config,
@@ -69,6 +78,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
             return {
               file: '',
               caption: '',
+              thumbUrl: '',
             };
           },
         },
@@ -78,18 +88,19 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
             return {
               file: '',
               caption: '',
+              thumbUrl: '',
             };
           },
         },
       },
       output: graphql.field({
         type: VideoFieldOutput,
-        async resolve({ value: { file, caption } }) {
+        async resolve({ value: { file, caption, thumbUrl } }) {
           if (file === null || caption === null) {
             return null;
           }
 
-          return { file, caption };
+          return { file, caption, thumbUrl };
         },
       }),
 

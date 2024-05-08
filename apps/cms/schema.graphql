@@ -682,6 +682,7 @@ type Initiative_intro_Document {
 type VideoFieldOutput {
   file: String
   caption: String
+  thumbUrl: String
 }
 
 type Initiative_body_Document {
@@ -774,6 +775,7 @@ input InitiativeUpdateInput {
 input VideoFieldInput {
   file: String
   caption: String
+  thumbUrl: String
 }
 
 input EventRelateToManyForUpdateInput {

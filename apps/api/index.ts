@@ -60,36 +60,54 @@ app.get('/media/videos', async (req, res, next) => {
       thumb: any;
       thumbSm: any;
     }[] = [];
+    let page = 0;
+
     const getData = async (
-      apiPath: string = '/channels/1773240/videos?per_page=100'
+      apiPath: string = '/users/11255512/videos?sort=date&direction=desc&per_page=75'
     ) => {
-      const response = await axios.get(`https://api.vimeo.com${apiPath}`, {
-        headers: {
-          Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
-        },
-      });
+      const response = await axios
+        .get(`https://api.vimeo.com${apiPath}`, {
+          headers: {
+            Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
+          },
+        })
+        .catch((err) => {
+          res.status(500).send(err.message);
+        });
+      if (!response) return;
       const resData = response.data;
+
+      page++;
       let m = _.map(
         resData.data,
         (val: {
           name: any;
           player_embed_url: any;
           pictures: { sizes: string | any[] };
+          files: any[];
         }) => {
+          let fileInfo = val.files.find((file) => file.rendition === '1080p');
+          // Fallback
+          if (!fileInfo)
+            fileInfo = val.files.find((file) => file.rendition === '720p');
+
           return {
             label: val.name,
             value: val.player_embed_url,
             thumb: val.pictures.sizes[val.pictures.sizes.length - 1].link,
             thumbSm: val.pictures.sizes[1].link,
+            file: fileInfo ? fileInfo.link : undefined,
           };
         }
       );
       videoData = videoData.concat(videoData, m);
 
-      if (resData.paging.next) getData(resData.paging.next);
-      else {
-        res.status(200).send(videoData);
-      }
+      // Limit to first 75 videos
+      // if (resData.paging.next && page < 3) getData(resData.paging.next);
+      // else {
+      console.log(videoData);
+      res.status(200).send(videoData);
+      // }
     };
     getData();
   } catch (err: any) {

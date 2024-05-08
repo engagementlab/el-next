@@ -167,9 +167,9 @@ const VideoSelector = ({
     currentVideo,
   } = useStore((state) => state);
 
-  const beginIndex = pgIndex * 12;
-  const endIndex = beginIndex + 12;
-  const dataLength = Math.floor(data.length / 12) + 1;
+  const beginIndex = pgIndex * 18;
+  const endIndex = beginIndex + 18;
+  const dataLength = Math.floor(data.length / 18) + 1;
   return (
     <>
       <TailwindCdnScript />
@@ -221,7 +221,7 @@ const VideoSelector = ({
               <hr className=" border-t-2 border-[#f6a536] my-3" />
 
               <Box className="flex-grow-1">
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   {data
                     .slice(beginIndex, endIndex)
                     .map((item: RelatedVideo) => {
@@ -233,7 +233,7 @@ const VideoSelector = ({
                           );
                       // console.log(selected, currentVideo);
                       return (
-                        <Grid item xs={3} key={item.value}>
+                        <Grid item xs={2} key={item.value}>
                           <a
                             className="relative cursor-pointer"
                             onClick={() => {

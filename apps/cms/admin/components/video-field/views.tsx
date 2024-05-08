@@ -1,7 +1,8 @@
 import React from 'react';
 import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
-import { CellLink, CellContainer } from '@keystone-6/core/admin-ui/components';
-import { Button } from '@keystone-ui/button';
+import { CellContainer } from '@keystone-6/core/admin-ui/components';
+import LoadingButton from '@mui/lab/LoadingButton';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 
 import {
   CardValueComponent,
@@ -12,6 +13,8 @@ import {
 } from '@keystone-6/core/types';
 
 import { css as emCss } from '@emotion/css';
+import { VideoGrid } from '../video/components';
+import VideoSelector, { RelatedVideo } from '../video/selector';
 
 const styles = {
   icon: emCss`
@@ -31,19 +34,43 @@ export function Field({
   onChange,
   autoFocus,
 }: FieldProps<typeof controller>) {
+  const VideoGridInstance = new VideoGrid();
   return (
-    <FieldContainer as="fieldset" className={styles.field}>
-      <Button
-        size="small"
-        disabled={onChange === undefined}
-        onClick={() => {
-          //   inputRef.current?.click();
+    <>
+      <FieldContainer as="fieldset" className={styles.field}>
+        <LoadingButton
+          loading={VideoGridInstance._useStore().waiting}
+          loadingPosition="start"
+          startIcon={<VideoLibraryIcon />}
+          variant="outlined"
+          color="success"
+          onClick={() => {
+            VideoGridInstance.GetData();
+          }}
+        >
+          Select Video
+        </LoadingButton>
+        {VideoGridInstance._useStore().error && (
+          <p className="p-4 text-red font-bold block">Something went wrong.</p>
+        )}
+        {value && <span>{value.thumbUrl}</span>}
+      </FieldContainer>
+      <VideoSelector
+        videos={VideoGridInstance.currentVideos}
+        data={VideoGridInstance.data}
+        open={VideoGridInstance.gridOpen}
+        selectionChanged={(item: RelatedVideo) => {
+          VideoGridInstance.setVideo(item);
+          if (onChange)
+            onChange({
+              file: item.value,
+              caption: '',
+              thumbUrl: item.thumbSm,
+            });
         }}
-        tone="positive"
-      >
-        Select Video
-      </Button>
-    </FieldContainer>
+        done={() => VideoGridInstance.setGridOpen(false)}
+      />
+    </>
   );
 }
 
@@ -63,22 +90,28 @@ export const CardValue: CardValueComponent = ({ item, field }) => {
 
 export const controller = (
   config: FieldControllerConfig
-): FieldController<string | null, string> => {
+): FieldController<{
+  file: string;
+  caption: string;
+  thumbUrl: string;
+}> => {
   return {
     path: config.path,
     label: config.label,
     description: config.description,
 
     graphqlSelection: `${config.path} {
-        url
-        filename
-        ref
-        filesize
+        file
+        caption
       }`,
-    defaultValue: { kind: 'empty' },
+    defaultValue: {
+      file: '',
+      caption: '',
+      thumbUrl: '',
+    },
     deserialize: (data) => {
       const value = data[config.path];
-      return typeof value === 'string' ? value : null;
+      return value;
     },
     serialize: (value) => ({ [config.path]: value }),
   };

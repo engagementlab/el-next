@@ -48,6 +48,9 @@ export function Field({
         {VideoGridInstance._useStore().error && (
           <p className="p-4 text-red font-bold block">Something went wrong.</p>
         )}
+        {VideoGridInstance._useStore().waiting && (
+          <p>Vimeo data may take quite a while to load...</p>
+        )}
       </FieldContainer>
       <VideoSelector
         videos={VideoGridInstance.currentVideos}

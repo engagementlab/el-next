@@ -3,18 +3,17 @@ import {
   fieldType,
   FieldTypeFunc,
   CommonFieldConfig,
-  orderDirectionEnum,
-  KeystoneContext,
 } from '@keystone-6/core/types';
 import { graphql } from '@keystone-6/core';
-import { GraphQLResolveInfo } from 'graphql';
 
-type PairInput = {
+type VideoInput = {
   file: string;
+  label: string;
   caption?: string;
   thumbUrl: string;
+  thumbSmUrl: string;
 };
-type PairOutput = PairInput;
+type VideoOutput = VideoInput;
 
 const VideoFieldInput = graphql.inputObject({
   name: 'VideoFieldInput',
@@ -22,27 +21,44 @@ const VideoFieldInput = graphql.inputObject({
     file: graphql.arg({
       type: graphql.String,
     }),
+    label: graphql.arg({
+      type: graphql.String,
+    }),
     caption: graphql.arg({ type: graphql.String }),
     thumbUrl: graphql.arg({ type: graphql.String }),
+    thumbSmUrl: graphql.arg({ type: graphql.String }),
   },
 });
-const VideoFieldOutput = graphql.object<PairOutput>()({
+const VideoFieldOutput = graphql.object<VideoOutput>()({
   name: 'VideoFieldOutput',
   fields: {
     file: graphql.field({ type: graphql.String }),
+    label: graphql.field({
+      type: graphql.String,
+    }),
     caption: graphql.field({ type: graphql.String }),
     thumbUrl: graphql.field({ type: graphql.String }),
+    thumbSmUrl: graphql.field({ type: graphql.String }),
   },
 });
 
 export type VideoFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
-  CommonFieldConfig<ListTypeInfo> & PairOutput;
+  CommonFieldConfig<ListTypeInfo> & VideoOutput;
 
 export function video<ListTypeInfo extends BaseListTypeInfo>(
-  { file, caption, thumbUrl, ...config }: VideoFieldConfig<ListTypeInfo> = {
-    file: 'none',
+  {
+    file,
+    label,
+    caption,
+    thumbUrl,
+    thumbSmUrl,
+    ...config
+  }: VideoFieldConfig<ListTypeInfo> = {
+    file: '',
+    label: '',
     caption: '',
     thumbUrl: '',
+    thumbSmUrl: '',
   }
 ): FieldTypeFunc<ListTypeInfo> {
   return (meta) =>
@@ -50,6 +66,15 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
       kind: 'multi',
       fields: {
         file: {
+          kind: 'scalar',
+          scalar: 'String',
+          mode: 'required',
+          default: {
+            kind: 'literal',
+            value: 'none',
+          },
+        },
+        label: {
           kind: 'scalar',
           scalar: 'String',
           mode: 'required',
@@ -68,6 +93,15 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
             value: 'none',
           },
         },
+        thumbSmUrl: {
+          kind: 'scalar',
+          scalar: 'String',
+          mode: 'required',
+          default: {
+            kind: 'literal',
+            value: 'none',
+          },
+        },
       },
     })({
       ...config,
@@ -76,9 +110,11 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           arg: graphql.arg({ type: VideoFieldInput }),
           resolve(val) {
             return {
-              file: '',
-              caption: '',
-              thumbUrl: '',
+              file: val?.file || '',
+              label: val?.label || '',
+              caption: val?.caption || '',
+              thumbUrl: val?.thumbUrl || '',
+              thumbSmUrl: val?.thumbSmUrl || '',
             };
           },
         },
@@ -86,21 +122,32 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           arg: graphql.arg({ type: VideoFieldInput }),
           resolve(val) {
             return {
-              file: '',
-              caption: '',
-              thumbUrl: '',
+              file: val?.file || '',
+              label: val?.label || '',
+              caption: val?.caption || '',
+              thumbUrl: val?.thumbUrl || '',
+              thumbSmUrl: val?.thumbSmUrl || '',
             };
           },
         },
       },
       output: graphql.field({
         type: VideoFieldOutput,
-        async resolve({ value: { file, caption, thumbUrl } }) {
-          if (file === null || caption === null) {
+        async resolve({
+          value: { file, label, caption, thumbUrl, thumbSmUrl },
+        }) {
+          const captionResolved = caption ? caption : undefined;
+          if (file === null || label === null) {
             return null;
           }
 
-          return { file, caption, thumbUrl };
+          return {
+            file,
+            label,
+            caption: captionResolved,
+            thumbUrl,
+            thumbSmUrl,
+          };
         },
       }),
 

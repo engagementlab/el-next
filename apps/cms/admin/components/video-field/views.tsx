@@ -12,21 +12,8 @@ import {
   FieldProps,
 } from '@keystone-6/core/types';
 
-import { css as emCss } from '@emotion/css';
 import { VideoGrid } from '../video/components';
 import VideoSelector, { RelatedVideo } from '../video/selector';
-
-const styles = {
-  icon: emCss`
-      display: inline-block;
-      margin-right: 1rem;`,
-  field: emCss`
-      display: flex;
-      align-items: center;
-      background-color: #F6A5365E;
-      padding: .5rem;
-    `,
-};
 
 export function Field({
   field,
@@ -35,9 +22,17 @@ export function Field({
   autoFocus,
 }: FieldProps<typeof controller>) {
   const VideoGridInstance = new VideoGrid();
+
   return (
     <>
-      <FieldContainer as="fieldset" className={styles.field}>
+      <FieldContainer as="fieldset" className="flex flex-col p-2 max-w-[12rem]">
+        {value.file.length > 1 && (
+          <>
+            <img src={value.thumbSmUrl} width={75} height={75} />
+            <p>{value.label}</p>
+          </>
+        )}
+
         <LoadingButton
           loading={VideoGridInstance._useStore().waiting}
           loadingPosition="start"
@@ -48,12 +43,11 @@ export function Field({
             VideoGridInstance.GetData();
           }}
         >
-          Select Video
+          {value ? 'Change' : 'Select'} Video
         </LoadingButton>
         {VideoGridInstance._useStore().error && (
           <p className="p-4 text-red font-bold block">Something went wrong.</p>
         )}
-        {value && <span>{value.thumbUrl}</span>}
       </FieldContainer>
       <VideoSelector
         videos={VideoGridInstance.currentVideos}
@@ -63,9 +57,11 @@ export function Field({
           VideoGridInstance.setVideo(item);
           if (onChange)
             onChange({
-              file: item.value,
+              file: item.file,
+              label: item.label,
               caption: '',
-              thumbUrl: item.thumbSm,
+              thumbUrl: item.thumb,
+              thumbSmUrl: item.thumbSm,
             });
         }}
         done={() => VideoGridInstance.setGridOpen(false)}
@@ -92,8 +88,10 @@ export const controller = (
   config: FieldControllerConfig
 ): FieldController<{
   file: string;
-  caption: string;
+  caption?: string;
   thumbUrl: string;
+  thumbSmUrl: string;
+  label: string;
 }> => {
   return {
     path: config.path,
@@ -102,12 +100,17 @@ export const controller = (
 
     graphqlSelection: `${config.path} {
         file
+        label
         caption
+        thumbUrl
+        thumbSmUrl
       }`,
     defaultValue: {
       file: '',
       caption: '',
       thumbUrl: '',
+      thumbSmUrl: '',
+      label: '',
     },
     deserialize: (data) => {
       const value = data[config.path];

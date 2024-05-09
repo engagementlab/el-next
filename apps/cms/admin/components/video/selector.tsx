@@ -33,7 +33,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
  */
 export interface RelatedVideo {
   label: string;
-  value: string;
+  file: string;
   thumb: string;
   thumbSm: string;
   caption?: string;
@@ -41,7 +41,7 @@ export interface RelatedVideo {
 export interface RelatedVideoField {
   [key: string]: {
     label: string;
-    value: string;
+    file: string;
     thumb: string;
     thumbSm: string;
     caption?: string;
@@ -225,21 +225,17 @@ const VideoSelector = ({
                   {data
                     .slice(beginIndex, endIndex)
                     .map((item: RelatedVideo) => {
-                      const selected = singleSelection
-                        ? (currentVideo as any).value ===
-                          (item as RelatedVideo).value
-                        : _.map(currentVideos, 'value').includes(
-                            (item as RelatedVideo).value
-                          );
-                      // console.log(selected, currentVideo);
+                      const selected =
+                        currentVideo &&
+                        (currentVideo as any).file ===
+                          (item as RelatedVideo).file;
+
                       return (
-                        <Grid item xs={2} key={item.value}>
+                        <Grid item xs={2} key={item.file}>
                           <a
                             className="relative cursor-pointer"
                             onClick={() => {
-                              if (singleSelection) setVideoSingle(item as any);
-                              else setVideo(item);
-                              // Are we allowing only one video to be selected?
+                              setVideoSingle(item as any);
                               selectionChanged(item as RelatedVideo);
                             }}
                           >

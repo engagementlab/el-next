@@ -128,15 +128,18 @@ export class VideoGrid {
   }
 
   GetData = () => {
+    if (this.data.length > 0) {
+      this.set({ gridOpen: true });
+      return;
+    }
     // Get Vimeo data
     try {
-      this.set({ waiting: true });
+      this.set({ waiting: true, error: false });
       axios
         .get(`${this.endpointPrefix}/media/videos`)
         .then((response: { data: any[] }) => {
           this.setData(response.data);
-          this.setGridOpen(true);
-          this.set({ waiting: false });
+          this.set({ waiting: false, gridOpen: true });
         })
         .catch((error: any) => {
           this.set({ waiting: false, error: true });

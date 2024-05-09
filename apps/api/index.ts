@@ -9,6 +9,14 @@ import dotenv from 'dotenv';
 import _ from 'lodash';
 import fileUpload from 'express-fileupload';
 
+type Video = {
+  name: any;
+  player_embed_url: any;
+  pictures: { sizes: string | any[] };
+  files: any[];
+  privacy: { view: string };
+};
+
 dotenv.config();
 
 cloudinary.config({
@@ -60,7 +68,6 @@ app.get('/media/videos', async (req, res, next) => {
       thumb: any;
       thumbSm: any;
     }[] = [];
-    let page = 0;
 
     const getData = async (
       apiPath: string = '/users/11255512/videos?sort=date&direction=desc&per_page=75'
@@ -77,15 +84,10 @@ app.get('/media/videos', async (req, res, next) => {
       if (!response) return;
       const resData = response.data;
 
-      page++;
       let m = _.map(
-        resData.data,
-        (val: {
-          name: any;
-          player_embed_url: any;
-          pictures: { sizes: string | any[] };
-          files: any[];
-        }) => {
+        resData.data.filter((d: Video) => d.privacy.view !== 'unlisted'),
+        (val: Video) => {
+          // if (val.privacy.view === 'unlisted') return;
           let fileInfo = val.files.find((file) => file.rendition === '1080p');
           // Fallback
           if (!fileInfo)
@@ -103,11 +105,7 @@ app.get('/media/videos', async (req, res, next) => {
       videoData = videoData.concat(videoData, m);
 
       // Limit to first 75 videos
-      // if (resData.paging.next && page < 3) getData(resData.paging.next);
-      // else {
-      console.log(videoData);
       res.status(200).send(videoData);
-      // }
     };
     getData();
   } catch (err: any) {

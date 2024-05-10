@@ -38,6 +38,7 @@ interface VideoProps {
   videoFile: string;
   videoLabel: string;
   caption?: string;
+  captionsFile?: string;
   theme: Theme;
   thumbUrl?: string;
   isSlide?: boolean;
@@ -64,6 +65,7 @@ type ControlsProps = {
   duration: number;
   muted: boolean;
   playing: boolean;
+  captionsEnabled: boolean;
   hideCaptions: boolean;
   fullscreen: boolean;
   playedSeconds: number;
@@ -136,18 +138,20 @@ const Controls = (props: ControlsProps) => {
         >
           {props.playing ? <PauseCircleFilledIcon /> : <PlayCircleFilledIcon />}
         </IconButton>
-        <IconButton
-          aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
-          size="large"
-          onClick={() => props.onToggleCaptions()}
-          sx={{ color: props.theme.buttons }}
-        >
-          {props.hideCaptions ? (
-            <ClosedCaptionDisabledIcon />
-          ) : (
-            <ClosedCaptionIcon />
-          )}
-        </IconButton>
+        {props.captionsEnabled && (
+          <IconButton
+            aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
+            size="large"
+            onClick={() => props.onToggleCaptions()}
+            sx={{ color: props.theme.buttons }}
+          >
+            {props.hideCaptions ? (
+              <ClosedCaptionDisabledIcon />
+            ) : (
+              <ClosedCaptionIcon />
+            )}
+          </IconButton>
+        )}
         <IconButton
           aria-label={props.fullscreen ? 'exit fullscreen' : 'Enter fullscreen'}
           size="large"
@@ -212,6 +216,7 @@ export const Video = ({
   videoFile,
   videoLabel,
   caption,
+  captionsFile,
   isSlide,
   theme,
   noUi,
@@ -430,22 +435,24 @@ export const Video = ({
             volume={volume}
             muted={muted}
             config={
-              {
-                // file: {
-                //   attributes: {
-                //     crossOrigin: 'true',
-                //   },
-                //   tracks: [
-                //     {
-                //       src: 'https://res.cloudinary.com/engagement-lab-home/raw/upload/v1711547945/0_yo8h2d.vtt',
-                //       kind: 'subtitles',
-                //       srcLang: 'en',
-                //       default: true,
-                //       label: 'English',
-                //     },
-                //   ],
-                // },
-              }
+              captionsFile
+                ? {
+                    file: {
+                      attributes: {
+                        crossOrigin: 'true',
+                      },
+                      tracks: [
+                        {
+                          src: captionsFile,
+                          kind: 'subtitles',
+                          srcLang: 'en',
+                          default: true,
+                          label: 'English',
+                        },
+                      ],
+                    },
+                  }
+                : {}
             }
           />
 
@@ -463,6 +470,7 @@ export const Video = ({
               volume={volume}
               muted={muted}
               theme={theme}
+              captionsEnabled={captionsFile !== undefined}
               hideCaptions={hideCaptions}
               fullscreen={isFullscreen}
               onMute={muteHandler}

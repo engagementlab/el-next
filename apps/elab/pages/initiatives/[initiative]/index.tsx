@@ -40,6 +40,12 @@ type Initiative = {
     document: any;
   };
   slides?: any[];
+  introVideo?: {
+    file: string;
+  };
+  captions?: {
+    url: string;
+  };
   videoId?: string;
   videoCaption?: string;
   videoThumbnail?: {
@@ -230,7 +236,8 @@ export default function InitIndex({
                 <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
                   <div className="group w-full min-h-[inherit] ">
                     <div id="video" className="min-h-[inherit] left">
-                      {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
+                      {process.env.NEXT_PUBLIC_STAGING === 'true' &&
+                      page.introVideo ? (
                         <>
                           <VideoV2
                             key={`video-player-${page.vimeoFile}`}
@@ -240,8 +247,9 @@ export default function InitIndex({
                                 (i) => i.key === initiative
                               )?.label
                             } Intro Video`}
-                            videoFile={page.vimeoFile}
+                            videoFile={page.introVideo.file}
                             caption={page.videoCaption}
+                            captionsFile={page.captions?.url}
                             thumbUrl={page.videoThumbnail?.publicUrl}
                             theme={videoColor}
                           />
@@ -509,6 +517,12 @@ export async function getStaticProps({
         intro {
           document
         }
+        introVideo {
+          file
+        }
+        captions {
+          url
+        }
         videoId
         videoThumbnail {
           publicUrl
@@ -586,7 +600,6 @@ export async function getStaticProps({
                 publicId
             }  
         }
-        vimeoFile
       }`
   );
 

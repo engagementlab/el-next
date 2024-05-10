@@ -90,6 +90,8 @@ model Initiative {
   introVideo_caption    String?
   introVideo_thumbUrl   String            @default("none")
   introVideo_thumbSmUrl String            @default("none")
+  captions_filename     String?
+  captions_filesize     Int?
   videoId               String            @default("")
   videoThumbnail        Json?
   videoCaption          String            @default("")
@@ -108,7 +110,6 @@ model Initiative {
   helper_html           String            @default("<p>Need HTML!</p>")
   helper_iconType       icon              @default(help)
   ogDescription         String            @default("")
-  vimeoFile             String            @default("")
 }
 
 model InitiativesLanding {

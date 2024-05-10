@@ -123,6 +123,7 @@ type NavState = {
   setFileUploadOpen: (open: boolean) => void;
   setEditOpen: (open: boolean) => void;
 };
+
 export default function Media() {
   // app name is derived from first pathname string
   const app =
@@ -908,11 +909,7 @@ export default function Media() {
                 MenuProps={MenuProps}
               >
                 {folders.map((folder) => (
-                  <MenuItem
-                    key={folder.path}
-                    value={folder.path}
-                    // style={getStyles(folder, personName, theme)}
-                  >
+                  <MenuItem key={folder.path} value={folder.path}>
                     {/* Format folder name */}
                     {folder.name
                       .replaceAll('-', ' ')

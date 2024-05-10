@@ -648,6 +648,7 @@ type Initiative {
   name: String
   intro: Initiative_intro_Document
   introVideo: VideoFieldOutput
+  captions: AzureStorageFileFieldOutput
   videoId: String
   videoThumbnail: CloudinaryImage_File
   videoCaption: String
@@ -672,7 +673,6 @@ type Initiative {
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
-  vimeoFile: String
 }
 
 type Initiative_intro_Document {
@@ -685,6 +685,13 @@ type VideoFieldOutput {
   caption: String
   thumbUrl: String
   thumbSmUrl: String
+}
+
+interface AzureStorageFileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
 }
 
 type Initiative_body_Document {
@@ -720,7 +727,6 @@ input InitiativeWhereInput {
   research: ResearchProjectManyRelationFilter
   associatedPeople: PersonManyRelationFilter
   ogDescription: StringFilter
-  vimeoFile: StringFilter
 }
 
 input EventManyRelationFilter {
@@ -747,13 +753,13 @@ input InitiativeOrderByInput {
   videoId: OrderDirection
   videoCaption: OrderDirection
   ogDescription: OrderDirection
-  vimeoFile: OrderDirection
 }
 
 input InitiativeUpdateInput {
   name: String
   intro: JSON
   introVideo: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   videoId: String
   videoThumbnail: Upload
   videoCaption: String
@@ -771,7 +777,6 @@ input InitiativeUpdateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-  vimeoFile: String
 }
 
 input VideoFieldInput {
@@ -780,6 +785,11 @@ input VideoFieldInput {
   caption: String
   thumbUrl: String
   thumbSmUrl: String
+}
+
+input AzureStorageFileFieldInput {
+  upload: Upload
+  ref: String
 }
 
 input EventRelateToManyForUpdateInput {
@@ -812,6 +822,7 @@ input InitiativeCreateInput {
   name: String
   intro: JSON
   introVideo: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   videoId: String
   videoThumbnail: Upload
   videoCaption: String
@@ -829,7 +840,6 @@ input InitiativeCreateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-  vimeoFile: String
 }
 
 input EventRelateToManyForCreateInput {
@@ -1512,13 +1522,6 @@ type Publication_citations_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-interface AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
 input PublicationWhereUniqueInput {
   id: ID
   key: String
@@ -1570,11 +1573,6 @@ input PublicationUpdateInput {
   file: AzureStorageFileFieldInput
   buttons: JSON
   relatedProject: ResearchProjectRelateToOneForUpdateInput
-}
-
-input AzureStorageFileFieldInput {
-  upload: Upload
-  ref: String
 }
 
 input ResearchProjectRelateToOneForUpdateInput {

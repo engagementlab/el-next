@@ -34,4 +34,16 @@ const azConfig: AzureStorageConfig = {
     url: process.env.AZURE_STORAGE_URL,
   },
 };
-export { azConfig };
+
+const azConfigCustom = (container: string) => {
+  const config: AzureStorageConfig = {
+    azureStorageOptions: {
+      account: process.env.AZURE_STORAGE_ACCOUNT || '',
+      accessKey: process.env.AZURE_STORAGE_ACCESS_KEY || '',
+      container,
+      url: process.env.AZURE_STORAGE_URL,
+    },
+  };
+  return config;
+};
+export { azConfig, azConfigCustom };

@@ -232,54 +232,40 @@ export default function InitIndex({
                   </div>
                 </div>
               </div>
-              {page.videoId ? (
-                <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
-                  <div className="group w-full min-h-[inherit] ">
-                    <div id="video" className="min-h-[inherit] left">
-                      {process.env.NEXT_PUBLIC_STAGING === 'true' &&
-                      page.introVideo ? (
-                        <>
-                          <VideoV2
-                            key={`video-player-${page.vimeoFile}`}
-                            isSlide={true}
-                            videoLabel={`${
-                              InitiativeFilterGroups.find(
-                                (i) => i.key === initiative
-                              )?.label
-                            } Intro Video`}
-                            videoFile={page.introVideo.file}
-                            caption={page.videoCaption}
-                            captionsFile={page.captions?.url}
-                            thumbUrl={page.videoThumbnail?.publicUrl}
-                            theme={videoColor}
-                          />
-                        </>
-                      ) : (
-                        <Video
+
+              <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
+                <div className="group w-full min-h-[inherit] ">
+                  <div id="video" className="min-h-[inherit] left">
+                    {page.introVideo ? (
+                      <>
+                        <VideoV2
+                          key={`video-player-${page.vimeoFile}`}
                           isSlide={true}
                           videoLabel={`${
                             InitiativeFilterGroups.find(
                               (i) => i.key === initiative
                             )?.label
                           } Intro Video`}
-                          videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
+                          videoFile={page.introVideo.file}
+                          caption={page.videoCaption}
+                          captionsFile={page.captions?.url}
                           thumbUrl={page.videoThumbnail?.publicUrl}
-                          // theme={videoColor}
+                          theme={videoColor}
                         />
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      page?.slides &&
+                      page?.slides.length > 0 && (
+                        <Slideshow
+                          slides={page?.slides}
+                          theme={Theming[initiative]}
+                          className={`${Theming[initiative].bg} bg-opacity-50`}
+                        />
+                      )
+                    )}
                   </div>
                 </div>
-              ) : (
-                page?.slides &&
-                page?.slides.length > 0 && (
-                  <Slideshow
-                    slides={page?.slides}
-                    theme={Theming[initiative]}
-                    className={`${Theming[initiative].bg} bg-opacity-50`}
-                  />
-                )
-              )}
+              </div>
             </div>
             <h2 className={`${subHeadClass} mt-20`}>Featured News & Events</h2>
             {mergedItems && (
@@ -523,7 +509,6 @@ export async function getStaticProps({
         captions {
           url
         }
-        videoId
         videoThumbnail {
           publicUrl
         }
@@ -535,7 +520,9 @@ export async function getStaticProps({
           }
           altText
           caption
-          videoId
+          video {
+            file
+          }
           order
         }
         news {

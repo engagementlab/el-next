@@ -8,7 +8,8 @@ export type Slide = {
     publicUrl: string;
   };
   caption: string;
-  videoId?: string;
+  captions?: { file: string };
+  video: { file: string };
   order: number;
 };
 
@@ -75,7 +76,7 @@ export const ThemeColors = [
     secondaryHex: '#F6A536',
   },
 ];
-
+// [key in 'none' | 'tngv' | 'tnej']
 export const Theming: { [key: string]: ThemeConfig } = {
   none: {
     arrow: '#F6A536',

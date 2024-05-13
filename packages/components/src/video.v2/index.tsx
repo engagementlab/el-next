@@ -21,12 +21,13 @@ import { IconButton } from '@mui/material';
 import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
 import ClosedCaptionDisabledIcon from '@mui/icons-material/ClosedCaptionDisabled';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
 
-type Theme = {
+type VideoTheme = {
   fill: string;
   stroke: string;
   bg: string;
@@ -39,7 +40,7 @@ interface VideoProps {
   videoLabel: string;
   caption?: string;
   captionsFile?: string;
-  theme: Theme;
+  theme: VideoTheme;
   thumbUrl?: string;
   isSlide?: boolean;
   noUi?: boolean;
@@ -71,7 +72,7 @@ type ControlsProps = {
   playedSeconds: number;
   volume: number;
   playerRef: MutableRefObject<ReactPlayer>;
-  theme: Theme;
+  theme: VideoTheme;
   setPlaying: Dispatch<SetStateAction<boolean>>;
   onVolumeChangeHandler: (e: any, value: string) => void;
   onVolumeSeekUp: (e: any, value: string) => void;
@@ -158,7 +159,7 @@ const Controls = (props: ControlsProps) => {
           onClick={() => props.onClickFullscreen()}
           sx={{ color: props.theme.buttons }}
         >
-          <FullscreenIcon />
+          {props.fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
         </IconButton>
         <Box
           className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${

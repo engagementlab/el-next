@@ -6,6 +6,9 @@ import { Lists } from '.keystone/types';
 
 import { cloudinaryImage } from '../components/cloudinary';
 import { helper, HelperIcon } from '../components/helper';
+import { azureStorageFile } from '../components/fields-azure/src';
+import { video } from '../components/video-field';
+import { azConfigCustom } from './azure';
 
 const Slide: Lists.Slide = list({
   access: allowAll,
@@ -49,11 +52,16 @@ const Slide: Lists.Slide = list({
           'This is optional and different from the description of the image.',
       },
     }),
-    videoId: text({
-      label: 'Vimeo ID',
-      ui: {
-        description: 'Use the image field to specify thumbnail.',
-      },
+    // videoId: text({
+    //   label: 'Vimeo ID',
+    //   ui: {
+    //     description: 'Use the image field to specify thumbnail.',
+    //   },
+    // }),
+    video: video(),
+    captions: azureStorageFile({
+      azureStorageConfig: azConfigCustom('captions'),
+      label: 'Video Captions File',
     }),
     order: integer({
       defaultValue: 0,

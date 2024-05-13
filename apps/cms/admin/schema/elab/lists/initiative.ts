@@ -36,16 +36,14 @@ const Initiative: Lists.Initiative = list({
         captions: azureStorageFile({
           azureStorageConfig: azConfigCustom('captions'),
           label: 'Captions File',
-          ui: { description: 'Optional' },
         }),
-
-        videoId: text({
+        /* video: text({
           label: 'Intro Video ID',
           ui: {
             description:
               'Vimeo video ID. If specified, takes precedence over slideshow',
           },
-        }),
+        }), */
         videoThumbnail: cloudinaryImage({
           label: 'Intro Video Thumbnail',
           cloudinary: {
@@ -65,12 +63,12 @@ const Initiative: Lists.Initiative = list({
             description:
               'A slide can be either an image or video. If you define both, only the image will display. ',
             displayMode: 'cards',
-            cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
+            cardFields: ['image', 'altText', 'caption', 'video', 'order'],
             inlineCreate: {
-              fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+              fields: ['image', 'altText', 'caption', 'video', 'order'],
             },
             inlineEdit: {
-              fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+              fields: ['image', 'altText', 'caption', 'video', 'order'],
             },
           },
         }),

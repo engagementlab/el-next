@@ -16,7 +16,7 @@ import screenfull from 'screenfull';
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { IconButton } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 
 import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
 import ClosedCaptionDisabledIcon from '@mui/icons-material/ClosedCaptionDisabled';
@@ -37,7 +37,7 @@ type VideoTheme = {
 
 interface VideoProps {
   videoFile: string;
-  videoLabel: string;
+  videoLabel?: string;
   caption?: string;
   captionsFile?: string;
   theme: VideoTheme;
@@ -90,6 +90,15 @@ const Controls = (props: ControlsProps) => {
 
   const [volumeHover, toggleHover] = useState(false);
 
+  const ProgressSlider = styled(Slider)({
+    color: '#52af77',
+    height: 8,
+    '& .MuiSlider-track': {
+      border: 'none',
+    },
+    '& .MuiSlider-thumb': {},
+  });
+
   return (
     <div
       className={`absolute flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
@@ -109,11 +118,17 @@ const Controls = (props: ControlsProps) => {
         <Slider
           aria-label="Player Current Position"
           defaultValue={0}
+          valueLabelDisplay="auto"
           value={
             props.playerRef.current
               ? props.playerRef.current.getCurrentTime()
               : 0
           }
+          valueLabelFormat={(v) => {
+            const mins = v < 60 ? 0 : Math.ceil(v / 60);
+            const secs = (v % 60 <= 9 ? '0' : '') + Math.ceil(v % 60);
+            return `${mins}:${secs}`;
+          }}
           getAriaValueText={() => {
             return props.playerRef.current &&
               props.playerRef.current.getCurrentTime() !== null
@@ -126,7 +141,37 @@ const Controls = (props: ControlsProps) => {
           }
           sx={{
             color: props.theme.seekbar,
-            filter: 'drop-shadow(1px 0px 12px #F6A515)',
+            // filter: 'drop-shadow(1px 0px 12px #F6A515)',÷
+            '& .MuiSlider-thumb': {
+              height: 24,
+              width: 24,
+              backgroundColor: '#fff',
+              border: '2px solid currentColor',
+              '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                boxShadow: 'inherit',
+              },
+              '&::before': {
+                display: 'none',
+              },
+            },
+
+            '& .MuiSlider-valueLabel': {
+              lineHeight: 1.2,
+              fontSize: 12,
+              background: 'unset',
+              padding: 0,
+              width: 64,
+              height: 32,
+              borderRadius: '50px',
+              backgroundColor: '#000',
+              filter: 'drop-shadow(1px 0px 5px #F6A515)',
+              transformOrigin: 'bottom center',
+              transform: 'translate(0, -100%) scale(0)',
+              '&::before': { display: 'none' },
+              '&.MuiSlider-valueLabelOpen': {
+                transform: 'translate(0, -100%) scale(1)',
+              },
+            },
           }}
         />
       </Box>
@@ -327,7 +372,6 @@ export const Video = ({
   }, [videoOpen]);
 
   useEffect(() => {
-    // debugger;
     return () => {
       setVideoState({
         ...videoState,
@@ -350,7 +394,11 @@ export const Video = ({
           style={{ height: 'inherit' }}
         >
           <Image
-            alt={`Thumbnail image for video with title "${videoLabel}"`}
+            alt={
+              videoLabel
+                ? `Thumbnail image for video with title "${videoLabel}"`
+                : 'Thumbnail image for video preview'
+            }
             className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
             src={thumbUrl}
             width={1920}
@@ -412,7 +460,7 @@ export const Video = ({
           )}
         </button>
       )}
-      {videoOpen && (
+      {(videoOpen || play) && (
         <div
           id="video-embed"
           ref={wrapperRef}
@@ -433,6 +481,7 @@ export const Video = ({
             onDuration={setDurationSeconds}
             onProgress={({ playedSeconds }) => setPlayedSeconds(playedSeconds)}
             onSeek={setPlayedSeconds}
+            //  onBuffer={}
             volume={volume}
             muted={muted}
             config={

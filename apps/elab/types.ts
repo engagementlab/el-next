@@ -10,6 +10,7 @@ export type Slide = {
   caption: string;
   captions?: { file: string };
   video: { file: string };
+  videoId?: string;
   order: number;
 };
 
@@ -363,8 +364,17 @@ export type StudioProject = {
     key: string;
     name: string;
   }[];
-  trailerId: string;
-  videoId: string;
+
+  captions?: { url: string };
+  video?: { file: string };
+
+  trailerVideo?: {
+    file: string;
+  };
+
+  videoId?: string;
+  trailerId?: string;
+
   buttons: any[];
   semester: {
     key: string;

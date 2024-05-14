@@ -32,7 +32,6 @@ import {
 } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
-import { useEffect } from 'react';
 
 type Initiative = {
   name?: string;
@@ -43,10 +42,8 @@ type Initiative = {
   introVideo?: {
     file: string;
   };
-  captions?: {
-    url: string;
-  };
-  videoId?: string;
+  captions?: { url: string };
+  video: { file: string };
   videoCaption?: string;
   videoThumbnail?: {
     publicUrl: string;
@@ -237,22 +234,20 @@ export default function InitIndex({
                 <div className="group w-full min-h-[inherit] ">
                   <div id="video" className="min-h-[inherit] left">
                     {page.introVideo ? (
-                      <>
-                        <VideoV2
-                          key={`video-player-${page.vimeoFile}`}
-                          isSlide={true}
-                          videoLabel={`${
-                            InitiativeFilterGroups.find(
-                              (i) => i.key === initiative
-                            )?.label
-                          } Intro Video`}
-                          videoFile={page.introVideo.file}
-                          caption={page.videoCaption}
-                          captionsFile={page.captions?.url}
-                          thumbUrl={page.videoThumbnail?.publicUrl}
-                          theme={videoColor}
-                        />
-                      </>
+                      <VideoV2
+                        key={`video-player-${page.vimeoFile}`}
+                        isSlide={true}
+                        videoLabel={`${
+                          InitiativeFilterGroups.find(
+                            (i) => i.key === initiative
+                          )?.label
+                        } Intro Video`}
+                        videoFile={page.introVideo.file}
+                        caption={page.videoCaption}
+                        captionsFile={page.captions?.url}
+                        thumbUrl={page.videoThumbnail?.publicUrl}
+                        theme={videoColor}
+                      />
                     ) : (
                       page?.slides &&
                       page?.slides.length > 0 && (

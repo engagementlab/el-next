@@ -4,7 +4,7 @@ import { AnimatePresence, motion, wrap, Variants } from 'framer-motion';
 import _ from 'lodash';
 
 import { Image } from '@el-next/components';
-// import { Video } from '@el-next/components/video';
+import { Video } from '@el-next/components/video';
 import { Video as VideoV2 } from '@el-next/components/video.v2';
 import { CustomEase, Slide, Theme, ThemeConfig, Theming } from '@/types';
 
@@ -80,28 +80,30 @@ const Slideshow = ({
     else if (data.video && data.image)
       return (
         <div className={`flex items-center min-h-[350px] lg:min-h-[465px]`}>
-          {/* <Video
-            videoLabel={''}
-            videoUrl={`https://player.vimeo.com/video/${data.videoId}`}
-            thumbUrl={data.image.publicUrl}
-            isSlide={true}
-          /> */}
-          <VideoV2
-            key={`video-slide-${data.video.file}`}
-            isSlide={true}
-            videoLabel=""
-            videoFile={data.video.file}
-            caption={data.caption}
-            captionsFile={data.captions?.file}
-            thumbUrl={data.image.publicUrl}
-            theme={{
-              stroke: Theming['none'].arrow,
-              fill: Theming['none'].fillRgb,
-              bg: Theming['none'].secondaryBg,
-              seekbar: Theming['none'].arrowHex,
-              buttons: '#fff',
-            }}
-          />
+          {data.videoId ? (
+            <Video
+              videoLabel={''}
+              videoUrl={`https://player.vimeo.com/video/${data.videoId}`}
+              thumbUrl={data.image.publicUrl}
+              isSlide={true}
+            />
+          ) : (
+            <VideoV2
+              key={`video-slide-${data.video.file}`}
+              isSlide={true}
+              videoFile={data.video.file}
+              caption={data.caption}
+              captionsFile={data.captions?.file}
+              thumbUrl={data.image.publicUrl}
+              theme={{
+                stroke: Theming['none'].arrow,
+                fill: Theming['none'].fillRgb,
+                bg: Theming['none'].secondaryBg,
+                seekbar: Theming['none'].arrowHex,
+                buttons: '#fff',
+              }}
+            />
+          )}
         </div>
       );
     else if (data.caption && data.image)

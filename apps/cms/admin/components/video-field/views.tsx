@@ -26,7 +26,7 @@ export function Field({
   return (
     <>
       <FieldContainer as="fieldset" className="flex flex-col p-2 max-w-[12rem]">
-        {value.file.length > 1 && (
+        {value.file.length > 5 && value.thumbSmUrl.length > 5 && (
           <>
             <img src={value.thumbSmUrl} width={75} height={75} />
             <p>{value.label}</p>
@@ -116,9 +116,13 @@ export const controller = (
       label: '',
     },
     deserialize: (data) => {
+      console.log('====', data);
       const value = data[config.path];
       return value;
     },
-    serialize: (value) => ({ [config.path]: value }),
+    serialize: (value) => {
+      if (value.file.length > 10) return { [config.path]: value };
+      return {};
+    },
   };
 };

@@ -71,7 +71,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
         label: {
@@ -80,7 +80,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
         caption: { kind: 'scalar', scalar: 'String', mode: 'optional' },
@@ -90,7 +90,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
         thumbSmUrl: {
@@ -99,7 +99,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
       },

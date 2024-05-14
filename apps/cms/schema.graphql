@@ -2009,13 +2009,6 @@ input SlideWhereUniqueInput {
   id: ID
 }
 
-type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
 input SlideWhereInput {
   AND: [SlideWhereInput!]
   OR: [SlideWhereInput!]
@@ -2275,7 +2268,11 @@ type StudioProject {
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   videoId: String
+  video: VideoFieldOutput
+  captions: AzureStorageFileFieldOutput
   trailerId: String
+  trailerVideo: VideoFieldOutput
+  trailerCaptions: AzureStorageFileFieldOutput
   trailerThumbnail: CloudinaryImage_File
   trailerThumbAltText: String
   partners: [StudioProjectPartnerType!]
@@ -2344,6 +2341,13 @@ type StudioProject_impact_Document {
 input StudioProjectWhereUniqueInput {
   id: ID
   key: String
+}
+
+type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
 }
 
 input StudioProjectWhereInput {
@@ -2432,7 +2436,11 @@ input StudioProjectUpdateInput {
   thumbnail: Upload
   thumbAltText: String
   videoId: String
+  video: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   trailerId: String
+  trailerVideo: VideoFieldInput
+  trailerCaptions: AzureStorageFileFieldInput
   trailerThumbnail: Upload
   trailerThumbAltText: String
   partners: [StudioProjectPartnerType!]
@@ -2485,7 +2493,11 @@ input StudioProjectCreateInput {
   thumbnail: Upload
   thumbAltText: String
   videoId: String
+  video: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   trailerId: String
+  trailerVideo: VideoFieldInput
+  trailerCaptions: AzureStorageFileFieldInput
   trailerThumbnail: Upload
   trailerThumbAltText: String
   partners: [StudioProjectPartnerType!]

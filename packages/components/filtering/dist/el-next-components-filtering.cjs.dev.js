@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var unsupportedIterableToArray = require('../../dist/unsupportedIterableToArray-ac28611a.cjs.dev.js');
-var objectSpread2 = require('../../dist/objectSpread2-62cbe323.cjs.dev.js');
+var objectSpread2 = require('../../dist/objectSpread2-c088c990.cjs.dev.js');
 require('react');
 var create = require('zustand');
 var middleware = require('zustand/middleware');
@@ -44,7 +44,7 @@ function _defineProperties(target, props) {
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, objectSpread2._toPropertyKey(descriptor.key), descriptor);
+    Object.defineProperty(target, objectSpread2.toPropertyKey(descriptor.key), descriptor);
   }
 }
 function _createClass(Constructor, protoProps, staticProps) {
@@ -257,7 +257,7 @@ var Filtering = /*#__PURE__*/function () {
       history.replaceState({}, 'Filtered Data', "".concat(location.pathname, "?").concat(current.join('/')));
     });
   }
-  _createClass(Filtering, [{
+  return _createClass(Filtering, [{
     key: "RenderFilters",
     value: function RenderFilters(filters) {
       // Store get/set
@@ -401,7 +401,6 @@ var Filtering = /*#__PURE__*/function () {
       });
     }
   }]);
-  return Filtering;
 }();
 
 exports["default"] = Filtering;

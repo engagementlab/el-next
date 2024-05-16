@@ -9,6 +9,9 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
+import { video } from '../../../components/video-field';
+import { azureStorageFile } from '../../../components/fields-azure/src';
+import { azConfig, azConfigCustom } from '../../azure';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -29,6 +32,13 @@ const Initiative: Lists.Initiative = list({
     ...group({
       label: 'Intro Video/Slideshow',
       fields: {
+        introVideo: video(),
+        captions: azureStorageFile({
+          azureStorageConfig: azConfigCustom('captions'),
+          label: 'Captions File',
+          ui: { description: 'Optional' },
+        }),
+
         videoId: text({
           label: 'Intro Video ID',
           ui: {
@@ -45,9 +55,8 @@ const Initiative: Lists.Initiative = list({
             folder: 'elab-home-v3.x/studios/projects',
           },
         }),
-        videoCaption: document({
+        videoCaption: text({
           label: 'Intro Video Caption',
-          formatting: true,
         }),
         slides: relationship({
           ref: 'Slide.initiativeSlides',
@@ -143,19 +152,6 @@ const Initiative: Lists.Initiative = list({
       },
     }),
     ...group(Social()),
-    vimeoFile: text({
-      ui: {
-        createView: {
-          fieldMode: 'hidden',
-        },
-        itemView: {
-          fieldMode: 'hidden',
-        },
-        listView: {
-          fieldMode: 'hidden',
-        },
-      },
-    }),
   },
   ui: {
     hideDelete: true,
@@ -172,20 +168,6 @@ const Initiative: Lists.Initiative = list({
       resolvedData,
       context,
     }) => {
-      if (resolvedData.videoId) {
-        const endpointPrefix =
-          process.env.NODE_ENV === 'production'
-            ? 'https://cms.elab.emerson.edU/api'
-            : 'http://localhost:8000';
-        const fileUrlResponse = await axios.get(
-          `${endpointPrefix}/media/videos/data/${resolvedData.videoId}`
-        );
-        resolvedData = {
-          ...resolvedData,
-          vimeoFile: fileUrlResponse.data,
-        };
-        return resolvedData;
-      }
       return resolvedData;
     },
   },

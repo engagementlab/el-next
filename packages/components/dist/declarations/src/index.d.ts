@@ -6,18 +6,18 @@ export declare const enum ErrorClass {
     query = 4,
     syntax = 5
 }
-export { BlockRenderers } from './blockRenderers';
-export { Button } from './button';
-export { DateFormat } from './dateFormat';
-export { DocRenderers } from './docRenderers';
-export { ExternalLink } from './externalLink';
-export { Favicon } from './favicon';
-export { default as Filtering } from './filtering';
-export { FlexLayout } from './flexLayout';
-export { HeadingStyle } from './headingStyle';
-export { Layout } from './layout';
-export { default as Image } from './image';
-export { ImageUrl } from './image';
-export { Video } from './video.v2';
-export * from './query';
-export type { TError } from './query';
+export { BlockRenderers } from "./blockRenderers/index.js";
+export { Button } from "./button/index.js";
+export { DateFormat } from "./dateFormat/index.js";
+export { DocRenderers } from "./docRenderers/index.js";
+export { ExternalLink } from "./externalLink/index.js";
+export { Favicon } from "./favicon/index.js";
+export { default as Filtering } from "./filtering/index.js";
+export { FlexLayout } from "./flexLayout/index.js";
+export { HeadingStyle } from "./headingStyle/index.js";
+export { Layout } from "./layout/index.js";
+export { default as Image } from "./image/index.js";
+export { ImageUrl } from "./image/index.js";
+export { Video } from "./video.v2/index.js";
+export * from "./query/index.js";
+export type { TError } from "./query/index.js";

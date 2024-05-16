@@ -91,8 +91,8 @@ export default function Event({
               hour: '2-digit',
               minute: '2-digit',
             })}`}</div>
-            {item.address && (
-              <div className="text-coated font-medium">
+            <div className="text-coated font-medium">
+              {item.address && (
                 <a
                   href={`https://www.google.com/maps?q=${item.address.replaceAll(
                     '\n',
@@ -103,24 +103,24 @@ export default function Event({
                 >
                   {item.address}
                 </a>
+              )}
 
-                <DocumentRenderer
-                  document={item.blurb.document}
-                  componentBlocks={Blocks()}
-                  renderers={Doc()}
-                />
-                {item.registrationLink &&
-                  new Date(item.eventDate) >= new Date() && (
-                    <CTAButton
-                      label="RSVP Today"
-                      external={true}
-                      link={item.registrationLink}
-                      theme={theme}
-                      className="max-w-[150px]"
-                    />
-                  )}
-              </div>
-            )}
+              <DocumentRenderer
+                document={item.blurb.document}
+                componentBlocks={Blocks()}
+                renderers={Doc()}
+              />
+              {item.registrationLink &&
+                new Date(item.eventDate) >= new Date() && (
+                  <CTAButton
+                    label="RSVP Today"
+                    external={true}
+                    link={item.registrationLink}
+                    theme={theme}
+                    className="max-w-[150px]"
+                  />
+                )}
+            </div>
           </div>
         </div>
         <div className="px-4 xl:px-8 mt-10">

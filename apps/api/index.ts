@@ -1,13 +1,21 @@
 import express, { Express } from 'express';
 import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
+import { WebClient } from '@slack/web-api';
+import { unfurl } from 'unfurl.js';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import multer from 'multer';
 import _ from 'lodash';
-import { unfurl } from 'unfurl.js';
-import { WebClient } from '@slack/web-api';
+import fileUpload from 'express-fileupload';
+
+type Video = {
+  name: any;
+  player_embed_url: any;
+  pictures: { sizes: string | any[] };
+  files: any[];
+  privacy: { view: string };
+};
 
 dotenv.config();
 
@@ -21,23 +29,20 @@ cloudinary.config({
 const app: Express = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: 1024 * 1024 * 100 }));
 
 const port = process.env.PORT || 3000;
-
-const upload = multer({
-  limits: {
-    fieldSize: 1024 * 1024 * 50,
-  },
-});
-
 const devMode = process.env.NODE_ENV === 'development';
 
 app.use(cors({ credentials: true }));
 app.enable('trust proxy');
+
+app.use(fileUpload());
+
+axios.defaults.maxBodyLength = 1024 * 1024 * 100;
 
 app.all('/*', (req, res, next) => {
   res.header(
@@ -63,36 +68,44 @@ app.get('/media/videos', async (req, res, next) => {
       thumb: any;
       thumbSm: any;
     }[] = [];
+
     const getData = async (
-      apiPath: string = '/channels/1773240/videos?per_page=100'
+      apiPath: string = '/users/11255512/videos?sort=date&direction=desc&per_page=75'
     ) => {
-      const response = await axios.get(`https://api.vimeo.com${apiPath}`, {
-        headers: {
-          Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
-        },
-      });
+      const response = await axios
+        .get(`https://api.vimeo.com${apiPath}`, {
+          headers: {
+            Authorization: `Bearer ${process.env.VIMEO_AUTH_TOKEN}`,
+          },
+        })
+        .catch((err) => {
+          res.status(500).send(err.message);
+        });
+      if (!response) return;
       const resData = response.data;
+
       let m = _.map(
-        resData.data,
-        (val: {
-          name: any;
-          player_embed_url: any;
-          pictures: { sizes: string | any[] };
-        }) => {
+        resData.data.filter((d: Video) => d.privacy.view !== 'unlisted'),
+        (val: Video) => {
+          // if (val.privacy.view === 'unlisted') return;
+          let fileInfo = val.files.find((file) => file.rendition === '1080p');
+          // Fallback
+          if (!fileInfo)
+            fileInfo = val.files.find((file) => file.rendition === '720p');
+
           return {
             label: val.name,
             value: val.player_embed_url,
             thumb: val.pictures.sizes[val.pictures.sizes.length - 1].link,
             thumbSm: val.pictures.sizes[1].link,
+            file: fileInfo ? fileInfo.link : undefined,
           };
         }
       );
       videoData = videoData.concat(videoData, m);
 
-      if (resData.paging.next) getData(resData.paging.next);
-      else {
-        res.status(200).send(videoData);
-      }
+      // Limit to first 75 videos
+      res.status(200).send(videoData);
     };
     getData();
   } catch (err: any) {
@@ -184,22 +197,7 @@ app.get('/media/delete', async (req, res) => {
   }
 });
 
-app.post('/embed', async (req, res) => {
-  if (!req.body) {
-    res.status(500).send('No body provided in payload.');
-    return;
-  }
-  const url = req.body.url;
-  try {
-    const oembed = await unfurl(url);
-
-    res.status(200).send(oembed);
-  } catch (err: any) {
-    res.status(500).send(err);
-  }
-});
-
-app.post('/media/upload', upload.none(), async (req, res) => {
+app.post('/media/upload', async (req, res) => {
   try {
     let options: UploadApiOptions = {
       folder:
@@ -221,6 +219,21 @@ app.post('/media/upload', upload.none(), async (req, res) => {
     res.status(200).send(response);
   } catch (err: any) {
     console.error(err);
+    res.status(500).send(err);
+  }
+});
+
+app.post('/embed', async (req, res) => {
+  if (!req.body) {
+    res.status(500).send('No body provided in payload.');
+    return;
+  }
+  const url = req.body.url;
+  try {
+    const oembed = await unfurl(url);
+
+    res.status(200).send(oembed);
+  } catch (err: any) {
     res.status(500).send(err);
   }
 });
@@ -254,6 +267,47 @@ app.get('/media/update/usage', async (req, res) => {
     res.status(200).send('ok');
   } catch (err: any) {
     res.status(500).send(err);
+  }
+});
+
+app.post('/file/upload', async (req, res, next) => {
+  try {
+    if (!req.body) {
+      res.status(500).send('No body provided in payload.');
+      return;
+    }
+    if (
+      !req.files ||
+      (!(req.files as unknown as fileUpload.FileArray).file as any).data
+    ) {
+      res.status(500).send('Invalid file.');
+      return;
+    }
+
+    const form = new FormData();
+    const file = new Blob([
+      ((req.files as unknown as fileUpload.FileArray).file as any).data,
+    ]);
+    const fileName = (
+      (req.files as unknown as fileUpload.FileArray).file as any
+    ).name
+      .toLocaleLowerCase()
+      .replace(/\s+/gi, '-');
+    form.append('file', file);
+
+    const response = await fetch(
+      `${process.env.UPLOAD_API_PATH as string}&name=${fileName}`,
+      {
+        method: 'POST',
+        body: form,
+      }
+    );
+
+    const result = await response.json();
+    res.status(200).send(result);
+  } catch (err: any) {
+    console.log(err);
+    res.status(500).send(err.message);
   }
 });
 

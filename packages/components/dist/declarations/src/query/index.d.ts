@@ -1,5 +1,5 @@
 import 'cross-fetch/polyfill';
-import { ErrorClass } from '..';
+import { ErrorClass } from "../index.js";
 export type TError = {
     class: ErrorClass;
     message?: string;

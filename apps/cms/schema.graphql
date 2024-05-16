@@ -647,9 +647,11 @@ type Initiative {
   id: ID!
   name: String
   intro: Initiative_intro_Document
+  introVideo: VideoFieldOutput
+  captions: AzureStorageFileFieldOutput
   videoId: String
   videoThumbnail: CloudinaryImage_File
-  videoCaption: Initiative_videoCaption_Document
+  videoCaption: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
   slidesCount(where: SlideWhereInput! = {}): Int
   news(where: NewsItemWhereInput! = {}, orderBy: [NewsItemOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: NewsItemWhereUniqueInput): [NewsItem!]
@@ -671,15 +673,25 @@ type Initiative {
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
-  vimeoFile: String
 }
 
 type Initiative_intro_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-type Initiative_videoCaption_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
+type VideoFieldOutput {
+  file: String
+  label: String
+  caption: String
+  thumbUrl: String
+  thumbSmUrl: String
+}
+
+interface AzureStorageFileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
 }
 
 type Initiative_body_Document {
@@ -706,6 +718,7 @@ input InitiativeWhereInput {
   id: IDFilter
   name: StringFilter
   videoId: StringFilter
+  videoCaption: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
   events: EventManyRelationFilter
@@ -714,7 +727,6 @@ input InitiativeWhereInput {
   research: ResearchProjectManyRelationFilter
   associatedPeople: PersonManyRelationFilter
   ogDescription: StringFilter
-  vimeoFile: StringFilter
 }
 
 input EventManyRelationFilter {
@@ -739,16 +751,18 @@ input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
   videoId: OrderDirection
+  videoCaption: OrderDirection
   ogDescription: OrderDirection
-  vimeoFile: OrderDirection
 }
 
 input InitiativeUpdateInput {
   name: String
   intro: JSON
+  introVideo: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   videoId: String
   videoThumbnail: Upload
-  videoCaption: JSON
+  videoCaption: String
   slides: SlideRelateToManyForUpdateInput
   news: NewsItemRelateToManyForUpdateInput
   events: EventRelateToManyForUpdateInput
@@ -763,7 +777,19 @@ input InitiativeUpdateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-  vimeoFile: String
+}
+
+input VideoFieldInput {
+  file: String
+  label: String
+  caption: String
+  thumbUrl: String
+  thumbSmUrl: String
+}
+
+input AzureStorageFileFieldInput {
+  upload: Upload
+  ref: String
 }
 
 input EventRelateToManyForUpdateInput {
@@ -795,9 +821,11 @@ input InitiativeUpdateArgs {
 input InitiativeCreateInput {
   name: String
   intro: JSON
+  introVideo: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   videoId: String
   videoThumbnail: Upload
-  videoCaption: JSON
+  videoCaption: String
   slides: SlideRelateToManyForCreateInput
   news: NewsItemRelateToManyForCreateInput
   events: EventRelateToManyForCreateInput
@@ -812,7 +840,6 @@ input InitiativeCreateInput {
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
-  vimeoFile: String
 }
 
 input EventRelateToManyForCreateInput {
@@ -1495,13 +1522,6 @@ type Publication_citations_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
-interface AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
 input PublicationWhereUniqueInput {
   id: ID
   key: String
@@ -1553,11 +1573,6 @@ input PublicationUpdateInput {
   file: AzureStorageFileFieldInput
   buttons: JSON
   relatedProject: ResearchProjectRelateToOneForUpdateInput
-}
-
-input AzureStorageFileFieldInput {
-  upload: Upload
-  ref: String
 }
 
 input ResearchProjectRelateToOneForUpdateInput {
@@ -1800,6 +1815,7 @@ type Semester {
   createdDate: DateTime
   status: SemesterStatusType
   studio: Studio
+  initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
   courseNumber: String
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
@@ -1824,6 +1840,11 @@ enum SemesterStatusType {
   disabled
   testing
   live
+}
+
+enum SemesterInitiativeType {
+  gunviolence
+  climate
 }
 
 enum SemesterTypeType {
@@ -1912,6 +1933,7 @@ input SemesterUpdateInput {
   createdDate: DateTime
   status: SemesterStatusType
   studio: StudioRelateToOneForUpdateInput
+  initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
   courseNumber: String
   instructors: PersonRelateToManyForUpdateInput
@@ -1950,6 +1972,7 @@ input SemesterCreateInput {
   createdDate: DateTime
   status: SemesterStatusType
   studio: StudioRelateToOneForCreateInput
+  initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
   courseNumber: String
   instructors: PersonRelateToManyForCreateInput

@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 interface VideoProps {
     videoUrl: string;
     videoLabel: string;
@@ -8,5 +8,5 @@ interface VideoProps {
     noUi?: boolean;
     play?: boolean;
 }
-export declare const Video: ({ thumbUrl, videoUrl, videoLabel, isSlide, themeColor, noUi, play, }: VideoProps) => JSX.Element;
+export declare const Video: ({ thumbUrl, videoUrl, videoLabel, isSlide, themeColor, noUi, play, }: VideoProps) => React.JSX.Element;
 export {};

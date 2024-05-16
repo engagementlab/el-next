@@ -17,17 +17,6 @@ type PairInput = {
 };
 type PairOutput = PairInput;
 
-type helperConfig = {
-  html: string;
-  iconType: HelperIcon;
-};
-const fileOutputFields = graphql.fields<Omit<helperConfig, 'type'>>()({
-  html: graphql.field({
-    type: graphql.nonNull(graphql.String),
-  }),
-  iconType: graphql.field({ type: graphql.String }),
-});
-
 const HelperFieldInput = graphql.inputObject({
   name: 'HelperFieldInput',
   fields: {
@@ -104,7 +93,7 @@ export function helper<ListTypeInfo extends BaseListTypeInfo>(
           if (value === null) {
             return null;
           }
-          console.log(value);
+
           return value;
         },
       }),

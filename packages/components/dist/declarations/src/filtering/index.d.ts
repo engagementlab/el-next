@@ -100,6 +100,6 @@ export default class Filtering<T> {
         [x: string]: any[];
     }, preSelectedFilters: never[], items: any[] | null, ItemRenderer: React.ComponentType<ItemRendererProps<T>>, mode?: string);
     private RenderFilters;
-    FilteredItems: () => JSX.Element;
+    FilteredItems: () => React.JSX.Element;
 }
 export {};

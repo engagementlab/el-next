@@ -1,5 +1,11 @@
 import { list } from '@keystone-6/core';
-import { checkbox, relationship, select, text } from '@keystone-6/core/fields';
+import {
+  checkbox,
+  multiselect,
+  relationship,
+  select,
+  text,
+} from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
 import { Lists } from '.keystone/types';
@@ -39,6 +45,13 @@ const Semester: Lists.Semester = list({
     studio: relationship({
       ref: 'Studio.semesters',
       ui: { hideCreate: true },
+    }),
+    initiatives: multiselect({
+      type: 'enum',
+      options: [
+        { label: 'TNGV', value: 'gunviolence' },
+        { label: 'TNEJ', value: 'climate' },
+      ],
     }),
     // order: integer({
     //   label: 'Order on index page',

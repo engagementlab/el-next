@@ -40,10 +40,14 @@ type Initiative = {
     document: any;
   };
   slides?: any[];
-  videoId?: string;
-  videoCaption?: {
-    document: any;
+  introVideo?: {
+    file: string;
   };
+  captions?: {
+    url: string;
+  };
+  videoId?: string;
+  videoCaption?: string;
   videoThumbnail?: {
     publicUrl: string;
   };
@@ -63,7 +67,7 @@ type Initiative = {
       publicId: string;
     };
   }[];
-  vimeoFile?: string;
+  vimeoFile: string;
 };
 
 export default function InitIndex({
@@ -232,19 +236,24 @@ export default function InitIndex({
                 <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
                   <div className="group w-full min-h-[inherit] ">
                     <div id="video" className="min-h-[inherit] left">
-                      {process.env.NEXT_PUBLIC_STAGING === 'true' ? (
-                        <VideoV2
-                          key={`video-player-${page.vimeoFile}`}
-                          isSlide={true}
-                          videoLabel={`${
-                            InitiativeFilterGroups.find(
-                              (i) => i.key === initiative
-                            )?.label
-                          } Intro Video`}
-                          videoFile={page.vimeoFile}
-                          thumbUrl={page.videoThumbnail?.publicUrl}
-                          theme={videoColor}
-                        />
+                      {process.env.NEXT_PUBLIC_STAGING === 'true' &&
+                      page.introVideo ? (
+                        <>
+                          <VideoV2
+                            key={`video-player-${page.vimeoFile}`}
+                            isSlide={true}
+                            videoLabel={`${
+                              InitiativeFilterGroups.find(
+                                (i) => i.key === initiative
+                              )?.label
+                            } Intro Video`}
+                            videoFile={page.introVideo.file}
+                            caption={page.videoCaption}
+                            captionsFile={page.captions?.url}
+                            thumbUrl={page.videoThumbnail?.publicUrl}
+                            theme={videoColor}
+                          />
+                        </>
                       ) : (
                         <Video
                           isSlide={true}
@@ -260,14 +269,6 @@ export default function InitIndex({
                       )}
                     </div>
                   </div>
-                  {page?.videoCaption && (
-                    <div className={Theming[initiative].text}>
-                      <DocumentRenderer
-                        document={page?.videoCaption.document}
-                        componentBlocks={Blocks(Theming[initiative])}
-                      />
-                    </div>
-                  )}
                 </div>
               ) : (
                 page?.slides &&
@@ -390,7 +391,7 @@ export default function InitIndex({
                             height={200}
                           />
                         )}
-                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1 brightness-150">
+                        <h3 className="hover:text-green-blue group-hover:text-green-blue text-xl font-semibold my-1">
                           {item.name}
                         </h3>
                         <p>{item.shortDescription}</p>
@@ -516,13 +517,17 @@ export async function getStaticProps({
         intro {
           document
         }
+        introVideo {
+          file
+        }
+        captions {
+          url
+        }
         videoId
         videoThumbnail {
           publicUrl
         }
-        videoCaption {
-          document
-        }
+        videoCaption
         slides {
           image {
             publicId
@@ -584,6 +589,7 @@ export async function getStaticProps({
                 publicId
             }
             thumbAltText
+            pin
         }
         associatedPeople {
             name
@@ -594,7 +600,6 @@ export async function getStaticProps({
                 publicId
             }  
         }
-        vimeoFile
       }`
   );
 

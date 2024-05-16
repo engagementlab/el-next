@@ -105,7 +105,8 @@ export async function getStaticProps() {
         (project: ResearchProject) => {
           // Pinned projects always appear first
           if (project.pin) return -1;
-          return project.ongoing ? 0 : 1;
+          if (project.ongoing) return 0;
+          return !project.endYear && !project.startYear ? 1 : 0;
         }
       ),
       blurb: blurb.researchProjectsBlurb,

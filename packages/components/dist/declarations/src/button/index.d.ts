@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 /**
  * @packageDocumentation
  * Engagement Lab 'Next' shared component library
@@ -45,5 +45,5 @@ interface ButtonProps {
  * Return a <button> element wrapped in <Link>
  * @returns {JSX.Element} Element
  */
-export declare const Button: ({ className, hoverColor, link, external, label, margin, anchorId, classOverride, icon, onClick, }: ButtonProps) => JSX.Element;
+export declare const Button: ({ className, hoverColor, link, external, label, margin, anchorId, classOverride, icon, onClick, }: ButtonProps) => React.JSX.Element;
 export {};

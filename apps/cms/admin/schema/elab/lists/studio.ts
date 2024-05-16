@@ -83,7 +83,6 @@ const Studio: Lists.Studio = list({
       options: [
         { label: 'TNGV', value: 'gunviolence' },
         { label: 'TNEJ', value: 'climate' },
-        // { label: 'Incarceration', value: 'incarceration' },
       ],
     }),
     ...group(Featuring),

@@ -1,4 +1,12 @@
-/// <reference types="react" />
+/**
+ * Engagement Lab 'Next' shared component library
+ * Developed by Engagement Lab, 2021-2024
+ *
+ * @author Johnny Richardson
+ * Cloudinary image component
+ * ==========
+ */
+import React from 'react';
 interface ImageProps {
     /**
      * The image's alt text
@@ -68,7 +76,7 @@ interface ImageUrlProps {
  *
  * @extends {Component<Props>}
  */
-declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, maxWidthDisable, lazy, aspectDefault, }: ImageProps) => JSX.Element;
+declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, maxWidthDisable, lazy, aspectDefault, }: ImageProps) => React.JSX.Element;
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL

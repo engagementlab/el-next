@@ -35,8 +35,10 @@ type Theme = {
 };
 
 interface VideoProps {
-  videoFile?: string;
+  videoFile: string;
   videoLabel: string;
+  caption?: string;
+  captionsFile?: string;
   theme: Theme;
   thumbUrl?: string;
   isSlide?: boolean;
@@ -63,6 +65,7 @@ type ControlsProps = {
   duration: number;
   muted: boolean;
   playing: boolean;
+  captionsEnabled: boolean;
   hideCaptions: boolean;
   fullscreen: boolean;
   playedSeconds: number;
@@ -135,6 +138,28 @@ const Controls = (props: ControlsProps) => {
         >
           {props.playing ? <PauseCircleFilledIcon /> : <PlayCircleFilledIcon />}
         </IconButton>
+        {props.captionsEnabled && (
+          <IconButton
+            aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
+            size="large"
+            onClick={() => props.onToggleCaptions()}
+            sx={{ color: props.theme.buttons }}
+          >
+            {props.hideCaptions ? (
+              <ClosedCaptionDisabledIcon />
+            ) : (
+              <ClosedCaptionIcon />
+            )}
+          </IconButton>
+        )}
+        <IconButton
+          aria-label={props.fullscreen ? 'exit fullscreen' : 'Enter fullscreen'}
+          size="large"
+          onClick={() => props.onClickFullscreen()}
+          sx={{ color: props.theme.buttons }}
+        >
+          <FullscreenIcon />
+        </IconButton>
         <Box
           className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
             volumeHover ? 'basis-[50%]' : 'basis-[5%]'
@@ -167,26 +192,6 @@ const Controls = (props: ControlsProps) => {
             }}
           />
         </Box>
-        <IconButton
-          aria-label={props.hideCaptions ? 'show captions' : 'hide captions'}
-          size="large"
-          onClick={() => props.onToggleCaptions()}
-          sx={{ color: props.theme.buttons }}
-        >
-          {props.hideCaptions ? (
-            <ClosedCaptionDisabledIcon />
-          ) : (
-            <ClosedCaptionIcon />
-          )}
-        </IconButton>
-        <IconButton
-          aria-label={props.fullscreen ? 'exit fullscreen' : 'Enter fullscreen'}
-          size="large"
-          onClick={() => props.onClickFullscreen()}
-          sx={{ color: props.theme.buttons }}
-        >
-          <FullscreenIcon />
-        </IconButton>
       </div>
     </div>
   );
@@ -210,6 +215,8 @@ export const Video = ({
   thumbUrl,
   videoFile,
   videoLabel,
+  caption,
+  captionsFile,
   isSlide,
   theme,
   noUi,
@@ -394,6 +401,14 @@ export const Video = ({
               </svg>
             </span>
           )}
+
+          {caption && (
+            <aside
+              className={`absolute bottom-0 right-3 p-3 text-left w-3/4 ${theme.bg} text-white sm:max-w-xs sm:right-20 lg:right-0`}
+            >
+              ↳ {caption}
+            </aside>
+          )}
         </button>
       )}
       {videoOpen && (
@@ -420,22 +435,24 @@ export const Video = ({
             volume={volume}
             muted={muted}
             config={
-              {
-                // file: {
-                //   attributes: {
-                //     crossOrigin: 'true',
-                //   },
-                //   tracks: [
-                //     {
-                //       src: 'https://res.cloudinary.com/engagement-lab-home/raw/upload/v1711547945/0_yo8h2d.vtt',
-                //       kind: 'subtitles',
-                //       srcLang: 'en',
-                //       default: true,
-                //       label: 'English',
-                //     },
-                //   ],
-                // },
-              }
+              captionsFile
+                ? {
+                    file: {
+                      attributes: {
+                        crossOrigin: 'true',
+                      },
+                      tracks: [
+                        {
+                          src: captionsFile,
+                          kind: 'subtitles',
+                          srcLang: 'en',
+                          default: true,
+                          label: 'English',
+                        },
+                      ],
+                    },
+                  }
+                : {}
             }
           />
 
@@ -453,6 +470,7 @@ export const Video = ({
               volume={volume}
               muted={muted}
               theme={theme}
+              captionsEnabled={captionsFile !== undefined}
               hideCaptions={hideCaptions}
               fullscreen={isFullscreen}
               onMute={muteHandler}

@@ -134,6 +134,7 @@ export const azureStorageFile =
           if (filename === null || filesize === null) {
             return null;
           }
+
           return { filename, filesize };
         },
       }),

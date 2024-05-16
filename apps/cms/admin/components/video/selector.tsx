@@ -26,6 +26,8 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import CloseIcon from '@mui/icons-material/Close';
+
 /**
  *
  * @function
@@ -33,7 +35,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
  */
 export interface RelatedVideo {
   label: string;
-  value: string;
+  file: string;
   thumb: string;
   thumbSm: string;
   caption?: string;
@@ -41,7 +43,7 @@ export interface RelatedVideo {
 export interface RelatedVideoField {
   [key: string]: {
     label: string;
-    value: string;
+    file: string;
     thumb: string;
     thumbSm: string;
     caption?: string;
@@ -167,9 +169,9 @@ const VideoSelector = ({
     currentVideo,
   } = useStore((state) => state);
 
-  const beginIndex = pgIndex * 12;
-  const endIndex = beginIndex + 12;
-  const dataLength = Math.floor(data.length / 12) + 1;
+  const beginIndex = pgIndex * 18;
+  const endIndex = beginIndex + 18;
+  const dataLength = Math.floor(data.length / 18) + 1;
   return (
     <>
       <TailwindCdnScript />
@@ -184,62 +186,71 @@ const VideoSelector = ({
         {data.length > 0 ? (
           <Box className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 border-2 bg-white p-4 shadow-xl">
             <>
-              <div className="flex flex-row">
-                <IconButton
-                  aria-label="go to last page"
-                  disabled={pgIndex === 0}
-                  onClick={(val) => {
-                    setPageIndex(pgIndex - 1);
-                  }}
-                >
-                  <ArrowCircleLeftOutlinedIcon fontSize="large" />
-                </IconButton>
-                <MUISelect
-                  value={pgIndex}
-                  label="Page"
-                  onChange={(val) => {
-                    setPageIndex(!val ? 0 : (val.target.value as number));
-                  }}
-                >
-                  {[...new Array(dataLength)].map((v, i) => (
-                    <MenuItem value={i} key={`pg-${i}`}>
-                      {i + 1}
-                    </MenuItem>
-                  ))}
-                </MUISelect>
-                <IconButton
-                  aria-label="go to right page"
-                  disabled={pgIndex === dataLength - 1}
-                  onClick={(val) => {
-                    setPageIndex(pgIndex + 1);
-                  }}
-                >
-                  <ArrowCircleRightOutlinedIcon fontSize="large" />
-                </IconButton>
+              <div className="flex flex-row justify-between">
+                <div>
+                  <IconButton
+                    aria-label="go to last page"
+                    disabled={pgIndex === 0}
+                    onClick={(val) => {
+                      setPageIndex(pgIndex - 1);
+                    }}
+                  >
+                    <ArrowCircleLeftOutlinedIcon fontSize="large" />
+                  </IconButton>
+                  <MUISelect
+                    value={pgIndex}
+                    label="Page"
+                    onChange={(val) => {
+                      setPageIndex(!val ? 0 : (val.target.value as number));
+                    }}
+                  >
+                    {[...new Array(dataLength)].map((v, i) => (
+                      <MenuItem value={i} key={`pg-${i}`}>
+                        {i + 1}
+                      </MenuItem>
+                    ))}
+                  </MUISelect>
+                  <IconButton
+                    aria-label="go to right page"
+                    disabled={pgIndex === dataLength - 1}
+                    onClick={(val) => {
+                      setPageIndex(pgIndex + 1);
+                    }}
+                  >
+                    <ArrowCircleRightOutlinedIcon fontSize="large" />
+                  </IconButton>
+                </div>
+                <div className="min-w-sm">
+                  <IconButton
+                    aria-label="close"
+                    onClick={() => {
+                      setGridOpen(false);
+                      done();
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </div>
               </div>
 
               <hr className=" border-t-2 border-[#f6a536] my-3" />
 
               <Box className="flex-grow-1">
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   {data
                     .slice(beginIndex, endIndex)
                     .map((item: RelatedVideo) => {
-                      const selected = singleSelection
-                        ? (currentVideo as any).value ===
-                          (item as RelatedVideo).value
-                        : _.map(currentVideos, 'value').includes(
-                            (item as RelatedVideo).value
-                          );
-                      // console.log(selected, currentVideo);
+                      const selected =
+                        currentVideo &&
+                        (currentVideo as any).file ===
+                          (item as RelatedVideo).file;
+
                       return (
-                        <Grid item xs={3} key={item.value}>
+                        <Grid item xs={2} key={item.file}>
                           <a
                             className="relative cursor-pointer"
                             onClick={() => {
-                              if (singleSelection) setVideoSingle(item as any);
-                              else setVideo(item);
-                              // Are we allowing only one video to be selected?
+                              setVideoSingle(item as any);
                               selectionChanged(item as RelatedVideo);
                             }}
                           >

@@ -9,6 +9,9 @@ import {
 
 export const ProjectsSort = (projects: Project[]) => {
   return projects.sort((a, b) => {
+    // Pinned projects always come first
+    if (a.pin || b.pin) return -1;
+
     // Get year from start year (research) or semester key
     const aYr = a.startYear
       ? [a.startYear]
@@ -37,14 +40,13 @@ export const ProjectsSort = (projects: Project[]) => {
           // otherwise, if just years match, use fall vs spring
           return a.semester[0].name.includes('Fall') ? -1 : 1;
         }
-        console.log(a.name, a.startYear, b.name, b.startYear, aYr[0], bYr[0]);
 
-        // if (a.startYear && !b.startYear)
+        // Research projects always show after studio projects
         return -1;
       }
 
       // Just use year
-      return parseInt(bYr[0].toString()) - parseInt(aYr[0].toString());
+      return strBYr - strAYr;
     }
 
     // Fallback to name alpha order

@@ -1,2 +1,2 @@
 export * from "../../dist/declarations/src/externalLink/index";
-//# sourceMappingURL=el-next-components-externalLink.cjs.d.ts.map
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZWwtbmV4dC1jb21wb25lbnRzLWV4dGVybmFsTGluay5janMuZC50cyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL2Rpc3QvZGVjbGFyYXRpb25zL3NyYy9leHRlcm5hbExpbmsvaW5kZXguZC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSJ9

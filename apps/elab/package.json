@@ -1,6 +1,6 @@
 {
   "name": "engagement-lab-home-3.x",
-  "version": "3.2.1",
+  "version": "3.2.5",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8083",

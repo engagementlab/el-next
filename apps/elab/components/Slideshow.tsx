@@ -77,17 +77,10 @@ const Slideshow = ({
 
   const Slide = ({ data }: { data: Slide }) => {
     if (ContentRenderer) return <ContentRenderer slide={data} />;
-    else if (data.video && data.image)
+    else if ((data.video || data.videoId) && data.image)
       return (
         <div className={`flex items-center min-h-[350px] lg:min-h-[465px]`}>
-          {data.videoId ? (
-            <Video
-              videoLabel={''}
-              videoUrl={`https://player.vimeo.com/video/${data.videoId}`}
-              thumbUrl={data.image.publicUrl}
-              isSlide={true}
-            />
-          ) : (
+          {data.video ? (
             <VideoV2
               key={`video-slide-${data.video.file}`}
               isSlide={true}
@@ -102,6 +95,13 @@ const Slideshow = ({
                 seekbar: Theming['none'].arrowHex,
                 buttons: '#fff',
               }}
+            />
+          ) : (
+            <Video
+              videoLabel={''}
+              videoUrl={`https://player.vimeo.com/video/${data.videoId}`}
+              thumbUrl={data.image.publicUrl}
+              isSlide={true}
             />
           )}
         </div>

@@ -18,15 +18,19 @@ import VideoSelector, { RelatedVideo } from '../video/selector';
 export function Field({
   field,
   value,
+
+  itemValue,
   onChange,
   autoFocus,
 }: FieldProps<typeof controller>) {
   const VideoGridInstance = new VideoGrid();
 
+  console.log(value, itemValue);
+
   return (
     <>
       <FieldContainer as="fieldset" className="flex flex-col p-2 max-w-[12rem]">
-        {value.file.length > 5 && value.thumbSmUrl.length > 5 && (
+        {value.file && value.file.length > 5 && value.thumbSmUrl.length > 5 && (
           <>
             <img src={value.thumbSmUrl} width={75} height={75} />
             <p>{value.label}</p>
@@ -58,6 +62,7 @@ export function Field({
         open={VideoGridInstance.gridOpen}
         selectionChanged={(item: RelatedVideo) => {
           VideoGridInstance.setVideo(item);
+
           if (onChange)
             onChange({
               file: item.file,
@@ -109,20 +114,23 @@ export const controller = (
         thumbSmUrl
       }`,
     defaultValue: {
-      file: '',
+      file: 'nofile',
       caption: '',
       thumbUrl: '',
       thumbSmUrl: '',
       label: '',
     },
     deserialize: (data) => {
-      console.log('====', data);
+      console.log('====', data[config.path]);
       const value = data[config.path];
+      if (!value || value.file.length < 5) return { kind: 'empty' };
+
       return value;
     },
     serialize: (value) => {
-      if (value.file.length > 10) return { [config.path]: value };
-      return {};
+      console.log('serialize', value);
+      if (value.file && value.file.length > 10) return { [config.path]: value };
+      return { file: '??' };
     },
   };
 };

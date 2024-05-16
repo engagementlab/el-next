@@ -85,7 +85,8 @@ model Initiative {
   id                    String            @id @default(cuid())
   name                  String            @unique @default("Initiative Name")
   intro                 Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  introVideo_file       String            @default("")
+  rating                Int?
+  introVideo_file       String
   introVideo_label      String            @default("")
   introVideo_caption    String?
   introVideo_thumbUrl   String            @default("")
@@ -297,7 +298,7 @@ model Slide {
   helper_iconType   icon         @default(help)
   altText           String       @default("")
   caption           String       @default("")
-  video_file        String       @default("")
+  video_file        String
   video_label       String       @default("")
   video_caption     String?
   video_thumbUrl    String       @default("")
@@ -350,7 +351,7 @@ model StudioProject {
   thumbnail                Json?
   thumbAltText             String                      @default("")
   videoId                  String                      @default("")
-  video_file               String                      @default("")
+  video_file               String
   video_label              String                      @default("")
   video_caption            String?
   video_thumbUrl           String                      @default("")
@@ -358,7 +359,7 @@ model StudioProject {
   captions_filename        String?
   captions_filesize        Int?
   trailerId                String                      @default("")
-  trailerVideo_file        String                      @default("")
+  trailerVideo_file        String
   trailerVideo_label       String                      @default("")
   trailerVideo_caption     String?
   trailerVideo_thumbUrl    String                      @default("")

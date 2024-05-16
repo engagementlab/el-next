@@ -12,6 +12,7 @@ import { Social } from '../social';
 import { video } from '../../../components/video-field';
 import { azureStorageFile } from '../../../components/fields-azure/src';
 import { azConfig, azConfigCustom } from '../../azure';
+import { stars } from '../../../components/2-stars-field';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -32,7 +33,12 @@ const Initiative: Lists.Initiative = list({
     ...group({
       label: 'Intro Video/Slideshow',
       fields: {
-        introVideo: video(),
+        rating: stars({
+          ui: {
+            description: 'A star rating, with a scale of 5',
+          },
+        }),
+        introVideo: video({ label: 'Intro Video' }),
         captions: azureStorageFile({
           azureStorageConfig: azConfigCustom('captions'),
           label: 'Captions File',

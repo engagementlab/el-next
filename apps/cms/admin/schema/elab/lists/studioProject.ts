@@ -113,7 +113,7 @@ const StudioProject: Lists.StudioProject = list({
               'Vimeo video ID, if applicable. If specified, "Watch the film" button will appear on page',
           },
         }),
-        video: video(),
+        video: video({ label: 'Watch the film' }),
         captions: azureStorageFile({
           azureStorageConfig: azConfigCustom('captions'),
           label: 'Video Captions File',
@@ -122,7 +122,7 @@ const StudioProject: Lists.StudioProject = list({
           label: 'Trailer video ID',
           ui: { description: 'Vimeo video ID for trailer, if applicable.' },
         }),
-        trailerVideo: video(),
+        trailerVideo: video({ label: 'Watch the film' }),
         trailerCaptions: azureStorageFile({
           azureStorageConfig: azConfigCustom('captions'),
         }),

@@ -647,6 +647,7 @@ type Initiative {
   id: ID!
   name: String
   intro: Initiative_intro_Document
+  rating: Int
   introVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
   videoThumbnail: CloudinaryImage_File
@@ -748,6 +749,7 @@ input ResearchProjectManyRelationFilter {
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  rating: OrderDirection
   videoCaption: OrderDirection
   ogDescription: OrderDirection
 }
@@ -755,6 +757,7 @@ input InitiativeOrderByInput {
 input InitiativeUpdateInput {
   name: String
   intro: JSON
+  rating: Int
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
   videoThumbnail: Upload
@@ -817,6 +820,7 @@ input InitiativeUpdateArgs {
 input InitiativeCreateInput {
   name: String
   intro: JSON
+  rating: Int
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
   videoThumbnail: Upload

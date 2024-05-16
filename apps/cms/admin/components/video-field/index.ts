@@ -7,7 +7,7 @@ import {
 import { graphql } from '@keystone-6/core';
 
 type VideoInput = {
-  file: string;
+  file: string | null;
   label: string;
   caption?: string;
   thumbUrl: string;
@@ -43,24 +43,11 @@ const VideoFieldOutput = graphql.object<VideoOutput>()({
 });
 
 export type VideoFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
-  CommonFieldConfig<ListTypeInfo> & VideoOutput;
+  CommonFieldConfig<ListTypeInfo>;
 
-export function video<ListTypeInfo extends BaseListTypeInfo>(
-  {
-    file,
-    label,
-    caption,
-    thumbUrl,
-    thumbSmUrl,
-    ...config
-  }: VideoFieldConfig<ListTypeInfo> = {
-    file: '',
-    label: '',
-    caption: '',
-    thumbUrl: '',
-    thumbSmUrl: '',
-  }
-): FieldTypeFunc<ListTypeInfo> {
+export function video<ListTypeInfo extends BaseListTypeInfo>({
+  ...config
+}: VideoFieldConfig<ListTypeInfo> = {}): FieldTypeFunc<ListTypeInfo> {
   return (meta) =>
     fieldType({
       kind: 'multi',
@@ -69,10 +56,6 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           kind: 'scalar',
           scalar: 'String',
           mode: 'required',
-          default: {
-            kind: 'literal',
-            value: '',
-          },
         },
         label: {
           kind: 'scalar',
@@ -108,7 +91,13 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
       input: {
         create: {
           arg: graphql.arg({ type: VideoFieldInput }),
-          resolve(val) {
+          resolve(val, context) {
+            console.log('CREATE FILE:', val);
+
+            if (val === undefined) {
+              return undefined;
+            }
+
             return {
               file: val?.file || '',
               label: val?.label || '',
@@ -121,8 +110,12 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
         update: {
           arg: graphql.arg({ type: VideoFieldInput }),
           resolve(val) {
+            if (val === null) return null;
+            if (val === undefined) return undefined;
+            console.log('UPDATE FILE:', val);
+
             return {
-              file: val?.file || '',
+              file: val.file,
               label: val?.label || '',
               caption: val?.caption || '',
               thumbUrl: val?.thumbUrl || '',
@@ -131,32 +124,30 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           },
         },
       },
-      output: graphql.field({
-        type: VideoFieldOutput,
-        async resolve({
-          value: { file, label, caption, thumbUrl, thumbSmUrl },
-        }) {
-          const captionResolved = caption ? caption : undefined;
-          if (file === null || label === null) {
-            return null;
-          }
-
-          return {
-            file,
-            label,
-            caption: captionResolved,
-            thumbUrl,
-            thumbSmUrl,
-          };
-        },
-      }),
+      // output: graphql.field({
+      //   type: VideoFieldOutput,
+      //   async resolve({
+      //     value: { file, label, caption, thumbUrl, thumbSmUrl },
+      //   }) {
+      //     const captionResolved = caption ? caption : undefined;
+      //     if (file === null || label === null) {
+      //       return null;
+      //     }
+      //     console.log('OUTPUT FILE:', label);
+      //     return {
+      //       file,
+      //       label,
+      //       caption: captionResolved,
+      //       thumbUrl,
+      //       thumbSmUrl,
+      //     };
+      //   },
+      // }),
 
       views: './admin/components/video-field/views',
 
       getAdminMeta() {
-        return {
-          file: '',
-        };
+        return {};
       },
     });
 }

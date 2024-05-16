@@ -649,7 +649,7 @@ type Initiative {
   intro: Initiative_intro_Document
   introVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
-  video: String
+  videoId: String
   videoThumbnail: CloudinaryImage_File
   videoCaption: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
@@ -717,7 +717,7 @@ input InitiativeWhereInput {
   NOT: [InitiativeWhereInput!]
   id: IDFilter
   name: StringFilter
-  video: StringFilter
+  videoId: StringFilter
   videoCaption: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
@@ -750,7 +750,7 @@ input ResearchProjectManyRelationFilter {
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  video: OrderDirection
+  videoId: OrderDirection
   videoCaption: OrderDirection
   ogDescription: OrderDirection
 }
@@ -760,7 +760,7 @@ input InitiativeUpdateInput {
   intro: JSON
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
-  video: String
+  videoId: String
   videoThumbnail: Upload
   videoCaption: String
   slides: SlideRelateToManyForUpdateInput
@@ -823,7 +823,7 @@ input InitiativeCreateInput {
   intro: JSON
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
-  video: String
+  videoId: String
   videoThumbnail: Upload
   videoCaption: String
   slides: SlideRelateToManyForCreateInput

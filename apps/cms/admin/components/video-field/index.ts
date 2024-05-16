@@ -69,6 +69,10 @@ export function video<ListTypeInfo extends BaseListTypeInfo>({
           kind: 'scalar',
           scalar: 'String',
           mode: 'required',
+          default: {
+            kind: 'literal',
+            value: '',
+          },
         },
         label: {
           kind: 'scalar',

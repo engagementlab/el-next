@@ -37,7 +37,7 @@ const Initiative: Lists.Initiative = list({
           azureStorageConfig: azConfigCustom('captions'),
           label: 'Captions File',
         }),
-        video: text({
+        videoId: text({
           label: 'Intro Video ID',
           ui: {
             description:

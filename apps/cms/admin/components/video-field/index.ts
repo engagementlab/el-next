@@ -5,6 +5,7 @@ import {
   CommonFieldConfig,
 } from '@keystone-6/core/types';
 import { graphql } from '@keystone-6/core';
+import { GraphQLResolveInfo } from 'graphql';
 
 type VideoInput = {
   file: string | null;
@@ -32,7 +33,9 @@ const VideoFieldInput = graphql.inputObject({
 const VideoFieldOutput = graphql.object<VideoOutput>()({
   name: 'VideoFieldOutput',
   fields: {
-    file: graphql.field({ type: graphql.String }),
+    file: graphql.field({
+      type: graphql.String,
+    }),
     label: graphql.field({
       type: graphql.String,
     }),
@@ -44,6 +47,16 @@ const VideoFieldOutput = graphql.object<VideoOutput>()({
 
 export type VideoFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
   CommonFieldConfig<ListTypeInfo>;
+
+const resolveInput = (val: VideoInput) => {
+  return {
+    file: val?.file || undefined,
+    label: val?.label || undefined,
+    caption: val?.caption || undefined,
+    thumbUrl: val?.thumbUrl || undefined,
+    thumbSmUrl: val?.thumbSmUrl || undefined,
+  };
+};
 
 export function video<ListTypeInfo extends BaseListTypeInfo>({
   ...config
@@ -91,58 +104,48 @@ export function video<ListTypeInfo extends BaseListTypeInfo>({
       input: {
         create: {
           arg: graphql.arg({ type: VideoFieldInput }),
-          resolve(val, context) {
-            console.log('CREATE FILE:', val);
-
-            if (val === undefined) {
-              return undefined;
-            }
-
+          resolve(val) {
             return {
-              file: val?.file || '',
-              label: val?.label || '',
-              caption: val?.caption || '',
-              thumbUrl: val?.thumbUrl || '',
-              thumbSmUrl: val?.thumbSmUrl || '',
+              file: val?.file || undefined,
+              label: val?.label || undefined,
+              caption: val?.caption || undefined,
+              thumbUrl: val?.thumbUrl || undefined,
+              thumbSmUrl: val?.thumbSmUrl || undefined,
             };
           },
         },
         update: {
           arg: graphql.arg({ type: VideoFieldInput }),
           resolve(val) {
-            if (val === null) return null;
-            if (val === undefined) return undefined;
-            console.log('UPDATE FILE:', val);
-
             return {
-              file: val.file,
-              label: val?.label || '',
-              caption: val?.caption || '',
-              thumbUrl: val?.thumbUrl || '',
-              thumbSmUrl: val?.thumbSmUrl || '',
+              file: val?.file || undefined,
+              label: val?.label || undefined,
+              caption: val?.caption || undefined,
+              thumbUrl: val?.thumbUrl || undefined,
+              thumbSmUrl: val?.thumbSmUrl || undefined,
             };
           },
         },
       },
-      // output: graphql.field({
-      //   type: VideoFieldOutput,
-      //   async resolve({
-      //     value: { file, label, caption, thumbUrl, thumbSmUrl },
-      //   }) {
-      //     const captionResolved = caption ? caption : undefined;
-      //     if (file === null || label === null) {
-      //       return null;
-      //     }
-      //     console.log('OUTPUT FILE:', label);
-      //     return {
-      //       file,
-      //       label,
-      //       caption: captionResolved,
-      //       thumbUrl,
-      //       thumbSmUrl,
-      //     };
-      //   },
-      // }),
+      output: graphql.field({
+        type: VideoFieldOutput,
+        async resolve({
+          value: { file, label, caption, thumbUrl, thumbSmUrl },
+        }) {
+          const captionResolved = caption ? caption : undefined;
+          if (file === null || label === null) {
+            return null;
+          }
+
+          return {
+            file,
+            label,
+            caption: captionResolved,
+            thumbUrl,
+            thumbSmUrl,
+          };
+        },
+      }),
 
       views: './admin/components/video-field/views',
 

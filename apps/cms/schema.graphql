@@ -647,9 +647,9 @@ type Initiative {
   id: ID!
   name: String
   intro: Initiative_intro_Document
-  rating: Int
   introVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
+  video: String
   videoThumbnail: CloudinaryImage_File
   videoCaption: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
@@ -717,6 +717,7 @@ input InitiativeWhereInput {
   NOT: [InitiativeWhereInput!]
   id: IDFilter
   name: StringFilter
+  video: StringFilter
   videoCaption: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
@@ -749,7 +750,7 @@ input ResearchProjectManyRelationFilter {
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  rating: OrderDirection
+  video: OrderDirection
   videoCaption: OrderDirection
   ogDescription: OrderDirection
 }
@@ -757,9 +758,9 @@ input InitiativeOrderByInput {
 input InitiativeUpdateInput {
   name: String
   intro: JSON
-  rating: Int
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
+  video: String
   videoThumbnail: Upload
   videoCaption: String
   slides: SlideRelateToManyForUpdateInput
@@ -820,9 +821,9 @@ input InitiativeUpdateArgs {
 input InitiativeCreateInput {
   name: String
   intro: JSON
-  rating: Int
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
+  video: String
   videoThumbnail: Upload
   videoCaption: String
   slides: SlideRelateToManyForCreateInput
@@ -2005,6 +2006,7 @@ type Slide {
   altText: String
   caption: String
   video: VideoFieldOutput
+  videoId: String
   captions: AzureStorageFileFieldOutput
   order: Int
 }
@@ -2024,6 +2026,7 @@ input SlideWhereInput {
   eventSlides: EventManyRelationFilter
   altText: StringFilter
   caption: StringFilter
+  videoId: StringFilter
   order: IntNullableFilter
 }
 
@@ -2037,6 +2040,7 @@ input SlideOrderByInput {
   id: OrderDirection
   altText: OrderDirection
   caption: OrderDirection
+  videoId: OrderDirection
   order: OrderDirection
 }
 
@@ -2050,6 +2054,7 @@ input SlideUpdateInput {
   altText: String
   caption: String
   video: VideoFieldInput
+  videoId: String
   captions: AzureStorageFileFieldInput
   order: Int
 }
@@ -2076,6 +2081,7 @@ input SlideCreateInput {
   altText: String
   caption: String
   video: VideoFieldInput
+  videoId: String
   captions: AzureStorageFileFieldInput
   order: Int
 }

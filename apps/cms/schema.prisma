@@ -85,7 +85,6 @@ model Initiative {
   id                    String            @id @default(cuid())
   name                  String            @unique @default("Initiative Name")
   intro                 Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  rating                Int?
   introVideo_file       String
   introVideo_label      String            @default("")
   introVideo_caption    String?
@@ -93,6 +92,7 @@ model Initiative {
   introVideo_thumbSmUrl String            @default("")
   captions_filename     String?
   captions_filesize     Int?
+  video                 String            @default("")
   videoThumbnail        Json?
   videoCaption          String            @default("")
   slides                Slide[]           @relation("Initiative_slides")
@@ -303,6 +303,7 @@ model Slide {
   video_caption     String?
   video_thumbUrl    String       @default("")
   video_thumbSmUrl  String       @default("")
+  videoId           String       @default("")
   captions_filename String?
   captions_filesize Int?
   order             Int?         @default(0)

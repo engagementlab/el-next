@@ -25,11 +25,10 @@ export function Field({
 }: FieldProps<typeof controller>) {
   const VideoGridInstance = new VideoGrid();
 
-  console.log(value, itemValue);
-
   return (
     <>
       <FieldContainer as="fieldset" className="flex flex-col p-2 max-w-[12rem]">
+        <FieldLabel as="legend">{field.label}</FieldLabel>
         {value.file && value.file.length > 5 && value.thumbSmUrl.length > 5 && (
           <>
             <img src={value.thumbSmUrl} width={75} height={75} />
@@ -47,7 +46,7 @@ export function Field({
             VideoGridInstance.GetData();
           }}
         >
-          {value ? 'Change' : 'Select'} Video
+          {value && value.file ? 'Change' : 'Select'} Video
         </LoadingButton>
         {VideoGridInstance._useStore().error && (
           <p className="p-4 text-red font-bold block">Something went wrong.</p>

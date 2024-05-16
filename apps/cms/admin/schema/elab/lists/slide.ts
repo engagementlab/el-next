@@ -60,7 +60,15 @@ const Slide: Lists.Slide = list({
           'This is optional and different from the description of the image.',
       },
     }),
+
     video: video(),
+    videoId: text({
+      label: 'Vimeo ID',
+      ui: {
+        description: 'Use the image field to specify thumbnail.',
+      },
+    }),
+
     captions: azureStorageFile({
       azureStorageConfig: azConfigCustom('captions'),
       label: 'Video Captions File',

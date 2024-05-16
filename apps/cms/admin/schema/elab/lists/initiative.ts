@@ -11,7 +11,7 @@ import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
 import { video } from '../../../components/video-field';
 import { azureStorageFile } from '../../../components/fields-azure/src';
-import { azConfig, azConfigCustom } from '../../azure';
+import { azConfigCustom } from '../../azure';
 
 const Initiative: Lists.Initiative = list({
   access: allowAll,
@@ -32,14 +32,12 @@ const Initiative: Lists.Initiative = list({
     ...group({
       label: 'Intro Video/Slideshow',
       fields: {
-        introVideo: video(),
+        introVideo: video({ label: 'Intro Video' }),
         captions: azureStorageFile({
           azureStorageConfig: azConfigCustom('captions'),
           label: 'Captions File',
-          ui: { description: 'Optional' },
         }),
-
-        videoId: text({
+        video: text({
           label: 'Intro Video ID',
           ui: {
             description:
@@ -65,12 +63,12 @@ const Initiative: Lists.Initiative = list({
             description:
               'A slide can be either an image or video. If you define both, only the image will display. ',
             displayMode: 'cards',
-            cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
+            cardFields: ['image', 'altText', 'caption', 'video', 'order'],
             inlineCreate: {
-              fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+              fields: ['image', 'altText', 'caption', 'video', 'order'],
             },
             inlineEdit: {
-              fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+              fields: ['image', 'altText', 'caption', 'video', 'order'],
             },
           },
         }),

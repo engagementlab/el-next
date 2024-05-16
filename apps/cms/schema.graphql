@@ -649,7 +649,7 @@ type Initiative {
   intro: Initiative_intro_Document
   introVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
-  videoId: String
+  video: String
   videoThumbnail: CloudinaryImage_File
   videoCaption: String
   slides(where: SlideWhereInput! = {}, orderBy: [SlideOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SlideWhereUniqueInput): [Slide!]
@@ -717,7 +717,7 @@ input InitiativeWhereInput {
   NOT: [InitiativeWhereInput!]
   id: IDFilter
   name: StringFilter
-  videoId: StringFilter
+  video: StringFilter
   videoCaption: StringFilter
   slides: SlideManyRelationFilter
   news: NewsItemManyRelationFilter
@@ -750,7 +750,7 @@ input ResearchProjectManyRelationFilter {
 input InitiativeOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  videoId: OrderDirection
+  video: OrderDirection
   videoCaption: OrderDirection
   ogDescription: OrderDirection
 }
@@ -760,7 +760,7 @@ input InitiativeUpdateInput {
   intro: JSON
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
-  videoId: String
+  video: String
   videoThumbnail: Upload
   videoCaption: String
   slides: SlideRelateToManyForUpdateInput
@@ -823,7 +823,7 @@ input InitiativeCreateInput {
   intro: JSON
   introVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
-  videoId: String
+  video: String
   videoThumbnail: Upload
   videoCaption: String
   slides: SlideRelateToManyForCreateInput
@@ -1527,13 +1527,6 @@ input PublicationWhereUniqueInput {
   key: String
 }
 
-type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
-  filename: String!
-  filesize: Int!
-  ref: String!
-  url: String!
-}
-
 input PublicationWhereInput {
   AND: [PublicationWhereInput!]
   OR: [PublicationWhereInput!]
@@ -2012,7 +2005,9 @@ type Slide {
   helper: HelperFieldOutput
   altText: String
   caption: String
+  video: VideoFieldOutput
   videoId: String
+  captions: AzureStorageFileFieldOutput
   order: Int
 }
 
@@ -2058,7 +2053,9 @@ input SlideUpdateInput {
   helper: HelperFieldInput
   altText: String
   caption: String
+  video: VideoFieldInput
   videoId: String
+  captions: AzureStorageFileFieldInput
   order: Int
 }
 
@@ -2083,7 +2080,9 @@ input SlideCreateInput {
   helper: HelperFieldInput
   altText: String
   caption: String
+  video: VideoFieldInput
   videoId: String
+  captions: AzureStorageFileFieldInput
   order: Int
 }
 
@@ -2279,7 +2278,11 @@ type StudioProject {
   thumbnail: CloudinaryImage_File
   thumbAltText: String
   videoId: String
+  video: VideoFieldOutput
+  captions: AzureStorageFileFieldOutput
   trailerId: String
+  trailerVideo: VideoFieldOutput
+  trailerCaptions: AzureStorageFileFieldOutput
   trailerThumbnail: CloudinaryImage_File
   trailerThumbAltText: String
   partners: [StudioProjectPartnerType!]
@@ -2348,6 +2351,13 @@ type StudioProject_impact_Document {
 input StudioProjectWhereUniqueInput {
   id: ID
   key: String
+}
+
+type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
 }
 
 input StudioProjectWhereInput {
@@ -2436,7 +2446,11 @@ input StudioProjectUpdateInput {
   thumbnail: Upload
   thumbAltText: String
   videoId: String
+  video: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   trailerId: String
+  trailerVideo: VideoFieldInput
+  trailerCaptions: AzureStorageFileFieldInput
   trailerThumbnail: Upload
   trailerThumbAltText: String
   partners: [StudioProjectPartnerType!]
@@ -2489,7 +2503,11 @@ input StudioProjectCreateInput {
   thumbnail: Upload
   thumbAltText: String
   videoId: String
+  video: VideoFieldInput
+  captions: AzureStorageFileFieldInput
   trailerId: String
+  trailerVideo: VideoFieldInput
+  trailerCaptions: AzureStorageFileFieldInput
   trailerThumbnail: Upload
   trailerThumbAltText: String
   partners: [StudioProjectPartnerType!]

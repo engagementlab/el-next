@@ -20,25 +20,25 @@ jobs:
         node-version: [20]
     steps:
       - name: Checkout code on HEAD
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
           ref: ${{ inputs.branch }}
 
       # Do this only for PR to production, since we need to work on main during later commit, and PR's work off of merge ref
       - name: Checkout code of PR HEAD
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       
       - name: Setup node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
           retention-days: 1

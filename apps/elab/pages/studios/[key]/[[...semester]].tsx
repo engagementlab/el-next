@@ -572,6 +572,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     };
   }
   let semesterPaths: string[] = [];
+  console.log(studios);
   const paths = (studios as { key: string; semesters: { key: string }[] }[])
     .filter(({ key }) => !!key)
     .map(({ key, semesters }) => {
@@ -614,7 +615,12 @@ export async function getStaticProps({
                 publicUrl
               }
               caption
-              videoId
+              captions { 
+                url 
+              }
+              video { 
+                file 
+              }
               order
             }
           }

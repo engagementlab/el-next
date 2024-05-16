@@ -16,17 +16,18 @@ import screenfull from 'screenfull';
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { IconButton } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 
 import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
 import ClosedCaptionDisabledIcon from '@mui/icons-material/ClosedCaptionDisabled';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
 
-type Theme = {
+type VideoTheme = {
   fill: string;
   stroke: string;
   bg: string;
@@ -36,10 +37,10 @@ type Theme = {
 
 interface VideoProps {
   videoFile: string;
-  videoLabel: string;
+  videoLabel?: string;
   caption?: string;
   captionsFile?: string;
-  theme: Theme;
+  theme: VideoTheme;
   thumbUrl?: string;
   isSlide?: boolean;
   noUi?: boolean;
@@ -71,7 +72,7 @@ type ControlsProps = {
   playedSeconds: number;
   volume: number;
   playerRef: MutableRefObject<ReactPlayer>;
-  theme: Theme;
+  theme: VideoTheme;
   setPlaying: Dispatch<SetStateAction<boolean>>;
   onVolumeChangeHandler: (e: any, value: string) => void;
   onVolumeSeekUp: (e: any, value: string) => void;
@@ -88,6 +89,15 @@ const Controls = (props: ControlsProps) => {
   };
 
   const [volumeHover, toggleHover] = useState(false);
+
+  const ProgressSlider = styled(Slider)({
+    color: '#52af77',
+    height: 8,
+    '& .MuiSlider-track': {
+      border: 'none',
+    },
+    '& .MuiSlider-thumb': {},
+  });
 
   return (
     <div
@@ -108,11 +118,17 @@ const Controls = (props: ControlsProps) => {
         <Slider
           aria-label="Player Current Position"
           defaultValue={0}
+          valueLabelDisplay="auto"
           value={
             props.playerRef.current
               ? props.playerRef.current.getCurrentTime()
               : 0
           }
+          valueLabelFormat={(v) => {
+            const mins = v < 60 ? 0 : Math.ceil(v / 60);
+            const secs = (v % 60 <= 9 ? '0' : '') + Math.ceil(v % 60);
+            return `${mins}:${secs}`;
+          }}
           getAriaValueText={() => {
             return props.playerRef.current &&
               props.playerRef.current.getCurrentTime() !== null
@@ -125,7 +141,37 @@ const Controls = (props: ControlsProps) => {
           }
           sx={{
             color: props.theme.seekbar,
-            filter: 'drop-shadow(1px 0px 12px #F6A515)',
+            // filter: 'drop-shadow(1px 0px 12px #F6A515)',÷
+            '& .MuiSlider-thumb': {
+              height: 24,
+              width: 24,
+              backgroundColor: '#fff',
+              border: '2px solid currentColor',
+              '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                boxShadow: 'inherit',
+              },
+              '&::before': {
+                display: 'none',
+              },
+            },
+
+            '& .MuiSlider-valueLabel': {
+              lineHeight: 1.2,
+              fontSize: 12,
+              background: 'unset',
+              padding: 0,
+              width: 64,
+              height: 32,
+              borderRadius: '50px',
+              backgroundColor: '#000',
+              filter: 'drop-shadow(1px 0px 5px #F6A515)',
+              transformOrigin: 'bottom center',
+              transform: 'translate(0, -100%) scale(0)',
+              '&::before': { display: 'none' },
+              '&.MuiSlider-valueLabelOpen': {
+                transform: 'translate(0, -100%) scale(1)',
+              },
+            },
           }}
         />
       </Box>
@@ -158,7 +204,7 @@ const Controls = (props: ControlsProps) => {
           onClick={() => props.onClickFullscreen()}
           sx={{ color: props.theme.buttons }}
         >
-          <FullscreenIcon />
+          {props.fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
         </IconButton>
         <Box
           className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
@@ -326,7 +372,6 @@ export const Video = ({
   }, [videoOpen]);
 
   useEffect(() => {
-    // debugger;
     return () => {
       setVideoState({
         ...videoState,
@@ -349,7 +394,11 @@ export const Video = ({
           style={{ height: 'inherit' }}
         >
           <Image
-            alt={`Thumbnail image for video with title "${videoLabel}"`}
+            alt={
+              videoLabel
+                ? `Thumbnail image for video with title "${videoLabel}"`
+                : 'Thumbnail image for video preview'
+            }
             className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
             src={thumbUrl}
             width={1920}
@@ -411,7 +460,7 @@ export const Video = ({
           )}
         </button>
       )}
-      {videoOpen && (
+      {(videoOpen || play) && (
         <div
           id="video-embed"
           ref={wrapperRef}
@@ -432,6 +481,7 @@ export const Video = ({
             onDuration={setDurationSeconds}
             onProgress={({ playedSeconds }) => setPlayedSeconds(playedSeconds)}
             onSeek={setPlayedSeconds}
+            //  onBuffer={}
             volume={volume}
             muted={muted}
             config={

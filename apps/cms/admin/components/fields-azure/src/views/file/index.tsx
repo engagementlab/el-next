@@ -86,6 +86,8 @@ export const controller = (config: FieldControllerConfig): FileController => {
       }`,
     defaultValue: { kind: 'empty' },
     deserialize(item) {
+      console.log(item, config);
+
       const value = item[config.path];
       if (!value) return { kind: 'empty' };
       return {

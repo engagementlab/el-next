@@ -393,7 +393,7 @@ app.post('/slack', async (req, res) => {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `> :postit: ${req.body.message}`,
+          text: `> :postit: ${req.body.message.replace(/\"/g, '\\"')}`,
         },
       });
     }

@@ -41,7 +41,7 @@ interface VideoProps {
   caption?: string;
   captionsFile?: string;
   theme: VideoTheme;
-  thumbUrl?: string;
+  thumbUrl: string;
   isSlide?: boolean;
   noUi?: boolean;
   play?: boolean;
@@ -101,7 +101,7 @@ const Controls = (props: ControlsProps) => {
 
   return (
     <div
-      className={`absolute flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
+      className={`absolute max-w-lg flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
         props.theme.bg
       } ${
         props.fullscreen
@@ -356,7 +356,7 @@ export const Video = ({
   };
 
   let classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
-  if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
+  // if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
 
   useEffect(() => {
     if (videoOpen) {
@@ -382,7 +382,7 @@ export const Video = ({
 
   return (
     <div className={classStr}>
-      {videoOpen || play || !thumbUrl ? (
+      {videoOpen || play ? (
         ''
       ) : (
         <button

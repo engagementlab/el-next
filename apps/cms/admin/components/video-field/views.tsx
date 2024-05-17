@@ -78,8 +78,27 @@ export function Field({
 }
 
 export const Cell: CellComponent = ({ item, field, linkTo }) => {
-  let value = item[field.path] + '';
-  return <CellContainer>{value}</CellContainer>;
+  let value = item[field.path];
+  return (
+    <CellContainer>
+      {value.file && value.file.length > 5 && value.thumbSmUrl.length > 5 ? (
+        <a
+          href={value.file}
+          target="_blank"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <img src={value.thumbSmUrl} width={35} height={35} />
+          <p>{value.label}</p>
+        </a>
+      ) : (
+        <em>None</em>
+      )}
+    </CellContainer>
+  );
 };
 
 export const CardValue: CardValueComponent = ({ item, field }) => {

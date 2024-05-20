@@ -90,24 +90,11 @@ const Controls = (props: ControlsProps) => {
 
   const [volumeHover, toggleHover] = useState(false);
 
-  const ProgressSlider = styled(Slider)({
-    color: '#52af77',
-    height: 8,
-    '& .MuiSlider-track': {
-      border: 'none',
-    },
-    '& .MuiSlider-thumb': {},
-  });
-
   return (
     <div
-      className={`absolute max-w-lg flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
+      className={`max-w-2xl flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
         props.theme.bg
-      } ${
-        props.fullscreen
-          ? 'left-1/4 right-1/4'
-          : 'left-[1rem] right-[1rem] md:left-[3rem] md:right-[3rem]'
-      }`}
+      } ${props.fullscreen ? 'w-1/2' : 'w-2/3'}`}
     >
       <Box
         sx={{
@@ -355,8 +342,9 @@ export const Video = ({
     });
   };
 
-  let classStr = 'absolute w-full h-full top-0 left-0 bottom-0 right-0 lg:mb-8';
-  // if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && 'min-h-[inherit]'}`;
+  let classStr =
+    'absolute w-full h-full overflow-hidden top-0 left-0 bottom-0 right-0 lg:mb-8';
+  // if (!isSlide) `video w-full h-full lg:mb-8 ${thumbUrl && ''}`;
 
   useEffect(() => {
     if (videoOpen) {
@@ -390,8 +378,7 @@ export const Video = ({
             toggleOpen(true);
             e.preventDefault();
           }}
-          className="group relative overflow-hidden"
-          style={{ height: 'inherit' }}
+          className="relative h-full w-full"
         >
           <Image
             alt={
@@ -400,9 +387,12 @@ export const Video = ({
                 : 'Thumbnail image for video preview'
             }
             className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
-            src={thumbUrl}
-            width={1920}
-            height={1080}
+            src={
+              thumbUrl
+                ? thumbUrl
+                : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
+            }
+            fill={true}
             unoptimized={true}
             draggable="true"
           />
@@ -507,8 +497,8 @@ export const Video = ({
           />
 
           <div
-            className={`relative transition-all duration-700 ${
-              videoHover ? '-translate-y-[1rem]' : 'translate-y-[8rem]'
+            className={`relative flex flex-col w-full items-center transition-all duration-700 ${
+              videoHover ? '-translate-y-[7rem]' : 'translate-y-0'
             } ${easing}`}
           >
             <Controls

@@ -41,6 +41,7 @@ type Initiative = {
   slides?: any[];
   introVideo?: {
     file: string;
+    thumbUrl: string;
   };
   captions?: { url: string };
   video: { file: string };
@@ -245,7 +246,11 @@ export default function InitIndex({
                         videoFile={page.introVideo.file}
                         caption={page.videoCaption}
                         captionsFile={page.captions?.url}
-                        thumbUrl={page.videoThumbnail?.publicUrl}
+                        thumbUrl={
+                          page.videoThumbnail
+                            ? page.videoThumbnail?.publicUrl
+                            : page.introVideo.thumbUrl
+                        }
                         theme={videoColor}
                       />
                     ) : (
@@ -500,6 +505,7 @@ export async function getStaticProps({
         }
         introVideo {
           file
+          thumbUrl
         }
         captions {
           url

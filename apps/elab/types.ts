@@ -9,7 +9,7 @@ export type Slide = {
   };
   caption: string;
   captions?: { file: string };
-  video: { file: string };
+  video: { file: string; thumbUrl: string };
   videoId?: string;
   order: number;
 };

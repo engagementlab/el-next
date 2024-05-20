@@ -76,7 +76,6 @@ const Slideshow = ({
   }, [slide]);
 
   const Slide = ({ data }: { data: Slide }) => {
-    console.log(data);
     if (ContentRenderer) return <ContentRenderer slide={data} />;
     else if ((data.video.file !== 'none' || data.videoId) && data.image)
       return (
@@ -88,7 +87,7 @@ const Slideshow = ({
               videoFile={data.video.file}
               caption={data.caption}
               captionsFile={data.captions?.file}
-              thumbUrl={data.image.publicUrl}
+              thumbUrl={data.image ? data.image.publicUrl : data.video.thumbUrl}
               theme={{
                 stroke: Theming['none'].arrow,
                 fill: Theming['none'].fillRgb,

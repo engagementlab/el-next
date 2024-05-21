@@ -78,7 +78,8 @@ export default function InitIndex({
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
   const videoColor = {
     stroke: Theming[initiative].arrow,
-    fill: Theming[initiative].fillRgb,
+    fill: Theming[initiative].fill,
+    fillRgb: Theming[initiative].fillRgb,
     bg: Theming[initiative].videoBg || Theming[initiative].secondaryBg,
     seekbar: Theming[initiative].fillVideo || Theming[initiative].arrowHex,
     buttons: '#fff',

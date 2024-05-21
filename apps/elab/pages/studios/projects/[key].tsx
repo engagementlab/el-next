@@ -91,7 +91,8 @@ export default function Project({
       Theming[item.initiative === 'gunviolence' ? 'tngv' : 'tnej'];
     const videoColor = {
       stroke: theming.arrow,
-      fill: theming.fillRgb,
+      fill: theming.fill,
+      fillRgb: theming.fillRgb,
       bg: theming.videoBg || theming.secondaryBg,
       seekbar: theming.fillVideo || theming.arrowHex,
       buttons: '#fff',
@@ -149,18 +150,34 @@ export default function Project({
     };
 
     const Media = () => {
-      if (item.video) {
-        let videoFile = item.video.file;
-        if (item.trailerVideo && !videoOpen) videoFile = item.trailerVideo.file;
-        console.log('fiLe', videoFile);
+      if (item.video)
         return (
           <div
-            className={`relative transition-all duration-500 ${CustomEase} ${
+            className={`relative transition-all duration-500 bg-blue ${CustomEase} ${
               videoOpen
-                ? 'w-full basis-full min-h-[50vh]'
-                : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
+                ? 'basis-full min-h-[50vh]'
+                : 'max-w-sm min-h-[200px] md:min-h-[255px] lg:max-w-xl lg:mx-3 basis-2/5'
             }`}
           >
+            {' '}
+            (
+            <button
+              onClick={() => toggleVideo()}
+              className={`transition-all duration-500 ${CustomEase} absolute right-0 mr-2 mt-2 z-50 inline-block w-12 h-12 hover:scale-125`}
+            >
+              <svg
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                className={theming.fill}
+              >
+                <path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z" />
+              </svg>
+            </button>
+            ){/* Close full movie */}
+            {/* {videoOpen &&}
             <div className="group w-full min-h-[inherit]">
               <div
                 id="video"
@@ -168,18 +185,18 @@ export default function Project({
                   videoOpen ? 'relative mb-5 h-full' : ``
                 } min-h-[inherit]`}
               >
-                <VideoV2
-                  key="video-player-project"
-                  videoLabel={`Trailer for ${item.name} `}
-                  videoFile={videoFile}
-                  captionsFile={item.captions?.url}
-                  thumbUrl={
-                    item.trailerThumbnail ? item.trailerThumbnail.publicUrl : ''
-                  }
-                  theme={videoColor}
-                  noUi={true}
-                  play={trailerOpen || videoOpen}
-                />
+                <div className={!videoOpen ? 'hidden' : 'block'}>
+                  <VideoV2
+                    key="video-player-project"
+                    videoLabel={`Trailer for ${item.name} `}
+                    videoFile={item.video.file}
+                    captionsFile={item.captions?.url}
+                    thumbUrl=""
+                    theme={videoColor}
+                    noUi={true}
+                    play={true}
+                  />
+                </div>
                 {!videoOpen && !item.trailerThumbnail && (
                   <Image
                     id="thumb"
@@ -189,108 +206,124 @@ export default function Project({
                   />
                 )}
               </div>
-              {!videoOpen &&
-                !trailerOpen &&
-                (item.trailerVideo || item.trailerId) && (
-                  <button
-                    className={`absolute transition-all duration-200 ${CustomEase} bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:pr-12`}
-                    onClick={() => toggleTrailerVideo()}
-                  >
-                    <svg
-                      height="48"
-                      width="48"
-                      viewBox="0 -960 960 960"
-                      className={`inline transition-all duration-200 ${CustomEase} group-hover:scale-125`}
+              {item.trailerVideo && (
+                <div className={videoOpen ? 'hidden' : 'block'}>
+                  <VideoV2
+                    key="video-player-project"
+                    videoLabel={`Trailer for ${item.name} `}
+                    videoFile={item.trailerVideo.file}
+                    captionsFile={item.captions?.url}
+                    thumbUrl={
+                      item.trailerThumbnail
+                        ? item.trailerThumbnail.publicUrl
+                        : ''
+                    }
+                    theme={videoColor}
+                    noUi={true}
+                    play={trailerOpen}
+                  />
+                  {!trailerOpen && (
+                    <button
+                      className={`absolute transition-all duration-200 ${CustomEase} bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:pr-12`}
+                      onClick={() => toggleTrailerVideo()}
                     >
-                      <path
-                        d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
-                        fill="white"
-                        className={`group-hover:${theming.fill}`}
-                      />
-                    </svg>
-                    <h4 className="text-white font-semibold text-3xl">
-                      Watch the trailer
-                    </h4>
-                  </button>
-                )}
-            </div>
-          </div>
-        );
-      }
-
-      if (item.videoId)
-        return (
-          <div
-            className={`relative transition-all duration-500 ${CustomEase} ${
-              videoOpen
-                ? 'w-full basis-full min-h-[50vh]'
-                : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
-            }`}
-          >
-            <div className="group w-full min-h-[inherit]">
-              <div
-                id="video"
-                className={`${
-                  videoOpen ? 'relative mb-5 h-full' : ``
-                } min-h-[inherit]`}
-              >
-                <Video
-                  videoLabel={`Trailer for ${item.name} `}
-                  videoUrl={`https://player.vimeo.com/video/${
-                    videoOpen ? item.videoId : item.trailerId
-                  }`}
-                  thumbUrl={
-                    item.trailerThumbnail ? item.trailerThumbnail.publicUrl : ''
-                  }
-                  play={trailerOpen || videoOpen}
-                  noUi={true}
-                />
-                {!videoOpen && !item.trailerThumbnail && (
-                  <Image
-                    id="thumb"
-                    alt={item.thumbAltText}
-                    imgId={item.thumbnail.publicId}
-                    transforms="f_auto,dpr_auto,c_fill,g_face"
-                  />
-                )}
-              </div>
-              {!videoOpen && !trailerOpen && item.trailerId && (
-                <button
-                  className="absolute bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
-                  onClick={() => toggleTrailerVideo()}
-                >
-                  <svg
-                    height="48"
-                    width="48"
-                    viewBox="0 -960 960 960"
-                    className={`inline transition-all duration-200 ${CustomEase} group-hover:scale-125`}
-                  >
-                    <path
-                      d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
-                      fill="white"
-                      className={`group-hover:${theming.fill}`}
-                    />
-                  </svg>
-                  <h4 className="text-white font-semibold text-3xl">
-                    Watch the trailer
-                  </h4>
-                </button>
+                      <svg
+                        height="48"
+                        width="48"
+                        viewBox="0 -960 960 960"
+                        className={`inline transition-all duration-200 ${CustomEase} group-hover:scale-125`}
+                      >
+                        <path
+                          d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
+                          fill="white"
+                          className={`group-hover:${theming.fill}`}
+                        />
+                      </svg>
+                      <h4 className="text-white font-semibold text-3xl">
+                        Watch the trailer
+                      </h4>
+                    </button>
+                  )}
+                </div>
               )}
-            </div>
+            </div> */}
           </div>
         );
 
-      return (
-        <div className="lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5">
-          <Image
-            id="thumb"
-            alt={item.thumbAltText}
-            imgId={item.thumbnail.publicId}
-            transforms="f_auto,dpr_auto,c_fill,g_face"
-          />
-        </div>
-      );
+      // if (item.videoId)
+      //   return (
+      //     <div
+      //       className={`relative transition-all duration-500 ${CustomEase} ${
+      //         videoOpen
+      //           ? 'w-full basis-full min-h-[50vh]'
+      //           : 'max-w-sm min-w-[300px] min-h-[200px] md:min-h-[255px] lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5'
+      //       }`}
+      //     >
+      //       <div className="group w-full min-h-[inherit]">
+      //         <div
+      //           id="video"
+      //           className={`${
+      //             videoOpen ? 'relative mb-5 h-full' : ``
+      //           } min-h-[inherit]`}
+      //         >
+      //           <Video
+      //             videoLabel={`Trailer for ${item.name} `}
+      //             videoUrl={`https://player.vimeo.com/video/${
+      //               videoOpen ? item.videoId : item.trailerId
+      //             }`}
+      //             thumbUrl={
+      //               item.trailerThumbnail ? item.trailerThumbnail.publicUrl : ''
+      //             }
+      //             play={trailerOpen || videoOpen}
+      //             noUi={true}
+      //           />
+      //           {!videoOpen && !item.trailerThumbnail && (
+      //             <Image
+      //               id="thumb"
+      //               alt={item.thumbAltText}
+      //               imgId={item.thumbnail.publicId}
+      //               transforms="f_auto,dpr_auto,c_fill,g_face"
+      //             />
+      //           )}
+      //         </div>
+      //         {!videoOpen && !trailerOpen && item.trailerId && (
+      //           <button
+      //             className="absolute bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:w-80"
+      //             onClick={() => toggleTrailerVideo()}
+      //           >
+      //             <svg
+      //               height="48"
+      //               width="48"
+      //               viewBox="0 -960 960 960"
+      //               className={`inline transition-all duration-200 ${CustomEase} group-hover:scale-125`}
+      //             >
+      //               <path
+      //                 d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
+      //                 fill="white"
+      //                 className={`group-hover:${theming.fill}`}
+      //               />
+      //             </svg>
+      //             <h4 className="text-white font-semibold text-3xl">
+      //               Watch the trailer
+      //             </h4>
+      //           </button>
+      //         )}
+      //       </div>
+      //     </div>
+      //   );
+
+      // return (
+      //   <div className="lg:mx-3 lg:max-w-xl lg:min-w-[450px] basis-2/5">
+      //     <Image
+      //       id="thumb"
+      //       alt={item.thumbAltText}
+      //       imgId={item.thumbnail.publicId}
+      //       transforms="f_auto,dpr_auto,c_fill,g_face"
+      //     />
+      //   </div>
+      // );
     };
+
     return (
       <Layout
         error={error}

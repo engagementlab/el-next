@@ -29,6 +29,7 @@ import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
 
 type VideoTheme = {
   fill: string;
+  fillRgb: string;
   stroke: string;
   bg: string;
   buttons: string;
@@ -49,6 +50,7 @@ interface VideoProps {
 
 interface VideoState {
   buffer: boolean;
+  error: boolean;
   cachedVolume: number;
   hideCaptions: boolean;
   isFullscreen: boolean;
@@ -231,13 +233,14 @@ const Controls = (props: ControlsProps) => {
 };
 
 const initialState = {
-  playing: true,
-  muted: false,
   volume: 0.5,
   cachedVolume: 0.5,
   played: 0,
-  seeking: false,
   buffer: true,
+  error: false,
+  muted: false,
+  playing: true,
+  seeking: false,
   hideCaptions: true,
   isFullscreen: false,
   videoOpen: false,
@@ -271,6 +274,8 @@ export const Video = ({
   const playerRef = useRef() as MutableRefObject<ReactPlayer>;
   const videoState = useStore();
   const {
+    buffer,
+    error,
     muted,
     volume,
     hideCaptions,
@@ -369,7 +374,12 @@ export const Video = ({
   }, []);
 
   return (
-    <div className={classStr}>
+    <div
+      className={classStr}
+      onMouseEnter={() => toggleHover(true)}
+      onMouseLeave={() => toggleHover(false)}
+      onTouchEnd={() => toggleHover(true)}
+    >
       {videoOpen || play ? (
         ''
       ) : (
@@ -427,7 +437,7 @@ export const Video = ({
                   cx="256"
                   cy="256"
                   r="250"
-                  style={{ fill: theme.fill }}
+                  style={{ fill: theme.fillRgb }}
                 ></circle>
                 <g>
                   <g className="transition-all origin-center group-hover:scale-125 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
@@ -454,72 +464,120 @@ export const Video = ({
         <div
           id="video-embed"
           ref={wrapperRef}
-          onMouseEnter={() => toggleHover(true)}
-          onMouseLeave={() => toggleHover(false)}
-          onTouchEnd={() => toggleHover(true)}
           className="w-full h-full min-h-[inherit] overflow-y-hidden"
         >
-          <ReactPlayer
-            url={videoFile || ''}
-            ref={playerRef}
-            id={`video-player-${Math.ceil(Math.random() * 10000)}`}
-            className="video-player"
-            controls={false}
-            width="100%"
-            height="100%"
-            playing={playing}
-            onDuration={setDurationSeconds}
-            onProgress={({ playedSeconds }) => setPlayedSeconds(playedSeconds)}
-            onSeek={setPlayedSeconds}
-            //  onBuffer={}
-            volume={volume}
-            muted={muted}
-            config={
-              captionsFile
-                ? {
-                    file: {
-                      attributes: {
-                        crossOrigin: 'true',
-                      },
-                      tracks: [
-                        {
-                          src: captionsFile,
-                          kind: 'subtitles',
-                          srcLang: 'en',
-                          default: true,
-                          label: 'English',
+          {!error ? (
+            <>
+              {buffer && (
+                <div className="absolute bg-white/20 w-full h-full">
+                  <span
+                    className="absolute"
+                    style={{
+                      top: `calc(50% - 50px)`,
+                      left: `calc(50% - 50px)`,
+                    }}
+                  >
+                    <svg
+                      width="100"
+                      height="100"
+                      viewBox="0 0 24 24"
+                      className={`opacity-100 ${theme.fill}`}
+                    >
+                      <path
+                        d="M2,12A10.94,10.94,0,0,1,5,4.65c-.21-.19-.42-.36-.62-.55h0A11,11,0,0,0,12,23c.34,0,.67,0,1-.05C6,23,2,17.74,2,12Z"
+                        className="animate-spin origin-center"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              )}
+              <ReactPlayer
+                url={videoFile || ''}
+                ref={playerRef}
+                id={`video-player-${Math.ceil(Math.random() * 10000)}`}
+                className="video-player"
+                controls={false}
+                width="100%"
+                height="100%"
+                playing={playing}
+                onDuration={setDurationSeconds}
+                onProgress={({ playedSeconds }) =>
+                  setPlayedSeconds(playedSeconds)
+                }
+                onSeek={setPlayedSeconds}
+                onError={() =>
+                  setVideoState({
+                    ...videoState,
+                    error: true,
+                  })
+                }
+                onBuffer={() =>
+                  setVideoState({
+                    ...videoState,
+                    buffer: true,
+                  })
+                }
+                onBufferEnd={() =>
+                  setVideoState({
+                    ...videoState,
+                    buffer: false,
+                  })
+                }
+                volume={volume}
+                muted={muted}
+                config={
+                  captionsFile
+                    ? {
+                        file: {
+                          attributes: {
+                            crossOrigin: 'true',
+                          },
+                          tracks: [
+                            {
+                              src: captionsFile,
+                              kind: 'subtitles',
+                              srcLang: 'en',
+                              default: true,
+                              label: 'English',
+                            },
+                          ],
                         },
-                      ],
-                    },
-                  }
-                : {}
-            }
-          />
-
-          <div
-            className={`relative flex flex-col w-full items-center transition-all duration-700 ${
-              videoHover ? '-translate-y-[7rem]' : 'translate-y-0'
-            } ${easing}`}
-          >
-            <Controls
-              duration={durationSeconds}
-              playerRef={playerRef}
-              playing={playing}
-              playedSeconds={playedSeconds}
-              setPlaying={setPlaying}
-              volume={volume}
-              muted={muted}
-              theme={theme}
-              captionsEnabled={captionsFile !== undefined}
-              hideCaptions={hideCaptions}
-              fullscreen={isFullscreen}
-              onMute={muteHandler}
-              onToggleCaptions={toggleCaptions}
-              onVolumeChangeHandler={volumeChangeHandler}
-              onVolumeSeekUp={volumeSeekUpHandler}
-              onClickFullscreen={onClickFullscreen}
-            />
-          </div>
+                      }
+                    : {}
+                }
+              />
+              <div
+                className={`relative flex flex-col w-full items-center transition-all duration-700 ${
+                  videoHover ? '-translate-y-[7rem]' : 'translate-y-0'
+                } ${easing}`}
+              >
+                <Controls
+                  duration={durationSeconds}
+                  playerRef={playerRef}
+                  playing={playing}
+                  playedSeconds={playedSeconds}
+                  setPlaying={setPlaying}
+                  volume={volume}
+                  muted={muted}
+                  theme={theme}
+                  captionsEnabled={captionsFile !== undefined}
+                  hideCaptions={hideCaptions}
+                  fullscreen={isFullscreen}
+                  onMute={muteHandler}
+                  onToggleCaptions={toggleCaptions}
+                  onVolumeChangeHandler={volumeChangeHandler}
+                  onVolumeSeekUp={volumeSeekUpHandler}
+                  onClickFullscreen={onClickFullscreen}
+                />
+              </div>
+            </>
+          ) : (
+            <h1 className="text-red font-bold">
+              {videoFile === 'none'
+                ? 'No video provided!'
+                : 'Could not load video.'}
+            </h1>
+          )}
         </div>
       )}
     </div>

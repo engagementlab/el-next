@@ -90,7 +90,8 @@ const Slideshow = ({
               thumbUrl={data.image ? data.image.publicUrl : data.video.thumbUrl}
               theme={{
                 stroke: Theming['none'].arrow,
-                fill: Theming['none'].fillRgb,
+                fill: Theming['none'].fill,
+                fillRgb: Theming['none'].fillRgb,
                 bg: Theming['none'].secondaryBg,
                 seekbar: Theming['none'].arrowHex,
                 buttons: '#fff',

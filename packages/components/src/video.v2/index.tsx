@@ -96,7 +96,7 @@ const Controls = (props: ControlsProps) => {
     <div
       className={`max-w-2xl flex flex-col px-5 bottom-0 rounded-[5px] bg-opacity-50 ${
         props.theme.bg
-      } ${props.fullscreen ? 'w-1/2' : 'w-2/3'}`}
+      } w-full ${props.fullscreen ? 'lg:w-1/2' : 'lg:w-2/3'}`}
     >
       <Box
         sx={{
@@ -196,7 +196,7 @@ const Controls = (props: ControlsProps) => {
           {props.fullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
         </IconButton>
         <Box
-          className={`flex flex-row items-center transition-all duration-[420ms] mr-5 ${
+          className={`flex flex-row items-center transition-all duration-[420ms] lg:mr-5 ${
             volumeHover ? 'basis-[50%]' : 'basis-[5%]'
           } ${easing}`}
           onMouseEnter={() => toggleHover(true)}
@@ -210,22 +210,24 @@ const Controls = (props: ControlsProps) => {
           >
             {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
           </IconButton>
-          <Slider
-            aria-label="Player Current Volume"
-            defaultValue={0.5}
-            value={props.volume * 100}
-            getAriaValueText={() => {
-              return props.volume.toString();
-            }}
-            onChange={(e: Event, value: number, activeThumb: number) => {
-              props.onVolumeChangeHandler(e, value.toString());
-            }}
-            sx={{
-              color: props.theme.seekbar,
-              opacity: volumeHover ? 1 : 0,
-              transition: 'all 420ms ease',
-            }}
-          />
+          <span className="hidden lg:inline">
+            <Slider
+              aria-label="Player Current Volume"
+              defaultValue={0.5}
+              value={props.volume * 100}
+              getAriaValueText={() => {
+                return props.volume.toString();
+              }}
+              onChange={(e: Event, value: number, activeThumb: number) => {
+                props.onVolumeChangeHandler(e, value.toString());
+              }}
+              sx={{
+                color: props.theme.seekbar,
+                opacity: volumeHover ? 1 : 0,
+                transition: 'all 420ms ease',
+              }}
+            />
+          </span>
         </Box>
       </div>
     </div>
@@ -388,7 +390,7 @@ export const Video = ({
             toggleOpen(true);
             e.preventDefault();
           }}
-          className="relative h-full w-full"
+          className="relative h-full w-full max-w-[400px]"
         >
           <Image
             alt={

@@ -61,6 +61,7 @@ const useStore = create<ProjectState>()(
         return {
           ...state,
           videoOpen: !state.videoOpen,
+          trailerOpen: false,
         };
       }),
     reset: () =>
@@ -151,7 +152,7 @@ export default function Project({
     };
 
     const Media = () => {
-      if (item.video)
+      if (item.video && item.video.file !== 'none')
         return (
           <motion.div
             initial="exit"
@@ -199,7 +200,7 @@ export default function Project({
             <div className="group w-full min-h-[inherit]">
               <div
                 id="video"
-                className={`${
+                className={`min-w-[600px] lg:min-w-[300px]  ${
                   videoOpen ? 'relative mb-5 h-full' : ``
                 } min-h-[inherit]`}
               >
@@ -249,7 +250,7 @@ export default function Project({
                           className={`group-hover:${theming.fill}`}
                         />
                       </svg>
-                      <h4 className="text-white font-semibold text-3xl">
+                      <h4 className="text-white font-semibold text-lg lg:text-3xl">
                         Watch the trailer
                       </h4>
                     </button>

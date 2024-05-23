@@ -176,7 +176,7 @@ export default function Project({
               },
             }}
             className={`relative min-h-[200px] md:min-h-[255px] lg:mx-3
-            ${!videoOpen && 'max-w-sm lg:max-w-xl'}`}
+            ${!videoOpen && 'max-w-md'}`}
           >
             {/* Close full movie */}
             {videoOpen && (

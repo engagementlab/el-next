@@ -137,7 +137,7 @@ const Controls = (props: ControlsProps) => {
               backgroundColor: '#fff',
               border: '2px solid currentColor',
               '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
-                boxShadow: 'inherit',
+                boxShadow: 'none',
               },
               '&::before': {
                 display: 'none',
@@ -153,7 +153,6 @@ const Controls = (props: ControlsProps) => {
               height: 32,
               borderRadius: '50px',
               backgroundColor: '#000',
-              filter: 'drop-shadow(1px 0px 5px #F6A515)',
               transformOrigin: 'bottom center',
               transform: 'translate(0, -100%) scale(0)',
               '&::before': { display: 'none' },
@@ -390,7 +389,7 @@ export const Video = ({
             toggleOpen(true);
             e.preventDefault();
           }}
-          className="relative h-full w-full max-w-[400px]"
+          className="relative h-full w-full"
         >
           <Image
             alt={

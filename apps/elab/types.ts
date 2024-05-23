@@ -395,6 +395,7 @@ export type StudioProject = {
   };
   thumbAltText: string;
   trailerThumbnail: {
+    publicId: string;
     publicUrl: string;
   };
   trailerThumbAltText: string;

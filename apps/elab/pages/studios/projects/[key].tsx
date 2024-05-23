@@ -210,10 +210,10 @@ export default function Project({
                     videoLabel={`Video for ${item.name} `}
                     videoFile={item.video.file}
                     captionsFile={item.captions?.url}
-                    thumbUrl=""
                     theme={videoColor}
                     noUi={true}
                     play={true}
+                    ended={() => toggleVideo()}
                   />
                 )}
               </div>
@@ -229,10 +229,19 @@ export default function Project({
                         ? item.trailerThumbnail.publicUrl
                         : ''
                     }
+                    thumbPublicId={item.trailerThumbnail.publicId}
                     theme={videoColor}
                     noUi={true}
                     play={trailerOpen}
+                    // We have to force the trailer state to be open if the video starts within the player component itself
+                    started={() => {
+                      if (!trailerOpen) toggleTrailerVideo();
+                    }}
+                    ended={() => {
+                      if (trailerOpen) toggleTrailerVideo();
+                    }}
                   />
+                  {/* Watch btn */}
                   {!trailerOpen && (
                     <button
                       className={`absolute transition-all duration-200 ${CustomEase} bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:pr-12`}
@@ -561,6 +570,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
             trailerId
             trailerThumbnail {
               publicUrl
+              publicId
             }
             trailerThumbAltText
             videoId

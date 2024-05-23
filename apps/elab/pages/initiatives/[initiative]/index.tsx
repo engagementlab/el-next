@@ -48,6 +48,7 @@ type Initiative = {
   videoCaption?: string;
   videoThumbnail?: {
     publicUrl: string;
+    publicId: string;
   };
   body: { document: any };
   news: News[];
@@ -186,7 +187,7 @@ export default function InitIndex({
       fullBleed={true}
       theme={Theming[initiative].theme}
       title={InitiativeFilterGroups.find((i) => i.key === initiative)?.label}
-      // ogDescription={item.summary}
+      // ogDescription={page.}
     >
       {page && (
         <div className="text-grey">
@@ -252,6 +253,7 @@ export default function InitIndex({
                             ? page.videoThumbnail?.publicUrl
                             : page.introVideo.thumbUrl
                         }
+                        thumbPublicId={page.videoThumbnail?.publicId}
                         theme={videoColor}
                       />
                     ) : (
@@ -513,6 +515,7 @@ export async function getStaticProps({
         }
         videoThumbnail {
           publicUrl
+          publicId
         }
         videoCaption
         slides {

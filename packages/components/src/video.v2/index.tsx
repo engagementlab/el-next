@@ -1,3 +1,11 @@
+/**
+ * Engagement Lab 'Next' shared component library
+ * Developed by Engagement Lab, 2021-2024
+ *
+ * @author Johnny Richardson
+ * Video player component
+ * ==========
+ */
 import Image from 'next/image';
 import React, {
   Dispatch,
@@ -16,7 +24,7 @@ import screenfull from 'screenfull';
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { IconButton, styled } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
 import ClosedCaptionDisabledIcon from '@mui/icons-material/ClosedCaptionDisabled';
@@ -26,6 +34,8 @@ import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeMuteIcon from '@mui/icons-material/VolumeMute';
+
+import * as CldImage from '../image';
 
 type VideoTheme = {
   fill: string;
@@ -42,10 +52,14 @@ interface VideoProps {
   caption?: string;
   captionsFile?: string;
   theme: VideoTheme;
-  thumbUrl: string;
+  thumbUrl?: string;
+  thumbPublicId?: string;
   isSlide?: boolean;
   noUi?: boolean;
   play?: boolean;
+  playing?: boolean;
+  started?: () => void;
+  ended?: () => void;
 }
 
 interface VideoState {
@@ -196,7 +210,7 @@ const Controls = (props: ControlsProps) => {
         </IconButton>
         <Box
           className={`flex flex-row items-center transition-all duration-[420ms] lg:mr-5 ${
-            volumeHover ? 'basis-[50%]' : 'basis-[5%]'
+            volumeHover ? 'md:basis-[50%]' : 'basis-[5%]'
           } ${easing}`}
           onMouseEnter={() => toggleHover(true)}
           onMouseLeave={() => toggleHover(false)}
@@ -209,24 +223,24 @@ const Controls = (props: ControlsProps) => {
           >
             {props.muted ? <VolumeMuteIcon /> : <VolumeUpIcon />}
           </IconButton>
-          <span className="hidden lg:inline">
-            <Slider
-              aria-label="Player Current Volume"
-              defaultValue={0.5}
-              value={props.volume * 100}
-              getAriaValueText={() => {
-                return props.volume.toString();
-              }}
-              onChange={(e: Event, value: number, activeThumb: number) => {
-                props.onVolumeChangeHandler(e, value.toString());
-              }}
-              sx={{
-                color: props.theme.seekbar,
-                opacity: volumeHover ? 1 : 0,
-                transition: 'all 420ms ease',
-              }}
-            />
-          </span>
+
+          <Slider
+            aria-label="Player Current Volume"
+            defaultValue={0.5}
+            value={props.volume * 100}
+            getAriaValueText={() => {
+              return props.volume.toString();
+            }}
+            onChange={(e: Event, value: number, activeThumb: number) => {
+              props.onVolumeChangeHandler(e, value.toString());
+            }}
+            className="!hidden md:!inline-block"
+            sx={{
+              color: props.theme.seekbar,
+              opacity: volumeHover ? 1 : 0,
+              transition: 'all 420ms ease',
+            }}
+          />
         </Box>
       </div>
     </div>
@@ -250,6 +264,7 @@ const initialState = {
 
 export const Video = ({
   thumbUrl,
+  thumbPublicId,
   videoFile,
   videoLabel,
   caption,
@@ -258,8 +273,9 @@ export const Video = ({
   theme,
   noUi,
   play,
+  started,
+  ended,
 }: VideoProps) => {
-  const [playing, setPlaying] = useState(true);
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
 
@@ -278,6 +294,7 @@ export const Video = ({
     buffer,
     error,
     muted,
+    playing,
     volume,
     hideCaptions,
     isFullscreen,
@@ -335,6 +352,7 @@ export const Video = ({
   };
 
   const toggleOpen = (open: boolean) => {
+    if (open && started) started();
     setVideoState({
       ...videoState,
       videoOpen: open,
@@ -391,22 +409,34 @@ export const Video = ({
           }}
           className="relative h-full w-full"
         >
-          <Image
-            alt={
-              videoLabel
-                ? `Thumbnail image for video with title "${videoLabel}"`
-                : 'Thumbnail image for video preview'
-            }
-            className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
-            src={
-              thumbUrl
-                ? thumbUrl
-                : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
-            }
-            fill={true}
-            unoptimized={true}
-            draggable="true"
-          />
+          {thumbPublicId ? (
+            <CldImage.default
+              id={`img-${thumbPublicId}`}
+              alt={`Thumbnail image for video with title "${videoLabel}"`}
+              imgId={thumbPublicId}
+              lazy={false}
+              // width={300}
+              transforms="g_faces"
+              // className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
+            />
+          ) : (
+            <Image
+              alt={
+                videoLabel
+                  ? `Thumbnail image for video with title "${videoLabel}"`
+                  : 'Thumbnail image for video preview'
+              }
+              className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
+              src={
+                thumbUrl
+                  ? thumbUrl
+                  : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
+              }
+              fill={true}
+              unoptimized={true}
+              draggable="true"
+            />
+          )}
 
           {!noUi && (
             <span
@@ -501,6 +531,16 @@ export const Video = ({
                 width="100%"
                 height="100%"
                 playing={playing}
+                onEnded={() => {
+                  playerRef.current.seekTo(0);
+                  playerRef.current.seekTo(0);
+                  setVideoState({
+                    ...videoState,
+                    playing: false,
+                    videoOpen: false,
+                  });
+                  if (ended) ended();
+                }}
                 onDuration={setDurationSeconds}
                 onProgress={({ playedSeconds }) =>
                   setPlayedSeconds(playedSeconds)
@@ -557,13 +597,18 @@ export const Video = ({
                   playerRef={playerRef}
                   playing={playing}
                   playedSeconds={playedSeconds}
-                  setPlaying={setPlaying}
                   volume={volume}
                   muted={muted}
                   theme={theme}
                   captionsEnabled={captionsFile !== undefined}
                   hideCaptions={hideCaptions}
                   fullscreen={isFullscreen}
+                  setPlaying={() =>
+                    setVideoState({
+                      ...videoState,
+                      playing: false,
+                    })
+                  }
                   onMute={muteHandler}
                   onToggleCaptions={toggleCaptions}
                   onVolumeChangeHandler={volumeChangeHandler}

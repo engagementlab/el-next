@@ -269,6 +269,7 @@ model Semester {
   studioId         String?             @map("studio")
   initiatives      Json                @default("[]")
   type             SemesterTypeType?
+  temp             String?
   courseNumber     String              @default("")
   instructors      Person[]            @relation("Person_studioInstructors")
   slides           Slideshow?          @relation("Semester_slides", fields: [slidesId], references: [id])

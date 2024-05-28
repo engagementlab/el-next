@@ -1810,6 +1810,7 @@ type Semester {
   studio: Studio
   initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
+  temp: String
   courseNumber: String
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   instructorsCount(where: PersonWhereInput! = {}): Int
@@ -1915,6 +1916,7 @@ input SemesterOrderByInput {
   createdDate: OrderDirection
   status: OrderDirection
   type: OrderDirection
+  temp: OrderDirection
   courseNumber: OrderDirection
   description: OrderDirection
   contact: OrderDirection
@@ -1928,6 +1930,7 @@ input SemesterUpdateInput {
   studio: StudioRelateToOneForUpdateInput
   initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
+  temp: String
   courseNumber: String
   instructors: PersonRelateToManyForUpdateInput
   slides: SlideshowRelateToOneForUpdateInput
@@ -1967,6 +1970,7 @@ input SemesterCreateInput {
   studio: StudioRelateToOneForCreateInput
   initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
+  temp: String
   courseNumber: String
   instructors: PersonRelateToManyForCreateInput
   slides: SlideshowRelateToOneForCreateInput

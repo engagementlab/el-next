@@ -98,6 +98,7 @@ type ControlsProps = {
 };
 
 const easing = 'ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)]';
+const thumbClass = `transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`;
 
 const Controls = (props: ControlsProps) => {
   const seek = (value: number) => {
@@ -415,9 +416,8 @@ export const Video = ({
               alt={`Thumbnail image for video with title "${videoLabel}"`}
               imgId={thumbPublicId}
               lazy={false}
-              // width={300}
               transforms="g_faces"
-              // className="pointer-events-none max-h-[350px] lg:max-h-[465px]"
+              className={thumbClass}
             />
           ) : (
             <Image
@@ -426,12 +426,12 @@ export const Video = ({
                   ? `Thumbnail image for video with title "${videoLabel}"`
                   : 'Thumbnail image for video preview'
               }
-              className={`transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`}
               src={
                 thumbUrl
                   ? thumbUrl
                   : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
               }
+              className={thumbClass}
               fill={true}
               unoptimized={true}
               draggable="true"

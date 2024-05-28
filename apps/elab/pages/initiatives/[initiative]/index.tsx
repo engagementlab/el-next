@@ -66,7 +66,6 @@ type Initiative = {
       publicId: string;
     };
   }[];
-  vimeoFile: string;
 };
 
 export default function InitIndex({
@@ -238,7 +237,7 @@ export default function InitIndex({
                   <div id="video" className="min-h-[inherit] left">
                     {page.introVideo ? (
                       <VideoV2
-                        key={`video-player-${page.vimeoFile}`}
+                        key={`video-player-${page.introVideo.file}`}
                         isSlide={true}
                         videoLabel={`${
                           InitiativeFilterGroups.find(

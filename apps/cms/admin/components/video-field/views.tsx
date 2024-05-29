@@ -18,6 +18,8 @@ import VideoSelector, { RelatedVideo } from '../video/selector';
 export function Field({
   field,
   value,
+
+  itemValue,
   onChange,
   autoFocus,
 }: FieldProps<typeof controller>) {
@@ -26,7 +28,8 @@ export function Field({
   return (
     <>
       <FieldContainer as="fieldset" className="flex flex-col p-2 max-w-[12rem]">
-        {value.file.length > 1 && (
+        <FieldLabel as="legend">{field.label}</FieldLabel>
+        {value.file && value.file.length > 5 && value.thumbSmUrl.length > 5 && (
           <>
             <img src={value.thumbSmUrl} width={75} height={75} />
             <p>{value.label}</p>
@@ -43,7 +46,7 @@ export function Field({
             VideoGridInstance.GetData();
           }}
         >
-          {value ? 'Change' : 'Select'} Video
+          {value && value.file ? 'Change' : 'Select'} Video
         </LoadingButton>
         {VideoGridInstance._useStore().error && (
           <p className="p-4 text-red font-bold block">Something went wrong.</p>
@@ -58,6 +61,7 @@ export function Field({
         open={VideoGridInstance.gridOpen}
         selectionChanged={(item: RelatedVideo) => {
           VideoGridInstance.setVideo(item);
+
           if (onChange)
             onChange({
               file: item.file,
@@ -74,8 +78,27 @@ export function Field({
 }
 
 export const Cell: CellComponent = ({ item, field, linkTo }) => {
-  let value = item[field.path] + '';
-  return <CellContainer>{value}</CellContainer>;
+  let value = item[field.path];
+  return (
+    <CellContainer>
+      {value.file && value.file.length > 5 && value.thumbSmUrl.length > 5 ? (
+        <a
+          href={value.file}
+          target="_blank"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <img src={value.thumbSmUrl} width={35} height={35} />
+          <p>{value.label}</p>
+        </a>
+      ) : (
+        <em>None</em>
+      )}
+    </CellContainer>
+  );
 };
 
 export const CardValue: CardValueComponent = ({ item, field }) => {
@@ -109,16 +132,23 @@ export const controller = (
         thumbSmUrl
       }`,
     defaultValue: {
-      file: '',
+      file: 'nofile',
       caption: '',
       thumbUrl: '',
       thumbSmUrl: '',
       label: '',
     },
     deserialize: (data) => {
+      console.log('====', data[config.path]);
       const value = data[config.path];
+      if (!value || value.file.length < 5) return { kind: 'empty' };
+
       return value;
     },
-    serialize: (value) => ({ [config.path]: value }),
+    serialize: (value) => {
+      console.log('serialize', value);
+      if (value.file && value.file.length > 10) return { [config.path]: value };
+      return { file: '??' };
+    },
   };
 };

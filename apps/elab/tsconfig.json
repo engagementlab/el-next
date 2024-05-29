@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
+      "react": ["./node_modules/@type/react"],
       "@/*": ["./*"]
     }
   },

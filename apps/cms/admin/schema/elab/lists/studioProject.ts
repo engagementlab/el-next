@@ -19,6 +19,9 @@ import { PartnersSelect } from './partners';
 import { Featuring } from '../featuring';
 import { Social } from '../social';
 import { Status } from '../flags';
+import { azureStorageFile } from '../../../components/fields-azure/src';
+import { video } from '../../../components/video-field';
+import { azConfigCustom } from '../../azure';
 
 const StudioProject: Lists.StudioProject = list({
   access: allowAll,
@@ -110,9 +113,18 @@ const StudioProject: Lists.StudioProject = list({
               'Vimeo video ID, if applicable. If specified, "Watch the film" button will appear on page',
           },
         }),
+        video: video({ label: 'Video' }),
+        captions: azureStorageFile({
+          azureStorageConfig: azConfigCustom('captions'),
+          label: 'Video Captions File',
+        }),
         trailerId: text({
           label: 'Trailer video ID',
           ui: { description: 'Vimeo video ID for trailer, if applicable.' },
+        }),
+        trailerVideo: video({ label: 'Trailer' }),
+        trailerCaptions: azureStorageFile({
+          azureStorageConfig: azConfigCustom('captions'),
         }),
         trailerThumbnail: cloudinaryImage({
           cloudinary: {

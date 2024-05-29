@@ -32,7 +32,6 @@ import {
 } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
-import { useEffect } from 'react';
 
 type Initiative = {
   name?: string;
@@ -42,14 +41,14 @@ type Initiative = {
   slides?: any[];
   introVideo?: {
     file: string;
+    thumbUrl: string;
   };
-  captions?: {
-    url: string;
-  };
-  videoId?: string;
+  captions?: { url: string };
+  video: { file: string };
   videoCaption?: string;
   videoThumbnail?: {
     publicUrl: string;
+    publicId: string;
   };
   body: { document: any };
   news: News[];
@@ -67,7 +66,6 @@ type Initiative = {
       publicId: string;
     };
   }[];
-  vimeoFile: string;
 };
 
 export default function InitIndex({
@@ -80,7 +78,8 @@ export default function InitIndex({
   const subHeadClass = `${Theming[initiative].heading} text-3xl my-7 font-extrabold uppercase`;
   const videoColor = {
     stroke: Theming[initiative].arrow,
-    fill: Theming[initiative].fillRgb,
+    fill: Theming[initiative].fill,
+    fillRgb: Theming[initiative].fillRgb,
     bg: Theming[initiative].videoBg || Theming[initiative].secondaryBg,
     seekbar: Theming[initiative].fillVideo || Theming[initiative].arrowHex,
     buttons: '#fff',
@@ -187,7 +186,7 @@ export default function InitIndex({
       fullBleed={true}
       theme={Theming[initiative].theme}
       title={InitiativeFilterGroups.find((i) => i.key === initiative)?.label}
-      // ogDescription={item.summary}
+      // ogDescription={page.}
     >
       {page && (
         <div className="text-grey">
@@ -232,54 +231,43 @@ export default function InitIndex({
                   </div>
                 </div>
               </div>
-              {page.videoId ? (
-                <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
-                  <div className="group w-full min-h-[inherit] ">
-                    <div id="video" className="min-h-[inherit] left">
-                      {process.env.NEXT_PUBLIC_STAGING === 'true' &&
-                      page.introVideo ? (
-                        <>
-                          <VideoV2
-                            key={`video-player-${page.vimeoFile}`}
-                            isSlide={true}
-                            videoLabel={`${
-                              InitiativeFilterGroups.find(
-                                (i) => i.key === initiative
-                              )?.label
-                            } Intro Video`}
-                            videoFile={page.introVideo.file}
-                            caption={page.videoCaption}
-                            captionsFile={page.captions?.url}
-                            thumbUrl={page.videoThumbnail?.publicUrl}
-                            theme={videoColor}
-                          />
-                        </>
-                      ) : (
-                        <Video
-                          isSlide={true}
-                          videoLabel={`${
-                            InitiativeFilterGroups.find(
-                              (i) => i.key === initiative
-                            )?.label
-                          } Intro Video`}
-                          videoUrl={`https://player.vimeo.com/video/${page.videoId}`}
-                          thumbUrl={page.videoThumbnail?.publicUrl}
-                          // theme={videoColor}
+
+              <div className="relative transition-all duration-500 w-full lg:w-1/2 flex justify-center min-h-[200px] md:min-h-[255px] max-h-[350px] lg:max-h-[465px]">
+                <div className="group w-full min-h-[inherit] ">
+                  <div id="video" className="min-h-[inherit] left">
+                    {page.introVideo ? (
+                      <VideoV2
+                        key={`video-player-${page.introVideo.file}`}
+                        isSlide={true}
+                        videoLabel={`${
+                          InitiativeFilterGroups.find(
+                            (i) => i.key === initiative
+                          )?.label
+                        } Intro Video`}
+                        videoFile={page.introVideo.file}
+                        caption={page.videoCaption}
+                        captionsFile={page.captions?.url}
+                        thumbUrl={
+                          page.videoThumbnail
+                            ? page.videoThumbnail?.publicUrl
+                            : page.introVideo.thumbUrl
+                        }
+                        thumbPublicId={page.videoThumbnail?.publicId}
+                        theme={videoColor}
+                      />
+                    ) : (
+                      page?.slides &&
+                      page?.slides.length > 0 && (
+                        <Slideshow
+                          slides={page?.slides}
+                          theme={Theming[initiative]}
+                          className={`${Theming[initiative].bg} bg-opacity-50`}
                         />
-                      )}
-                    </div>
+                      )
+                    )}
                   </div>
                 </div>
-              ) : (
-                page?.slides &&
-                page?.slides.length > 0 && (
-                  <Slideshow
-                    slides={page?.slides}
-                    theme={Theming[initiative]}
-                    className={`${Theming[initiative].bg} bg-opacity-50`}
-                  />
-                )
-              )}
+              </div>
             </div>
             <h2 className={`${subHeadClass} mt-20`}>Featured News & Events</h2>
             {mergedItems && (
@@ -519,13 +507,14 @@ export async function getStaticProps({
         }
         introVideo {
           file
+          thumbUrl
         }
         captions {
           url
         }
-        videoId
         videoThumbnail {
           publicUrl
+          publicId
         }
         videoCaption
         slides {
@@ -535,7 +524,9 @@ export async function getStaticProps({
           }
           altText
           caption
-          videoId
+          video {
+            file
+          }
           order
         }
         news {

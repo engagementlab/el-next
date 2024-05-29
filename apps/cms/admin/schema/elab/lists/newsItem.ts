@@ -74,12 +74,12 @@ const NewsItem: Lists.NewsItem = list({
       ui: {
         description: 'If defined, shows on news item instead of thumbnail.',
         displayMode: 'cards',
-        cardFields: ['image', 'altText', 'caption', 'videoId', 'order'],
+        cardFields: ['image', 'altText', 'caption', 'video', 'order'],
         inlineCreate: {
-          fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+          fields: ['image', 'altText', 'caption', 'video', 'order'],
         },
         inlineEdit: {
-          fields: ['image', 'altText', 'caption', 'videoId', 'order'],
+          fields: ['image', 'altText', 'caption', 'video', 'order'],
         },
       },
     }),

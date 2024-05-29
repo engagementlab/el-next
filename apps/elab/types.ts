@@ -8,6 +8,8 @@ export type Slide = {
     publicUrl: string;
   };
   caption: string;
+  captions?: { file: string };
+  video: { file: string; thumbUrl: string };
   videoId?: string;
   order: number;
 };
@@ -75,7 +77,7 @@ export const ThemeColors = [
     secondaryHex: '#F6A536',
   },
 ];
-
+// [key in 'none' | 'tngv' | 'tnej']
 export const Theming: { [key: string]: ThemeConfig } = {
   none: {
     arrow: '#F6A536',
@@ -362,8 +364,17 @@ export type StudioProject = {
     key: string;
     name: string;
   }[];
-  trailerId: string;
-  videoId: string;
+
+  captions?: { url: string };
+  video?: { file: string };
+
+  trailerVideo?: {
+    file: string;
+  };
+
+  videoId?: string;
+  trailerId?: string;
+
   buttons: any[];
   semester: {
     key: string;
@@ -384,6 +395,7 @@ export type StudioProject = {
   };
   thumbAltText: string;
   trailerThumbnail: {
+    publicId: string;
     publicUrl: string;
   };
   trailerThumbAltText: string;

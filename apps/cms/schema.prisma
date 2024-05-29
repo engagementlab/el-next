@@ -85,11 +85,11 @@ model Initiative {
   id                    String            @id @default(cuid())
   name                  String            @unique @default("Initiative Name")
   intro                 Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  introVideo_file       String            @default("none")
-  introVideo_label      String            @default("none")
+  introVideo_file       String            @default("")
+  introVideo_label      String            @default("")
   introVideo_caption    String?
-  introVideo_thumbUrl   String            @default("none")
-  introVideo_thumbSmUrl String            @default("none")
+  introVideo_thumbUrl   String            @default("")
+  introVideo_thumbSmUrl String            @default("")
   captions_filename     String?
   captions_filesize     Int?
   videoId               String            @default("")
@@ -269,6 +269,7 @@ model Semester {
   studioId         String?             @map("studio")
   initiatives      Json                @default("[]")
   type             SemesterTypeType?
+  temp             String?
   courseNumber     String              @default("")
   instructors      Person[]            @relation("Person_studioInstructors")
   slides           Slideshow?          @relation("Semester_slides", fields: [slidesId], references: [id])
@@ -288,18 +289,25 @@ model Semester {
 }
 
 model Slide {
-  id               String       @id @default(cuid())
-  slideshowSlides  Slideshow[]  @relation("Slide_slideshowSlides")
-  initiativeSlides Initiative[] @relation("Initiative_slides")
-  newsSlides       NewsItem[]   @relation("NewsItem_slides")
-  eventSlides      Event[]      @relation("Event_slides")
-  image            Json?
-  helper_html      String       @default("<p>Need HTML!</p>")
-  helper_iconType  icon         @default(help)
-  altText          String       @default("")
-  caption          String       @default("")
-  videoId          String       @default("")
-  order            Int?         @default(0)
+  id                String       @id @default(cuid())
+  slideshowSlides   Slideshow[]  @relation("Slide_slideshowSlides")
+  initiativeSlides  Initiative[] @relation("Initiative_slides")
+  newsSlides        NewsItem[]   @relation("NewsItem_slides")
+  eventSlides       Event[]      @relation("Event_slides")
+  image             Json?
+  helper_html       String       @default("<p>Need HTML!</p>")
+  helper_iconType   icon         @default(help)
+  altText           String       @default("")
+  caption           String       @default("")
+  video_file        String       @default("")
+  video_label       String       @default("")
+  video_caption     String?
+  video_thumbUrl    String       @default("")
+  video_thumbSmUrl  String       @default("")
+  videoId           String       @default("")
+  captions_filename String?
+  captions_filesize Int?
+  order             Int?         @default(0)
 }
 
 model Slideshow {
@@ -332,39 +340,53 @@ model Studio {
 }
 
 model StudioProject {
-  id                  String                      @id @default(cuid())
-  name                String                      @default("")
-  key                 String                      @unique @default("")
-  createdDate         DateTime?
-  status              StudioProjectStatusType?    @default(disabled)
-  initiative          StudioProjectInitiativeType @default(gunviolence)
-  filters             Filter[]                    @relation("Filter_studioProjects")
-  shortDescription    String                      @default("")
-  about               Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  buttons             Json?
-  thumbnail           Json?
-  thumbAltText        String                      @default("")
-  videoId             String                      @default("")
-  trailerId           String                      @default("")
-  trailerThumbnail    Json?
-  trailerThumbAltText String                      @default("")
-  partners            Json                        @default("[]")
-  coCreation          Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  impact              Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  learningPartners    Person[]                    @relation("Person_projectPartners")
-  studioStudents      Person[]                    @relation("Person_projectStudents")
-  studioStaff         Person[]                    @relation("Person_projectStaff")
-  instructors         Person[]                    @relation("Person_projectInstructors")
-  home                Boolean                     @default(false)
-  order               Int?                        @default(0)
-  semester            Semester[]                  @relation("Semester_projects")
-  undergrad           Undergraduate[]             @relation("StudioProject_undergrad")
-  initiativesRelated  Initiative[]                @relation("Initiative_projects")
-  mdProject           Boolean                     @default(false)
-  ogImage             Json?
-  helper_html         String                      @default("<p>Need HTML!</p>")
-  helper_iconType     icon                        @default(help)
-  ogDescription       String                      @default("")
+  id                       String                      @id @default(cuid())
+  name                     String                      @default("")
+  key                      String                      @unique @default("")
+  createdDate              DateTime?
+  status                   StudioProjectStatusType?    @default(disabled)
+  initiative               StudioProjectInitiativeType @default(gunviolence)
+  filters                  Filter[]                    @relation("Filter_studioProjects")
+  shortDescription         String                      @default("")
+  about                    Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  buttons                  Json?
+  thumbnail                Json?
+  thumbAltText             String                      @default("")
+  videoId                  String                      @default("")
+  video_file               String                      @default("")
+  video_label              String                      @default("")
+  video_caption            String?
+  video_thumbUrl           String                      @default("")
+  video_thumbSmUrl         String                      @default("")
+  captions_filename        String?
+  captions_filesize        Int?
+  trailerId                String                      @default("")
+  trailerVideo_file        String                      @default("")
+  trailerVideo_label       String                      @default("")
+  trailerVideo_caption     String?
+  trailerVideo_thumbUrl    String                      @default("")
+  trailerVideo_thumbSmUrl  String                      @default("")
+  trailerCaptions_filename String?
+  trailerCaptions_filesize Int?
+  trailerThumbnail         Json?
+  trailerThumbAltText      String                      @default("")
+  partners                 Json                        @default("[]")
+  coCreation               Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact                   Json                        @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  learningPartners         Person[]                    @relation("Person_projectPartners")
+  studioStudents           Person[]                    @relation("Person_projectStudents")
+  studioStaff              Person[]                    @relation("Person_projectStaff")
+  instructors              Person[]                    @relation("Person_projectInstructors")
+  home                     Boolean                     @default(false)
+  order                    Int?                        @default(0)
+  semester                 Semester[]                  @relation("Semester_projects")
+  undergrad                Undergraduate[]             @relation("StudioProject_undergrad")
+  initiativesRelated       Initiative[]                @relation("Initiative_projects")
+  mdProject                Boolean                     @default(false)
+  ogImage                  Json?
+  helper_html              String                      @default("<p>Need HTML!</p>")
+  helper_iconType          icon                        @default(help)
+  ogDescription            String                      @default("")
 }
 
 model Undergraduate {

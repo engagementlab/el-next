@@ -5,9 +5,10 @@ import {
   CommonFieldConfig,
 } from '@keystone-6/core/types';
 import { graphql } from '@keystone-6/core';
+import { GraphQLResolveInfo } from 'graphql';
 
 type VideoInput = {
-  file: string;
+  file: string | null;
   label: string;
   caption?: string;
   thumbUrl: string;
@@ -32,7 +33,9 @@ const VideoFieldInput = graphql.inputObject({
 const VideoFieldOutput = graphql.object<VideoOutput>()({
   name: 'VideoFieldOutput',
   fields: {
-    file: graphql.field({ type: graphql.String }),
+    file: graphql.field({
+      type: graphql.String,
+    }),
     label: graphql.field({
       type: graphql.String,
     }),
@@ -43,24 +46,21 @@ const VideoFieldOutput = graphql.object<VideoOutput>()({
 });
 
 export type VideoFieldConfig<ListTypeInfo extends BaseListTypeInfo> =
-  CommonFieldConfig<ListTypeInfo> & VideoOutput;
+  CommonFieldConfig<ListTypeInfo>;
 
-export function video<ListTypeInfo extends BaseListTypeInfo>(
-  {
-    file,
-    label,
-    caption,
-    thumbUrl,
-    thumbSmUrl,
-    ...config
-  }: VideoFieldConfig<ListTypeInfo> = {
-    file: '',
-    label: '',
-    caption: '',
-    thumbUrl: '',
-    thumbSmUrl: '',
-  }
-): FieldTypeFunc<ListTypeInfo> {
+const resolveInput = (val: VideoInput) => {
+  return {
+    file: val?.file || undefined,
+    label: val?.label || undefined,
+    caption: val?.caption || undefined,
+    thumbUrl: val?.thumbUrl || undefined,
+    thumbSmUrl: val?.thumbSmUrl || undefined,
+  };
+};
+
+export function video<ListTypeInfo extends BaseListTypeInfo>({
+  ...config
+}: VideoFieldConfig<ListTypeInfo> = {}): FieldTypeFunc<ListTypeInfo> {
   return (meta) =>
     fieldType({
       kind: 'multi',
@@ -71,7 +71,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
         label: {
@@ -80,7 +80,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
         caption: { kind: 'scalar', scalar: 'String', mode: 'optional' },
@@ -90,7 +90,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
         thumbSmUrl: {
@@ -99,7 +99,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           mode: 'required',
           default: {
             kind: 'literal',
-            value: 'none',
+            value: '',
           },
         },
       },
@@ -110,11 +110,11 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           arg: graphql.arg({ type: VideoFieldInput }),
           resolve(val) {
             return {
-              file: val?.file || '',
-              label: val?.label || '',
-              caption: val?.caption || '',
-              thumbUrl: val?.thumbUrl || '',
-              thumbSmUrl: val?.thumbSmUrl || '',
+              file: val?.file || undefined,
+              label: val?.label || undefined,
+              caption: val?.caption || undefined,
+              thumbUrl: val?.thumbUrl || undefined,
+              thumbSmUrl: val?.thumbSmUrl || undefined,
             };
           },
         },
@@ -122,11 +122,11 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
           arg: graphql.arg({ type: VideoFieldInput }),
           resolve(val) {
             return {
-              file: val?.file || '',
-              label: val?.label || '',
-              caption: val?.caption || '',
-              thumbUrl: val?.thumbUrl || '',
-              thumbSmUrl: val?.thumbSmUrl || '',
+              file: val?.file || undefined,
+              label: val?.label || undefined,
+              caption: val?.caption || undefined,
+              thumbUrl: val?.thumbUrl || undefined,
+              thumbSmUrl: val?.thumbSmUrl || undefined,
             };
           },
         },
@@ -154,9 +154,7 @@ export function video<ListTypeInfo extends BaseListTypeInfo>(
       views: './admin/components/video-field/views',
 
       getAdminMeta() {
-        return {
-          file: '',
-        };
+        return {};
       },
     });
 }

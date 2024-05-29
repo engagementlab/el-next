@@ -146,7 +146,12 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           publicUrl
         }
         caption
-        videoId
+        captions { 
+          url 
+        }
+        video { 
+          file 
+        }
         order
       }
     }`

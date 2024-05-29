@@ -23,6 +23,7 @@ require('@mui/material');
 require('@mui/icons-material/ClosedCaption');
 require('@mui/icons-material/ClosedCaptionDisabled');
 require('@mui/icons-material/Fullscreen');
+require('@mui/icons-material/FullscreenExit');
 require('@mui/icons-material/PlayCircleFilled');
 require('@mui/icons-material/PauseCircleFilled');
 require('@mui/icons-material/VolumeUp');

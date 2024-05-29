@@ -1,5 +1,5 @@
 name: Deploy app to production
-on: 
+on:
   repository_dispatch:
     types: deploy-prod
 env:
@@ -9,27 +9,27 @@ env:
   AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
 jobs:
   initial-setup:
-    name: "Initial setup"
+    name: 'Initial setup'
     uses: engagementlab/el-next/.github/workflows/init.yml@main
-    with: 
+    with:
       branch: production
   run-cms:
     needs: initial-setup
-    name: "Run CMS, make build"
+    name: 'Run CMS, make build'
     # Do not run on automated commits (interpretation of TravisCI feature)
     if: "!contains(github.event.head_commit.message, 'skip ci') && github.actor != 'dependabot[bot]'"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [16.13.1]
-    steps:      
+    steps:
       - name: Setup node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Download artifacts from initial-setup job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ format('artifact-repo-{0}', github.run_id) }}
 
@@ -44,7 +44,6 @@ jobs:
         run: |
           echo "**Publishing summary from user:**" >> $GITHUB_STEP_SUMMARY
           echo "_${{ github.event.client_payload.note }}_" >> $GITHUB_STEP_SUMMARY
-          
 
       - name: Make production build
         working-directory: ${{ format('apps/{0}', github.event.client_payload.appName) }}
@@ -55,7 +54,7 @@ jobs:
           yarn add typescript @types/node
           yarn
           yarn build
-          
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -67,9 +66,9 @@ jobs:
             ./scripts/commit.sh
             outputRoutes.mjs
             package.json
- 
+
   production-publish:
-    name: "Publish new build to production"
+    name: 'Publish new build to production'
     needs: [initial-setup, run-cms]
     runs-on: ubuntu-latest
     strategy:
@@ -83,8 +82,8 @@ jobs:
 
       # - name: Install packages
       #   run: npm i -g pa11y-ci http-server pm2 && npm i
-          
-      # - name: Serve build 
+
+      # - name: Serve build
       #   working-directory: ./
       #   run: pm2 start `which http-server` --name server
 
@@ -92,7 +91,7 @@ jobs:
       #   run: |
       #     node outputRoutes.mjs --app ${{ github.event.client_payload.appName }}
       #     pa11y-ci
-          
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -104,17 +103,17 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload-batch --overwrite true --account-name ${{ github.event.client_payload.storageAccount }} --auth-mode key -d '$web' -s ./apps/${{ github.event.client_payload.appName }}/out
-      
+
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az cdn endpoint purge --content-paths "/*" --profile-name web-apps -n ${{ github.event.client_payload.cdnName }} -g web
 
-    # Azure logout
+      # Azure logout
       - name: logout
         run: |
-              az logout
+          az logout
         if: always()
 
   notify-success:
@@ -130,7 +129,7 @@ jobs:
     secrets: inherit
 
   notify-failure:
-    name: Send failure Slack notification 
+    name: Send failure Slack notification
     needs: [initial-setup, run-cms, production-publish]
     if: ${{ failure() }}
     uses: engagementlab/el-next/.github/workflows/slack.yml@main

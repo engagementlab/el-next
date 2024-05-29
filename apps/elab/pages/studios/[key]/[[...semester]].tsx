@@ -630,7 +630,7 @@ export async function getStaticProps({
           impact {
               document(hydrateRelationships: true)
           }
-          projects {
+          projects(${DefaultWhereCondition()}) {
               name
               key
               shortDescription

@@ -260,29 +260,39 @@ model ResearchProject {
 }
 
 model Semester {
-  id               String              @id @default(cuid())
-  name             String              @default("")
-  key              String              @default("")
-  createdDate      DateTime?
-  status           SemesterStatusType? @default(disabled)
-  studio           Studio?             @relation("Semester_studio", fields: [studioId], references: [id])
-  studioId         String?             @map("studio")
-  initiatives      Json                @default("[]")
-  type             SemesterTypeType?
-  temp             String?
-  courseNumber     String              @default("")
-  instructors      Person[]            @relation("Person_studioInstructors")
-  slides           Slideshow?          @relation("Semester_slides", fields: [slidesId], references: [id])
-  slidesId         String?             @map("slides")
-  description      String              @default("")
-  partners         Json                @default("[]")
-  coCreation       Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  impact           Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  projects         StudioProject[]     @relation("Semester_projects")
-  learningPartners Person[]            @relation("Person_learningPartners")
-  studioStudents   Person[]            @relation("Person_studioStudents")
-  studioStaff      Person[]            @relation("Person_studioStaff")
-  contact          String              @default("")
+  id                      String              @id @default(cuid())
+  name                    String              @default("")
+  key                     String              @default("")
+  createdDate             DateTime?
+  status                  SemesterStatusType? @default(disabled)
+  studio                  Studio?             @relation("Semester_studio", fields: [studioId], references: [id])
+  studioId                String?             @map("studio")
+  initiatives             Json                @default("[]")
+  type                    SemesterTypeType?
+  courseNumber            String              @default("")
+  instructors             Person[]            @relation("Person_studioInstructors")
+  partners                Json                @default("[]")
+  contact                 String              @default("")
+  description             String              @default("")
+  slides                  Slideshow?          @relation("Semester_slides", fields: [slidesId], references: [id])
+  slidesId                String?             @map("slides")
+  coCreation              Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  impact                  Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  projects                StudioProject[]     @relation("Semester_projects")
+  learningPartners        Person[]            @relation("Person_learningPartners")
+  studioStudents          Person[]            @relation("Person_studioStudents")
+  studioStaff             Person[]            @relation("Person_studioStaff")
+  previewThumbnail        Json?
+  previewSummary          Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  previewVideo_file       String              @default("")
+  previewVideo_label      String              @default("")
+  previewVideo_caption    String?
+  previewVideo_thumbUrl   String              @default("")
+  previewVideo_thumbSmUrl String              @default("")
+  captions_filename       String?
+  captions_filesize       Int?
+  previewVideoThumbnail   Json?
+  trailerThumbAltText     String              @default("")
 
   @@index([studioId])
   @@index([slidesId])

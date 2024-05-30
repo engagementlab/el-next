@@ -8,6 +8,9 @@ import {
 import { CellLink, CellContainer } from '@keystone-6/core/admin-ui/components';
 
 import {
+  BaseFields,
+  BaseListTypeInfo,
+  FieldTypeFunc,
   type CardValueComponent,
   type CellComponent,
   type FieldController,
@@ -15,6 +18,8 @@ import {
   type FieldProps,
 } from '@keystone-6/core/types';
 import _ from 'lodash';
+
+// import { DocumentEditor } from '@keystone-6/fields-document/views';
 
 export function Field({
   field,
@@ -84,6 +89,7 @@ export const controller = (
       neededValue: any;
       queryPath: string;
     };
+    // field: FieldTypeFunc<BaseListTypeInfo>
   }>
 ): FieldController<string | null, string> & {
   dependency: {
@@ -91,12 +97,15 @@ export const controller = (
     neededValue: any;
     queryPath: string;
   };
+  // fields:
+  field: BaseFields<BaseListTypeInfo>;
 } => {
   return {
     path: config.path,
     label: config.label,
     description: config.description,
     dependency: config.fieldMeta?.dependency,
+    // field: config.fieldMeta?.field,
     graphqlSelection: config.path,
     defaultValue: null,
     deserialize: (data) => {

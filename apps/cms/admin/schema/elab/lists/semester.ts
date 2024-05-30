@@ -52,6 +52,8 @@ const Conditional: (
 
           query: 'id name type',
         });
+
+        if (!res.type && type === 'current') return 'edit';
         return res.type === type ? 'edit' : 'hidden';
       },
     },

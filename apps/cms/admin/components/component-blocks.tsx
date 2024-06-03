@@ -660,6 +660,87 @@ function embedField({
   };
 }
 
+function semesterSelect({
+  label,
+  current,
+  defaultValue = null,
+}: {
+  label: string;
+  current?: any;
+  defaultValue: any;
+}): FormField<any, undefined> {
+  return {
+    kind: 'form',
+
+    Input({ value, onChange, autoFocus }) {
+      // Create store with Zustand
+      const [useStore] = useState(() =>
+        create<EmbedState>((set) => ({
+          waiting: false,
+          dataError: false,
+          editUrl: false,
+          data: null,
+          toggleWaiting: () =>
+            set((state) => {
+              return { waiting: !state.waiting };
+            }),
+        }))
+      );
+
+      const toggleWaiting = useStore((state) => state.toggleWaiting);
+      const snackbarClose = () => {
+        useStore.setState({
+          dataError: false,
+        });
+      };
+      const { dataError, waiting, editUrl } = useStore((state) => state);
+      const endpoint =
+        window.location.protocol === 'https:'
+          ? '/rest/semesters'
+          : 'http://localhost:3000/rest/semesters';
+      // const embedValue = value as EmbedMetadata[0];
+
+      axios
+        .get(endpoint)
+        .then((response: { data: any }) => {
+          let data = response.data;
+          toggleWaiting();
+          // onChange(data);
+        })
+        .catch((error: any) => {
+          toggleWaiting();
+          useStore.setState({
+            dataError: true,
+          });
+        });
+      return (
+        <FieldContainer>
+          {waiting && (
+            <Box>
+              <LinearProgress />
+            </Box>
+          )}
+          <Snackbar
+            open={dataError}
+            autoHideDuration={10000}
+            onClose={snackbarClose}
+          >
+            <Alert severity="error">
+              Unable to retrieve embed data. It is possible that this URL does
+              not support it.
+            </Alert>
+          </Snackbar>
+        </FieldContainer>
+      );
+    },
+    options: undefined,
+    defaultValue,
+    validate(value) {
+      return typeof value === 'object';
+    },
+  };
+}
+
 const defaultHtmlEmbedValue = 'Use this instead of embedding URL';
 
 export const componentBlocks = {
@@ -1009,6 +1090,41 @@ export const componentBlocks = {
           { label: 'Video', value: 'video' },
         ],
         defaultValue: 'article',
+      }),
+    },
+  }),
+  studioPreview: component({
+    label: 'Studio Preview',
+    preview: (props) => {
+      return (
+        <>
+          <NotEditable>
+            {/* {props.fields.slideshow.value?.data.slides.map(
+              (
+                value: { image: { publicId: string }; altText: string },
+                index: number
+              ) => {
+                return (
+                  <span style={{ marginLeft: '5px' }}>
+                    <Image
+                      id={`img-preview-${index}`}
+                      imgId={value.image.publicId}
+                      alt={value.altText}
+                      width={30}
+                    />
+                  </span>
+                );
+              }
+            )} */}
+          </NotEditable>
+        </>
+      );
+    },
+    schema: {
+      semester: fields.select({
+        listKey: 'Semester',
+        label: 'Select:',
+        selection: 'key name',
       }),
     },
   }),

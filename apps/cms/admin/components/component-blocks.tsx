@@ -41,7 +41,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import { create } from 'zustand';
 
 import { Image } from '@el-next/components';
-import { EmbedMetadata, EmbedState } from '../../types';
+import {
+  EmbedMetadata,
+  EmbedState,
+  StudioPreview,
+  StudioPreviewState,
+} from '../../types';
 import Link from 'next/link';
 
 const axios = require('axios').default;
@@ -271,7 +276,6 @@ function imageSelect({
               });
             });
         } catch (err: any) {
-          r;
           useStore.setState({
             imgDataError: true,
           });
@@ -675,11 +679,11 @@ function semesterSelect({
     Input({ value, onChange, autoFocus }) {
       // Create store with Zustand
       const [useStore] = useState(() =>
-        create<EmbedState>((set) => ({
-          waiting: false,
+        create<StudioPreviewState>((set) => ({
+          waiting: true,
           dataError: false,
-          editUrl: false,
-          data: null,
+          data: [],
+          selectedSemester: value || null,
           toggleWaiting: () =>
             set((state) => {
               return { waiting: !state.waiting };
@@ -693,26 +697,36 @@ function semesterSelect({
           dataError: false,
         });
       };
-      const { dataError, waiting, editUrl } = useStore((state) => state);
-      const endpoint =
-        window.location.protocol === 'https:'
-          ? '/rest/semesters'
-          : 'http://localhost:3000/rest/semesters';
-      // const embedValue = value as EmbedMetadata[0];
+      const { dataError, waiting, data, selectedSemester } = useStore(
+        (state) => state
+      );
 
-      axios
-        .get(endpoint)
-        .then((response: { data: any }) => {
-          let data = response.data;
-          toggleWaiting();
-          // onChange(data);
-        })
-        .catch((error: any) => {
-          toggleWaiting();
-          useStore.setState({
-            dataError: true,
+      useEffect(() => {
+        if (data && data.length > 1) return;
+
+        const endpoint =
+          window.location.protocol === 'https:'
+            ? '/rest/semesters'
+            : 'http://localhost:3000/rest/semesters';
+
+        axios
+          .get(endpoint)
+          .then((response: { data: any }) => {
+            let data = response.data;
+            toggleWaiting();
+            // onChange(data);
+
+            useStore.setState({
+              data,
+            });
+          })
+          .catch((error: any) => {
+            toggleWaiting();
+            useStore.setState({
+              dataError: true,
+            });
           });
-        });
+      });
       return (
         <FieldContainer>
           {waiting && (
@@ -720,22 +734,56 @@ function semesterSelect({
               <LinearProgress />
             </Box>
           )}
+          <FormControl fullWidth>
+            <InputLabel id="semester-select-label">
+              Select a Semester
+            </InputLabel>
+            <Select
+              value={selectedSemester?.key}
+              labelId="semester-select-label"
+              label="Select a Semester"
+              onChange={(val) => {
+                const thisSemester = data.find(
+                  (d) => d.key === val.target.value
+                );
+                onChange(thisSemester);
+                useStore.setState({
+                  selectedSemester: thisSemester,
+                });
+              }}
+            >
+              {data.map((semester) => (
+                <MenuItem value={semester.key}>
+                  {semester.name.split(' - ')[0]}
+                  <br />
+                  <div
+                    style={{
+                      display: 'contents',
+                      color: 'gray',
+                      textTransform: 'uppercase',
+                      fontSize: '10px',
+                    }}
+                  >
+                    {semester.studio.name.substring(0, 40)}
+                    {semester.studio.name.length > 39 && '...'}
+                  </div>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Snackbar
             open={dataError}
             autoHideDuration={10000}
             onClose={snackbarClose}
           >
-            <Alert severity="error">
-              Unable to retrieve embed data. It is possible that this URL does
-              not support it.
-            </Alert>
+            <Alert severity="error">Unable to retrieve studio data.</Alert>
           </Snackbar>
         </FieldContainer>
       );
     },
     options: undefined,
     defaultValue,
-    validate(value) {
+    validate(value: any) {
       return typeof value === 'object';
     },
   };
@@ -1096,35 +1144,33 @@ export const componentBlocks = {
   studioPreview: component({
     label: 'Studio Preview',
     preview: (props) => {
+      const semester = props.fields.semester.value as StudioPreview;
       return (
         <>
           <NotEditable>
-            {/* {props.fields.slideshow.value?.data.slides.map(
-              (
-                value: { image: { publicId: string }; altText: string },
-                index: number
-              ) => {
-                return (
-                  <span style={{ marginLeft: '5px' }}>
-                    <Image
-                      id={`img-preview-${index}`}
-                      imgId={value.image.publicId}
-                      alt={value.altText}
-                      width={30}
-                    />
-                  </span>
-                );
-              }
-            )} */}
+            <p style={{ fontWeight: 'bold' }}>
+              {semester.name.split(' - ')[0]}
+            </p>
+
+            <div
+              style={{
+                color: 'gray',
+                textTransform: 'uppercase',
+                fontSize: '12px',
+              }}
+            >
+              {semester.studio.name.substring(0, 40)}
+              {semester.studio.name.length > 39 && '...'}
+            </div>
           </NotEditable>
         </>
       );
     },
     schema: {
-      semester: fields.select({
-        listKey: 'Semester',
-        label: 'Select:',
-        selection: 'key name',
+      semester: semesterSelect({
+        label: 'semester',
+        current: null,
+        defaultValue: null,
       }),
     },
   }),

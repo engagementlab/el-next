@@ -1,15 +1,19 @@
+import { ReactElement, ReactNode } from 'react';
 import {
   BlockRenderers,
   DocRenderers,
   HeadingStyle,
   Image,
 } from '@el-next/components';
+import { Video } from '@el-next/components/video.v2';
+
 import { CTAButton } from './Buttons';
 import {
   CustomEase,
   Item,
   ResearchProject,
   Studio,
+  StudioPreview,
   StudioUnion,
   Theme,
   ThemeConfig,
@@ -20,9 +24,9 @@ import Slideshow from './Slideshow';
 import Link from 'next/link';
 import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
-import { ReactElement, ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { SemestersSort } from '@/shared';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import { GetThemeFromDBKey, SemestersSort } from '@/shared';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -122,6 +126,66 @@ let AppBlocks = (theme: ThemeConfig) => {
           ></iframe>
         );
     },
+    studioPreview: (props: { semester: StudioPreview }) => {
+      const semester = props.semester;
+
+      let themeKey = 'none';
+      const themeInfo = GetThemeFromDBKey(semester.initiatives);
+      themeKey = themeInfo.themeKey;
+
+      const videoColor = {
+        stroke: Theming[themeKey].arrow,
+        fill: Theming[themeKey].fill,
+        fillRgb: Theming[themeKey].fillRgb,
+        bg: Theming[themeKey].videoBg || Theming[themeKey].secondaryBg,
+        seekbar: Theming[themeKey].fillVideo || Theming[themeKey].arrowHex,
+        buttons: '#fff',
+      };
+
+      return (
+        <div className="my-4 whitespace-pre-wrap">
+          <h3 className="text-2xl text-coated leading-none font-extrabold">
+            {semester.name}
+          </h3>
+          <Image
+            id={'img-' + semester.previewThumbnail.publicId}
+            alt={semester.previewThumbAltText}
+            imgId={semester.previewThumbnail.publicId}
+            aspectDefault={true}
+          />
+
+          <p>
+            <strong>Department(s):</strong>&nbsp;
+            {semester.courseNumber}
+          </p>
+          <p>
+            <strong>
+              Instructor{semester.instructors.length > 1 && <span>s</span>}:{' '}
+            </strong>
+            {semester.instructors.map((i) => i.name).join(', ')}
+          </p>
+          <div className="my-4 whitespace-pre-wrap">
+            <DocumentRenderer
+              document={semester.previewSummary.document}
+              componentBlocks={Blocks()}
+              renderers={Doc()}
+            />
+          </div>
+
+          <div className="group relative w-full min-h-[350px] max-h-[350px] lg:max-h-[465px]">
+            <Video
+              key={`video-player-${semester.previewVideo.file}`}
+              videoLabel={`${semester.name} Preview Video`}
+              videoFile={semester.previewVideo.file}
+              captionsFile={semester.captions?.file.url}
+              thumbUrl={semester.previewVideoThumbnail.publicId}
+              thumbPublicId={semester.previewVideoThumbnail?.publicId}
+              theme={videoColor}
+            />
+          </div>
+        </div>
+      );
+    },
   };
 };
 const SuperBlocks = BlockRenderers();
@@ -134,6 +198,7 @@ const Blocks = (theme?: ThemeConfig) => {
     slideshow: AppBlocks(componentTheme).slideshow,
     iconLink: AppBlocks(componentTheme).iconLink,
     embed: AppBlocks(componentTheme).embed,
+    studioPreview: AppBlocks(componentTheme).studioPreview,
   };
 };
 

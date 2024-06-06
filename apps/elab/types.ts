@@ -432,6 +432,36 @@ export type StudioProject = {
     };
   }[];
 };
+export type StudioPreview = {
+  name: string;
+  key: string;
+  studio: { name: string; key: string };
+  initiatives: string[];
+  courseNumber: string;
+  instructors: [
+    {
+      name: string;
+    }
+  ];
+  previewThumbnail: {
+    publicId: string;
+  };
+  previewThumbAltText: string;
+  previewSummary: {
+    document: any;
+  };
+  previewVideo: {
+    // caption?: string;
+    file: string;
+  };
+  captions: {
+    file: { url: string };
+  };
+  previewVideoThumbnail: {
+    publicId: string;
+  };
+  previewVideoThumbAltText: string;
+};
 export type StudioUnion = Studio & StudioProject;
 
 export type Item = News & Event & StudioProject;

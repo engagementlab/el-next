@@ -572,7 +572,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     };
   }
   let semesterPaths: string[] = [];
-  console.log(studios);
+
   const paths = (studios as { key: string; semesters: { key: string }[] }[])
     .filter(({ key }) => !!key)
     .map(({ key, semesters }) => {
@@ -701,6 +701,7 @@ export async function getStaticProps({
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
+  console.log(item.semesters[0].impact.document[0].props);
   return {
     props: {
       item,

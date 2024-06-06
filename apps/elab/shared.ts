@@ -4,6 +4,7 @@ import {
   ResearchProject,
   Semester,
   StudioProject,
+  Theme,
   Theming,
 } from './types';
 
@@ -85,4 +86,22 @@ export const ClassFilterButton = (
       ? `bg-white ${Theming[themeKey].text}`
       : `text-white ${Theming[themeKey].bg}`
   }`;
+};
+
+export const GetThemeFromDBKey = (
+  initiatives: string[]
+): { theme: Theme; themeKey: string } => {
+  let theme = Theme.none;
+  let themeKey = 'none';
+  if (initiatives && initiatives.length > 0) {
+    if (initiatives[0] === 'gunviolence') {
+      theme = Theme.gunviolence;
+      themeKey = 'tngv';
+    } else if (initiatives[0] === 'climate') {
+      theme = Theme.climate;
+      themeKey = 'tnej';
+    }
+  }
+
+  return { theme, themeKey };
 };

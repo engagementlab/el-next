@@ -16,6 +16,7 @@ import { DefaultWhereCondition, Event as EType, Theme, Theming } from '@/types';
 import { CTAButton } from '@/components/Buttons';
 import Logos from '@/components/Logos';
 import Slideshow from '@/components/Slideshow';
+import { GetThemeFromDBKey } from '@/shared';
 const rendererOverrides = {
   heading: (level: number, children: ReactNode, textAlign: any) => {
     const customRenderers = {
@@ -33,15 +34,9 @@ export default function Event({
   let theme = Theme.none;
   let themeKey = 'none';
   if (item) {
-    if (item.initiatives && item.initiatives.length > 0) {
-      if (item.initiatives[0] === 'gunviolence') {
-        theme = Theme.gunviolence;
-        themeKey = 'tngv';
-      } else if (item.initiatives[0] === 'climate') {
-        theme = Theme.climate;
-        themeKey = 'tnej';
-      }
-    }
+    const themeInfo = GetThemeFromDBKey(item?.initiatives);
+    theme = themeInfo.theme;
+    themeKey = themeInfo.themeKey;
   }
   return item ? (
     <Layout

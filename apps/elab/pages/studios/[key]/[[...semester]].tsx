@@ -701,7 +701,7 @@ export async function getStaticProps({
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
-  console.log(item.semesters[0].impact.document[0].props);
+
   return {
     props: {
       item,

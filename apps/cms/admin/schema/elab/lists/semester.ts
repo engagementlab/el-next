@@ -201,6 +201,10 @@ const Semester: Lists.Semester = list({
       },
       ui: Conditional('upcoming'),
     }),
+    previewThumbAltText: text({
+      label: 'Preview Thumbnail Alt Text ♿',
+      ui: Conditional('upcoming'),
+    }),
     previewSummary: document({
       formatting: true,
       ui: Conditional('upcoming', './admin/components/component-blocks'),
@@ -223,10 +227,6 @@ const Semester: Lists.Semester = list({
         apiSecret: `${process.env.CLOUDINARY_SECRET}`,
         folder: 'elab-home-v3.x/studios',
       },
-      ui: Conditional('upcoming'),
-    }),
-    trailerThumbAltText: text({
-      label: 'Preview Thumbnail Alt Text ♿',
       ui: Conditional('upcoming'),
     }),
   },

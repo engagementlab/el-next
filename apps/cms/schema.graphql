@@ -1828,11 +1828,11 @@ type Semester {
   studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   studioStaffCount(where: PersonWhereInput! = {}): Int
   previewThumbnail: CloudinaryImage_File
+  previewThumbAltText: String
   previewSummary: Semester_previewSummary_Document
   previewVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
   previewVideoThumbnail: CloudinaryImage_File
-  trailerThumbAltText: String
 }
 
 enum SemesterStatusType {
@@ -1902,7 +1902,7 @@ input SemesterWhereInput {
   learningPartners: PersonManyRelationFilter
   studioStudents: PersonManyRelationFilter
   studioStaff: PersonManyRelationFilter
-  trailerThumbAltText: StringFilter
+  previewThumbAltText: StringFilter
 }
 
 input SemesterStatusTypeNullableFilter {
@@ -1929,7 +1929,7 @@ input SemesterOrderByInput {
   courseNumber: OrderDirection
   contact: OrderDirection
   description: OrderDirection
-  trailerThumbAltText: OrderDirection
+  previewThumbAltText: OrderDirection
 }
 
 input SemesterUpdateInput {
@@ -1953,11 +1953,11 @@ input SemesterUpdateInput {
   studioStudents: PersonRelateToManyForUpdateInput
   studioStaff: PersonRelateToManyForUpdateInput
   previewThumbnail: Upload
+  previewThumbAltText: String
   previewSummary: JSON
   previewVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
   previewVideoThumbnail: Upload
-  trailerThumbAltText: String
 }
 
 input StudioRelateToOneForUpdateInput {
@@ -1998,11 +1998,11 @@ input SemesterCreateInput {
   studioStudents: PersonRelateToManyForCreateInput
   studioStaff: PersonRelateToManyForCreateInput
   previewThumbnail: Upload
+  previewThumbAltText: String
   previewSummary: JSON
   previewVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
   previewVideoThumbnail: Upload
-  trailerThumbAltText: String
 }
 
 input StudioRelateToOneForCreateInput {

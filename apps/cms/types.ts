@@ -112,7 +112,28 @@ export type EmbedState = {
 export type StudioPreview = {
   name: string;
   key: string;
-  studio: { name: string };
+  studio: { name: string; key: string };
+  initiatives: [];
+  courseNumber: string;
+  instructors: [
+    {
+      name: string;
+    }
+  ];
+  previewThumbnail: {
+    publicId: string;
+  };
+  previewSummary: {
+    document: any;
+  };
+  previewVideo: {
+    caption?: string;
+    file: string;
+  };
+  previewVideoThumbnail: {
+    publicId: string;
+  };
+  previewVideoThumbAltText: string;
 };
 
 export type StudioPreviewState = {

@@ -31,11 +31,33 @@ export async function getUpcomingSemesters(
 ) {
   const result = await context.query.Semester.findMany({
     query: `
-        name
-        key
-        studio {
+      name
+      key
+      studio {
           name
-        }
+          key
+      }
+      initiatives
+      courseNumber
+      instructors {
+          name
+      }
+      previewThumbnail {
+        publicId
+      }
+      previewThumbAltText
+      previewSummary {
+          document
+      }
+      previewVideo {
+        file
+      }
+      captions {
+        url
+      }
+      previewVideoThumbnail {
+        publicId
+      }
       `,
     where: { type: { equals: 'upcoming' } },
   });

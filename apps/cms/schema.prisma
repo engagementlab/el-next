@@ -283,6 +283,7 @@ model Semester {
   studioStudents          Person[]            @relation("Person_studioStudents")
   studioStaff             Person[]            @relation("Person_studioStaff")
   previewThumbnail        Json?
+  previewThumbAltText     String              @default("")
   previewSummary          Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   previewVideo_file       String              @default("")
   previewVideo_label      String              @default("")
@@ -292,7 +293,6 @@ model Semester {
   captions_filename       String?
   captions_filesize       Int?
   previewVideoThumbnail   Json?
-  trailerThumbAltText     String              @default("")
 
   @@index([studioId])
   @@index([slidesId])

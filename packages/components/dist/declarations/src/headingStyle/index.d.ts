@@ -7,7 +7,7 @@
  * Heading renderer
  * ==========
  */
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 interface HeadingProps {
     /**
      * The header's level (importance)
@@ -40,5 +40,5 @@ interface HeadingProps {
  * };
  * return HeadingStyle({ level, children, textAlign, customRenderers });
  */
-export declare const HeadingStyle: ({ level, children, textAlign, customRenderers, }: HeadingProps) => React.JSX.Element;
+export declare const HeadingStyle: ({ level, children, textAlign, customRenderers, }: HeadingProps) => any;
 export {};

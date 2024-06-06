@@ -7,7 +7,6 @@
  * Favicon renderer
  * ==========
  */
-/// <reference types="react" />
 /**
  * Return all links to favicons in the '/favicon' folder relative to the _app file
  * @returns {JSX.Element} Element

@@ -433,6 +433,7 @@ export type StudioProject = {
   }[];
 };
 export type StudioPreview = {
+  id: string;
   name: string;
   key: string;
   studio: { name: string; key: string };

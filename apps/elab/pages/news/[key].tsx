@@ -90,7 +90,7 @@ export default function NewsItem({
         <div className="px-4 xl:px-8">
           <DocumentRenderer
             document={item.body.document}
-            componentBlocks={Blocks()}
+            componentBlocks={Blocks(undefined, item.)}
             renderers={Doc()}
           />
         </div>
@@ -153,6 +153,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           file 
         }
         order
+        studioPreviews
       }
     }`
   );

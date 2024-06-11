@@ -65,7 +65,7 @@ const blockOverrides = (theme: ThemeConfig | null) => {
     },
   };
 };
-let AppBlocks = (theme: ThemeConfig) => {
+let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
   return {
     slideshow: (props: any) => {
       if (!props.slideshow)
@@ -127,7 +127,9 @@ let AppBlocks = (theme: ThemeConfig) => {
         );
     },
     studioPreview: (props: { semester: StudioPreview }) => {
-      const semester = props.semester;
+      const semester = studioPreviews?.find((s) => s.id === props.semester.id);
+
+      if (!semester) return <>No data for studio preview found!</>;
 
       let themeKey = 'none';
       const themeInfo = GetThemeFromDBKey(semester.initiatives);
@@ -189,7 +191,7 @@ let AppBlocks = (theme: ThemeConfig) => {
   };
 };
 const SuperBlocks = BlockRenderers();
-const Blocks = (theme?: ThemeConfig) => {
+const Blocks = (theme?: ThemeConfig, studioPreviews?: StudioPreview[]) => {
   const componentTheme = theme ? theme : Theming['none'];
   return {
     button: SuperBlocks(blockOverrides(componentTheme)).button,
@@ -198,7 +200,7 @@ const Blocks = (theme?: ThemeConfig) => {
     slideshow: AppBlocks(componentTheme).slideshow,
     iconLink: AppBlocks(componentTheme).iconLink,
     embed: AppBlocks(componentTheme).embed,
-    studioPreview: AppBlocks(componentTheme).studioPreview,
+    studioPreview: AppBlocks(componentTheme, studioPreviews).studioPreview,
   };
 };
 

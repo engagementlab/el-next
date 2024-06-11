@@ -1147,7 +1147,7 @@ export const componentBlocks = {
       const semester = props.fields.semester.value as StudioPreview;
       return (
         <>
-          {semester && (
+          {semester && semester.name ? (
             <NotEditable>
               <p style={{ fontWeight: 'bold' }}>
                 {semester.name.split(' - ')[0]}
@@ -1164,6 +1164,10 @@ export const componentBlocks = {
                 {semester.studio.name.length > 39 && '...'}
               </div>
             </NotEditable>
+          ) : (
+            <span>
+              Click <em>Edit</em>
+            </span>
           )}
         </>
       );

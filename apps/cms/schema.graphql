@@ -1097,6 +1097,7 @@ type NewsItem {
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
+  studioPreviews: JSON
 }
 
 enum NewsItemStatusType {

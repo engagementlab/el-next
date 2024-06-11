@@ -1,10 +1,11 @@
-import { group, list } from '@keystone-6/core';
+import { graphql, group, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
   relationship,
   text,
   timestamp,
+  virtual,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
@@ -183,6 +184,47 @@ const NewsItem: Lists.NewsItem = list({
       },
     }),
     ...group(Social('Item "Summary" used if not specified')),
+
+    studioPreviews: virtual({
+      field: graphql.field({
+        type: graphql.JSON,
+        resolve(item, args, context) {
+          const res = context.query.Semester.findMany({
+            where: { type: { equals: 'upcoming' } },
+            query: `
+                  id
+                  name
+                  key
+                  studio {
+                      name
+                      key
+                  }
+                  initiatives
+                  courseNumber
+                  instructors {
+                      name
+                  }
+                  previewThumbnail {
+                    publicId
+                  }
+                  previewThumbAltText
+                  previewSummary {
+                      document
+                  }
+                  previewVideo {
+                    file
+                  }
+                  captions {
+                    url
+                  }
+                  previewVideoThumbnail {
+                    publicId
+                  }`,
+          });
+          return res;
+        },
+      }),
+    }),
   },
   hooks: {
     resolveInput: async ({

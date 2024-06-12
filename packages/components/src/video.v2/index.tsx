@@ -13,6 +13,7 @@ import React, {
   SetStateAction,
   useEffect,
   useRef,
+  ReactNode,
 } from 'react';
 import { useState } from 'react';
 
@@ -46,7 +47,7 @@ type VideoTheme = {
   seekbar: string;
 };
 
-interface VideoProps {
+type VideoProps = {
   videoFile: string;
   videoLabel?: string;
   caption?: string;
@@ -60,7 +61,8 @@ interface VideoProps {
   playing?: boolean;
   started?: () => void;
   ended?: () => void;
-}
+  InitialUI?: React.Component<any>;
+};
 
 interface VideoState {
   buffer: boolean;
@@ -276,6 +278,7 @@ export const Video = ({
   play,
   started,
   ended,
+  InitialUI,
 }: VideoProps) => {
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
@@ -403,93 +406,96 @@ export const Video = ({
       {videoOpen || play ? (
         ''
       ) : (
-        <button
-          onClick={(e) => {
-            toggleOpen(true);
-            e.preventDefault();
-          }}
-          className="relative h-full w-full"
-        >
-          {thumbPublicId ? (
-            <CldImage.default
-              id={`img-${thumbPublicId}`}
-              alt={`Thumbnail image for video with title "${videoLabel}"`}
-              imgId={thumbPublicId}
-              lazy={false}
-              transforms="g_faces"
-              className={thumbClass}
-            />
-          ) : (
-            <Image
-              alt={
-                videoLabel
-                  ? `Thumbnail image for video with title "${videoLabel}"`
-                  : 'Thumbnail image for video preview'
-              }
-              src={
-                thumbUrl
-                  ? thumbUrl
-                  : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
-              }
-              className={thumbClass}
-              fill={true}
-              unoptimized={true}
-              draggable="true"
-            />
-          )}
+        <>
+          <InitialUI />
+          <button
+            onClick={(e) => {
+              toggleOpen(true);
+              e.preventDefault();
+            }}
+            className="relative h-full w-full"
+          >
+            {thumbPublicId ? (
+              <CldImage.default
+                id={`img-${thumbPublicId}`}
+                alt={`Thumbnail image for video with title "${videoLabel}"`}
+                imgId={thumbPublicId}
+                lazy={false}
+                transforms="g_faces"
+                className={thumbClass}
+              />
+            ) : (
+              <Image
+                alt={
+                  videoLabel
+                    ? `Thumbnail image for video with title "${videoLabel}"`
+                    : 'Thumbnail image for video preview'
+                }
+                src={
+                  thumbUrl
+                    ? thumbUrl
+                    : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
+                }
+                className={thumbClass}
+                fill={true}
+                unoptimized={true}
+                draggable="true"
+              />
+            )}
 
-          {!noUi && (
-            <span
-              className="absolute"
-              style={{
-                top: `calc(50% - ${buttonSize / 2}px)`,
-                left: `calc(50% - ${buttonSize / 2}px)`,
-              }}
-            >
-              <svg
-                fill="#000000"
-                width={buttonSize}
-                height={buttonSize}
-                viewBox="0 0 512 512"
+            {!noUi && (
+              <span
+                className="absolute"
+                style={{
+                  top: `calc(50% - ${buttonSize / 2}px)`,
+                  left: `calc(50% - ${buttonSize / 2}px)`,
+                }}
               >
-                <g
-                  className={`transition-all origin-center group-hover:scale-75 group-hover:opacity-0 ${easing}`}
+                <svg
+                  fill="#000000"
+                  width={buttonSize}
+                  height={buttonSize}
+                  viewBox="0 0 512 512"
                 >
-                  <g>
-                    <path
-                      d="M256,0C114.608,0,0,114.608,0,256s114.608,256,256,256s256-114.608,256-256S397.392,0,256,0z M256,496
+                  <g
+                    className={`transition-all origin-center group-hover:scale-75 group-hover:opacity-0 ${easing}`}
+                  >
+                    <g>
+                      <path
+                        d="M256,0C114.608,0,0,114.608,0,256s114.608,256,256,256s256-114.608,256-256S397.392,0,256,0z M256,496
 			C123.664,496,16,388.336,16,256S123.664,16,256,16s240,107.664,240,240S388.336,496,256,496z"
-                      style={{ fill: '#fff', strokeWidth: '6px' }}
-                    />
+                        style={{ fill: '#fff', strokeWidth: '6px' }}
+                      />
+                    </g>
                   </g>
-                </g>
 
-                <circle
-                  cx="256"
-                  cy="256"
-                  r="250"
-                  style={{ fill: theme.fillRgb }}
-                ></circle>
-                <g>
-                  <g className="transition-all origin-center group-hover:scale-125 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
-                    <polygon
-                      points="189.776,141.328 189.776,370.992 388.672,256.16"
-                      style={{ fill: '#fff' }}
-                    />
+                  <circle
+                    cx="256"
+                    cy="256"
+                    r="250"
+                    style={{ fill: theme.fillRgb }}
+                  ></circle>
+                  <g>
+                    <g className="transition-all origin-center group-hover:scale-125 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
+                      <polygon
+                        points="189.776,141.328 189.776,370.992 388.672,256.16"
+                        style={{ fill: '#fff' }}
+                      />
+                    </g>
                   </g>
-                </g>
-              </svg>
-            </span>
-          )}
+                </svg>
+              </span>
+            )}
 
-          {caption && (
-            <aside
-              className={`absolute bottom-0 right-3 p-3 text-left w-3/4 ${theme.bg} text-white sm:max-w-xs sm:right-20 lg:right-0`}
-            >
-              ↳ {caption}
-            </aside>
-          )}
-        </button>
+            {caption && (
+              <aside
+                className={`absolute bottom-0 right-3 p-3 text-left w-3/4 ${theme.bg} text-white sm:max-w-xs sm:right-20 lg:right-0`}
+              >
+                ↳ {caption}
+              </aside>
+            )}
+          </button>
+        </>
       )}
       {(videoOpen || play) && (
         <div

@@ -19,6 +19,7 @@ import { helper, HelperIcon } from '../../../components/helper';
 import { Featuring } from '../featuring';
 import { Social } from '../social';
 import { Status } from '../flags';
+import { StudioPreviews } from '../virtual';
 
 const NewsItem: Lists.NewsItem = list({
   access: allowAll,
@@ -96,11 +97,6 @@ const NewsItem: Lists.NewsItem = list({
           'This field is purely cosmetic, not to schedule this item for future publishing. News items for the future should not be enabled until ready for review and publishing.',
       },
     }),
-    /* source: text({
-      ui: {
-        description: 'e.g. The Boston Globe, CommonWealth Magazine',
-      },
-    }), */
     linkHelper: helper({
       html: 'If external link is used, <em>body</em> is not required.',
       iconType: HelperIcon.info,
@@ -124,14 +120,7 @@ const NewsItem: Lists.NewsItem = list({
       },
     }),
     body: document({
-      formatting: {
-        headingLevels: true,
-        inlineMarks: true,
-        listTypes: true,
-        alignment: true,
-        blockTypes: true,
-        softBreaks: true,
-      },
+      formatting: true,
       dividers: true,
       links: true,
       layouts: [
@@ -185,46 +174,7 @@ const NewsItem: Lists.NewsItem = list({
     }),
     ...group(Social('Item "Summary" used if not specified')),
 
-    studioPreviews: virtual({
-      field: graphql.field({
-        type: graphql.JSON,
-        resolve(item, args, context) {
-          const res = context.query.Semester.findMany({
-            where: { type: { equals: 'upcoming' } },
-            query: `
-                  id
-                  name
-                  key
-                  studio {
-                      name
-                      key
-                  }
-                  initiatives
-                  courseNumber
-                  instructors {
-                      name
-                  }
-                  previewThumbnail {
-                    publicId
-                  }
-                  previewThumbAltText
-                  previewSummary {
-                      document
-                  }
-                  previewVideo {
-                    file
-                  }
-                  captions {
-                    url
-                  }
-                  previewVideoThumbnail {
-                    publicId
-                  }`,
-          });
-          return res;
-        },
-      }),
-    }),
+    studioPreviews: StudioPreviews,
   },
   hooks: {
     resolveInput: async ({

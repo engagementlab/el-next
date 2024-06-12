@@ -6,6 +6,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
+import { StudioPreviews } from '../virtual';
 
 const Undergraduate: Lists.Undergraduate = list({
   access: allowAll,
@@ -73,6 +74,7 @@ const Undergraduate: Lists.Undergraduate = list({
       ui: { hideCreate: true },
     }),
     ...group(Social()),
+    studioPreviews: StudioPreviews,
   },
   ui: {
     hideCreate: true,

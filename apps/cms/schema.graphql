@@ -2576,6 +2576,7 @@ type Undergraduate {
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
+  studioPreviews: JSON
 }
 
 type Undergraduate_intro_Document {

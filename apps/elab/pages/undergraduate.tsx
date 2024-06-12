@@ -11,6 +11,7 @@ import {
   DefaultWhereCondition,
   OGParams,
   Studio,
+  StudioPreview,
   StudioProject,
 } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
@@ -28,6 +29,7 @@ type UndergradPage = {
   introImageCaption: string;
   socialImpactDesign: { document: any };
   projectSpotlight: StudioProject[];
+  studioPreviews: StudioPreview[];
 } & OGParams;
 
 const rendererOverrides = {
@@ -303,6 +305,7 @@ export async function getStaticProps() {
             publicId
         }
         ogDescription
+        studioPreviews
       }
     `
   );

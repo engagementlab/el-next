@@ -19,6 +19,7 @@ export default function NewsItem({
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   let theme = 'none';
+
   if (item) {
     if (item.initiatives && item.initiatives.length > 0) {
       if (item.initiatives[0] === 'gunviolence') theme = 'tngv';
@@ -90,7 +91,7 @@ export default function NewsItem({
         <div className="px-4 xl:px-8">
           <DocumentRenderer
             document={item.body.document}
-            componentBlocks={Blocks(undefined, item.)}
+            componentBlocks={Blocks(undefined, item.studioPreviews)}
             renderers={Doc()}
           />
         </div>
@@ -153,8 +154,8 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
           file 
         }
         order
-        studioPreviews
       }
+      studioPreviews
     }`
   );
 

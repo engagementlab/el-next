@@ -21,7 +21,6 @@ import Slideshow from '@/components/Slideshow';
 import Logos from '@/components/Logos';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { Button, Query, Image } from '@el-next/components';
-import { Video } from '@el-next/components/video';
 import { Video as VideoV2 } from '@el-next/components/video.v2';
 
 import { DocumentRenderer } from '@keystone-6/document-renderer';

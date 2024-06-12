@@ -1,4 +1,11 @@
+import { motion } from 'framer-motion';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import Link from 'next/link';
 import { ReactElement, ReactNode } from 'react';
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+import { GetThemeFromDBKey, SemestersSort } from '@/shared';
+
 import {
   BlockRenderers,
   DocRenderers,
@@ -21,12 +28,8 @@ import {
 } from '@/types';
 import CaptionedImage from './CaptionedImage';
 import Slideshow from './Slideshow';
-import Link from 'next/link';
 import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
-import { motion } from 'framer-motion';
-import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { GetThemeFromDBKey, SemestersSort } from '@/shared';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -127,9 +130,47 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
         );
     },
     studioPreview: (props: { semester: StudioPreview }) => {
-      const semester = studioPreviews?.find((s) => s.id === props.semester.id);
+      interface PreviewState {
+        videoOpen: boolean;
+        toggleVideo: () => void;
+        reset: () => void;
+      }
 
-      if (!semester) return <>No data for studio preview found!</>;
+      // Create store with Zustand
+      const useStore = create<PreviewState>()(
+        subscribeWithSelector((set) => ({
+          videoOpen: false,
+          toggleVideo: () =>
+            set((state) => {
+              return {
+                ...state,
+                videoOpen: !state.videoOpen,
+              };
+            }),
+          reset: () =>
+            set((state) => {
+              return {
+                ...state,
+
+                videoOpen: false,
+              };
+            }),
+        }))
+      );
+      if (!studioPreviews)
+        return (
+          <p className="text-2xl font-extrabold text-red">
+            No query for studio previews. This is a bug in code.
+          </p>
+        );
+
+      const semester = studioPreviews?.find((s) => s.id === props.semester.id);
+      if (!semester)
+        return (
+          <p className="text-2xl font-extrabold text-red">
+            No data for studio preview found!
+          </p>
+        );
 
       let themeKey = 'none';
       const themeInfo = GetThemeFromDBKey(semester.initiatives);
@@ -146,15 +187,23 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
 
       return (
         <div className="my-4 whitespace-pre-wrap">
-          <h3 className="text-2xl text-coated leading-none font-extrabold">
+          <h3 className="my-6 text-2xl text-coated leading-none font-extrabold">
             {semester.name}
           </h3>
-          <Image
-            id={'img-' + semester.previewThumbnail.publicId}
-            alt={semester.previewThumbAltText}
-            imgId={semester.previewThumbnail.publicId}
-            aspectDefault={true}
-          />
+          {semester.previewThumbnail ? (
+            <Image
+              id={'img-' + semester.previewThumbnail.publicId}
+              alt={semester.previewThumbAltText}
+              imgId={semester.previewThumbnail.publicId}
+              aspectDefault={true}
+            />
+          ) : (
+            <ImagePlaceholder
+              imageLabel="Studio Preview"
+              width={335}
+              height={200}
+            />
+          )}
 
           <p>
             <strong>Department(s):</strong>&nbsp;
@@ -180,7 +229,6 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
               videoLabel={`${semester.name} Preview Video`}
               videoFile={semester.previewVideo.file}
               captionsFile={semester.captions?.file.url}
-              thumbUrl={semester.previewVideoThumbnail.publicId}
               thumbPublicId={semester.previewVideoThumbnail?.publicId}
               theme={videoColor}
             />

@@ -38,6 +38,7 @@ export default function Event({
     theme = themeInfo.theme;
     themeKey = themeInfo.themeKey;
   }
+
   return item ? (
     <Layout
       error={error}

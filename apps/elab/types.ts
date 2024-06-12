@@ -183,6 +183,7 @@ export type News = {
   summary: string;
   source: string;
   slides: Slide[];
+  studioPreviews?: StudioPreview[];
 } & OGParams;
 export type Person = {
   name: string;

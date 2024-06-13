@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 import Link from 'next/link';
 import { ReactElement, ReactNode } from 'react';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
 import { GetThemeFromDBKey, SemestersSort } from '@/shared';
 
 import {
@@ -130,33 +128,6 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
         );
     },
     studioPreview: (props: { semester: StudioPreview }) => {
-      interface PreviewState {
-        videoOpen: boolean;
-        toggleVideo: () => void;
-        reset: () => void;
-      }
-
-      // Create store with Zustand
-      const useStore = create<PreviewState>()(
-        subscribeWithSelector((set) => ({
-          videoOpen: false,
-          toggleVideo: () =>
-            set((state) => {
-              return {
-                ...state,
-                videoOpen: !state.videoOpen,
-              };
-            }),
-          reset: () =>
-            set((state) => {
-              return {
-                ...state,
-
-                videoOpen: false,
-              };
-            }),
-        }))
-      );
       if (!studioPreviews)
         return (
           <p className="text-2xl font-extrabold text-red">
@@ -204,7 +175,6 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
               height={200}
             />
           )}
-
           <p>
             <strong>Department(s):</strong>&nbsp;
             {semester.courseNumber}
@@ -222,17 +192,40 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
               renderers={Doc()}
             />
           </div>
-
-          <div className="group relative w-full min-h-[350px] max-h-[350px] lg:max-h-[465px]">
-            <Video
-              key={`video-player-${semester.previewVideo.file}`}
-              videoLabel={`${semester.name} Preview Video`}
-              videoFile={semester.previewVideo.file}
-              captionsFile={semester.captions?.file.url}
-              thumbPublicId={semester.previewVideoThumbnail?.publicId}
-              theme={videoColor}
-            />
-          </div>
+          {semester.previewVideo.file && (
+            <div className="group relative w-full min-h-[350px] max-h-[350px] lg:max-h-[465px]">
+              <Video
+                key={`video-player-${semester.previewVideo.file}`}
+                videoLabel={`${semester.name} Preview Video`}
+                videoFile={semester.previewVideo.file}
+                captionsFile={semester.captions?.file.url}
+                thumbPublicId={semester.previewVideoThumbnail?.publicId}
+                theme={videoColor}
+                InitialUI={() => {
+                  return (
+                    <div
+                      key={`video-btn-${semester.previewVideo.file}`}
+                      className={`flex flex-row gap-x-2 my-2 group items-center ${theme?.text} `}
+                    >
+                      <span className="basis-5">
+                        <Icons icons={['video']} />
+                      </span>
+                      <span
+                        className={`font-bold border-b-2 text-left ${theme?.text} ${theme?.border}`}
+                      >
+                        Watch Studio Preview video
+                      </span>
+                      <span
+                        className={`group-hover:translate-x-1 transition-transform ${CustomEase}`}
+                      >
+                        ➝
+                      </span>
+                    </div>
+                  );
+                }}
+              />
+            </div>
+          )}
         </div>
       );
     },

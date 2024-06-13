@@ -125,9 +125,9 @@ export default function InitIndex({
             <Image
               id={`thumb-${props.slide.key}`}
               alt={props.slide.thumbAltText}
-              // transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+              transforms="c_fill,g_faces,h_600,w_800"
               imgId={props.slide.thumbnail.publicId}
-              width={460}
+              width={800}
               maxWidthDisable={true}
               className="w-full"
             />

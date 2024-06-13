@@ -702,7 +702,7 @@ function semesterSelect({
       );
 
       useEffect(() => {
-        if (data && data.length > 1) return;
+        if (data && data.length >= 1) return;
 
         const endpoint =
           window.location.protocol === 'https:'

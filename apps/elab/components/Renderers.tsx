@@ -201,6 +201,7 @@ let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
                 captionsFile={semester.captions?.file.url}
                 thumbPublicId={semester.previewVideoThumbnail?.publicId}
                 theme={videoColor}
+                showCloseButton={true}
                 InitialUI={() => {
                   return (
                     <div

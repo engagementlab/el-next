@@ -706,7 +706,7 @@ function semesterSelect({
 
         const endpoint =
           window.location.protocol === 'https:'
-            ? '/rest/semesters'
+            ? '/elab/rest/semesters'
             : 'http://localhost:3000/rest/semesters';
 
         axios

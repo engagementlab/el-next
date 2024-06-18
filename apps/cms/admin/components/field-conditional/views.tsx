@@ -30,7 +30,6 @@ export function Field({
 }: FieldProps<typeof controller>) {
   const neededValue =
     (itemValue as any)?.[field.dependency.field]?.value ?? null;
-  console.log(neededValue, _.get(neededValue, field.dependency.queryPath));
   const hidden =
     field.dependency.neededValue !==
     _.get(neededValue, field.dependency.queryPath);

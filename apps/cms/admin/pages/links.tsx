@@ -153,7 +153,6 @@ export default function URLShortener(this: any) {
         }),
       setRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) =>
         set((state) => {
-          console.log(event.target.value);
           const rowsPerPage = parseInt(event.target.value, 10);
           return { ...state, rowsPerPage };
         }),

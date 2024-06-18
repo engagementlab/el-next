@@ -139,14 +139,12 @@ export const controller = (
       label: '',
     },
     deserialize: (data) => {
-      console.log('====', data[config.path]);
       const value = data[config.path];
       if (!value || value.file.length < 5) return { kind: 'empty' };
 
       return value;
     },
     serialize: (value) => {
-      console.log('serialize', value);
       if (value.file && value.file.length > 10) return { [config.path]: value };
       return { file: '??' };
     },

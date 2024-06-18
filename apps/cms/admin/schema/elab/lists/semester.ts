@@ -139,6 +139,7 @@ const Semester: Lists.Semester = list({
       ref: 'Slideshow.semesterSlides',
       many: false,
       label: 'Slideshow',
+      ui: Conditional('current'),
     }),
     coCreation: document({
       formatting: true,
@@ -215,6 +216,14 @@ const Semester: Lists.Semester = list({
       label: 'Preview Thumbnail Alt Text ♿',
       ui: Conditional('upcoming'),
     }),
+    previewShortDescription: text({
+      label: 'Preview Short Description',
+      ui: {
+        ...Conditional('upcoming'),
+        displayMode: 'textarea',
+        description: 'Displays in listing under thumbnail.',
+      },
+    }),
     previewSummary: document({
       formatting: true,
       ui: Conditional('upcoming', './admin/components/component-blocks'),
@@ -245,22 +254,29 @@ const Semester: Lists.Semester = list({
       field: graphql.field({
         type: graphql.String,
         resolve(item, args, context) {
-          if (item.initiatives) {
-            const initiativeKeys = item.initiatives as string[];
-            if (initiativeKeys.length > 0) {
-              const initiativeLabels: string[] = [];
-              initiativeKeys.forEach((key) =>
-                initiativeLabels.push(key === 'gunviolence' ? 'TNGV' : 'TNEJ')
-              );
-              return `${item.name} (${initiativeLabels.join(', ')})`;
-            } else return `${item.name} (N/A)`;
+          // console.log(item.studioId);
+          if (item.initiatives && item.studioId) {
+            context.db.Studio.findOne({
+              where: { id: item.studioId },
+            }).then((res) => {
+              const initiativeKeys = item.initiatives as string[];
+              if (initiativeKeys.length > 0) {
+                const initiativeLabels: string[] = [];
+                initiativeKeys.forEach((key) =>
+                  initiativeLabels.push(key === 'gunviolence' ? 'TNGV' : 'TNEJ')
+                );
+                return `${res?.name} ${item.name} (${initiativeLabels.join(
+                  ', '
+                )})`;
+              } else return `${item.name} (N/A)`;
+            });
           } else return item.name;
         },
       }),
       ui: {
         createView: { fieldMode: 'hidden' },
-        itemView: { fieldMode: 'hidden' },
-        listView: { fieldMode: 'hidden' },
+        // itemView: { fieldMode: 'hidden' },
+        // listView: { fieldMode: 'hidden' },
       },
     }),
   },

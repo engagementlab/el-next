@@ -285,6 +285,7 @@ model Semester {
   undergrad               Undergraduate[]     @relation("Semester_undergrad")
   previewThumbnail        Json?
   previewThumbAltText     String              @default("")
+  previewShortDescription String              @default("")
   previewSummary          Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   previewVideo_file       String              @default("")
   previewVideo_label      String              @default("")

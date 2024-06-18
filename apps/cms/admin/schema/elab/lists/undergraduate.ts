@@ -76,6 +76,7 @@ const Undergraduate: Lists.Undergraduate = list({
     }),
 
     featuredSemesters: relationship({
+      label: 'Featured Upcoming Semesters',
       ref: 'Semester.undergrad',
       many: true,
       ui: {

@@ -1832,6 +1832,7 @@ type Semester {
   undergradCount(where: UndergraduateWhereInput! = {}): Int
   previewThumbnail: CloudinaryImage_File
   previewThumbAltText: String
+  previewShortDescription: String
   previewSummary: Semester_previewSummary_Document
   previewVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
@@ -1908,6 +1909,7 @@ input SemesterWhereInput {
   studioStaff: PersonManyRelationFilter
   undergrad: UndergraduateManyRelationFilter
   previewThumbAltText: StringFilter
+  previewShortDescription: StringFilter
 }
 
 input SemesterStatusTypeNullableFilter {
@@ -1941,6 +1943,7 @@ input SemesterOrderByInput {
   contact: OrderDirection
   description: OrderDirection
   previewThumbAltText: OrderDirection
+  previewShortDescription: OrderDirection
 }
 
 input SemesterUpdateInput {
@@ -1966,6 +1969,7 @@ input SemesterUpdateInput {
   undergrad: UndergraduateRelateToManyForUpdateInput
   previewThumbnail: Upload
   previewThumbAltText: String
+  previewShortDescription: String
   previewSummary: JSON
   previewVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput
@@ -2019,6 +2023,7 @@ input SemesterCreateInput {
   undergrad: UndergraduateRelateToManyForCreateInput
   previewThumbnail: Upload
   previewThumbAltText: String
+  previewShortDescription: String
   previewSummary: JSON
   previewVideo: VideoFieldInput
   captions: AzureStorageFileFieldInput

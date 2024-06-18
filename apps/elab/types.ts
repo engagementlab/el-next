@@ -348,6 +348,9 @@ export type Semester = {
     };
   }[];
   contact: string;
+  previewSummary?: {
+    document: any;
+  };
 };
 export type StudioProject = {
   name: string;

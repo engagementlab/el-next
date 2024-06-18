@@ -13,12 +13,14 @@ import {
   Studio,
   StudioPreview,
   StudioProject,
+  Theming,
 } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
 import { Blocks, Doc, Heading } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Link from 'next/link';
+import { GetThemeFromDBKey } from '@/shared';
 
 type UndergradPage = {
   intro: { document: any };
@@ -30,6 +32,7 @@ type UndergradPage = {
   socialImpactDesign: { document: any };
   projectSpotlight: StudioProject[];
   studioPreviews: StudioPreview[];
+  featuredSemesters?: StudioPreview[];
 } & OGParams;
 
 const rendererOverrides = {
@@ -222,6 +225,91 @@ export default function Undergraduate({
           </Gutter>
           <Divider />
 
+          {/* Studio previews */}
+
+          {page.featuredSemesters && (
+            <>
+              <Gutter>
+                <div id="studio-previews">
+                  <h2 className="font-bold text-4xl">Upcoming Studios</h2>
+                  <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
+                    {page.featuredSemesters.map(
+                      (semester: StudioPreview, i: number) => {
+                        let themeKey = 'none';
+                        const themeInfo = GetThemeFromDBKey(
+                          semester.initiatives
+                        );
+                        themeKey = themeInfo.themeKey;
+                        let borderColor = 'border-yellow';
+                        if (semester.initiatives[0] === 'gunviolence')
+                          borderColor = 'border-purple';
+                        else if (semester.initiatives[0] === 'climate')
+                          borderColor = 'border-leaf';
+                        return (
+                          <Link
+                            href={`/studios/${semester.studio.key}/${semester.key}`}
+                            key={`studio-link-${i}`}
+                            className="group"
+                          >
+                            <div className="my-4 whitespace-pre-wrap">
+                              <h3 className="my-6 text-2xl text-coated leading-none font-extrabold">
+                                {semester.name}
+                              </h3>
+                              {semester.previewThumbnail ? (
+                                <Image
+                                  id={
+                                    'img-' + semester.previewThumbnail.publicId
+                                  }
+                                  alt={semester.previewThumbAltText}
+                                  imgId={semester.previewThumbnail.publicId}
+                                  aspectDefault={true}
+                                />
+                              ) : (
+                                <ImagePlaceholder
+                                  imageLabel="Studio Preview"
+                                  width={335}
+                                  height={200}
+                                />
+                              )}
+
+                              <hr
+                                className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+                              />
+                              <p>
+                                <strong>Department(s):</strong>&nbsp;
+                                {semester.courseNumber}
+                              </p>
+                              <p>
+                                <strong>
+                                  Instructor
+                                  {semester.instructors.length > 1 && (
+                                    <span>s</span>
+                                  )}
+                                  :{' '}
+                                </strong>
+                                {semester.instructors
+                                  .map((i) => i.name)
+                                  .join(', ')}
+                              </p>
+                              <div className="my-4 whitespace-pre-wrap">
+                                <DocumentRenderer
+                                  document={semester.previewSummary.document}
+                                  componentBlocks={Blocks()}
+                                  renderers={Doc()}
+                                />
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+              </Gutter>
+              <Divider />
+            </>
+          )}
+
           <Gutter>
             {page.projectSpotlight && (
               <div id="projects">
@@ -273,6 +361,8 @@ export default function Undergraduate({
               </div>
             )}
           </Gutter>
+
+          {}
         </div>
       )}
     </Layout>
@@ -306,6 +396,35 @@ export async function getStaticProps() {
         }
         ogDescription
         studioPreviews
+        featuredSemesters {
+          name
+          key
+          studio {
+              name
+              key
+          }
+          initiatives
+          courseNumber
+          instructors {
+              name
+          }
+          previewThumbnail {
+            publicId
+          }
+          previewThumbAltText
+          previewSummary {
+              document
+          }
+          previewVideo {
+            file
+          }
+          captions {
+            url
+          }
+          previewVideoThumbnail {
+            publicId
+          }
+        }
       }
     `
   );

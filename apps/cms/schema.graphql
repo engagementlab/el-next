@@ -1828,12 +1828,15 @@ type Semester {
   studioStudentsCount(where: PersonWhereInput! = {}): Int
   studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   studioStaffCount(where: PersonWhereInput! = {}): Int
+  undergrad(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
+  undergradCount(where: UndergraduateWhereInput! = {}): Int
   previewThumbnail: CloudinaryImage_File
   previewThumbAltText: String
   previewSummary: Semester_previewSummary_Document
   previewVideo: VideoFieldOutput
   captions: AzureStorageFileFieldOutput
   previewVideoThumbnail: CloudinaryImage_File
+  internalLabel: String
 }
 
 enum SemesterStatusType {
@@ -1903,6 +1906,7 @@ input SemesterWhereInput {
   learningPartners: PersonManyRelationFilter
   studioStudents: PersonManyRelationFilter
   studioStaff: PersonManyRelationFilter
+  undergrad: UndergraduateManyRelationFilter
   previewThumbAltText: StringFilter
 }
 
@@ -1918,6 +1922,12 @@ input SemesterTypeTypeNullableFilter {
   in: [SemesterTypeType!]
   notIn: [SemesterTypeType!]
   not: SemesterTypeTypeNullableFilter
+}
+
+input UndergraduateManyRelationFilter {
+  every: UndergraduateWhereInput
+  some: UndergraduateWhereInput
+  none: UndergraduateWhereInput
 }
 
 input SemesterOrderByInput {
@@ -1953,6 +1963,7 @@ input SemesterUpdateInput {
   learningPartners: PersonRelateToManyForUpdateInput
   studioStudents: PersonRelateToManyForUpdateInput
   studioStaff: PersonRelateToManyForUpdateInput
+  undergrad: UndergraduateRelateToManyForUpdateInput
   previewThumbnail: Upload
   previewThumbAltText: String
   previewSummary: JSON
@@ -1971,6 +1982,13 @@ input SlideshowRelateToOneForUpdateInput {
   create: SlideshowCreateInput
   connect: SlideshowWhereUniqueInput
   disconnect: Boolean
+}
+
+input UndergraduateRelateToManyForUpdateInput {
+  disconnect: [UndergraduateWhereUniqueInput!]
+  set: [UndergraduateWhereUniqueInput!]
+  create: [UndergraduateCreateInput!]
+  connect: [UndergraduateWhereUniqueInput!]
 }
 
 input SemesterUpdateArgs {
@@ -1998,6 +2016,7 @@ input SemesterCreateInput {
   learningPartners: PersonRelateToManyForCreateInput
   studioStudents: PersonRelateToManyForCreateInput
   studioStaff: PersonRelateToManyForCreateInput
+  undergrad: UndergraduateRelateToManyForCreateInput
   previewThumbnail: Upload
   previewThumbAltText: String
   previewSummary: JSON
@@ -2014,6 +2033,11 @@ input StudioRelateToOneForCreateInput {
 input SlideshowRelateToOneForCreateInput {
   create: SlideshowCreateInput
   connect: SlideshowWhereUniqueInput
+}
+
+input UndergraduateRelateToManyForCreateInput {
+  create: [UndergraduateCreateInput!]
+  connect: [UndergraduateWhereUniqueInput!]
 }
 
 type Slide {
@@ -2434,12 +2458,6 @@ input FilterManyRelationFilter {
   none: FilterWhereInput
 }
 
-input UndergraduateManyRelationFilter {
-  every: UndergraduateWhereInput
-  some: UndergraduateWhereInput
-  none: UndergraduateWhereInput
-}
-
 input StudioProjectOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -2503,13 +2521,6 @@ input FilterRelateToManyForUpdateInput {
   connect: [FilterWhereUniqueInput!]
 }
 
-input UndergraduateRelateToManyForUpdateInput {
-  disconnect: [UndergraduateWhereUniqueInput!]
-  set: [UndergraduateWhereUniqueInput!]
-  create: [UndergraduateCreateInput!]
-  connect: [UndergraduateWhereUniqueInput!]
-}
-
 input StudioProjectUpdateArgs {
   where: StudioProjectWhereUniqueInput!
   data: StudioProjectUpdateInput!
@@ -2558,11 +2569,6 @@ input FilterRelateToManyForCreateInput {
   connect: [FilterWhereUniqueInput!]
 }
 
-input UndergraduateRelateToManyForCreateInput {
-  create: [UndergraduateCreateInput!]
-  connect: [UndergraduateWhereUniqueInput!]
-}
-
 type Undergraduate {
   id: ID!
   name: String
@@ -2573,6 +2579,8 @@ type Undergraduate {
   socialImpactDesign: Undergraduate_socialImpactDesign_Document
   projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
+  featuredSemesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  featuredSemestersCount(where: SemesterWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
@@ -2601,6 +2609,7 @@ input UndergraduateWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   projectSpotlight: StudioProjectManyRelationFilter
+  featuredSemesters: SemesterManyRelationFilter
   ogDescription: StringFilter
 }
 
@@ -2620,6 +2629,7 @@ input UndergraduateUpdateInput {
   introImageCaption: String
   socialImpactDesign: JSON
   projectSpotlight: StudioProjectRelateToManyForUpdateInput
+  featuredSemesters: SemesterRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
@@ -2638,6 +2648,7 @@ input UndergraduateCreateInput {
   introImageCaption: String
   socialImpactDesign: JSON
   projectSpotlight: StudioProjectRelateToManyForCreateInput
+  featuredSemesters: SemesterRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String

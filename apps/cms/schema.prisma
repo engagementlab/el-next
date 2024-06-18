@@ -282,6 +282,7 @@ model Semester {
   learningPartners        Person[]            @relation("Person_learningPartners")
   studioStudents          Person[]            @relation("Person_studioStudents")
   studioStaff             Person[]            @relation("Person_studioStaff")
+  undergrad               Undergraduate[]     @relation("Semester_undergrad")
   previewThumbnail        Json?
   previewThumbAltText     String              @default("")
   previewSummary          Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
@@ -408,6 +409,7 @@ model Undergraduate {
   introImageCaption  String          @default("")
   socialImpactDesign Json            @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   projectSpotlight   StudioProject[] @relation("StudioProject_undergrad")
+  featuredSemesters  Semester[]      @relation("Semester_undergrad")
   ogImage            Json?
   helper_html        String          @default("<p>Need HTML!</p>")
   helper_iconType    icon            @default(help)

@@ -1,10 +1,11 @@
-import { list } from '@keystone-6/core';
+import { graphql, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
   relationship,
   select,
   text,
+  virtual,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
@@ -189,6 +190,15 @@ const Semester: Lists.Semester = list({
       many: true,
       ui: Conditional('current'),
     }),
+    undergrad: relationship({
+      ref: 'Undergraduate.featuredSemesters',
+      many: true,
+      ui: {
+        createView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
+      },
+    }),
 
     // --- UPCOMING SEMESTER ---
     previewThumbnail: cloudinaryImage({
@@ -228,6 +238,30 @@ const Semester: Lists.Semester = list({
         folder: 'elab-home-v3.x/studios',
       },
       ui: Conditional('upcoming'),
+    }),
+
+    // Label for CMS use
+    internalLabel: virtual({
+      field: graphql.field({
+        type: graphql.String,
+        resolve(item, args, context) {
+          if (item.initiatives) {
+            const initiativeKeys = item.initiatives as string[];
+            if (initiativeKeys.length > 0) {
+              const initiativeLabels: string[] = [];
+              initiativeKeys.forEach((key) =>
+                initiativeLabels.push(key === 'gunviolence' ? 'TNGV' : 'TNEJ')
+              );
+              return `${item.name} (${initiativeLabels.join(', ')})`;
+            } else return `${item.name} (N/A)`;
+          } else return item.name;
+        },
+      }),
+      ui: {
+        createView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
+      },
     }),
   },
 

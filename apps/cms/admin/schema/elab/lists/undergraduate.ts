@@ -1,3 +1,4 @@
+import path from 'path';
 import { group, list } from '@keystone-6/core';
 import { relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
@@ -72,6 +73,14 @@ const Undergraduate: Lists.Undergraduate = list({
       ref: 'StudioProject.undergrad',
       many: true,
       ui: { hideCreate: true },
+    }),
+
+    featuredSemesters: relationship({
+      ref: 'Semester.undergrad',
+      many: true,
+      ui: {
+        labelField: 'internalLabel',
+      },
     }),
     ...group(Social()),
     studioPreviews: StudioPreviews,

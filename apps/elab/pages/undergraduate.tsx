@@ -227,7 +227,7 @@ export default function Undergraduate({
 
           {/* Studio previews */}
 
-          {page.featuredSemesters && (
+          {page.featuredSemesters && page.featuredSemesters.length > 0 && (
             <>
               <Gutter>
                 <div id="studio-previews">
@@ -252,9 +252,6 @@ export default function Undergraduate({
                             className="group"
                           >
                             <div className="my-4 whitespace-pre-wrap">
-                              <h3 className="my-6 text-2xl text-coated leading-none font-extrabold">
-                                {semester.name}
-                              </h3>
                               {semester.previewThumbnail ? (
                                 <Image
                                   id={
@@ -275,6 +272,12 @@ export default function Undergraduate({
                               <hr
                                 className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
                               />
+                              <h3 className="hover:text-green-blue group-hover:text-green-blue mt-3 text-2xl text-coated leading-none font-extrabold">
+                                {semester.name}
+                              </h3>
+                              <p className="mt-1 mb-5">
+                                {semester.studio.name}
+                              </p>
                               <p>
                                 <strong>Department(s):</strong>&nbsp;
                                 {semester.courseNumber}
@@ -292,11 +295,7 @@ export default function Undergraduate({
                                   .join(', ')}
                               </p>
                               <div className="my-4 whitespace-pre-wrap">
-                                <DocumentRenderer
-                                  document={semester.previewSummary.document}
-                                  componentBlocks={Blocks()}
-                                  renderers={Doc()}
-                                />
+                                {semester.previewShortDescription}
                               </div>
                             </div>
                           </Link>
@@ -412,9 +411,7 @@ export async function getStaticProps() {
             publicId
           }
           previewThumbAltText
-          previewSummary {
-              document
-          }
+          previewShortDescription
           previewVideo {
             file
           }

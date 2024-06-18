@@ -452,6 +452,7 @@ export type StudioPreview = {
     publicId: string;
   };
   previewThumbAltText: string;
+  previewShortDescription: string;
   previewSummary: {
     document: any;
   };

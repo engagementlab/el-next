@@ -98,9 +98,6 @@ const Semester: Lists.Semester = list({
         { label: 'TNEJ', value: 'climate' },
       ],
     }),
-    // order: integer({
-    //   label: 'Order on index page',
-    // }),
     type: select({
       type: 'enum',
       options: [
@@ -253,30 +250,38 @@ const Semester: Lists.Semester = list({
     internalLabel: virtual({
       field: graphql.field({
         type: graphql.String,
-        resolve(item, args, context) {
-          // console.log(item.studioId);
+        async resolve(item, args, context) {
           if (item.initiatives && item.studioId) {
-            context.db.Studio.findOne({
+            // Get the studio this semester belongs to
+            const studio = await context.db.Studio.findOne({
               where: { id: item.studioId },
-            }).then((res) => {
+            });
+
+            if (studio) {
+              // Get/format the name of studio
               const initiativeKeys = item.initiatives as string[];
+              const studioNameFormatted =
+                studio.name.length > 40
+                  ? `${studio.name.substring(0, 40)}...`
+                  : studio.name;
+              const labelPrefix = `${studioNameFormatted} - ${
+                item.name.split(' - ')[0]
+              } `;
               if (initiativeKeys.length > 0) {
                 const initiativeLabels: string[] = [];
                 initiativeKeys.forEach((key) =>
                   initiativeLabels.push(key === 'gunviolence' ? 'TNGV' : 'TNEJ')
                 );
-                return `${res?.name} ${item.name} (${initiativeLabels.join(
-                  ', '
-                )})`;
-              } else return `${item.name} (N/A)`;
-            });
+                return `${labelPrefix} (${initiativeLabels.join(', ')})`;
+              } else return `${labelPrefix} (None)`;
+            }
           } else return item.name;
         },
       }),
       ui: {
         createView: { fieldMode: 'hidden' },
-        // itemView: { fieldMode: 'hidden' },
-        // listView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
       },
     }),
   },

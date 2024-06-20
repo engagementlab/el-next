@@ -13,6 +13,8 @@ import {
   Item,
   Person as PersonT,
   InitiativeFilterGroups,
+  DefaultWhereCondition,
+  StudioPreview,
 } from '@/types';
 
 import { CTAButton, MoreButton } from '@/components/Buttons';
@@ -28,6 +30,7 @@ import {
   Blocks,
   Doc,
   ResearchProjectItemRenderer,
+  StudioPreviewRenderer,
 } from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import { Person } from '@/components/People';
@@ -70,6 +73,7 @@ type Initiative = {
 export default function InitIndex({
   page,
   mergedItems,
+  filteredSemesters,
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -396,6 +400,30 @@ export default function InitIndex({
               </div>
             )}
           </Gutter>
+          {/* Studio previews */}
+          {filteredSemesters && filteredSemesters.length > 0 && (
+            <>
+              <Divider color={Theming[initiative].secondary} />
+
+              <Gutter>
+                <div id="studio-previews">
+                  <h2 className="font-bold text-4xl">
+                    Upcoming Studios: Fall 2024
+                  </h2>
+                  <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
+                    {filteredSemesters.map(
+                      (semester: StudioPreview, i: number) => (
+                        <StudioPreviewRenderer
+                          semester={semester}
+                          key={`studio-link-${i}`}
+                        />
+                      )
+                    )}
+                  </div>
+                </div>
+              </Gutter>
+            </>
+          )}
 
           {page.research && page.research.length > 0 && (
             <Divider color={Theming[initiative].secondary} />
@@ -592,11 +620,52 @@ export async function getStaticProps({
         }
       }`
   );
+  const upcomingSemesters = await Query(
+    'semesters',
+    `semesters(${DefaultWhereCondition('type: {equals: upcoming}')})
+      {
+        name
+        key
+        studio {
+            name
+            key
+        }
+        initiatives
+        courseNumber
+        instructors {
+            name
+        }
+        previewThumbnail {
+          publicId
+        }
+        previewThumbAltText
+        previewShortDescription
+        previewVideo {
+          file
+        }
+        captions {
+          url
+        }
+        previewVideoThumbnail {
+          publicId
+        }
+      }`
+  );
 
   if (result.error) {
     return {
       props: {
         error: result.error,
+        page: null,
+        initiative: 'tngv',
+      },
+    };
+  }
+
+  if (upcomingSemesters.error) {
+    return {
+      props: {
+        error: upcomingSemesters.error,
         page: null,
         initiative: 'tngv',
       },
@@ -618,11 +687,18 @@ export async function getStaticProps({
       val = a.publishDate > b.eventDate ? -1 : 1;
     return val;
   });
+
+  const filteredSemesters = (upcomingSemesters as StudioPreview[]).filter((s) =>
+    s.initiatives.includes(initiative === 'tngv' ? 'gunviolence' : 'climate')
+  );
+
   return {
     props: {
       page,
       initiative,
       mergedItems,
+
+      filteredSemesters,
     },
     revalidate: 1,
   };

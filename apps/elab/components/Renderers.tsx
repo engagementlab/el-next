@@ -525,6 +525,65 @@ const StudioGenericItemRenderer = (props: {
   );
 };
 
+const StudioPreviewRenderer = (props: {
+  semester: StudioPreview;
+  showBorder?: boolean;
+}) => {
+  let themeKey = 'none';
+  const themeInfo = GetThemeFromDBKey(props.semester.initiatives);
+  themeKey = themeInfo.themeKey;
+  let borderColor = 'border-yellow';
+  if (props.semester.initiatives[0] === 'gunviolence')
+    borderColor = 'border-purple';
+  else if (props.semester.initiatives[0] === 'climate')
+    borderColor = 'border-leaf';
+  return (
+    <Link
+      href={`/studios/${props.semester.studio.key}/${props.semester.key}`}
+      className="group"
+    >
+      <div className="my-4 whitespace-pre-wrap">
+        {props.semester.previewThumbnail ? (
+          <Image
+            id={'img-' + props.semester.previewThumbnail.publicId}
+            alt={props.semester.previewThumbAltText}
+            imgId={props.semester.previewThumbnail.publicId}
+            aspectDefault={true}
+          />
+        ) : (
+          <ImagePlaceholder
+            imageLabel="Studio Preview"
+            width={335}
+            height={200}
+          />
+        )}
+        {props.showBorder && (
+          <hr
+            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+          />
+        )}
+        <h3 className="hover:text-green-blue group-hover:text-green-blue mt-3 text-2xl text-coated leading-none font-extrabold">
+          {props.semester.studio.name}
+        </h3>
+        <p>
+          <strong>Department(s):</strong>&nbsp;
+          {props.semester.courseNumber}
+        </p>
+        <p>
+          <strong>
+            Instructor
+            {props.semester.instructors.length > 1 && <span>s</span>}:{' '}
+          </strong>
+          {props.semester.instructors.map((i) => i.name).join(', ')}
+        </p>
+        <div className="my-4 whitespace-pre-wrap">
+          {props.semester.previewShortDescription}
+        </div>
+      </div>
+    </Link>
+  );
+};
+
 const ResearchProjectItemRenderer = (props: {
   item: ResearchProject;
   showBorder?: boolean;
@@ -648,6 +707,7 @@ export {
   Heading,
   NewsEventRenderer,
   StudioGenericItemRenderer,
+  StudioPreviewRenderer,
   ResearchProjectItemRenderer,
   StudiosGridRenderer,
   QuoteRenderer,

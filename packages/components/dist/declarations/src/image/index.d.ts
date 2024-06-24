@@ -40,6 +40,11 @@ interface ImageProps {
      * - If set to false, the image will not use a 4:3 aspect ratio
      */
     aspectDefault?: boolean;
+    /**
+     * @defaultValue undefined
+     * -  Optional callback function for when the image is loaded
+     */
+    loaded?: () => void;
 }
 interface ImageUrlProps {
     /**
@@ -67,7 +72,7 @@ interface ImageUrlProps {
  *
  * @extends {Component<Props>}
  */
-declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, maxWidthDisable, lazy, aspectDefault, }: ImageProps) => any;
+declare const Image: ({ alt, className, id, imgId, transforms, width, maxWidth, maxWidthDisable, lazy, aspectDefault, loaded, }: ImageProps) => any;
 /**
  * Return a Cloudinary url
  * @returns {string} The image URL

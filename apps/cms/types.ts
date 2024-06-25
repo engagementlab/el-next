@@ -108,3 +108,17 @@ export type EmbedState = {
   editUrl: boolean;
   toggleWaiting: () => void;
 };
+
+export type StudioPreview = {
+  name: string;
+  key: string;
+  studio: { name: string; key: string };
+};
+
+export type StudioPreviewState = {
+  dataError: boolean;
+  waiting: boolean;
+  data: StudioPreview[];
+  selectedSemester: StudioPreview | null;
+  toggleWaiting: () => void;
+};

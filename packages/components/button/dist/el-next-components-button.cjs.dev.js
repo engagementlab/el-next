@@ -13,7 +13,7 @@ var Link__default = /*#__PURE__*/_interopDefault(Link);
 
 /**
  * Return a <button> element wrapped in <Link>
- * @returns {JSX.Element} Element
+ * @returns {React.JSX.Element} Element
  */
 var Button = function Button(_ref) {
   var className = _ref.className,

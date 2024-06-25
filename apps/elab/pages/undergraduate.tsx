@@ -11,13 +11,21 @@ import {
   DefaultWhereCondition,
   OGParams,
   Studio,
+  StudioPreview,
   StudioProject,
+  Theming,
 } from '@/types';
 import CaptionedImage from '@/components/CaptionedImage';
-import { Blocks, Doc, Heading } from '@/components/Renderers';
+import {
+  Blocks,
+  Doc,
+  Heading,
+  StudioPreviewRenderer,
+} from '@/components/Renderers';
 import { Gutter } from '@/components/Gutter';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Link from 'next/link';
+import { GetThemeFromDBKey } from '@/shared';
 
 type UndergradPage = {
   intro: { document: any };
@@ -28,6 +36,8 @@ type UndergradPage = {
   introImageCaption: string;
   socialImpactDesign: { document: any };
   projectSpotlight: StudioProject[];
+  studioPreviews: StudioPreview[];
+  featuredSemesters?: StudioPreview[];
 } & OGParams;
 
 const rendererOverrides = {
@@ -220,6 +230,31 @@ export default function Undergraduate({
           </Gutter>
           <Divider />
 
+          {/* Studio previews */}
+          {page.featuredSemesters && page.featuredSemesters.length > 0 && (
+            <>
+              <Gutter>
+                <div id="studio-previews">
+                  <h2 className="font-bold text-4xl">
+                    Upcoming Studios: Fall 2024
+                  </h2>
+                  <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:gap-2 text-grey">
+                    {page.featuredSemesters.map(
+                      (semester: StudioPreview, i: number) => (
+                        <StudioPreviewRenderer
+                          semester={semester}
+                          key={`studio-link-${i}`}
+                          showBorder={true}
+                        />
+                      )
+                    )}
+                  </div>
+                </div>
+              </Gutter>
+              <Divider />
+            </>
+          )}
+
           <Gutter>
             {page.projectSpotlight && (
               <div id="projects">
@@ -271,6 +306,8 @@ export default function Undergraduate({
               </div>
             )}
           </Gutter>
+
+          {}
         </div>
       )}
     </Layout>
@@ -303,6 +340,34 @@ export async function getStaticProps() {
             publicId
         }
         ogDescription
+        studioPreviews
+        featuredSemesters {
+          name
+          key
+          studio {
+              name
+              key
+          }
+          initiatives
+          courseNumber
+          instructors {
+              name
+          }
+          previewThumbnail {
+            publicId
+          }
+          previewThumbAltText
+          previewShortDescription
+          previewVideo {
+            file
+          }
+          captions {
+            url
+          }
+          previewVideoThumbnail {
+            publicId
+          }
+        }
       }
     `
   );

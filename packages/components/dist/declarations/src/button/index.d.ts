@@ -38,12 +38,12 @@ interface ButtonProps {
     margin?: string;
     anchorId?: string;
     classOverride?: string;
-    icon?: JSX.Element;
+    icon?: React.JSX.Element;
     onClick?(): void;
 }
 /**
  * Return a <button> element wrapped in <Link>
- * @returns {JSX.Element} Element
+ * @returns {React.JSX.Element} Element
  */
-export declare const Button: ({ className, hoverColor, link, external, label, margin, anchorId, classOverride, icon, onClick, }: ButtonProps) => React.JSX.Element;
+export declare const Button: ({ className, hoverColor, link, external, label, margin, anchorId, classOverride, icon, onClick, }: ButtonProps) => any;
 export {};

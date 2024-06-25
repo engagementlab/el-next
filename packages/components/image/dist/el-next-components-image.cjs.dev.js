@@ -41,7 +41,8 @@ var Image = function Image(_ref) {
     maxWidthDisable = _ref.maxWidthDisable,
     lazy = _ref.lazy,
     _ref$aspectDefault = _ref.aspectDefault,
-    aspectDefault = _ref$aspectDefault === void 0 ? true : _ref$aspectDefault;
+    aspectDefault = _ref$aspectDefault === void 0 ? true : _ref$aspectDefault,
+    loaded = _ref.loaded;
   // Instantiate a CloudinaryImage object for the image with public ID
   var cloudImage = cld.image(imgId);
   if (process.env.NODE_ENV !== 'production' && maxWidth < 800) return /*#__PURE__*/jsxRuntime.jsxs("div", {
@@ -102,7 +103,10 @@ var Image = function Image(_ref) {
     plugins: plugins,
     style: !maxWidthDisable ? {
       maxWidth: "".concat(width, "px")
-    } : {}
+    } : {},
+    onLoad: function onLoad() {
+      if (loaded) loaded();
+    }
   });
 };
 

@@ -41,7 +41,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import { create } from 'zustand';
 
 import { Image } from '@el-next/components';
-import { EmbedMetadata, EmbedState } from '../../types';
+import {
+  EmbedMetadata,
+  EmbedState,
+  StudioPreview,
+  StudioPreviewState,
+} from '../../types';
 import Link from 'next/link';
 
 const axios = require('axios').default;
@@ -271,7 +276,6 @@ function imageSelect({
               });
             });
         } catch (err: any) {
-          r;
           useStore.setState({
             imgDataError: true,
           });
@@ -660,6 +664,131 @@ function embedField({
   };
 }
 
+function semesterSelect({
+  label,
+  current,
+  defaultValue = null,
+}: {
+  label: string;
+  current?: any;
+  defaultValue: any;
+}): FormField<any, undefined> {
+  return {
+    kind: 'form',
+
+    Input({ value, onChange, autoFocus }) {
+      // Create store with Zustand
+      const [useStore] = useState(() =>
+        create<StudioPreviewState>((set) => ({
+          waiting: true,
+          dataError: false,
+          data: [],
+          selectedSemester: value || null,
+          toggleWaiting: () =>
+            set((state) => {
+              return { waiting: !state.waiting };
+            }),
+        }))
+      );
+
+      const toggleWaiting = useStore((state) => state.toggleWaiting);
+      const snackbarClose = () => {
+        useStore.setState({
+          dataError: false,
+        });
+      };
+      const { dataError, waiting, data, selectedSemester } = useStore(
+        (state) => state
+      );
+
+      useEffect(() => {
+        if (data && data.length >= 1) return;
+
+        const endpoint =
+          window.location.protocol === 'https:'
+            ? '/elab/rest/semesters'
+            : 'http://localhost:3000/rest/semesters';
+
+        axios
+          .get(endpoint)
+          .then((response: { data: any }) => {
+            let data = response.data;
+            toggleWaiting();
+            // onChange(data);
+
+            useStore.setState({
+              data,
+            });
+          })
+          .catch((error: any) => {
+            toggleWaiting();
+            useStore.setState({
+              dataError: true,
+            });
+          });
+      });
+      return (
+        <FieldContainer>
+          {waiting && (
+            <Box>
+              <LinearProgress />
+            </Box>
+          )}
+          <FormControl fullWidth>
+            <InputLabel id="semester-select-label">
+              Select a Semester
+            </InputLabel>
+            <Select
+              value={selectedSemester?.key}
+              labelId="semester-select-label"
+              label="Select a Semester"
+              onChange={(val) => {
+                const thisSemester = data.find(
+                  (d) => d.key === val.target.value
+                );
+                onChange(thisSemester);
+                useStore.setState({
+                  selectedSemester: thisSemester,
+                });
+              }}
+            >
+              {data.map((semester) => (
+                <MenuItem value={semester.key}>
+                  {semester.name.split(' - ')[0]}
+                  <br />
+                  <div
+                    style={{
+                      display: 'contents',
+                      color: 'gray',
+                      textTransform: 'uppercase',
+                      fontSize: '10px',
+                    }}
+                  >
+                    {semester.studio.name.substring(0, 40)}
+                    {semester.studio.name.length > 39 && '...'}
+                  </div>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Snackbar
+            open={dataError}
+            autoHideDuration={10000}
+            onClose={snackbarClose}
+          >
+            <Alert severity="error">Unable to retrieve studio data.</Alert>
+          </Snackbar>
+        </FieldContainer>
+      );
+    },
+    options: undefined,
+    defaultValue,
+    validate(value: any) {
+      return typeof value === 'object';
+    },
+  };
+}
+
 const defaultHtmlEmbedValue = 'Use this instead of embedding URL';
 
 export const componentBlocks = {
@@ -1009,6 +1138,45 @@ export const componentBlocks = {
           { label: 'Video', value: 'video' },
         ],
         defaultValue: 'article',
+      }),
+    },
+  }),
+  studioPreview: component({
+    label: 'Studio Preview',
+    preview: (props) => {
+      const semester = props.fields.semester.value as StudioPreview;
+      return (
+        <>
+          {semester && semester.name ? (
+            <NotEditable>
+              <p style={{ fontWeight: 'bold' }}>
+                {semester.name.split(' - ')[0]}
+              </p>
+
+              <div
+                style={{
+                  color: 'gray',
+                  textTransform: 'uppercase',
+                  fontSize: '12px',
+                }}
+              >
+                {semester.studio.name.substring(0, 40)}
+                {semester.studio.name.length > 39 && '...'}
+              </div>
+            </NotEditable>
+          ) : (
+            <span>
+              Click <em>Edit</em>
+            </span>
+          )}
+        </>
+      );
+    },
+    schema: {
+      semester: semesterSelect({
+        label: 'semester',
+        current: null,
+        defaultValue: null,
       }),
     },
   }),

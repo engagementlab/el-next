@@ -1,13 +1,3 @@
-/**
- * @packageDocumentation
- * Engagement Lab 'Next' shared component library
- * Developed by Engagement Lab, 2022-2023
- *
- * @author Johnny Richardson
- * External link renderer
- * ==========
- */
-import React from 'react';
 interface ExternalLinkProps {
     href: string;
     label: string;
@@ -20,5 +10,5 @@ interface ExternalLinkProps {
  * Return a link with "external" SVG icon
  * @returns {JSX.Element} Element
  */
-export declare const ExternalLink: ({ href, label, customClass, }: ExternalLinkProps) => React.JSX.Element;
+export declare const ExternalLink: ({ href, label, customClass, }: ExternalLinkProps) => any;
 export {};

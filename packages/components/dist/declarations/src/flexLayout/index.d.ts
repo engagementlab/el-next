@@ -7,7 +7,7 @@
  * Flex layout renderer
  * ==========
  */
-import React, { JSXElementConstructor, ReactElement } from 'react';
+import { JSXElementConstructor, ReactElement } from 'react';
 interface FlexProps {
     /**
      * Array of indices defining the layout type provided by the component
@@ -25,5 +25,5 @@ interface FlexProps {
  * @remarks
  * This is a renderer component that overrides KeystoneJS 5.x's default layout DocumentRendererProp to use flex, rather than grid layout, allowing for responsive layout
  */
-export declare const FlexLayout: ({ layout, children }: FlexProps) => React.JSX.Element;
+export declare const FlexLayout: ({ layout, children }: FlexProps) => any;
 export {};

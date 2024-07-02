@@ -34,7 +34,7 @@ const CTAButton = ({
   className,
   iconClassName,
   onClick,
-}: Props): JSX.Element => {
+}: Props): React.JSX.Element => {
   const themeConfig = [
     {
       arrow: '#F6A536',

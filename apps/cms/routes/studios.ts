@@ -7,7 +7,7 @@ export async function getStudios(
   context: Context
 ) {
   // This was added by the context middleware in ../keystone.ts
-  //   const { context } = req as typeof req & { context: Context };
+  // const { context } = req as typeof req & { context: Context };
 
   const result = await context.query.Studio.findMany({
     query: `
@@ -19,6 +19,27 @@ export async function getStudios(
         publicId
         }
       `,
+  });
+  // And return the result as JSON
+  res.json(result);
+}
+
+export async function getUpcomingSemesters(
+  req: Request,
+  res: Response,
+  context: Context
+) {
+  const result = await context.query.Semester.findMany({
+    query: `
+      id 
+      name
+      key
+      studio {
+          name
+          key
+      }
+      `,
+    where: { type: { equals: 'upcoming' } },
   });
   // And return the result as JSON
   res.json(result);

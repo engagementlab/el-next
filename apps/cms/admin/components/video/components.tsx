@@ -285,7 +285,6 @@ export const Field = ({
             setVideo(item);
             // setTimeout(() => {
             if (onChange) onChange(JSON.stringify(currentVideos));
-            console.log(currentVideos);
             // }, 1000);
           }}
           done={() => setGridOpen(false)}

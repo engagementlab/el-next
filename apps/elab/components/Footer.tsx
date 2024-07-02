@@ -354,7 +354,7 @@ export const Footer = () => {
             <GetInTouch />
           </div>
           {/* Newsletter signup */}
-          <h3 className="uppercase font-extrabold text-xl">Newsletters</h3>
+          {/* <h3 className="uppercase font-extrabold text-xl">Newsletters</h3>
           <div id="newsletter">
             <form onSubmit={SubmitEmail}>
               <div className="py-6 w-full">
@@ -540,6 +540,7 @@ export const Footer = () => {
             </form>
             <div className="subscribed"></div>
           </div>
+             */}
         </div>
         <p className="absolute flex flex-row gap-x-2 bottom-0 right-0 px-6 py-5 text-sm items-center">
           <span className="italic">ELab Home</span> v{packageInfo.version}

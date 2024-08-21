@@ -31,6 +31,7 @@ export { default as StudioProject } from './lists/studioProject';
 export { default as Slide } from './lists/slide';
 export { default as Studio } from './lists/studio';
 export { default as Semester } from './lists/semester';
+export { default as Testimonial } from './lists/testimonial';
 export { default as Partner } from './lists/partners';
 export { default as Person } from './lists/person';
 export { default as Undergraduate } from './lists/undergraduate';

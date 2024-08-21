@@ -401,6 +401,14 @@ model StudioProject {
   ogDescription            String                      @default("")
 }
 
+model Testimonial {
+  id          String                 @id @default(cuid())
+  createdDate DateTime?
+  status      TestimonialStatusType? @default(disabled)
+  body        Json                   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  attribution String                 @default("")
+}
+
 model Undergraduate {
   id                 String          @id @default(cuid())
   name               String          @unique @default("Undergraduate Landing Page")
@@ -478,4 +486,10 @@ enum StudioProjectStatusType {
 enum StudioProjectInitiativeType {
   gunviolence
   climate
+}
+
+enum TestimonialStatusType {
+  disabled
+  testing
+  live
 }

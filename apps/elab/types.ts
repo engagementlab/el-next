@@ -183,6 +183,7 @@ export type News = {
   summary: string;
   source: string;
   slides: Slide[];
+  studioPreviews?: StudioPreview[];
 } & OGParams;
 export type Person = {
   name: string;
@@ -347,6 +348,9 @@ export type Semester = {
     };
   }[];
   contact: string;
+  previewSummary?: {
+    document: any;
+  };
 };
 export type StudioProject = {
   name: string;
@@ -431,6 +435,38 @@ export type StudioProject = {
       publicId: string;
     };
   }[];
+};
+export type StudioPreview = {
+  id: string;
+  name: string;
+  key: string;
+  studio: { name: string; key: string };
+  initiatives: string[];
+  courseNumber: string;
+  instructors: [
+    {
+      name: string;
+    }
+  ];
+  previewThumbnail: {
+    publicId: string;
+  };
+  previewThumbAltText: string;
+  previewShortDescription: string;
+  previewSummary: {
+    document: any;
+  };
+  previewVideo: {
+    // caption?: string;
+    file: string;
+  };
+  captions: {
+    file: { url: string };
+  };
+  previewVideoThumbnail: {
+    publicId: string;
+  };
+  previewVideoThumbAltText: string;
 };
 export type StudioUnion = Studio & StudioProject;
 

@@ -1,15 +1,24 @@
+import { motion } from 'framer-motion';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
+import Link from 'next/link';
+import { ReactElement, ReactNode } from 'react';
+import { GetThemeFromDBKey, SemestersSort } from '@/shared';
+
 import {
   BlockRenderers,
   DocRenderers,
   HeadingStyle,
   Image,
 } from '@el-next/components';
+import { Video } from '@el-next/components/video.v2';
+
 import { CTAButton } from './Buttons';
 import {
   CustomEase,
   Item,
   ResearchProject,
   Studio,
+  StudioPreview,
   StudioUnion,
   Theme,
   ThemeConfig,
@@ -17,12 +26,8 @@ import {
 } from '@/types';
 import CaptionedImage from './CaptionedImage';
 import Slideshow from './Slideshow';
-import Link from 'next/link';
 import { Icons } from './Icons';
 import ImagePlaceholder from './ImagePlaceholder';
-import { ReactElement, ReactNode } from 'react';
-import { motion } from 'framer-motion';
-import { SemestersSort } from '@/shared';
 
 const blockOverrides = (theme: ThemeConfig | null) => {
   return {
@@ -61,7 +66,7 @@ const blockOverrides = (theme: ThemeConfig | null) => {
     },
   };
 };
-let AppBlocks = (theme: ThemeConfig) => {
+let AppBlocks = (theme: ThemeConfig, studioPreviews?: StudioPreview[]) => {
   return {
     slideshow: (props: any) => {
       if (!props.slideshow)
@@ -122,10 +127,113 @@ let AppBlocks = (theme: ThemeConfig) => {
           ></iframe>
         );
     },
+    studioPreview: (props: { semester: StudioPreview }) => {
+      if (!studioPreviews)
+        return (
+          <p className="text-2xl font-extrabold text-red">
+            No query for studio previews. This is a bug in code.
+          </p>
+        );
+
+      const semester = studioPreviews?.find((s) => s.id === props.semester.id);
+      if (!semester)
+        return (
+          <p className="text-2xl font-extrabold text-red">
+            No data for studio preview found!
+          </p>
+        );
+
+      let themeKey = 'none';
+      const themeInfo = GetThemeFromDBKey(semester.initiatives);
+      themeKey = themeInfo.themeKey;
+
+      const videoColor = {
+        stroke: Theming[themeKey].arrow,
+        fill: Theming[themeKey].fill,
+        fillRgb: Theming[themeKey].fillRgb,
+        bg: Theming[themeKey].videoBg || Theming[themeKey].secondaryBg,
+        seekbar: Theming[themeKey].fillVideo || Theming[themeKey].arrowHex,
+        buttons: '#fff',
+      };
+
+      return (
+        <div className="my-4 whitespace-pre-wrap">
+          <h3 className="my-6 text-2xl text-coated leading-none font-extrabold">
+            {semester.name}
+          </h3>
+          {semester.previewThumbnail ? (
+            <Image
+              id={'img-' + semester.previewThumbnail.publicId}
+              alt={semester.previewThumbAltText}
+              imgId={semester.previewThumbnail.publicId}
+              aspectDefault={true}
+            />
+          ) : (
+            <ImagePlaceholder
+              imageLabel="Studio Preview"
+              width={335}
+              height={200}
+            />
+          )}
+          <p>
+            <strong>Department(s):</strong>&nbsp;
+            {semester.courseNumber}
+          </p>
+          <p>
+            <strong>
+              Instructor{semester.instructors.length > 1 && <span>s</span>}:{' '}
+            </strong>
+            {semester.instructors.map((i) => i.name).join(', ')}
+          </p>
+          <div className="my-4 whitespace-pre-wrap">
+            <DocumentRenderer
+              document={semester.previewSummary.document}
+              componentBlocks={Blocks()}
+              renderers={Doc()}
+            />
+          </div>
+          {semester.previewVideo.file && (
+            <div className="group relative w-full min-h-[350px] max-h-[350px] lg:max-h-[465px]">
+              <Video
+                key={`video-player-${semester.previewVideo.file}`}
+                videoLabel={`${semester.name} Preview Video`}
+                videoFile={semester.previewVideo.file}
+                captionsFile={semester.captions?.file.url}
+                thumbPublicId={semester.previewVideoThumbnail?.publicId}
+                theme={videoColor}
+                showCloseButton={true}
+                InitialUI={() => {
+                  return (
+                    <div
+                      key={`video-btn-${semester.previewVideo.file}`}
+                      className={`flex flex-row gap-x-2 my-2 group items-center ${theme?.text} `}
+                    >
+                      <span className="basis-5">
+                        <Icons icons={['video']} />
+                      </span>
+                      <span
+                        className={`font-bold border-b-2 text-left ${theme?.text} ${theme?.border}`}
+                      >
+                        Watch Studio Preview video
+                      </span>
+                      <span
+                        className={`group-hover:translate-x-1 transition-transform ${CustomEase}`}
+                      >
+                        ➝
+                      </span>
+                    </div>
+                  );
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
+    },
   };
 };
 const SuperBlocks = BlockRenderers();
-const Blocks = (theme?: ThemeConfig) => {
+const Blocks = (theme?: ThemeConfig, studioPreviews?: StudioPreview[]) => {
   const componentTheme = theme ? theme : Theming['none'];
   return {
     button: SuperBlocks(blockOverrides(componentTheme)).button,
@@ -134,6 +242,7 @@ const Blocks = (theme?: ThemeConfig) => {
     slideshow: AppBlocks(componentTheme).slideshow,
     iconLink: AppBlocks(componentTheme).iconLink,
     embed: AppBlocks(componentTheme).embed,
+    studioPreview: AppBlocks(componentTheme, studioPreviews).studioPreview,
   };
 };
 
@@ -416,6 +525,65 @@ const StudioGenericItemRenderer = (props: {
   );
 };
 
+const StudioPreviewRenderer = (props: {
+  semester: StudioPreview;
+  showBorder?: boolean;
+}) => {
+  let themeKey = 'none';
+  const themeInfo = GetThemeFromDBKey(props.semester.initiatives);
+  themeKey = themeInfo.themeKey;
+  let borderColor = 'border-yellow';
+  if (props.semester.initiatives[0] === 'gunviolence')
+    borderColor = 'border-purple';
+  else if (props.semester.initiatives[0] === 'climate')
+    borderColor = 'border-leaf';
+  return (
+    <Link
+      href={`/studios/${props.semester.studio.key}/${props.semester.key}`}
+      className="group"
+    >
+      <div className="my-4 whitespace-pre-wrap">
+        {props.semester.previewThumbnail ? (
+          <Image
+            id={'img-' + props.semester.previewThumbnail.publicId}
+            alt={props.semester.previewThumbAltText}
+            imgId={props.semester.previewThumbnail.publicId}
+            aspectDefault={true}
+          />
+        ) : (
+          <ImagePlaceholder
+            imageLabel="Studio Preview"
+            width={335}
+            height={200}
+          />
+        )}
+        {props.showBorder && (
+          <hr
+            className={`border-b-[15px] transition-transform origin-bottom ${CustomEase} duration-600 scale-y-100 group-hover:scale-y-[200%] ${borderColor}`}
+          />
+        )}
+        <h3 className="hover:text-green-blue group-hover:text-green-blue mt-3 text-2xl text-coated leading-none font-extrabold">
+          {props.semester.studio.name}
+        </h3>
+        <p>
+          <strong>Department(s):</strong>&nbsp;
+          {props.semester.courseNumber}
+        </p>
+        <p>
+          <strong>
+            Instructor
+            {props.semester.instructors.length > 1 && <span>s</span>}:{' '}
+          </strong>
+          {props.semester.instructors.map((i) => i.name).join(', ')}
+        </p>
+        <div className="my-4 whitespace-pre-wrap">
+          {props.semester.previewShortDescription}
+        </div>
+      </div>
+    </Link>
+  );
+};
+
 const ResearchProjectItemRenderer = (props: {
   item: ResearchProject;
   showBorder?: boolean;
@@ -539,6 +707,7 @@ export {
   Heading,
   NewsEventRenderer,
   StudioGenericItemRenderer,
+  StudioPreviewRenderer,
   ResearchProjectItemRenderer,
   StudiosGridRenderer,
   QuoteRenderer,

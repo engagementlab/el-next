@@ -13,6 +13,7 @@ import React, {
   SetStateAction,
   useEffect,
   useRef,
+  ReactNode,
 } from 'react';
 import { useState } from 'react';
 
@@ -46,7 +47,7 @@ type VideoTheme = {
   seekbar: string;
 };
 
-interface VideoProps {
+type VideoProps = {
   videoFile: string;
   videoLabel?: string;
   caption?: string;
@@ -56,11 +57,13 @@ interface VideoProps {
   thumbPublicId?: string;
   isSlide?: boolean;
   noUi?: boolean;
+  showCloseButton?: boolean;
   play?: boolean;
   playing?: boolean;
   started?: () => void;
   ended?: () => void;
-}
+  InitialUI?: React.ComponentType<any>;
+};
 
 interface VideoState {
   buffer: boolean;
@@ -99,6 +102,21 @@ type ControlsProps = {
 
 const easing = 'ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)]';
 const thumbClass = `transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`;
+
+const initialState = {
+  volume: 0.5,
+  cachedVolume: 0.5,
+  played: 0,
+  buffer: true,
+  error: false,
+  muted: false,
+  playing: true,
+  seeking: false,
+  hideCaptions: true,
+  isFullscreen: false,
+  videoOpen: false,
+  videoHover: false,
+};
 
 const Controls = (props: ControlsProps) => {
   const seek = (value: number) => {
@@ -248,21 +266,6 @@ const Controls = (props: ControlsProps) => {
   );
 };
 
-const initialState = {
-  volume: 0.5,
-  cachedVolume: 0.5,
-  played: 0,
-  buffer: true,
-  error: false,
-  muted: false,
-  playing: true,
-  seeking: false,
-  hideCaptions: true,
-  isFullscreen: false,
-  videoOpen: false,
-  videoHover: false,
-};
-
 export const Video = ({
   thumbUrl,
   thumbPublicId,
@@ -273,10 +276,102 @@ export const Video = ({
   isSlide,
   theme,
   noUi,
+  showCloseButton,
   play,
   started,
   ended,
+  InitialUI,
 }: VideoProps) => {
+  const PreviewUI = () => {
+    return (
+      <button
+        onClick={(e) => {
+          toggleOpen(true);
+          e.preventDefault();
+        }}
+        className="relative h-full w-full"
+      >
+        {thumbPublicId ? (
+          <CldImage.default
+            id={`img-${thumbPublicId}`}
+            alt={`Thumbnail image for video with title "${videoLabel}"`}
+            imgId={thumbPublicId}
+            lazy={false}
+            transforms="g_faces"
+            className={thumbClass}
+          />
+        ) : (
+          <Image
+            alt={
+              videoLabel
+                ? `Thumbnail image for video with title "${videoLabel}"`
+                : 'Thumbnail image for video preview'
+            }
+            src={
+              thumbUrl
+                ? thumbUrl
+                : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
+            }
+            className={thumbClass}
+            fill={true}
+            unoptimized={true}
+            draggable="true"
+          />
+        )}
+        {!noUi && (
+          <span
+            className="absolute"
+            style={{
+              top: `calc(50% - ${buttonSize / 2}px)`,
+              left: `calc(50% - ${buttonSize / 2}px)`,
+            }}
+          >
+            <svg
+              fill="#000000"
+              width={buttonSize}
+              height={buttonSize}
+              viewBox="0 0 512 512"
+            >
+              <g
+                className={`transition-all origin-center group-hover:scale-75 group-hover:opacity-0 ${easing}`}
+              >
+                <g>
+                  <path
+                    d="M256,0C114.608,0,0,114.608,0,256s114.608,256,256,256s256-114.608,256-256S397.392,0,256,0z M256,496
+			C123.664,496,16,388.336,16,256S123.664,16,256,16s240,107.664,240,240S388.336,496,256,496z"
+                    style={{ fill: '#fff', strokeWidth: '6px' }}
+                  />
+                </g>
+              </g>
+
+              <circle
+                cx="256"
+                cy="256"
+                r="250"
+                style={{ fill: theme.fillRgb }}
+              ></circle>
+              <g>
+                <g className="transition-all origin-center group-hover:scale-125 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
+                  <polygon
+                    points="189.776,141.328 189.776,370.992 388.672,256.16"
+                    style={{ fill: '#fff' }}
+                  />
+                </g>
+              </g>
+            </svg>
+          </span>
+        )}
+        {caption && (
+          <aside
+            className={`absolute bottom-0 right-3 p-3 text-left w-3/4 ${theme.bg} text-white sm:max-w-xs sm:right-20 lg:right-0`}
+          >
+            ↳ {caption}
+          </aside>
+        )}
+      </button>
+    );
+  };
+
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
 
@@ -393,239 +488,181 @@ export const Video = ({
     };
   }, []);
 
-  return (
-    <div
-      className={classStr}
-      onMouseEnter={() => toggleHover(true)}
-      onMouseLeave={() => toggleHover(false)}
-      onTouchEnd={() => toggleHover(true)}
-    >
-      {videoOpen || play ? (
-        ''
-      ) : (
-        <button
-          onClick={(e) => {
-            toggleOpen(true);
-            e.preventDefault();
-          }}
-          className="relative h-full w-full"
-        >
-          {thumbPublicId ? (
-            <CldImage.default
-              id={`img-${thumbPublicId}`}
-              alt={`Thumbnail image for video with title "${videoLabel}"`}
-              imgId={thumbPublicId}
-              lazy={false}
-              transforms="g_faces"
-              className={thumbClass}
-            />
-          ) : (
-            <Image
-              alt={
-                videoLabel
-                  ? `Thumbnail image for video with title "${videoLabel}"`
-                  : 'Thumbnail image for video preview'
-              }
-              src={
-                thumbUrl
-                  ? thumbUrl
-                  : 'https://dummyimage.com/350/F6A536/000.png&text=No thumb provided'
-              }
-              className={thumbClass}
-              fill={true}
-              unoptimized={true}
-              draggable="true"
-            />
-          )}
-
-          {!noUi && (
-            <span
-              className="absolute"
-              style={{
-                top: `calc(50% - ${buttonSize / 2}px)`,
-                left: `calc(50% - ${buttonSize / 2}px)`,
-              }}
-            >
-              <svg
-                fill="#000000"
-                width={buttonSize}
-                height={buttonSize}
-                viewBox="0 0 512 512"
+  if (InitialUI && !videoOpen)
+    return (
+      <button
+        onClick={(e) => {
+          toggleOpen(true);
+          e.preventDefault();
+        }}
+      >
+        <InitialUI />
+      </button>
+    );
+  else
+    return (
+      // <div className="group relative w-full min-h-[350px] max-h-[350px] lg:max-h-[465px]">
+      <div
+        className={classStr}
+        onMouseEnter={() => toggleHover(true)}
+        onMouseLeave={() => toggleHover(false)}
+        onTouchEnd={() => toggleHover(true)}
+      >
+        {videoOpen || play ? '' : <PreviewUI />}
+        {(videoOpen || play) && (
+          <div
+            id="video-embed"
+            ref={wrapperRef}
+            className="w-full h-full min-h-[inherit] overflow-y-hidden"
+          >
+            {/* Close button */}
+            {showCloseButton && (
+              <button
+                onClick={() => toggleOpen(false)}
+                className={`transition-all duration-500 ${easing} absolute right-0 mr-2 mt-2 z-50 inline-block w-12 h-12 hover:scale-125`}
               >
-                <g
-                  className={`transition-all origin-center group-hover:scale-75 group-hover:opacity-0 ${easing}`}
+                <svg
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  className={theme.fill}
                 >
-                  <g>
-                    <path
-                      d="M256,0C114.608,0,0,114.608,0,256s114.608,256,256,256s256-114.608,256-256S397.392,0,256,0z M256,496
-			C123.664,496,16,388.336,16,256S123.664,16,256,16s240,107.664,240,240S388.336,496,256,496z"
-                      style={{ fill: '#fff', strokeWidth: '6px' }}
-                    />
-                  </g>
-                </g>
-
-                <circle
-                  cx="256"
-                  cy="256"
-                  r="250"
-                  style={{ fill: theme.fillRgb }}
-                ></circle>
-                <g>
-                  <g className="transition-all origin-center group-hover:scale-125 ease-[cubic-bezier(0.075, 0.820, 0.165, 1.000)]">
-                    <polygon
-                      points="189.776,141.328 189.776,370.992 388.672,256.16"
-                      style={{ fill: '#fff' }}
-                    />
-                  </g>
-                </g>
-              </svg>
-            </span>
-          )}
-
-          {caption && (
-            <aside
-              className={`absolute bottom-0 right-3 p-3 text-left w-3/4 ${theme.bg} text-white sm:max-w-xs sm:right-20 lg:right-0`}
-            >
-              ↳ {caption}
-            </aside>
-          )}
-        </button>
-      )}
-      {(videoOpen || play) && (
-        <div
-          id="video-embed"
-          ref={wrapperRef}
-          className="w-full h-full min-h-[inherit] overflow-y-hidden"
-        >
-          {!error ? (
-            <>
-              {buffer && (
-                <div className="absolute bg-white/20 w-full h-full">
-                  <span
-                    className="absolute"
-                    style={{
-                      top: `calc(50% - 50px)`,
-                      left: `calc(50% - 50px)`,
-                    }}
-                  >
-                    <svg
-                      width="100"
-                      height="100"
-                      viewBox="0 0 24 24"
-                      className={`opacity-100 ${theme.fill}`}
+                  <path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z" />
+                </svg>
+              </button>
+            )}
+            {!error ? (
+              <>
+                {buffer && (
+                  <div className="absolute bg-white/20 w-full h-full">
+                    <span
+                      className="absolute"
+                      style={{
+                        top: `calc(50% - 50px)`,
+                        left: `calc(50% - 50px)`,
+                      }}
                     >
-                      <path
-                        d="M2,12A10.94,10.94,0,0,1,5,4.65c-.21-.19-.42-.36-.62-.55h0A11,11,0,0,0,12,23c.34,0,.67,0,1-.05C6,23,2,17.74,2,12Z"
-                        className="animate-spin origin-center"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              )}
-              <ReactPlayer
-                url={videoFile || ''}
-                ref={playerRef}
-                id={`video-player-${Math.ceil(Math.random() * 10000)}`}
-                className="video-player"
-                controls={false}
-                width="100%"
-                height="100%"
-                playing={playing}
-                onEnded={() => {
-                  playerRef.current.seekTo(0);
-                  playerRef.current.seekTo(0);
-                  setVideoState({
-                    ...videoState,
-                    playing: false,
-                    videoOpen: false,
-                  });
-                  if (ended) ended();
-                }}
-                onDuration={setDurationSeconds}
-                onProgress={({ playedSeconds }) =>
-                  setPlayedSeconds(playedSeconds)
-                }
-                onSeek={setPlayedSeconds}
-                onError={() =>
-                  setVideoState({
-                    ...videoState,
-                    error: true,
-                  })
-                }
-                onBuffer={() =>
-                  setVideoState({
-                    ...videoState,
-                    buffer: true,
-                  })
-                }
-                onBufferEnd={() =>
-                  setVideoState({
-                    ...videoState,
-                    buffer: false,
-                  })
-                }
-                volume={volume}
-                muted={muted}
-                config={
-                  captionsFile
-                    ? {
-                        file: {
-                          attributes: {
-                            crossOrigin: 'true',
-                          },
-                          tracks: [
-                            {
-                              src: captionsFile,
-                              kind: 'subtitles',
-                              srcLang: 'en',
-                              default: true,
-                              label: 'English',
-                            },
-                          ],
-                        },
-                      }
-                    : {}
-                }
-              />
-              <div
-                className={`relative flex flex-col w-full items-center transition-all duration-700 ${
-                  videoHover ? '-translate-y-[7rem]' : 'translate-y-0'
-                } ${easing}`}
-              >
-                <Controls
-                  duration={durationSeconds}
-                  playerRef={playerRef}
+                      <svg
+                        width="100"
+                        height="100"
+                        viewBox="0 0 24 24"
+                        className={`opacity-100 ${theme.fill}`}
+                      >
+                        <path
+                          d="M2,12A10.94,10.94,0,0,1,5,4.65c-.21-.19-.42-.36-.62-.55h0A11,11,0,0,0,12,23c.34,0,.67,0,1-.05C6,23,2,17.74,2,12Z"
+                          className="animate-spin origin-center"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                )}
+                <ReactPlayer
+                  url={videoFile || ''}
+                  ref={playerRef}
+                  id={`video-player-${Math.ceil(Math.random() * 10000)}`}
+                  className="video-player"
+                  controls={false}
+                  width="100%"
+                  height="100%"
                   playing={playing}
-                  playedSeconds={playedSeconds}
-                  volume={volume}
-                  muted={muted}
-                  theme={theme}
-                  captionsEnabled={captionsFile !== undefined}
-                  hideCaptions={hideCaptions}
-                  fullscreen={isFullscreen}
-                  setPlaying={() =>
+                  onEnded={() => {
+                    playerRef.current.seekTo(0);
+                    playerRef.current.seekTo(0);
                     setVideoState({
                       ...videoState,
                       playing: false,
+                      videoOpen: false,
+                    });
+                    if (ended) ended();
+                  }}
+                  onDuration={setDurationSeconds}
+                  onProgress={({ playedSeconds }) =>
+                    setPlayedSeconds(playedSeconds)
+                  }
+                  onSeek={setPlayedSeconds}
+                  onError={() =>
+                    setVideoState({
+                      ...videoState,
+                      error: true,
                     })
                   }
-                  onMute={muteHandler}
-                  onToggleCaptions={toggleCaptions}
-                  onVolumeChangeHandler={volumeChangeHandler}
-                  onVolumeSeekUp={volumeSeekUpHandler}
-                  onClickFullscreen={onClickFullscreen}
+                  onBuffer={() =>
+                    setVideoState({
+                      ...videoState,
+                      buffer: true,
+                    })
+                  }
+                  onBufferEnd={() =>
+                    setVideoState({
+                      ...videoState,
+                      buffer: false,
+                    })
+                  }
+                  volume={volume}
+                  muted={muted}
+                  config={
+                    captionsFile
+                      ? {
+                          file: {
+                            attributes: {
+                              crossOrigin: 'true',
+                            },
+                            tracks: [
+                              {
+                                src: captionsFile,
+                                kind: 'subtitles',
+                                srcLang: 'en',
+                                default: true,
+                                label: 'English',
+                              },
+                            ],
+                          },
+                        }
+                      : {}
+                  }
                 />
-              </div>
-            </>
-          ) : (
-            <h1 className="text-red font-bold">
-              {videoFile === 'none'
-                ? 'No video provided!'
-                : 'Could not load video.'}
-            </h1>
-          )}
-        </div>
-      )}
-    </div>
-  );
+                <div
+                  className={`relative flex flex-col w-full items-center transition-all duration-700 ${
+                    videoHover ? '-translate-y-[7rem]' : 'translate-y-0'
+                  } ${easing}`}
+                >
+                  <Controls
+                    duration={durationSeconds}
+                    playerRef={playerRef}
+                    playing={playing}
+                    playedSeconds={playedSeconds}
+                    volume={volume}
+                    muted={muted}
+                    theme={theme}
+                    captionsEnabled={captionsFile !== undefined}
+                    hideCaptions={hideCaptions}
+                    fullscreen={isFullscreen}
+                    setPlaying={() =>
+                      setVideoState({
+                        ...videoState,
+                        playing: false,
+                      })
+                    }
+                    onMute={muteHandler}
+                    onToggleCaptions={toggleCaptions}
+                    onVolumeChangeHandler={volumeChangeHandler}
+                    onVolumeSeekUp={volumeSeekUpHandler}
+                    onClickFullscreen={onClickFullscreen}
+                  />
+                </div>
+              </>
+            ) : (
+              <h1 className="text-red font-bold">
+                {videoFile === 'none'
+                  ? 'No video provided!'
+                  : 'Could not load video.'}
+              </h1>
+            )}
+          </div>
+        )}
+      </div>
+      // </div>
+    );
 };

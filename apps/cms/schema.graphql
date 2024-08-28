@@ -1097,6 +1097,7 @@ type NewsItem {
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
+  studioPreviews: JSON
 }
 
 enum NewsItemStatusType {
@@ -1810,13 +1811,13 @@ type Semester {
   studio: Studio
   initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
-  temp: String
   courseNumber: String
   instructors(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   instructorsCount(where: PersonWhereInput! = {}): Int
-  slides: Slideshow
-  description: String
   partners: [SemesterPartnerType!]
+  contact: String
+  description: String
+  slides: Slideshow
   coCreation: Semester_coCreation_Document
   impact: Semester_impact_Document
   projects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
@@ -1827,7 +1828,16 @@ type Semester {
   studioStudentsCount(where: PersonWhereInput! = {}): Int
   studioStaff(where: PersonWhereInput! = {}, orderBy: [PersonOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PersonWhereUniqueInput): [Person!]
   studioStaffCount(where: PersonWhereInput! = {}): Int
-  contact: String
+  undergrad(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
+  undergradCount(where: UndergraduateWhereInput! = {}): Int
+  previewThumbnail: CloudinaryImage_File
+  previewThumbAltText: String
+  previewShortDescription: String
+  previewSummary: Semester_previewSummary_Document
+  previewVideo: VideoFieldOutput
+  captions: AzureStorageFileFieldOutput
+  previewVideoThumbnail: CloudinaryImage_File
+  internalLabel: String
 }
 
 enum SemesterStatusType {
@@ -1869,6 +1879,10 @@ type Semester_impact_Document {
   document(hydrateRelationships: Boolean! = false): JSON!
 }
 
+type Semester_previewSummary_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
 input SemesterWhereUniqueInput {
   id: ID
 }
@@ -1886,13 +1900,16 @@ input SemesterWhereInput {
   type: SemesterTypeTypeNullableFilter
   courseNumber: StringFilter
   instructors: PersonManyRelationFilter
-  slides: SlideshowWhereInput
+  contact: StringFilter
   description: StringFilter
+  slides: SlideshowWhereInput
   projects: StudioProjectManyRelationFilter
   learningPartners: PersonManyRelationFilter
   studioStudents: PersonManyRelationFilter
   studioStaff: PersonManyRelationFilter
-  contact: StringFilter
+  undergrad: UndergraduateManyRelationFilter
+  previewThumbAltText: StringFilter
+  previewShortDescription: StringFilter
 }
 
 input SemesterStatusTypeNullableFilter {
@@ -1909,6 +1926,12 @@ input SemesterTypeTypeNullableFilter {
   not: SemesterTypeTypeNullableFilter
 }
 
+input UndergraduateManyRelationFilter {
+  every: UndergraduateWhereInput
+  some: UndergraduateWhereInput
+  none: UndergraduateWhereInput
+}
+
 input SemesterOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -1916,10 +1939,11 @@ input SemesterOrderByInput {
   createdDate: OrderDirection
   status: OrderDirection
   type: OrderDirection
-  temp: OrderDirection
   courseNumber: OrderDirection
-  description: OrderDirection
   contact: OrderDirection
+  description: OrderDirection
+  previewThumbAltText: OrderDirection
+  previewShortDescription: OrderDirection
 }
 
 input SemesterUpdateInput {
@@ -1930,19 +1954,26 @@ input SemesterUpdateInput {
   studio: StudioRelateToOneForUpdateInput
   initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
-  temp: String
   courseNumber: String
   instructors: PersonRelateToManyForUpdateInput
-  slides: SlideshowRelateToOneForUpdateInput
-  description: String
   partners: [SemesterPartnerType!]
+  contact: String
+  description: String
+  slides: SlideshowRelateToOneForUpdateInput
   coCreation: JSON
   impact: JSON
   projects: StudioProjectRelateToManyForUpdateInput
   learningPartners: PersonRelateToManyForUpdateInput
   studioStudents: PersonRelateToManyForUpdateInput
   studioStaff: PersonRelateToManyForUpdateInput
-  contact: String
+  undergrad: UndergraduateRelateToManyForUpdateInput
+  previewThumbnail: Upload
+  previewThumbAltText: String
+  previewShortDescription: String
+  previewSummary: JSON
+  previewVideo: VideoFieldInput
+  captions: AzureStorageFileFieldInput
+  previewVideoThumbnail: Upload
 }
 
 input StudioRelateToOneForUpdateInput {
@@ -1955,6 +1986,13 @@ input SlideshowRelateToOneForUpdateInput {
   create: SlideshowCreateInput
   connect: SlideshowWhereUniqueInput
   disconnect: Boolean
+}
+
+input UndergraduateRelateToManyForUpdateInput {
+  disconnect: [UndergraduateWhereUniqueInput!]
+  set: [UndergraduateWhereUniqueInput!]
+  create: [UndergraduateCreateInput!]
+  connect: [UndergraduateWhereUniqueInput!]
 }
 
 input SemesterUpdateArgs {
@@ -1970,19 +2008,26 @@ input SemesterCreateInput {
   studio: StudioRelateToOneForCreateInput
   initiatives: [SemesterInitiativeType!]
   type: SemesterTypeType
-  temp: String
   courseNumber: String
   instructors: PersonRelateToManyForCreateInput
-  slides: SlideshowRelateToOneForCreateInput
-  description: String
   partners: [SemesterPartnerType!]
+  contact: String
+  description: String
+  slides: SlideshowRelateToOneForCreateInput
   coCreation: JSON
   impact: JSON
   projects: StudioProjectRelateToManyForCreateInput
   learningPartners: PersonRelateToManyForCreateInput
   studioStudents: PersonRelateToManyForCreateInput
   studioStaff: PersonRelateToManyForCreateInput
-  contact: String
+  undergrad: UndergraduateRelateToManyForCreateInput
+  previewThumbnail: Upload
+  previewThumbAltText: String
+  previewShortDescription: String
+  previewSummary: JSON
+  previewVideo: VideoFieldInput
+  captions: AzureStorageFileFieldInput
+  previewVideoThumbnail: Upload
 }
 
 input StudioRelateToOneForCreateInput {
@@ -1993,6 +2038,11 @@ input StudioRelateToOneForCreateInput {
 input SlideshowRelateToOneForCreateInput {
   create: SlideshowCreateInput
   connect: SlideshowWhereUniqueInput
+}
+
+input UndergraduateRelateToManyForCreateInput {
+  create: [UndergraduateCreateInput!]
+  connect: [UndergraduateWhereUniqueInput!]
 }
 
 type Slide {
@@ -2413,12 +2463,6 @@ input FilterManyRelationFilter {
   none: FilterWhereInput
 }
 
-input UndergraduateManyRelationFilter {
-  every: UndergraduateWhereInput
-  some: UndergraduateWhereInput
-  none: UndergraduateWhereInput
-}
-
 input StudioProjectOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -2482,13 +2526,6 @@ input FilterRelateToManyForUpdateInput {
   connect: [FilterWhereUniqueInput!]
 }
 
-input UndergraduateRelateToManyForUpdateInput {
-  disconnect: [UndergraduateWhereUniqueInput!]
-  set: [UndergraduateWhereUniqueInput!]
-  create: [UndergraduateCreateInput!]
-  connect: [UndergraduateWhereUniqueInput!]
-}
-
 input StudioProjectUpdateArgs {
   where: StudioProjectWhereUniqueInput!
   data: StudioProjectUpdateInput!
@@ -2537,9 +2574,69 @@ input FilterRelateToManyForCreateInput {
   connect: [FilterWhereUniqueInput!]
 }
 
-input UndergraduateRelateToManyForCreateInput {
-  create: [UndergraduateCreateInput!]
-  connect: [UndergraduateWhereUniqueInput!]
+type Testimonial {
+  id: ID!
+  createdDate: DateTime
+  status: TestimonialStatusType
+  body: Testimonial_body_Document
+  attribution: String
+}
+
+enum TestimonialStatusType {
+  disabled
+  testing
+  live
+}
+
+type Testimonial_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input TestimonialWhereUniqueInput {
+  id: ID
+}
+
+input TestimonialWhereInput {
+  AND: [TestimonialWhereInput!]
+  OR: [TestimonialWhereInput!]
+  NOT: [TestimonialWhereInput!]
+  id: IDFilter
+  createdDate: DateTimeNullableFilter
+  status: TestimonialStatusTypeNullableFilter
+  attribution: StringFilter
+}
+
+input TestimonialStatusTypeNullableFilter {
+  equals: TestimonialStatusType
+  in: [TestimonialStatusType!]
+  notIn: [TestimonialStatusType!]
+  not: TestimonialStatusTypeNullableFilter
+}
+
+input TestimonialOrderByInput {
+  id: OrderDirection
+  createdDate: OrderDirection
+  status: OrderDirection
+  attribution: OrderDirection
+}
+
+input TestimonialUpdateInput {
+  createdDate: DateTime
+  status: TestimonialStatusType
+  body: JSON
+  attribution: String
+}
+
+input TestimonialUpdateArgs {
+  where: TestimonialWhereUniqueInput!
+  data: TestimonialUpdateInput!
+}
+
+input TestimonialCreateInput {
+  createdDate: DateTime
+  status: TestimonialStatusType
+  body: JSON
+  attribution: String
 }
 
 type Undergraduate {
@@ -2552,9 +2649,12 @@ type Undergraduate {
   socialImpactDesign: Undergraduate_socialImpactDesign_Document
   projectSpotlight(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   projectSpotlightCount(where: StudioProjectWhereInput! = {}): Int
+  featuredSemesters(where: SemesterWhereInput! = {}, orderBy: [SemesterOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SemesterWhereUniqueInput): [Semester!]
+  featuredSemestersCount(where: SemesterWhereInput! = {}): Int
   ogImage: CloudinaryImage_File
   helper: HelperFieldOutput
   ogDescription: String
+  studioPreviews: JSON
 }
 
 type Undergraduate_intro_Document {
@@ -2579,6 +2679,7 @@ input UndergraduateWhereInput {
   introImageAltText: StringFilter
   introImageCaption: StringFilter
   projectSpotlight: StudioProjectManyRelationFilter
+  featuredSemesters: SemesterManyRelationFilter
   ogDescription: StringFilter
 }
 
@@ -2598,6 +2699,7 @@ input UndergraduateUpdateInput {
   introImageCaption: String
   socialImpactDesign: JSON
   projectSpotlight: StudioProjectRelateToManyForUpdateInput
+  featuredSemesters: SemesterRelateToManyForUpdateInput
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
@@ -2616,6 +2718,7 @@ input UndergraduateCreateInput {
   introImageCaption: String
   socialImpactDesign: JSON
   projectSpotlight: StudioProjectRelateToManyForCreateInput
+  featuredSemesters: SemesterRelateToManyForCreateInput
   ogImage: Upload
   helper: HelperFieldInput
   ogDescription: String
@@ -2729,6 +2832,12 @@ type Mutation {
   updateStudioProjects(data: [StudioProjectUpdateArgs!]!): [StudioProject]
   deleteStudioProject(where: StudioProjectWhereUniqueInput!): StudioProject
   deleteStudioProjects(where: [StudioProjectWhereUniqueInput!]!): [StudioProject]
+  createTestimonial(data: TestimonialCreateInput!): Testimonial
+  createTestimonials(data: [TestimonialCreateInput!]!): [Testimonial]
+  updateTestimonial(where: TestimonialWhereUniqueInput!, data: TestimonialUpdateInput!): Testimonial
+  updateTestimonials(data: [TestimonialUpdateArgs!]!): [Testimonial]
+  deleteTestimonial(where: TestimonialWhereUniqueInput!): Testimonial
+  deleteTestimonials(where: [TestimonialWhereUniqueInput!]!): [Testimonial]
   createUndergraduate(data: UndergraduateCreateInput!): Undergraduate
   createUndergraduates(data: [UndergraduateCreateInput!]!): [Undergraduate]
   updateUndergraduate(where: UndergraduateWhereUniqueInput!, data: UndergraduateUpdateInput!): Undergraduate
@@ -2789,6 +2898,9 @@ type Query {
   studioProjects(where: StudioProjectWhereInput! = {}, orderBy: [StudioProjectOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: StudioProjectWhereUniqueInput): [StudioProject!]
   studioProject(where: StudioProjectWhereUniqueInput!): StudioProject
   studioProjectsCount(where: StudioProjectWhereInput! = {}): Int
+  testimonials(where: TestimonialWhereInput! = {}, orderBy: [TestimonialOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TestimonialWhereUniqueInput): [Testimonial!]
+  testimonial(where: TestimonialWhereUniqueInput!): Testimonial
+  testimonialsCount(where: TestimonialWhereInput! = {}): Int
   undergraduates(where: UndergraduateWhereInput! = {}, orderBy: [UndergraduateOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UndergraduateWhereUniqueInput): [Undergraduate!]
   undergraduate(where: UndergraduateWhereUniqueInput!): Undergraduate
   undergraduatesCount(where: UndergraduateWhereInput! = {}): Int

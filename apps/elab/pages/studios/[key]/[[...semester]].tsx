@@ -310,30 +310,43 @@ export default function Studio({
                           <br />
                           {semesterInstructors}
                         </p>
-                        <p>
-                          <span className="font-bold tracking-wider">
-                            PARTNER ORGANIZATION
-                            {selectedSemester.partners.length > 1 && (
-                              <span>S</span>
-                            )}
-                            :&nbsp;
-                          </span>
-                          {Partners({ partners: selectedSemester.partners })}
-                        </p>
-                        <p>
-                          <span className="font-bold tracking-wider">
-                            LEARNING PARTNER
-                            {selectedSemester.learningPartners.length > 1 && (
-                              <span>S</span>
-                            )}
-                            :
-                          </span>
-                          <br />
-                          {selectedSemester.learningPartners
-                            .map((i) => i.name)
-                            .join(', ')}
-                        </p>
-                        <p className="my-2">{selectedSemester.description}</p>
+                        {selectedSemester.type !== 'upcoming' ? (
+                          <>
+                            <p>
+                              <span className="font-bold tracking-wider">
+                                PARTNER ORGANIZATION
+                                {selectedSemester.partners.length > 1 && (
+                                  <span>S</span>
+                                )}
+                                :&nbsp;
+                              </span>
+                              {Partners({
+                                partners: selectedSemester.partners,
+                              })}
+                            </p>
+                            <p>
+                              <span className="font-bold tracking-wider">
+                                LEARNING PARTNER
+                                {selectedSemester.learningPartners.length >
+                                  1 && <span>S</span>}
+                                :
+                              </span>
+                              <br />
+                              {selectedSemester.learningPartners
+                                .map((i) => i.name)
+                                .join(', ')}
+                            </p>
+                            <p className="my-2">
+                              {selectedSemester.description}
+                            </p>
+                          </>
+                        ) : (
+                          <DocumentRenderer
+                            document={selectedSemester.previewSummary?.document}
+                            componentBlocks={Blocks()}
+                            renderers={Doc(rendererOverrides)}
+                          />
+                        )}
                       </div>
                       {selectedSemester.slides &&
                         selectedSemester.slides.slides.length > 0 && (
@@ -345,206 +358,209 @@ export default function Studio({
                         )}
                     </div>
                   </div>
-                  {selectedSemester.impact &&
-                    selectedSemester.impact.document.length > 2 && (
-                      <div className="hidden lg:block w-full mt-6 p-6">
-                        <h2
-                          className={`uppercase text-xl lg:text-3xl font-extrabold ${theme.heading}`}
-                        >
-                          Jump to:
-                        </h2>
-                        <div className="flex flex-col w-full gap-x-10">
-                          <Button
-                            label="A Look Inside the Co-Creation Process"
-                            anchorId="cocreation"
-                            className={`text-sm ${theme.text} ${theme.fill}
-                      `}
-                          />
 
-                          {selectedSemester.projects &&
-                            selectedSemester.projects.length > 0 && (
+                  {/* PAST/CURRENT SEMESTER */}
+                  {selectedSemester.type !== 'upcoming' && (
+                    <>
+                      {selectedSemester.impact &&
+                        selectedSemester.impact.document.length > 2 && (
+                          <div className="hidden lg:block w-full mt-6 p-6">
+                            <h2
+                              className={`uppercase text-xl lg:text-3xl font-extrabold ${theme.heading}`}
+                            >
+                              Jump to:
+                            </h2>
+                            <div className="flex flex-col w-full gap-x-10">
                               <Button
-                                label="Projects"
-                                anchorId="projects"
+                                label="A Look Inside the Co-Creation Process"
+                                anchorId="cocreation"
                                 className={`text-sm ${theme.text} ${theme.fill}
                       `}
                               />
-                            )}
-                          {selectedSemester.impact &&
-                            selectedSemester.impact.document.length > 0 && (
-                              <Button
-                                label="Impact Beyond the Studio"
-                                anchorId="impact"
-                                className={`text-sm ${theme.text} ${theme.fill}
-                      `}
-                              />
-                            )}
-                          {selectedSemester.learningPartners &&
-                            selectedSemester.learningPartners.length > 0 &&
-                            selectedSemester.studioStudents &&
-                            selectedSemester.studioStudents.length > 0 && (
-                              <Button
-                                label="Studio Participants"
-                                anchorId="participants"
-                                className={`text-sm ${theme.text} ${theme.fill}
-                      `}
-                              />
-                            )}
-                        </div>
-                      </div>
-                    )}
 
-                  {selectedSemester.coCreation &&
-                    selectedSemester.coCreation.document.length > 2 && (
-                      <div id="cocreation" className="p-6">
-                        <h2 className="font-bold text-5xl my-3">
-                          A Look Inside the Co-Creation Process
-                        </h2>
-                        <DocumentRenderer
-                          document={selectedSemester.coCreation.document}
-                          componentBlocks={Blocks()}
-                          renderers={Doc(rendererOverrides)}
-                        />
-                      </div>
-                    )}
-
-                  {selectedSemester.projects &&
-                    selectedSemester.projects.length > 0 && (
-                      <>
-                        <Divider color={`${theme.bg} bg-opacity-50`} />
-                        <div id="projects" className="p-6">
-                          <h2 className="font-bold text-5xl my-3">
-                            {selectedSemester.name} Studio Projects
-                          </h2>
-                          <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
-                            {selectedSemester.projects.map((project) => (
-                              <Link
-                                href={`/studios/projects/${project.key}`}
-                                passHref
-                                className="group"
-                                key={project.key}
-                              >
-                                {project.thumbnail ? (
-                                  <Image
-                                    id={`thumb-${project.key}`}
-                                    alt={project.thumbailAltText}
-                                    imgId={project.thumbnail.publicId}
-                                    transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
-                                    width={460}
-                                    className="w-full"
-                                  />
-                                ) : (
-                                  <ImagePlaceholder
-                                    imageLabel="Project"
-                                    width={335}
-                                    height={200}
+                              {selectedSemester.projects &&
+                                selectedSemester.projects.length > 0 && (
+                                  <Button
+                                    label="Projects"
+                                    anchorId="projects"
+                                    className={`text-sm ${theme.text} ${theme.fill}
+                      `}
                                   />
                                 )}
-                                <h3 className="text-bluegreen text-3xl font-bold mt-4 hover:text-green-blue group-hover:text-green-blue">
-                                  {project.name}
-                                </h3>
-                                <div className="mt-2 mb-20">
-                                  <p className="m-0">
-                                    {project.shortDescription}
-                                  </p>
-                                </div>
-                              </Link>
-                            ))}
+                              {selectedSemester.impact &&
+                                selectedSemester.impact.document.length > 0 && (
+                                  <Button
+                                    label="Impact Beyond the Studio"
+                                    anchorId="impact"
+                                    className={`text-sm ${theme.text} ${theme.fill}
+                      `}
+                                  />
+                                )}
+                              {selectedSemester.learningPartners &&
+                                selectedSemester.learningPartners.length > 0 &&
+                                selectedSemester.studioStudents &&
+                                selectedSemester.studioStudents.length > 0 && (
+                                  <Button
+                                    label="Studio Participants"
+                                    anchorId="participants"
+                                    className={`text-sm ${theme.text} ${theme.fill}
+                      `}
+                                  />
+                                )}
+                            </div>
                           </div>
-                        </div>
-                      </>
-                    )}
-
-                  {selectedSemester.impact &&
-                    selectedSemester.impact.document.length > 2 && (
-                      <>
-                        <Divider color={`${theme.bg} bg-opacity-50`} />
-                        <div id="impact" className="p-6">
-                          <h2 className="font-bold text-5xl my-3">
-                            Impact Beyond the Studio
-                          </h2>
-                          <DocumentRenderer
-                            document={selectedSemester.impact.document}
-                            componentBlocks={Blocks()}
-                            renderers={Doc(rendererOverrides)}
-                          />
-                        </div>
-                      </>
-                    )}
-                  <Divider color={`${theme.bg} bg-opacity-50`} />
-                  <div className="p-6" id="participants">
-                    <h2 className="font-bold text-5xl my-3">
-                      {selectedSemester.name} Studio Participants
-                    </h2>
-                    {selectedSemester.studioStudents &&
-                      selectedSemester.studioStudents.length > 0 && (
-                        <PeopleList
-                          list={selectedSemester.studioStudents}
-                          heading="Students"
-                          theme={theme}
-                          index={0}
-                        />
-                      )}
-                    {selectedSemester.learningPartners &&
-                      selectedSemester.learningPartners.length > 0 && (
-                        <PeopleList
-                          list={selectedSemester.learningPartners}
-                          heading="Learning Partners"
-                          index={1}
-                          theme={theme}
-                        />
-                      )}
-                    <div className="flex flex-col lg:flex-row gap-x-7">
-                      <div className="flex-grow">
-                        {selectedSemester.instructors &&
-                          selectedSemester.instructors.length > 0 && (
+                        )}
+                      {selectedSemester.coCreation &&
+                        selectedSemester.coCreation.document.length > 2 && (
+                          <div id="cocreation" className="p-6">
+                            <h2 className="font-bold text-5xl my-3">
+                              A Look Inside the Co-Creation Process
+                            </h2>
+                            <DocumentRenderer
+                              document={selectedSemester.coCreation.document}
+                              componentBlocks={Blocks()}
+                              renderers={Doc(rendererOverrides)}
+                            />
+                          </div>
+                        )}
+                      {selectedSemester.projects &&
+                        selectedSemester.projects.length > 0 && (
+                          <>
+                            <Divider color={`${theme.bg} bg-opacity-50`} />
+                            <div id="projects" className="p-6">
+                              <h2 className="font-bold text-5xl my-3">
+                                {selectedSemester.name} Studio Projects
+                              </h2>
+                              <div className="lg:ml-5 grid xl:grid-cols-3 xl:gap-5 xl:gap-y-10 lg:grid-cols-2 lg:gap-2 text-grey">
+                                {selectedSemester.projects.map((project) => (
+                                  <Link
+                                    href={`/studios/projects/${project.key}`}
+                                    passHref
+                                    className="group"
+                                    key={project.key}
+                                  >
+                                    {project.thumbnail ? (
+                                      <Image
+                                        id={`thumb-${project.key}`}
+                                        alt={project.thumbailAltText}
+                                        imgId={project.thumbnail.publicId}
+                                        transforms="f_auto,dpr_auto,c_fill,g_face,h_290,w_460"
+                                        width={460}
+                                        className="w-full"
+                                      />
+                                    ) : (
+                                      <ImagePlaceholder
+                                        imageLabel="Project"
+                                        width={335}
+                                        height={200}
+                                      />
+                                    )}
+                                    <h3 className="text-bluegreen text-3xl font-bold mt-4 hover:text-green-blue group-hover:text-green-blue">
+                                      {project.name}
+                                    </h3>
+                                    <div className="mt-2 mb-20">
+                                      <p className="m-0">
+                                        {project.shortDescription}
+                                      </p>
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      {selectedSemester.impact &&
+                        selectedSemester.impact.document.length > 2 && (
+                          <>
+                            <Divider color={`${theme.bg} bg-opacity-50`} />
+                            <div id="impact" className="p-6">
+                              <h2 className="font-bold text-5xl my-3">
+                                Impact Beyond the Studio
+                              </h2>
+                              <DocumentRenderer
+                                document={selectedSemester.impact.document}
+                                componentBlocks={Blocks()}
+                                renderers={Doc(rendererOverrides)}
+                              />
+                            </div>
+                          </>
+                        )}
+                      <Divider color={`${theme.bg} bg-opacity-50`} />
+                      <div className="p-6" id="participants">
+                        <h2 className="font-bold text-5xl my-3">
+                          {selectedSemester.name} Studio Participants
+                        </h2>
+                        {selectedSemester.studioStudents &&
+                          selectedSemester.studioStudents.length > 0 && (
                             <PeopleList
-                              list={selectedSemester.instructors}
-                              heading="Studio Professors"
+                              list={selectedSemester.studioStudents}
+                              heading="Students"
                               theme={theme}
-                              index={2}
+                              index={0}
                             />
                           )}
-                      </div>
-                      <div>
-                        {selectedSemester.studioStaff &&
-                          selectedSemester.studioStaff.length > 0 && (
+                        {selectedSemester.learningPartners &&
+                          selectedSemester.learningPartners.length > 0 && (
                             <PeopleList
-                              list={selectedSemester.studioStaff}
-                              heading="Engagement Lab Staff"
+                              list={selectedSemester.learningPartners}
+                              heading="Learning Partners"
+                              index={1}
                               theme={theme}
-                              index={3}
                             />
                           )}
-                      </div>
-                    </div>
-                    <h2
-                      className={`text-xl font-extrabold uppercase my-3 ${theme.heading}`}
-                    >
-                      Studio Contact
-                    </h2>
-                    <p className="w-full">
-                      Are you an Emerson student interested in enrolling in this
-                      course in the future? Please contact &nbsp;
-                      {selectedSemester.contact}&nbsp;to learn more!
-                    </p>
-                    {selectedSemester.partners &&
-                      selectedSemester.partners.length > 0 && (
-                        <>
-                          <h2
-                            className={`text-xl font-extrabold uppercase mb-3 mt-8 ${theme.heading}`}
-                          >
-                            {selectedSemester.name}&nbsp;
-                            {selectedSemester.partners.length > 1
-                              ? 'Partners'
-                              : 'Partner'}
-                          </h2>
-                          <div className="px-6">
-                            <Logos partners={selectedSemester.partners} />
+                        <div className="flex flex-col lg:flex-row gap-x-7">
+                          <div className="flex-grow">
+                            {selectedSemester.instructors &&
+                              selectedSemester.instructors.length > 0 && (
+                                <PeopleList
+                                  list={selectedSemester.instructors}
+                                  heading="Studio Professors"
+                                  theme={theme}
+                                  index={2}
+                                />
+                              )}
                           </div>
-                        </>
-                      )}
-                  </div>
+                          <div>
+                            {selectedSemester.studioStaff &&
+                              selectedSemester.studioStaff.length > 0 && (
+                                <PeopleList
+                                  list={selectedSemester.studioStaff}
+                                  heading="Engagement Lab Staff"
+                                  theme={theme}
+                                  index={3}
+                                />
+                              )}
+                          </div>
+                        </div>
+                        <h2
+                          className={`text-xl font-extrabold uppercase my-3 ${theme.heading}`}
+                        >
+                          Studio Contact
+                        </h2>
+                        <p className="w-full">
+                          Are you an Emerson student interested in enrolling in
+                          this course in the future? Please contact &nbsp;
+                          {selectedSemester.contact}&nbsp;to learn more!
+                        </p>
+                        {selectedSemester.partners &&
+                          selectedSemester.partners.length > 0 && (
+                            <>
+                              <h2
+                                className={`text-xl font-extrabold uppercase mb-3 mt-8 ${theme.heading}`}
+                              >
+                                {selectedSemester.name}&nbsp;
+                                {selectedSemester.partners.length > 1
+                                  ? 'Partners'
+                                  : 'Partner'}
+                              </h2>
+                              <div className="px-6">
+                                <Logos partners={selectedSemester.partners} />
+                              </div>
+                            </>
+                          )}
+                      </div>
+                    </>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -572,7 +588,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     };
   }
   let semesterPaths: string[] = [];
-  console.log(studios);
+
   const paths = (studios as { key: string; semesters: { key: string }[] }[])
     .filter(({ key }) => !!key)
     .map(({ key, semesters }) => {
@@ -607,6 +623,9 @@ export async function getStaticProps({
           courseNumber
           description
           partners
+          previewSummary {
+            document
+          }
           slides {
             slides {
               altText
@@ -630,7 +649,7 @@ export async function getStaticProps({
           impact {
               document(hydrateRelationships: true)
           }
-          projects {
+          projects(${DefaultWhereCondition()}) {
               name
               key
               shortDescription
@@ -701,6 +720,7 @@ export async function getStaticProps({
   //     },
   //     query: 'title key filters { key name } shortDescription thumbnail { publicId }',
   // })) as MediaItem[];
+
   return {
     props: {
       item,

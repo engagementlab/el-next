@@ -37,7 +37,7 @@ console.log('Found app name: ' + appName);
 
 import { v2 as cloudinary } from 'cloudinary';
 
-import { getStudios } from './routes/studios';
+import { getStudios, getUpcomingSemesters } from './routes/studios';
 import _ from 'lodash';
 import cors from 'cors';
 import schema from './schema';
@@ -107,14 +107,13 @@ let ksConfig = (lists: any) => {
           else next();
         });
 
-        // app.use(`${routePrefix}/rest`, async (req, res, next) => {
-        //   (req as any).context = await createContext(req, res);
-        //   next();
-        // });
-
         app.get(
           `${routePrefix}/rest/studios`,
           withContext(commonContext as Context, getStudios)
+        );
+        app.get(
+          `${routePrefix}/rest/semesters`,
+          withContext(commonContext as Context, getUpcomingSemesters)
         );
       },
     },

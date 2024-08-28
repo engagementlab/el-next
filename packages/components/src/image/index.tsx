@@ -64,6 +64,12 @@ interface ImageProps {
    * - If set to false, the image will not use a 4:3 aspect ratio
    */
   aspectDefault?: boolean;
+
+  /**
+   * @defaultValue undefined
+   * -  Optional callback function for when the image is loaded
+   */
+  loaded?: () => void;
 }
 
 interface ImageUrlProps {
@@ -104,6 +110,7 @@ const Image = ({
   maxWidthDisable,
   lazy,
   aspectDefault = true,
+  loaded,
 }: ImageProps) => {
   // Instantiate a CloudinaryImage object for the image with public ID
   const cloudImage = cld.image(imgId);
@@ -176,6 +183,9 @@ const Image = ({
       alt={alt}
       plugins={plugins}
       style={!maxWidthDisable ? { maxWidth: `${width}px` } : {}}
+      onLoad={() => {
+        if (loaded) loaded();
+      }}
     />
   );
 };

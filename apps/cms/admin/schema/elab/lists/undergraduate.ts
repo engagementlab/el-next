@@ -1,3 +1,4 @@
+import path from 'path';
 import { group, list } from '@keystone-6/core';
 import { relationship, text } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
@@ -6,6 +7,7 @@ import { Lists } from '.keystone/types';
 import { componentBlocks } from '../../../components/component-blocks';
 import { cloudinaryImage } from '../../../components/cloudinary';
 import { Social } from '../social';
+import { StudioPreviews } from '../virtual';
 
 const Undergraduate: Lists.Undergraduate = list({
   access: allowAll,
@@ -72,7 +74,17 @@ const Undergraduate: Lists.Undergraduate = list({
       many: true,
       ui: { hideCreate: true },
     }),
+
+    featuredSemesters: relationship({
+      label: 'Featured Upcoming Semesters',
+      ref: 'Semester.undergrad',
+      many: true,
+      ui: {
+        labelField: 'internalLabel',
+      },
+    }),
     ...group(Social()),
+    studioPreviews: StudioPreviews,
   },
   ui: {
     hideCreate: true,

@@ -1,10 +1,11 @@
-import { group, list } from '@keystone-6/core';
+import { graphql, group, list } from '@keystone-6/core';
 import {
   checkbox,
   multiselect,
   relationship,
   text,
   timestamp,
+  virtual,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { allowAll } from '@keystone-6/core/access';
@@ -18,6 +19,7 @@ import { helper, HelperIcon } from '../../../components/helper';
 import { Featuring } from '../featuring';
 import { Social } from '../social';
 import { Status } from '../flags';
+import { StudioPreviews } from '../virtual';
 
 const NewsItem: Lists.NewsItem = list({
   access: allowAll,
@@ -95,11 +97,6 @@ const NewsItem: Lists.NewsItem = list({
           'This field is purely cosmetic, not to schedule this item for future publishing. News items for the future should not be enabled until ready for review and publishing.',
       },
     }),
-    /* source: text({
-      ui: {
-        description: 'e.g. The Boston Globe, CommonWealth Magazine',
-      },
-    }), */
     linkHelper: helper({
       html: 'If external link is used, <em>body</em> is not required.',
       iconType: HelperIcon.info,
@@ -123,14 +120,7 @@ const NewsItem: Lists.NewsItem = list({
       },
     }),
     body: document({
-      formatting: {
-        headingLevels: true,
-        inlineMarks: true,
-        listTypes: true,
-        alignment: true,
-        blockTypes: true,
-        softBreaks: true,
-      },
+      formatting: true,
       dividers: true,
       links: true,
       layouts: [
@@ -183,6 +173,8 @@ const NewsItem: Lists.NewsItem = list({
       },
     }),
     ...group(Social('Item "Summary" used if not specified')),
+
+    studioPreviews: StudioPreviews,
   },
   hooks: {
     resolveInput: async ({

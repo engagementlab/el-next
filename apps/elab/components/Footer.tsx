@@ -131,7 +131,11 @@ export const Footer = () => {
   const LicensePrivacy = () => {
     return (
       <>
-        <div className="flex flex-row mt-10">
+        <a
+          href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+          target="_blank"
+          className="flex flex-row mt-10"
+        >
           <svg width="35px" height="35px" viewBox="5.5 -3.5 64 64">
             <g>
               <circle
@@ -233,7 +237,8 @@ export const Footer = () => {
               </g>
             </g>
           </svg>
-        </div>
+        </a>
+
         <div className="flex flex-row gap-x-4 mt-5">
           <Link href="/privacy">Privacy Policy</Link>
           {/* <Link href="/attributions">Attributions</Link> */}

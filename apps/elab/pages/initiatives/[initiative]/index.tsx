@@ -73,7 +73,6 @@ type Initiative = {
 export default function InitIndex({
   page,
   mergedItems,
-  filteredSemesters,
   initiative,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -401,7 +400,7 @@ export default function InitIndex({
             )}
           </Gutter>
           {/* Studio previews */}
-          {filteredSemesters && filteredSemesters.length > 0 && (
+          {/* {filteredSemesters && filteredSemesters.length > 0 && (
             <>
               <Divider color={Theming[initiative].secondary} />
 
@@ -423,7 +422,7 @@ export default function InitIndex({
                 </div>
               </Gutter>
             </>
-          )}
+          )} */}
 
           {page.research && page.research.length > 0 && (
             <Divider color={Theming[initiative].secondary} />
@@ -662,15 +661,15 @@ export async function getStaticProps({
     };
   }
 
-  if (upcomingSemesters.error) {
-    return {
-      props: {
-        error: upcomingSemesters.error,
-        page: null,
-        initiative: 'tngv',
-      },
-    };
-  }
+  // if (upcomingSemesters.error) {
+  //   return {
+  //     props: {
+  //       error: upcomingSemesters.error,
+  //       page: null,
+  //       initiative: 'tngv',
+  //     },
+  //   };
+  // }
 
   const page = result as Initiative;
   const mergedItems = (
@@ -688,9 +687,14 @@ export async function getStaticProps({
     return val;
   });
 
-  const filteredSemesters = (upcomingSemesters as StudioPreview[]).filter((s) =>
-    s.initiatives.includes(initiative === 'tngv' ? 'gunviolence' : 'climate')
-  );
+  // const filteredSemesters =
+  //   upcomingSemesters && !upcomingSemesters.error
+  //     ? (upcomingSemesters as StudioPreview[]).filter((s) =>
+  //         s.initiatives.includes(
+  //           initiative === 'tngv' ? 'gunviolence' : 'climate'
+  //         )
+  //       )
+  //     : [];
 
   return {
     props: {
@@ -698,7 +702,7 @@ export async function getStaticProps({
       initiative,
       mergedItems,
 
-      filteredSemesters,
+      // filteredSemesters,
     },
     revalidate: 1,
   };

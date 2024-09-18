@@ -506,17 +506,21 @@ const StudioGenericItemRenderer = (props: {
                 href={`/studios/${props.item.key}/${semester.key}`}
                 className={`inline transition-all ${CustomEase} p-2 leading-none rounded-[5px] ${bgColor} bg-opacity-40 hover:bg-opacity-80 hover:scale-105`}
               >
-                {semester.name.substring(0, semester.name.indexOf('-') - 1)}
+                {semester.name.includes(' - ')
+                  ? semester.name.substring(0, semester.name.indexOf('-') - 1)
+                  : semester.name}
               </Link>
             ))}
           </div>
         )}
         {props.item.semester && (
           <p className={`mt-1 uppercase font-extrabold text-sm ${textColor}`}>
-            {props.item.semester[0].name.substring(
-              0,
-              props.item.semester[0].name.indexOf('-') - 1
-            )}
+            {props.item.semester[0].name.includes(' - ')
+              ? props.item.semester[0].name.substring(
+                  0,
+                  props.item.semester[0].name.indexOf('-') - 1
+                )
+              : props.item.semester[0].name}
           </p>
         )}
         <p>{props.item.shortDescription}</p>

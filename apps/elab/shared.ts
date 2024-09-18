@@ -57,7 +57,15 @@ export const ProjectsSort = (projects: Project[]) => {
 
 export const SemestersSort = (semesters: Semester[]) => {
   let sortedSemesters = semesters
-    .filter((v) => v.type !== 'current')
+    .filter((v) => {
+      const testSem = v.key === 'test-semester';
+      let allowTestSem = false;
+
+      if (!testSem || (testSem && process.env.NEXT_PUBLIC_STAGING === 'true'))
+        allowTestSem = true;
+
+      return v.type !== 'current' && allowTestSem;
+    })
     .sort((a, b) => {
       // Get year from semester key
       const aYr = a.key.match(/\d{4}/gm);

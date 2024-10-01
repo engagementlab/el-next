@@ -435,7 +435,7 @@ export type StudioProject = {
       publicId: string;
     };
   }[];
-};
+} & OGParams;
 export type StudioPreview = {
   id: string;
   name: string;

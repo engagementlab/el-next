@@ -64,6 +64,15 @@ export default () => {
             </button>
           );
         })}
+
+        {filter !== 'none' && (
+          <button
+            onClick={() => setFilter('none')}
+            className="text-grey text-base uppercase leading-6 opacity-70"
+          >
+            CLEAR FILTERS
+          </button>
+        )}
       </div>
       <div className="flex flex-col gap-y-5 min-h-screen w-full">
         {([...Events.default, ...Blog.default] as unknown as Item[])

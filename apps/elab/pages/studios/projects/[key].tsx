@@ -351,6 +351,12 @@ export default function Project({
         theme={theming.theme}
         fullBleed={true}
         title={`${item.name} - Studio Projects`}
+        ogDescription={item.ogDescription || item.shortDescription}
+        ogImageId={
+          item.ogImage && item.ogImage.publicId
+            ? item.ogImage.publicId
+            : item.thumbnail.publicId
+        }
       >
         {item && (
           <div className="text-grey">
@@ -551,87 +557,92 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const itemResult = await Query(
     'studioProjects',
     `studioProjects(where: { key: {equals: "${params!.key}"} }) {
-            name
-            key
-            initiative
-            about {
-              document(hydrateRelationships: true)
-            }
-            buttons
-            semester {
-              name
-            }
-            shortDescription
-            thumbAltText
-            thumbnail {
-              publicId
-              publicUrl
-            }
-            trailerId
-            trailerThumbnail {
-              publicUrl
-              publicId
-            }
-            trailerThumbAltText
-            videoId
+        name
+        key
+        initiative
+        about {
+          document(hydrateRelationships: true)
+        }
+        buttons
+        semester {
+          name
+        }
+        shortDescription
+        thumbAltText
+        thumbnail {
+          publicId
+          publicUrl
+        }
+        trailerId
+        trailerThumbnail {
+          publicUrl
+          publicId
+        }
+        trailerThumbAltText
+        videoId
 
-            captions { 
-              url 
-            }
-            video { 
-              file 
-            }
-            trailerCaptions { 
-              url 
-            }
-            trailerVideo {
-              file
-            }
+        captions { 
+          url 
+        }
+        video { 
+          file 
+        }
+        trailerCaptions { 
+          url 
+        }
+        trailerVideo {
+          file
+        }
+        
+        partners
+        coCreation {
+          document(hydrateRelationships: true)
+        }
+        impact {
+          document(hydrateRelationships: true)
+        }
+
+        instructors {
+          name
+          secondaryTitle
+          key
+          title
+          image {
+            publicId
+          }
+        }
+        learningPartners {
+          name
+          key
+          title
+          image {
+            publicId
+          }
+        }
+        studioStudents {
+          name
+          key
+          title
+          secondaryTitle
+          image {
+              publicId
+          }  
+        }
+        studioStaff {
+          name
+          key
+          title
+          secondaryTitle
+          image {
+              publicId
+          }  
+        }
             
-            partners
-            coCreation {
-              document(hydrateRelationships: true)
-            }
-            impact {
-              document(hydrateRelationships: true)
-            }
-    
-            instructors {
-              name
-              secondaryTitle
-              key
-              title
-              image {
-                publicId
-              }
-            }
-            learningPartners {
-              name
-              key
-              title
-              image {
-                publicId
-              }
-            }
-            studioStudents {
-              name
-              key
-              title
-              secondaryTitle
-              image {
-                  publicId
-              }  
-            }
-            studioStaff {
-              name
-              key
-              title
-              secondaryTitle
-              image {
-                  publicId
-              }  
-            }
-        }`
+        ogImage { 
+            publicId
+        }
+        ogDescription
+      }`
   );
   if (itemResult.error) {
     return {

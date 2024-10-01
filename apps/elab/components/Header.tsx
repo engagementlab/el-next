@@ -35,6 +35,7 @@ type Props = {
 
 const subMenuAnimate: Variants = {
   enter: {
+    flexBasis: 'column',
     left: '50%',
     translateX: '-50%',
     opacity: 1,
@@ -241,7 +242,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       <NavLink href="/news" label="News" />
       <NavLink href="/events" label="Events" />
       {process.env.NEXT_PUBLIC_STAGING === 'true' && (
-        <NavLink href="/news/archive" label="Archive" />
+        <NavLink href="/whats-new/archive" label="Archive" />
       )}
       {/* <NavLink href="/newsletter" label="Join Newsletter" disabled={true} /> */}
     </>

@@ -25,6 +25,7 @@ export default function Testimonials({
                     componentBlocks={Blocks()}
                     renderers={Doc()}
                   />
+                  <p>&mdash;&nbsp;{item.attribution}</p>
                 </div>
               );
             })}

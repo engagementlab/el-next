@@ -69,24 +69,6 @@ const Layout = ({
               We invite you to&nbsp;.&nbsp;.&nbsp;.
             </h1>
             <ul className="list-none font-medium md:text-2xl lg:mt-8 md:ml-3 lg:ml-5">
-              <li>
-                <svg
-                  viewBox="9 6.998 17 24.286"
-                  width="17"
-                  height="24.286"
-                  className="inline scale-50 fill-red md:scale-100 md:mr-3"
-                >
-                  <path d="M 11.941 7.379 C 11.596 7.117 11.215 6.998 10.831 6.998 C 9.891 6.998 9 7.741 9 8.817 L 9 29.462 C 9 30.543 9.894 31.284 10.831 31.284 C 11.217 31.284 11.601 31.162 11.946 30.898 C 15.72 27.976 22.141 23 25.293 20.557 C 25.74 20.212 26 19.682 26 19.119 C 26 18.56 25.738 18.029 25.293 17.684 C 22.136 15.25 15.71 10.291 11.941 7.379 Z"></path>
-                </svg>
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSdflgbPiqz7fZM8f5GJAFPy10V82HvKDsgv49daI4hx4LPA2Q/viewform"
-                  target="_blank"
-                  className="text-red border-red border-b-2 font-bold hover:border-0"
-                >
-                  RSVP
-                </a>
-                &nbsp;to our farewell toast on the evening of October 9, 2024
-              </li>
               <li className="mt-3">
                 <svg
                   viewBox="9 6.998 17 24.286"

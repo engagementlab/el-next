@@ -5,7 +5,6 @@ import { Query } from '@el-next/components';
 import { DefaultWhereCondition } from '@/types';
 import Layout from '../components/Layout';
 import { Blocks, Doc } from '@/components/Renderers';
-import { ReactElement } from 'react';
 
 export default function Testimonials({
   items,
@@ -19,40 +18,13 @@ export default function Testimonials({
         {items && (
           <div className="grid mt-5 lg:grid-cols-2 lg:gap-10">
             {items.map((item: { attribution: string; body: any }) => {
-              const bodyLength = item.body.document.length;
-              let i = 0;
               return (
                 <div>
-                  &ldquo;
                   <DocumentRenderer
                     document={item.body.document}
                     componentBlocks={Blocks()}
-                    renderers={Doc({
-                      paragraph: (children: ReactElement[]) => {
-                        i++;
-                        return (
-                          <>
-                            {children.map((child: ReactElement) => {
-                              return (
-                                <span className="my-4 whitespace-pre-wrap">
-                                  {child}
-
-                                  {i / 2 === bodyLength && <>&rdquo;</>}
-                                  {i / 2 <= bodyLength && (
-                                    <>
-                                      <br />
-                                      <br />
-                                    </>
-                                  )}
-                                </span>
-                              );
-                            })}
-                          </>
-                        );
-                      },
-                    })}
+                    renderers={Doc()}
                   />
-                  <p>&mdash;&nbsp;{item.attribution}</p>
                 </div>
               );
             })}

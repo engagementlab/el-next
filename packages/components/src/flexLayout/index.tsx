@@ -77,16 +77,17 @@ export const FlexLayout = ({ layout, children }: FlexProps) => {
   else if (layout[0] === 1 && layout[1] === 1) {
     return (
       <div className={flexClass}>
-        {children.map((element, i) => (
-          <div
-            key={i}
-            className={`${
-              i === 0 ? 'w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0' : ''
-            }`}
-          >
-            {element}
-          </div>
-        ))}
+        {children.map((element, i) => {
+          return i === 0 ? (
+            <div key={i} className="w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0">
+              {element}
+            </div>
+          ) : (
+            <div key={i} className="flex-grow">
+              {element}
+            </div>
+          );
+        })}
       </div>
     );
   } else return <div>{children}</div>;

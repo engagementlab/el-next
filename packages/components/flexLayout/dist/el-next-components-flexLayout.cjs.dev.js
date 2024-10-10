@@ -66,8 +66,11 @@ var FlexLayout = function FlexLayout(_ref) {
     return /*#__PURE__*/jsxRuntime.jsx("div", {
       className: flexClass,
       children: children.map(function (element, i) {
-        return /*#__PURE__*/jsxRuntime.jsx("div", {
-          className: "".concat(i === 0 ? 'w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0' : ''),
+        return i === 0 ? /*#__PURE__*/jsxRuntime.jsx("div", {
+          className: "w-full lg:w-1/2 lg:basis-1/2 flex-shrink-0",
+          children: element
+        }, i) : /*#__PURE__*/jsxRuntime.jsx("div", {
+          className: "flex-grow",
           children: element
         }, i);
       })

@@ -229,7 +229,11 @@ export default function Project({
                         ? item.trailerThumbnail.publicUrl
                         : ''
                     }
-                    thumbPublicId={item.trailerThumbnail.publicId}
+                    thumbPublicId={
+                      item.trailerThumbnail
+                        ? item.trailerThumbnail.publicId
+                        : ''
+                    }
                     theme={videoColor}
                     noUi={true}
                     play={trailerOpen}
@@ -344,6 +348,12 @@ export default function Project({
       );
     };
 
+    let ogImageId = undefined;
+    if (item.ogImage && item.ogImage.publicId)
+      ogImageId = item.ogImage.publicId;
+    else if (item.thumbnail && item.thumbnail.publicId)
+      ogImageId = item.thumbnail.publicId;
+
     return (
       <Layout
         error={error}
@@ -352,11 +362,7 @@ export default function Project({
         fullBleed={true}
         title={`${item.name} - Studio Projects`}
         ogDescription={item.ogDescription || item.shortDescription}
-        ogImageId={
-          item.ogImage && item.ogImage.publicId
-            ? item.ogImage.publicId
-            : item.thumbnail.publicId
-        }
+        ogImageId={ogImageId}
       >
         {item && (
           <div className="text-grey">

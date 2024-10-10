@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { cubicBezier, motion } from 'framer-motion';
+import { cubicBezier, motion, SVGMotionProps, useCycle } from 'framer-motion';
 
 import { ImageUrl, Layout as SuperLayout } from '@el-next/components';
 import { Breadcrumb, CustomEase, DefaultOGImageOptions, Theme } from '@/types';
@@ -8,6 +8,8 @@ import Header from './Header';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import Footer from './Footer';
 import { useRouter } from 'next/router';
+import useStore from '@/useStore';
+import { useBannerStore } from '@/bannerStore';
 
 type Props = {
   children: ReactNode;
@@ -27,7 +29,84 @@ const appName = 'Engagement Lab';
 const defaultDescription =
   'Advancing peace, equity, and justice through collaborative design, storytelling, and research.';
 const DefaultOGImageId = 'elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8';
+const Path = (
+  props: JSX.IntrinsicAttributes &
+    SVGMotionProps<SVGPathElement> &
+    React.RefAttributes<SVGPathElement>
+) => (
+  <motion.path
+    className="origin-center"
+    fill="transparent"
+    strokeWidth="5"
+    strokeLinecap="square"
+    {...props}
+  />
+);
 
+const MenuToggle = ({ toggle, hover, isHover, clicked }: any) => {
+  const currentState = () => {
+    if (isHover) return 'hover';
+    return 'closed';
+  };
+  return (
+    <motion.button
+      onMouseUp={() => clicked()}
+      onTap={toggle}
+      onHoverStart={hover}
+      onHoverEnd={hover}
+      whileTap={{
+        scale: 1.2,
+        transition: {
+          ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+          duration: 0.3,
+        },
+      }}
+      whileHover={{
+        scale: 1.03,
+        transition: { duration: 0.3 },
+      }}
+      className="relative z-50"
+      aria-label="Close Top Banner"
+    >
+      <svg width="75" height="75" viewBox="0 0 75 75">
+        <Path
+          d="M 25 33 L 60 33"
+          stroke="#FF0001"
+          animate={currentState()}
+          variants={{
+            closed: {
+              rotate: '-45deg',
+              translateY: '10px',
+            },
+            hover: {
+              rotate: '-42deg',
+              translateY: '10px',
+              scale: 1.23,
+            },
+          }}
+          transition={{
+            duration: 0.2,
+            ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+          }}
+        />
+        <Path
+          d="M 25 57 L 60 57"
+          animate={currentState()}
+          stroke="#FF0001"
+          variants={{
+            closed: { rotate: '45deg', translateY: '-13px' },
+            hover: { rotate: '45deg', translateY: '-13px', scale: 1.23 },
+          }}
+          transition={{
+            duration: 0.75,
+            delay: 0.051,
+            ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+          }}
+        />
+      </svg>
+    </motion.button>
+  );
+};
 const Layout = ({
   children,
   title,
@@ -52,79 +131,82 @@ const Layout = ({
   const currentUrl = router.asPath;
 
   const [isHomePage, setIsHomePage] = useState(false);
-  const [farewellDismissed, setFarewellDismissed] = useState(false);
+
+  const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
+  // const [farewellDismissed, setFarewellDismissed] = useState(() =>
+  //   typeof window !== 'undefined' &&
+  //   sessionStorage.getItem('bannerDismissed') === 'true'
+  //     ? true
+  //     : false
+  // );
+  // const [farewellDismissed, setFarewellDismissed] = useState(false);
+
+  const [isFirstLoad, setIsFirstLoad] = useState(false);
+
+  // useEffect(() => {}, [isFirstLoad]);
 
   useEffect(() => {
     if (currentUrl === '/') setIsHomePage(true);
+    router.events.on('routeChangeStart', () => {
+      if (!isFirstLoad) {
+        // Perform actions for the first load
+        console.log('First load of session detected!');
+        setIsFirstLoad(true);
+      }
+    });
   });
+
+  // useEffect(() => {
+  //   sessionStorage.setItem('bannerDismissed', String(farewellDismissed));
+  // }, [farewellDismissed]);
+  const store = useStore(useBannerStore, (state) => state);
+  console.log('showBanner', store);
+  // const hideBanner = useStore(useBannerStore, (state) => state.hideBanner);
   return (
     <>
-      {isHomePage && !farewellDismissed && (
+      {store?.showBanner && (
         <>
-          <div className="fixed top-0 bottom-0 z-[90] w-full h-full bg-black/50"></div>
-          <div className="absolute top-0 md:top-1/4 bottom-0 md:bottom-auto p-8 md:px-20 xl:px-32 z-[100] w-full h-full md:h-auto bg-white">
-            <h1 className="font-extrabold text-3xl md:text-5xl mb-3">
-              The Engagement Lab will be closing its doors this fall.
-              <br />
-              We invite you to&nbsp;.&nbsp;.&nbsp;.
-            </h1>
-            <ul className="list-none font-medium md:text-2xl lg:mt-8 md:ml-3 lg:ml-5">
-              <li className="mt-3">
-                <svg
-                  viewBox="9 6.998 17 24.286"
-                  width="17"
-                  height="24.286"
-                  className="inline scale-50 fill-yellow md:scale-100 md:mr-3"
-                >
-                  <path d="M 11.941 7.379 C 11.596 7.117 11.215 6.998 10.831 6.998 C 9.891 6.998 9 7.741 9 8.817 L 9 29.462 C 9 30.543 9.894 31.284 10.831 31.284 C 11.217 31.284 11.601 31.162 11.946 30.898 C 15.72 27.976 22.141 23 25.293 20.557 C 25.74 20.212 26 19.682 26 19.119 C 26 18.56 25.738 18.029 25.293 17.684 C 22.136 15.25 15.71 10.291 11.941 7.379 Z"></path>
-                </svg>
-                <a
-                  href="https://mailchi.mp/emerson/elab-toast"
-                  target="_blank"
-                  className="text-yellow border-yellow border-b-2 font-bold hover:border-0"
-                >
-                  Read the letter
-                </a>
-                &nbsp;to our communities reflecting on our 14 years at Emerson
-              </li>
-              <li className="mt-3">
-                <svg
-                  viewBox="9 6.998 17 24.286"
-                  width="17"
-                  height="24.286"
-                  className="inline scale-50 fill-green-blue md:scale-100 md:mr-3"
-                >
-                  <path d="M 11.941 7.379 C 11.596 7.117 11.215 6.998 10.831 6.998 C 9.891 6.998 9 7.741 9 8.817 L 9 29.462 C 9 30.543 9.894 31.284 10.831 31.284 C 11.217 31.284 11.601 31.162 11.946 30.898 C 15.72 27.976 22.141 23 25.293 20.557 C 25.74 20.212 26 19.682 26 19.119 C 26 18.56 25.738 18.029 25.293 17.684 C 22.136 15.25 15.71 10.291 11.941 7.379 Z"></path>
-                </svg>
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSfVSTPWRZvAozw2B2XZkH4yV2WAJZ-NgfDePX9JENDr_BAGIw/viewform"
-                  className="text-green-blue border-green-blue border-b-2 font-bold hover:border-0"
-                >
-                  Share your ELab stories
-                </a>
-                , memories, thoughts, or provocations with us
-              </li>
-            </ul>
-            <div
-              className="flex flex-row justify-center my-8 cursor-pointer group"
-              onClick={() => setFarewellDismissed(true)}
-            >
-              <svg
-                width="24"
-                height="24"
-                xmlns="http://www.w3.org/2000/svg"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                className={`group-hover:scale-125 duration-300 ${CustomEase}`}
-              >
-                <path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm0 10.293l5.293-5.293.707.707-5.293 5.293 5.293 5.293-.707.707-5.293-5.293-5.293 5.293-.707-.707 5.293-5.293-5.293-5.293.707-.707 5.293 5.293z" />
-              </svg>
-              &nbsp;
-              <span className="opacity-50 group-hover:opacity-100 transition-all">
-                Dismiss this message
-              </span>
+          <div className="fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71]"></div>
+          <header
+            role="banner"
+            className="fixed top-0 z-[100] w-full h-auto bg-white/95"
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between p-8 md:px-10 xl:px-20 ">
+              <div>
+                <h1 className="font-extrabold uppercase text-xl md:text-2xl text-red mb-3">
+                  This Website Is An Archive, As Of October 2024.
+                </h1>
+                <h2 className="text-gray-600 text-base">
+                  The Engagement Lab at Emerson College has closed its doors.{' '}
+                  <Link
+                    href="https://elab.emerson.edu/news/read-the-report-detailing-the-elabs-final-chapter/"
+                    className="text-red font-bold border-b-2 hover:border-b-0"
+                  >
+                    Read the report
+                  </Link>{' '}
+                  detailing the ELab’s final chapter, or{' '}
+                  <a
+                    href="#"
+                    onClick={() => store?.hideBanner(false)}
+                    className="text-red font-bold border-b-2 hover:border-b-0"
+                  >
+                    dismiss this message
+                  </a>{' '}
+                  to explore the archive.
+                </h2>
+              </div>
+              <MenuToggle
+                // clicked={() => store?.hideBanner(true)}
+                hover={() => toggleMenuHover()}
+                isHover={menuButtonHover}
+              />
             </div>
-          </div>
+            <div>
+              <hr className="h-1 border-none w-full bg-red" />
+              <hr className="h-1 my-1 border-none w-full bg-green-blue" />
+              <hr className="h-1 border-none w-full bg-yellow" />
+            </div>
+          </header>
         </>
       )}
       <span

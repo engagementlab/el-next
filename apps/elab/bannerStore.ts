@@ -2,16 +2,16 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface BannerState {
-  bannerVisible: boolean;
-  hideBanner: () => void;
+  fullBanner: boolean;
+  toggleFullBanner: (hide: boolean) => void;
 }
 
 export const useBannerStore = create<BannerState>()(
   persist(
     (set) => ({
-      bannerVisible: true,
-      hideBanner: () => {
-        set({ bannerVisible: false });
+      fullBanner: true,
+      toggleFullBanner: (hide: boolean) => {
+        set({ fullBanner: hide });
       },
     }),
     {

@@ -35,84 +35,7 @@ const appName = 'Engagement Lab';
 const defaultDescription =
   'Advancing peace, equity, and justice through collaborative design, storytelling, and research.';
 const DefaultOGImageId = 'elab-home-v3.x/about/cllz9l8bn00036gk2gnbddzl8';
-const Path = (
-  props: JSX.IntrinsicAttributes &
-    SVGMotionProps<SVGPathElement> &
-    React.RefAttributes<SVGPathElement>
-) => (
-  <motion.path
-    className="origin-center"
-    fill="transparent"
-    strokeWidth="5"
-    strokeLinecap="square"
-    {...props}
-  />
-);
 
-const MenuToggle = ({ toggle, hover, isHover, clicked }: any) => {
-  const currentState = () => {
-    if (isHover) return 'hover';
-    return 'closed';
-  };
-  return (
-    <motion.button
-      onMouseUp={() => clicked()}
-      onTap={toggle}
-      onHoverStart={hover}
-      onHoverEnd={hover}
-      whileTap={{
-        scale: 1.2,
-        transition: {
-          ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-          duration: 0.3,
-        },
-      }}
-      whileHover={{
-        scale: 1.03,
-        transition: { duration: 0.3 },
-      }}
-      className="relative z-50"
-      aria-label="Close Top Banner"
-    >
-      <svg width="75" height="75" viewBox="0 0 75 75">
-        <Path
-          d="M 25 33 L 60 33"
-          stroke="#FF0001"
-          animate={currentState()}
-          variants={{
-            closed: {
-              rotate: '-45deg',
-              translateY: '10px',
-            },
-            hover: {
-              rotate: '-42deg',
-              translateY: '10px',
-              scale: 1.23,
-            },
-          }}
-          transition={{
-            duration: 0.2,
-            ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-          }}
-        />
-        <Path
-          d="M 25 57 L 60 57"
-          animate={currentState()}
-          stroke="#FF0001"
-          variants={{
-            closed: { rotate: '45deg', translateY: '-13px' },
-            hover: { rotate: '45deg', translateY: '-13px', scale: 1.23 },
-          }}
-          transition={{
-            duration: 0.75,
-            delay: 0.051,
-            ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-          }}
-        />
-      </svg>
-    </motion.button>
-  );
-};
 const Layout = ({
   children,
   title,
@@ -136,82 +59,121 @@ const Layout = ({
   const router = useRouter();
   const currentUrl = router.asPath;
 
-  const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
   const store = useStore(useBannerStore, (state) => state);
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {store?.bannerVisible && (
-          <>
-            <motion.div
-              className="fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71]"
-              animate={{
-                opacity: 1,
-                height: '100%',
+      <>
+        <div
+          className={`fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71] transition-all duration-500 ${CustomEase} ${
+            store?.fullBanner ? 'opacity-100' : 'opacity-0 -translate-y-full'
+          }`}
+        ></div>
+
+        <motion.header
+          transition={{
+            duration: 0.2,
+            ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+          }}
+          className="relative top-0 z-[100] w-full h-auto bg-white"
+        >
+          <motion.div
+            animate={store?.fullBanner ? 'max' : 'min'}
+            variants={{
+              min: {
+                paddingTop: '1%',
+                paddingBottom: '0%',
+              },
+              max: {
+                paddingTop: '2%',
+                paddingBottom: '2%',
+              },
+            }}
+            className="flex flex-col md:flex-row items-center justify-between md:px-10 xl:px-20 "
+          >
+            <div>
+              <h1 className="font-extrabold uppercase text-xl md:text-2xl text-red px-3 md:px-0">
+                This Website Is An Archive, As Of October 2024.
+              </h1>
+
+              <motion.h2
+                animate={store?.fullBanner ? 'max' : 'min'}
+                variants={{
+                  min: { opacity: 0, height: 0 },
+                  max: { opacity: 1, height: 'auto' },
+                }}
+                transition={{ duration: 0.55, opacity: { duration: 0.2 } }}
+                className="text-gray-600 text-base px-3 md:px-0"
+              >
+                The Engagement Lab at Emerson College has closed its doors.{' '}
+                <Link
+                  href="https://elab.emerson.edu/news/read-the-report-detailing-the-elabs-final-chapter/"
+                  className="text-red font-bold border-b-2 hover:border-b-0"
+                >
+                  Read the report
+                </Link>{' '}
+                detailing the ELab’s final chapter, or{' '}
+                <a
+                  href="#"
+                  onClick={() => store?.toggleFullBanner(!store?.fullBanner)}
+                  className="text-red font-bold border-b-2 hover:border-b-0"
+                >
+                  dismiss this message
+                </a>{' '}
+                to explore the archive.
+              </motion.h2>
+            </div>
+            <motion.button
+              onMouseUp={() => store?.toggleFullBanner(!store?.fullBanner)}
+              whileTap={{
+                scale: 1.4,
                 transition: {
                   ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-                  duration: 1.75,
+                  duration: 0.3,
                 },
               }}
-              initial={{ opacity: 0, height: 0 }}
-              exit={{ opacity: 0, height: '100%' }}
-              transition={{ type: 'tween', delay: 0.3 }}
-            ></motion.div>
-            <motion.header
-              role="banner"
-              className="fixed top-0 z-[100] w-full h-auto bg-white"
-              animate={{
-                opacity: 1,
-                y: 0,
-                transition: {
-                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-                  duration: 0.75,
+              whileHover={{
+                scale: 1.15,
+                transition: { duration: 0.3 },
+              }}
+              animate={store?.fullBanner ? 'max' : 'min'}
+              variants={{
+                min: {
+                  rotate: '180deg',
+                },
+                max: {
+                  rotate: '360deg',
                 },
               }}
-              initial={{ opacity: 0, y: '-100%' }}
-              exit={{ opacity: 0, y: '-150%' }}
-              transition={{ type: 'tween' }}
+              transition={{ ease: 'easeInOut', duration: 0.55 }}
+              className="relative z-50 mt-2 md:mt-0"
+              aria-label="Close Top Banner"
             >
-              <div className="flex flex-col md:flex-row items-center justify-between p-8 md:px-10 xl:px-20 ">
-                <div>
-                  <h1 className="font-extrabold uppercase text-xl md:text-2xl text-red mb-3">
-                    This Website Is An Archive, As Of October 2024.
-                  </h1>
-                  <h2 className="text-gray-600 text-base">
-                    The Engagement Lab at Emerson College has closed its doors.{' '}
-                    <Link
-                      href="https://elab.emerson.edu/news/read-the-report-detailing-the-elabs-final-chapter/"
-                      className="text-red font-bold border-b-2 hover:border-b-0"
-                    >
-                      Read the report
-                    </Link>{' '}
-                    detailing the ELab’s final chapter, or{' '}
-                    <a
-                      href="#"
-                      onClick={() => store?.hideBanner()}
-                      className="text-red font-bold border-b-2 hover:border-b-0"
-                    >
-                      dismiss this message
-                    </a>{' '}
-                    to explore the archive.
-                  </h2>
-                </div>
-                <MenuToggle
-                  clicked={() => store?.hideBanner()}
-                  hover={() => toggleMenuHover()}
-                  isHover={menuButtonHover}
+              <svg
+                viewBox="0 0 52 33"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                className="w-12 h-9"
+              >
+                <path
+                  d="M 48.49 30.149 L 26 4.861 L 3.562 30.149 L 2 29.059 L 26 2 L 50 29.077 L 48.49 30.149 Z"
+                  style={{
+                    stroke: 'rgb(255, 0, 0)',
+                    strokeWidth: '5px',
+                    strokeLinejoin: 'round',
+                  }}
                 />
-              </div>
-              <div>
-                <hr className="h-1 border-none w-full bg-red" />
-                <hr className="h-1 my-1 border-none w-full bg-green-blue" />
-                <hr className="h-1 border-none w-full bg-yellow" />
-              </div>
-            </motion.header>
-          </>
-        )}
-      </AnimatePresence>
+              </svg>
+            </motion.button>
+          </motion.div>
+          <motion.div className="mt-3">
+            <hr className="h-1 border-none w-full bg-red" />
+            <hr className="h-1 my-1 border-none w-full bg-green-blue" />
+            <hr className="h-1 border-none w-full bg-yellow" />
+          </motion.div>
+        </motion.header>
+      </>
+
       <span
         className={`fixed top-0 bottom-0 w-1 md:w-16 shadow-[inset_-14px_0_9px_-6px_rgba(0,0,0,0.1)] ${
           GutterBGClasses[theme || 0]

@@ -763,11 +763,11 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                       y: 0,
                       transition: {
                         ease: 'easeOut',
-                        duration: 0.3,
+                        duration: 4.3,
                       },
                     }}
-                    initial={{ opacity: 0, y: '-1%' }}
-                    exit={{ opacity: 0, y: '-1%' }}
+                    initial={{ opacity: 0, y: '-100%' }}
+                    exit={{ opacity: 0, y: '-150%' }}
                     transition={{ type: 'tween' }}
                   >
                     <section className="flex flex-col landscape:flex-row gap-x-16 gap-y-16">

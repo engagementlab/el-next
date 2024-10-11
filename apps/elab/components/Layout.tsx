@@ -1,6 +1,12 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { cubicBezier, motion, SVGMotionProps, useCycle } from 'framer-motion';
+import {
+  AnimatePresence,
+  cubicBezier,
+  motion,
+  SVGMotionProps,
+  useCycle,
+} from 'framer-motion';
 
 import { ImageUrl, Layout as SuperLayout } from '@el-next/components';
 import { Breadcrumb, CustomEase, DefaultOGImageOptions, Theme } from '@/types';
@@ -130,85 +136,82 @@ const Layout = ({
   const router = useRouter();
   const currentUrl = router.asPath;
 
-  const [isHomePage, setIsHomePage] = useState(false);
-
   const [menuButtonHover, toggleMenuHover] = useCycle(false, true);
-  // const [farewellDismissed, setFarewellDismissed] = useState(() =>
-  //   typeof window !== 'undefined' &&
-  //   sessionStorage.getItem('bannerDismissed') === 'true'
-  //     ? true
-  //     : false
-  // );
-  // const [farewellDismissed, setFarewellDismissed] = useState(false);
-
-  const [isFirstLoad, setIsFirstLoad] = useState(false);
-
-  // useEffect(() => {}, [isFirstLoad]);
-
-  useEffect(() => {
-    if (currentUrl === '/') setIsHomePage(true);
-    router.events.on('routeChangeStart', () => {
-      if (!isFirstLoad) {
-        // Perform actions for the first load
-        console.log('First load of session detected!');
-        setIsFirstLoad(true);
-      }
-    });
-  });
-
-  // useEffect(() => {
-  //   sessionStorage.setItem('bannerDismissed', String(farewellDismissed));
-  // }, [farewellDismissed]);
   const store = useStore(useBannerStore, (state) => state);
-  console.log('showBanner', store);
-  // const hideBanner = useStore(useBannerStore, (state) => state.hideBanner);
+
   return (
     <>
-      {store?.showBanner && (
-        <>
-          <div className="fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71]"></div>
-          <header
-            role="banner"
-            className="fixed top-0 z-[100] w-full h-auto bg-white/95"
-          >
-            <div className="flex flex-col md:flex-row items-center justify-between p-8 md:px-10 xl:px-20 ">
-              <div>
-                <h1 className="font-extrabold uppercase text-xl md:text-2xl text-red mb-3">
-                  This Website Is An Archive, As Of October 2024.
-                </h1>
-                <h2 className="text-gray-600 text-base">
-                  The Engagement Lab at Emerson College has closed its doors.{' '}
-                  <Link
-                    href="https://elab.emerson.edu/news/read-the-report-detailing-the-elabs-final-chapter/"
-                    className="text-red font-bold border-b-2 hover:border-b-0"
-                  >
-                    Read the report
-                  </Link>{' '}
-                  detailing the ELab’s final chapter, or{' '}
-                  <a
-                    href="#"
-                    onClick={() => store?.hideBanner(false)}
-                    className="text-red font-bold border-b-2 hover:border-b-0"
-                  >
-                    dismiss this message
-                  </a>{' '}
-                  to explore the archive.
-                </h2>
+      <AnimatePresence mode="wait">
+        {store?.bannerVisible && (
+          <>
+            <motion.div
+              className="fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71]"
+              animate={{
+                opacity: 1,
+                height: '100%',
+                transition: {
+                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                  duration: 1.75,
+                },
+              }}
+              initial={{ opacity: 0, height: 0 }}
+              exit={{ opacity: 0, height: '100%' }}
+              transition={{ type: 'tween', delay: 0.3 }}
+            ></motion.div>
+            <motion.header
+              role="banner"
+              className="fixed top-0 z-[100] w-full h-auto bg-white"
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                  duration: 0.75,
+                },
+              }}
+              initial={{ opacity: 0, y: '-100%' }}
+              exit={{ opacity: 0, y: '-150%' }}
+              transition={{ type: 'tween' }}
+            >
+              <div className="flex flex-col md:flex-row items-center justify-between p-8 md:px-10 xl:px-20 ">
+                <div>
+                  <h1 className="font-extrabold uppercase text-xl md:text-2xl text-red mb-3">
+                    This Website Is An Archive, As Of October 2024.
+                  </h1>
+                  <h2 className="text-gray-600 text-base">
+                    The Engagement Lab at Emerson College has closed its doors.{' '}
+                    <Link
+                      href="https://elab.emerson.edu/news/read-the-report-detailing-the-elabs-final-chapter/"
+                      className="text-red font-bold border-b-2 hover:border-b-0"
+                    >
+                      Read the report
+                    </Link>{' '}
+                    detailing the ELab’s final chapter, or{' '}
+                    <a
+                      href="#"
+                      onClick={() => store?.hideBanner()}
+                      className="text-red font-bold border-b-2 hover:border-b-0"
+                    >
+                      dismiss this message
+                    </a>{' '}
+                    to explore the archive.
+                  </h2>
+                </div>
+                <MenuToggle
+                  clicked={() => store?.hideBanner()}
+                  hover={() => toggleMenuHover()}
+                  isHover={menuButtonHover}
+                />
               </div>
-              <MenuToggle
-                // clicked={() => store?.hideBanner(true)}
-                hover={() => toggleMenuHover()}
-                isHover={menuButtonHover}
-              />
-            </div>
-            <div>
-              <hr className="h-1 border-none w-full bg-red" />
-              <hr className="h-1 my-1 border-none w-full bg-green-blue" />
-              <hr className="h-1 border-none w-full bg-yellow" />
-            </div>
-          </header>
-        </>
-      )}
+              <div>
+                <hr className="h-1 border-none w-full bg-red" />
+                <hr className="h-1 my-1 border-none w-full bg-green-blue" />
+                <hr className="h-1 border-none w-full bg-yellow" />
+              </div>
+            </motion.header>
+          </>
+        )}
+      </AnimatePresence>
       <span
         className={`fixed top-0 bottom-0 w-1 md:w-16 shadow-[inset_-14px_0_9px_-6px_rgba(0,0,0,0.1)] ${
           GutterBGClasses[theme || 0]

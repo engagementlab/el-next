@@ -77,7 +77,11 @@ const Slideshow = ({
 
   const Slide = ({ data }: { data: Slide }) => {
     if (ContentRenderer) return <ContentRenderer slide={data} />;
-    else if ((data.video.file !== 'none' || data.videoId) && data.image)
+    else if (
+      (data.video.file !== 'none' || data.videoId) &&
+      data.video.file.length > 0 &&
+      data.image
+    )
       return (
         <div className={`flex items-center min-h-[350px] lg:min-h-[465px]`}>
           {data.video.file !== 'none' ? (

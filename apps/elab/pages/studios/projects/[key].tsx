@@ -152,7 +152,11 @@ export default function Project({
     };
 
     const Media = () => {
-      if (item.video && item.video.file !== 'none')
+      if (
+        item.video &&
+        item.video.file !== 'none' &&
+        item.video.file.length > 0
+      )
         return (
           <motion.div
             initial="exit"
@@ -217,59 +221,61 @@ export default function Project({
                   />
                 )}
               </div>
-              {item.trailerVideo && !videoOpen && (
-                <>
-                  <VideoV2
-                    key="video-player-project"
-                    videoLabel={`Trailer for ${item.name} `}
-                    videoFile={item.trailerVideo.file}
-                    captionsFile={item.captions?.url}
-                    thumbUrl={
-                      item.trailerThumbnail
-                        ? item.trailerThumbnail.publicUrl
-                        : ''
-                    }
-                    thumbPublicId={
-                      item.trailerThumbnail
-                        ? item.trailerThumbnail.publicId
-                        : ''
-                    }
-                    theme={videoColor}
-                    noUi={true}
-                    play={trailerOpen}
-                    // We have to force the trailer state to be open if the video starts within the player component itself
-                    started={() => {
-                      if (!trailerOpen) toggleTrailerVideo();
-                    }}
-                    ended={() => {
-                      if (trailerOpen) toggleTrailerVideo();
-                    }}
-                  />
-                  {/* Watch btn */}
-                  {!trailerOpen && (
-                    <button
-                      className={`absolute transition-all duration-200 ${CustomEase} bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:pr-12`}
-                      onClick={() => toggleTrailerVideo()}
-                    >
-                      <svg
-                        height="48"
-                        width="48"
-                        viewBox="0 -960 960 960"
-                        className={`inline transition-all duration-200 ${CustomEase} group-hover:scale-125`}
+              {item.trailerVideo &&
+                item.trailerVideo.file.length > 0 &&
+                !videoOpen && (
+                  <>
+                    <VideoV2
+                      key="video-player-project"
+                      videoLabel={`Trailer for ${item.name} `}
+                      videoFile={item.trailerVideo.file}
+                      captionsFile={item.captions?.url}
+                      thumbUrl={
+                        item.trailerThumbnail
+                          ? item.trailerThumbnail.publicUrl
+                          : ''
+                      }
+                      thumbPublicId={
+                        item.trailerThumbnail
+                          ? item.trailerThumbnail.publicId
+                          : ''
+                      }
+                      theme={videoColor}
+                      noUi={true}
+                      play={trailerOpen}
+                      // We have to force the trailer state to be open if the video starts within the player component itself
+                      started={() => {
+                        if (!trailerOpen) toggleTrailerVideo();
+                      }}
+                      ended={() => {
+                        if (trailerOpen) toggleTrailerVideo();
+                      }}
+                    />
+                    {/* Watch btn */}
+                    {!trailerOpen && (
+                      <button
+                        className={`absolute transition-all duration-200 ${CustomEase} bottom-10 md:bottom-12 left-5 flex flex-row items-center gap-x-3 border-b-2 border-white cursor-pointer group-hover:pr-12`}
+                        onClick={() => toggleTrailerVideo()}
                       >
-                        <path
-                          d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
-                          fill="white"
-                          className={`group-hover:${theming.fill}`}
-                        />
-                      </svg>
-                      <h4 className="text-white font-semibold text-lg lg:text-3xl">
-                        Watch the trailer
-                      </h4>
-                    </button>
-                  )}
-                </>
-              )}
+                        <svg
+                          height="48"
+                          width="48"
+                          viewBox="0 -960 960 960"
+                          className={`inline transition-all duration-200 ${CustomEase} group-hover:scale-125`}
+                        >
+                          <path
+                            d="m392-313 260-169-260-169v338ZM140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm0-60h680v-520H140v520Zm0 0v-520 520Z"
+                            fill="white"
+                            className={`group-hover:${theming.fill}`}
+                          />
+                        </svg>
+                        <h4 className="text-white font-semibold text-lg lg:text-3xl">
+                          Watch the trailer
+                        </h4>
+                      </button>
+                    )}
+                  </>
+                )}
             </div>
           </motion.div>
         );

@@ -65,7 +65,7 @@ const Layout = ({
     <>
       <>
         <div
-          className={`fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71] transition-all duration-500 ${CustomEase} ${
+          className={`fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71] transition-all duration-1000 ease-[cubic-bezier(0.19, 1, 0.22, 1)] ${
             store?.fullBanner ? 'opacity-100' : 'opacity-0 -translate-y-full'
           }`}
         ></div>
@@ -235,9 +235,11 @@ const Layout = ({
               : appName
           }
           ogTitle={ogTitle}
-          description={description ? description : defaultDescription}
+          description={`(Archived 10/2024) ${
+            description ? description : defaultDescription
+          }`}
           ogDescription={ogDescription ? ogDescription : defaultDescription}
-          ogUrl={`https://elab.emerson.edu${currentUrl}`}
+          ogUrl={`https://engagementlab.work${currentUrl}`}
           ogImage={ImageUrl({
             // Fallback for OG image
             ...{ imgId: ogImageId || DefaultOGImageId },

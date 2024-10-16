@@ -101,7 +101,7 @@ type ControlsProps = {
 };
 
 const easing = 'ease-[cubic-bezier(0.68, -0.55, 0.27, 1.55)]';
-const thumbClass = `transition-all pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`;
+const thumbClass = `transition-all duration-150 pointer-events-none group-hover:brightness-105 group-hover:scale-105 ${easing}`;
 
 const initialState = {
   volume: 0.5,

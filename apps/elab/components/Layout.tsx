@@ -1,6 +1,12 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { cubicBezier, motion } from 'framer-motion';
+import {
+  AnimatePresence,
+  cubicBezier,
+  motion,
+  SVGMotionProps,
+  useCycle,
+} from 'framer-motion';
 
 import { ImageUrl, Layout as SuperLayout } from '@el-next/components';
 import { Breadcrumb, CustomEase, DefaultOGImageOptions, Theme } from '@/types';
@@ -8,6 +14,8 @@ import Header from './Header';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import Footer from './Footer';
 import { useRouter } from 'next/router';
+import useStore from '@/useStore';
+import { useBannerStore } from '@/bannerStore';
 
 type Props = {
   children: ReactNode;
@@ -51,82 +59,121 @@ const Layout = ({
   const router = useRouter();
   const currentUrl = router.asPath;
 
-  const [isHomePage, setIsHomePage] = useState(false);
-  const [farewellDismissed, setFarewellDismissed] = useState(false);
+  const store = useStore(useBannerStore, (state) => state);
 
-  useEffect(() => {
-    if (currentUrl === '/') setIsHomePage(true);
-  });
   return (
     <>
-      {isHomePage && !farewellDismissed && (
-        <>
-          <div className="fixed top-0 bottom-0 z-[90] w-full h-full bg-black/50"></div>
-          <div className="absolute top-0 md:top-1/4 bottom-0 md:bottom-auto p-8 md:px-20 xl:px-32 z-[100] w-full h-full md:h-auto bg-white">
-            <h1 className="font-extrabold text-3xl md:text-5xl mb-3">
-              The Engagement Lab will be closing its doors this fall.
-              <br />
-              We invite you to&nbsp;.&nbsp;.&nbsp;.
-            </h1>
-            <ul className="list-none font-medium md:text-2xl lg:mt-8 md:ml-3 lg:ml-5">
-              <li className="mt-3">
-                <svg
-                  viewBox="9 6.998 17 24.286"
-                  width="17"
-                  height="24.286"
-                  className="inline scale-50 fill-yellow md:scale-100 md:mr-3"
+      <>
+        <div
+          className={`fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71] transition-all duration-1000 ${CustomEase} ${
+            store?.fullBanner ? 'opacity-100' : 'opacity-0 -translate-y-full'
+          }`}
+        ></div>
+
+        <motion.header
+          transition={{
+            duration: 0.2,
+            ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+          }}
+          className="relative top-0 z-[100] w-full h-auto bg-white"
+        >
+          <motion.div
+            animate={store?.fullBanner ? 'max' : 'min'}
+            variants={{
+              min: {
+                paddingTop: '1%',
+                paddingBottom: '0%',
+              },
+              max: {
+                paddingTop: '2%',
+                paddingBottom: '2%',
+              },
+            }}
+            className="flex flex-col md:flex-row items-center justify-between md:px-10 xl:px-20 "
+          >
+            <div>
+              <h1 className="font-extrabold uppercase text-xl md:text-2xl text-red px-3 md:px-0">
+                This Website Is An Archive, As Of October 2024.
+              </h1>
+
+              <motion.h2
+                animate={store?.fullBanner ? 'max' : 'min'}
+                variants={{
+                  min: { opacity: 0, height: 0 },
+                  max: { opacity: 1, height: 'auto' },
+                }}
+                transition={{ duration: 0.55, opacity: { duration: 0.2 } }}
+                className="text-gray-600 text-base px-3 md:px-0"
+              >
+                The Engagement Lab at Emerson College has closed its doors.{' '}
+                <Link
+                  href="https://elab.emerson.edu/news/read-the-report-detailing-the-elabs-final-chapter/"
+                  className="text-red font-bold border-b-2 hover:border-b-0"
                 >
-                  <path d="M 11.941 7.379 C 11.596 7.117 11.215 6.998 10.831 6.998 C 9.891 6.998 9 7.741 9 8.817 L 9 29.462 C 9 30.543 9.894 31.284 10.831 31.284 C 11.217 31.284 11.601 31.162 11.946 30.898 C 15.72 27.976 22.141 23 25.293 20.557 C 25.74 20.212 26 19.682 26 19.119 C 26 18.56 25.738 18.029 25.293 17.684 C 22.136 15.25 15.71 10.291 11.941 7.379 Z"></path>
-                </svg>
+                  Read the report
+                </Link>{' '}
+                detailing the ELab’s final chapter, or{' '}
                 <a
-                  href="https://mailchi.mp/emerson/elab-toast"
-                  target="_blank"
-                  className="text-yellow border-yellow border-b-2 font-bold hover:border-0"
+                  href="#"
+                  onClick={() => store?.toggleFullBanner(!store?.fullBanner)}
+                  className="text-red font-bold border-b-2 hover:border-b-0"
                 >
-                  Read the letter
-                </a>
-                &nbsp;to our communities reflecting on our 14 years at Emerson
-              </li>
-              <li className="mt-3">
-                <svg
-                  viewBox="9 6.998 17 24.286"
-                  width="17"
-                  height="24.286"
-                  className="inline scale-50 fill-green-blue md:scale-100 md:mr-3"
-                >
-                  <path d="M 11.941 7.379 C 11.596 7.117 11.215 6.998 10.831 6.998 C 9.891 6.998 9 7.741 9 8.817 L 9 29.462 C 9 30.543 9.894 31.284 10.831 31.284 C 11.217 31.284 11.601 31.162 11.946 30.898 C 15.72 27.976 22.141 23 25.293 20.557 C 25.74 20.212 26 19.682 26 19.119 C 26 18.56 25.738 18.029 25.293 17.684 C 22.136 15.25 15.71 10.291 11.941 7.379 Z"></path>
-                </svg>
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSfVSTPWRZvAozw2B2XZkH4yV2WAJZ-NgfDePX9JENDr_BAGIw/viewform"
-                  className="text-green-blue border-green-blue border-b-2 font-bold hover:border-0"
-                >
-                  Share your ELab stories
-                </a>
-                , memories, thoughts, or provocations with us
-              </li>
-            </ul>
-            <div
-              className="flex flex-row justify-center my-8 cursor-pointer group"
-              onClick={() => setFarewellDismissed(true)}
+                  dismiss this message
+                </a>{' '}
+                to explore the archive.
+              </motion.h2>
+            </div>
+            <motion.button
+              onMouseUp={() => store?.toggleFullBanner(!store?.fullBanner)}
+              whileTap={{
+                scale: 1.4,
+                transition: {
+                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                  duration: 0.3,
+                },
+              }}
+              whileHover={{
+                scale: 1.15,
+                transition: { duration: 0.3 },
+              }}
+              animate={store?.fullBanner ? 'max' : 'min'}
+              variants={{
+                min: {
+                  rotate: '180deg',
+                },
+                max: {
+                  rotate: '360deg',
+                },
+              }}
+              transition={{ ease: 'easeInOut', duration: 0.55 }}
+              className="relative z-50 mt-2 md:mt-0"
+              aria-label="Close Top Banner"
             >
               <svg
-                width="24"
-                height="24"
-                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 52 33"
                 fill-rule="evenodd"
                 clip-rule="evenodd"
-                className={`group-hover:scale-125 duration-300 ${CustomEase}`}
+                className="w-12 h-9"
               >
-                <path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm0 10.293l5.293-5.293.707.707-5.293 5.293 5.293 5.293-.707.707-5.293-5.293-5.293 5.293-.707-.707 5.293-5.293-5.293-5.293.707-.707 5.293 5.293z" />
+                <path
+                  d="M 48.49 30.149 L 26 4.861 L 3.562 30.149 L 2 29.059 L 26 2 L 50 29.077 L 48.49 30.149 Z"
+                  style={{
+                    stroke: 'rgb(255, 0, 0)',
+                    strokeWidth: '5px',
+                    strokeLinejoin: 'round',
+                  }}
+                />
               </svg>
-              &nbsp;
-              <span className="opacity-50 group-hover:opacity-100 transition-all">
-                Dismiss this message
-              </span>
-            </div>
-          </div>
-        </>
-      )}
+            </motion.button>
+          </motion.div>
+          <motion.div className="mt-3">
+            <hr className="h-1 border-none w-full bg-red" />
+            <hr className="h-1 my-1 border-none w-full bg-green-blue" />
+            <hr className="h-1 border-none w-full bg-yellow" />
+          </motion.div>
+        </motion.header>
+      </>
+
       <span
         className={`fixed top-0 bottom-0 w-1 md:w-16 shadow-[inset_-14px_0_9px_-6px_rgba(0,0,0,0.1)] ${
           GutterBGClasses[theme || 0]
@@ -188,9 +235,13 @@ const Layout = ({
               : appName
           }
           ogTitle={ogTitle}
-          description={description ? description : defaultDescription}
-          ogDescription={ogDescription ? ogDescription : defaultDescription}
-          ogUrl={`https://elab.emerson.edu${currentUrl}`}
+          description={`(Archived 10/2024) ${
+            description ? description : defaultDescription
+          }`}
+          ogDescription={`(Archived 10/2024) ${
+            ogDescription ? ogDescription : defaultDescription
+          }`}
+          ogUrl={`https://engagementlab.work${currentUrl}`}
           ogImage={ImageUrl({
             // Fallback for OG image
             ...{ imgId: ogImageId || DefaultOGImageId },

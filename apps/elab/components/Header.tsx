@@ -229,6 +229,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   );
   const whatsNewLinks = (
     <>
+      <NavLink href="/testimonials" label="Testimonials" />
       <NavLink href="/news" label="News" />
       <NavLink href="/events" label="Events" />
       <NavLink href="/whats-new/archive" label="Archive" />
@@ -368,11 +369,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       links: aboutLinks,
     },
     {
-      label: 'Testimonials',
-      link: '/testimonials',
-      // links: siiLinks,
-    },
-    {
       label: 'Social Impact Initiatives',
       links: siiLinks,
     },
@@ -381,7 +377,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       links: researchLinks,
     },
     {
-      label: "What's New",
+      label: 'Info',
       links: whatsNewLinks,
     },
   ];
@@ -653,16 +649,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                   </motion.div>
                 </motion.div>
 
-                <Link
-                  href="/testimonials"
-                  // className="block w-56 text-center relative z-10"
-                  className="block w-40 text-center relative z-10"
-                >
-                  <span className={`w-24 border-teal ${navHeaderClass}`}>
-                    Testimonials
-                  </span>
-                </Link>
-
                 <motion.div
                   className="group relative mr-8"
                   onMouseEnter={() => {
@@ -729,10 +715,8 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                     href="/whats-new"
                     className="block w-36 text-center relative z-10"
                   >
-                    <span
-                      className={`w-[86px] border-yellow ${navHeaderClass}`}
-                    >
-                      What’s New
+                    <span className={`w-7 border-yellow ${navHeaderClass}`}>
+                      Info
                     </span>
                   </Link>
                   <motion.div
@@ -779,65 +763,37 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                         <h2 className="uppercase">Main Menu</h2>
                         {MobileNavSections.map((section, i) => (
                           <>
-                            {section.links ? (
-                              <motion.header
-                                className="text-2xl font-light mt-3 origin-left"
-                                animate={{
-                                  opacity: 1,
-                                  y: 0,
-                                  transition: {
-                                    duration: 0.1,
-                                    delay: 0.1 * (i + 1),
-                                    ease: [0.04, 0.62, 0.23, 0.98],
-                                  },
-                                }}
-                                initial={{ opacity: 0, y: '-40%' }}
-                                exit={{ opacity: 0, y: '-11%' }}
-                                whileTap={{
-                                  scale: 1.034,
-                                  transition: {
-                                    ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-                                    duration: 0.3,
-                                  },
-                                }}
-                                onClick={() =>
-                                  setExpanded(
-                                    expanded.flatMap((v, eI) => {
-                                      return expanded[i] ? false : eI === i;
-                                    })
-                                  )
-                                }
-                              >
-                                {section.label}
-                              </motion.header>
-                            ) : (
-                              <motion.div
-                                className="text-2xl font-light mt-3 origin-left"
-                                animate={{
-                                  opacity: 1,
-                                  y: 0,
-                                  transition: {
-                                    duration: 0.1,
-                                    delay: 0.1 * (i + 1),
-                                    ease: [0.04, 0.62, 0.23, 0.98],
-                                  },
-                                }}
-                                initial={{ opacity: 0, y: '-40%' }}
-                                exit={{ opacity: 0, y: '-11%' }}
-                                whileTap={{
-                                  scale: 1.034,
-                                  transition: {
-                                    ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-                                    duration: 0.3,
-                                  },
-                                }}
-                              >
-                                <NavLink
-                                  href={section.link}
-                                  label={section.label}
-                                />
-                              </motion.div>
-                            )}
+                            <motion.header
+                              className="text-2xl font-light mt-3 origin-left"
+                              animate={{
+                                opacity: 1,
+                                y: 0,
+                                transition: {
+                                  duration: 0.1,
+                                  delay: 0.1 * (i + 1),
+                                  ease: [0.04, 0.62, 0.23, 0.98],
+                                },
+                              }}
+                              initial={{ opacity: 0, y: '-40%' }}
+                              exit={{ opacity: 0, y: '-11%' }}
+                              whileTap={{
+                                scale: 1.034,
+                                transition: {
+                                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                                  duration: 0.3,
+                                },
+                              }}
+                              onClick={() =>
+                                setExpanded(
+                                  expanded.flatMap((v, eI) => {
+                                    return expanded[i] ? false : eI === i;
+                                  })
+                                )
+                              }
+                            >
+                              {section.label}
+                            </motion.header>
+
                             <AnimatePresence mode="wait">
                               {expanded[i] && (
                                 <motion.section

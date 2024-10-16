@@ -184,7 +184,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
           onClick={() => {
             toggleNavOpen(false);
             if (linkOverride) window.location.href = linkOverride;
-            // router.reload(window.location.pathname);
           }}
         >
           {subLink && (
@@ -207,9 +206,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       <NavLink href="/about/mission-values" label="Mission & Values" />
       <NavLink href="/about/our-approach" label="Our Approach" />
       <NavLink href="/about/people" label="People" />
-      <NavLink href="/about/jobs" label="Jobs" />
-      {/* <NavLink href="/about/get-involved" label="Get Involved" /> */}
-      <NavLink href="/about/donate" label="Support Our Work" />
     </>
   );
   const siiLinks = (
@@ -223,12 +219,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
         href="/initiatives/tnej"
         label="Transforming Narratives for Environmental Justice (TNEJ)"
       />
-      {/* <NavLink
-        href="/studios/projects/?climate"
-        linkOverride="/studios/projects?climate"
-        label="TNEJ Projects"
-        subLink={true}
-      /> */}
     </>
   );
   const researchLinks = (
@@ -376,6 +366,11 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
     {
       label: 'About',
       links: aboutLinks,
+    },
+    {
+      label: 'Testimonials',
+      link: '/testimonials',
+      // links: siiLinks,
     },
     {
       label: 'Social Impact Initiatives',
@@ -658,6 +653,16 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                   </motion.div>
                 </motion.div>
 
+                <Link
+                  href="/testimonials"
+                  // className="block w-56 text-center relative z-10"
+                  className="block w-40 text-center relative z-10"
+                >
+                  <span className={`w-24 border-teal ${navHeaderClass}`}>
+                    Testimonials
+                  </span>
+                </Link>
+
                 <motion.div
                   className="group relative mr-8"
                   onMouseEnter={() => {
@@ -762,12 +767,11 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                       opacity: 1,
                       y: 0,
                       transition: {
-                        ease: 'easeOut',
-                        duration: 4.3,
+                        duration: 0.3,
                       },
                     }}
-                    initial={{ opacity: 0, y: '-100%' }}
-                    exit={{ opacity: 0, y: '-150%' }}
+                    initial={{ opacity: 0, y: '-1%' }}
+                    exit={{ opacity: 0, y: '-1%' }}
                     transition={{ type: 'tween' }}
                   >
                     <section className="flex flex-col landscape:flex-row gap-x-16 gap-y-16">
@@ -775,36 +779,65 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                         <h2 className="uppercase">Main Menu</h2>
                         {MobileNavSections.map((section, i) => (
                           <>
-                            <motion.header
-                              className="text-2xl font-light mt-3 origin-left"
-                              animate={{
-                                opacity: 1,
-                                y: 0,
-                                transition: {
-                                  duration: 0.1,
-                                  delay: 0.1 * (i + 1),
-                                  ease: [0.04, 0.62, 0.23, 0.98],
-                                },
-                              }}
-                              initial={{ opacity: 0, y: '-40%' }}
-                              exit={{ opacity: 0, y: '-11%' }}
-                              whileTap={{
-                                scale: 1.034,
-                                transition: {
-                                  ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
-                                  duration: 0.3,
-                                },
-                              }}
-                              onClick={() =>
-                                setExpanded(
-                                  expanded.flatMap((v, eI) => {
-                                    return expanded[i] ? false : eI === i;
-                                  })
-                                )
-                              }
-                            >
-                              {section.label}
-                            </motion.header>
+                            {section.links ? (
+                              <motion.header
+                                className="text-2xl font-light mt-3 origin-left"
+                                animate={{
+                                  opacity: 1,
+                                  y: 0,
+                                  transition: {
+                                    duration: 0.1,
+                                    delay: 0.1 * (i + 1),
+                                    ease: [0.04, 0.62, 0.23, 0.98],
+                                  },
+                                }}
+                                initial={{ opacity: 0, y: '-40%' }}
+                                exit={{ opacity: 0, y: '-11%' }}
+                                whileTap={{
+                                  scale: 1.034,
+                                  transition: {
+                                    ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                                    duration: 0.3,
+                                  },
+                                }}
+                                onClick={() =>
+                                  setExpanded(
+                                    expanded.flatMap((v, eI) => {
+                                      return expanded[i] ? false : eI === i;
+                                    })
+                                  )
+                                }
+                              >
+                                {section.label}
+                              </motion.header>
+                            ) : (
+                              <motion.div
+                                className="text-2xl font-light mt-3 origin-left"
+                                animate={{
+                                  opacity: 1,
+                                  y: 0,
+                                  transition: {
+                                    duration: 0.1,
+                                    delay: 0.1 * (i + 1),
+                                    ease: [0.04, 0.62, 0.23, 0.98],
+                                  },
+                                }}
+                                initial={{ opacity: 0, y: '-40%' }}
+                                exit={{ opacity: 0, y: '-11%' }}
+                                whileTap={{
+                                  scale: 1.034,
+                                  transition: {
+                                    ease: cubicBezier(0.075, 0.82, 0.165, 1.0),
+                                    duration: 0.3,
+                                  },
+                                }}
+                              >
+                                <NavLink
+                                  href={section.link}
+                                  label={section.label}
+                                />
+                              </motion.div>
+                            )}
                             <AnimatePresence mode="wait">
                               {expanded[i] && (
                                 <motion.section

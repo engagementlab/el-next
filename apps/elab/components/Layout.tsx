@@ -65,7 +65,7 @@ const Layout = ({
     <>
       <>
         <div
-          className={`fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71] transition-all duration-1000 ease-[cubic-bezier(0.19, 1, 0.22, 1)] ${
+          className={`fixed top-0 z-[90] w-full h-3/4 bg-gradient-to-b from-[#fabc71] transition-all duration-1000 ${CustomEase} ${
             store?.fullBanner ? 'opacity-100' : 'opacity-0 -translate-y-full'
           }`}
         ></div>

@@ -238,7 +238,9 @@ const Layout = ({
           description={`(Archived 10/2024) ${
             description ? description : defaultDescription
           }`}
-          ogDescription={ogDescription ? ogDescription : defaultDescription}
+          ogDescription={`(Archived 10/2024) ${
+            ogDescription ? ogDescription : defaultDescription
+          }`}
           ogUrl={`https://engagementlab.work${currentUrl}`}
           ogImage={ImageUrl({
             // Fallback for OG image

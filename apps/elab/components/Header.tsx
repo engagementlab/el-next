@@ -202,6 +202,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   };
   const aboutLinks = (
     <>
+      <NavLink href="/testimonials" label="Testimonials" />
       <NavLink href="/about/about-the-lab" label="About the Lab" />
       <NavLink href="/about/mission-values" label="Mission & Values" />
       <NavLink href="/about/our-approach" label="Our Approach" />
@@ -229,7 +230,6 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
   );
   const whatsNewLinks = (
     <>
-      <NavLink href="/testimonials" label="Testimonials" />
       <NavLink href="/news" label="News" />
       <NavLink href="/events" label="Events" />
       <NavLink href="/whats-new/archive" label="Archive" />
@@ -377,7 +377,7 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
       links: researchLinks,
     },
     {
-      label: 'Info',
+      label: "What's New",
       links: whatsNewLinks,
     },
   ];
@@ -715,8 +715,10 @@ const Header = ({ theme = Theme.none }: Props): JSX.Element => {
                     href="/whats-new"
                     className="block w-36 text-center relative z-10"
                   >
-                    <span className={`w-7 border-yellow ${navHeaderClass}`}>
-                      Info
+                    <span
+                      className={`w-[87px] border-yellow ${navHeaderClass}`}
+                    >
+                      What's New
                     </span>
                   </Link>
                   <motion.div

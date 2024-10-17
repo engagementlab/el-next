@@ -103,7 +103,7 @@ const Layout = ({
                   max: { opacity: 1, height: 'auto' },
                 }}
                 transition={{ duration: 0.55, opacity: { duration: 0.2 } }}
-                className="text-gray-600 text-base px-3 md:px-0"
+                className="text-gray-600 text-base px-3 md:pr-3 md:pl-0"
               >
                 The Engagement Lab at Emerson College has closed its doors.{' '}
                 <Link
@@ -112,7 +112,14 @@ const Layout = ({
                 >
                   Read the report
                 </Link>{' '}
-                detailing the ELab’s final chapter, or{' '}
+                detailing the ELab’s final chapter,{' '}
+                <Link
+                  href="/testimonials"
+                  className="text-red font-bold border-b-2 hover:border-b-0"
+                >
+                  read testimonials
+                </Link>
+                &nbsp;from our extended community, or{' '}
                 <a
                   href="#"
                   onClick={() => store?.toggleFullBanner(!store?.fullBanner)}

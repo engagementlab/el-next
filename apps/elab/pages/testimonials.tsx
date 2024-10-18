@@ -25,7 +25,12 @@ export default function Testimonials({
                     componentBlocks={Blocks()}
                     renderers={Doc()}
                   />
-                  <p>&mdash;&nbsp;{item.attribution}</p>
+                  <p>
+                    &mdash;&nbsp;
+                    {item.attribution && item.attribution.length > 0
+                      ? item.attribution
+                      : 'Anonymous'}
+                  </p>
                 </div>
               );
             })}
